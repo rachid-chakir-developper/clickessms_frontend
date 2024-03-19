@@ -45,3 +45,25 @@ export const STATUS =  {
         {value : "FINISHED", label : "Terminée"},
     ]
 };
+
+export const UDESIRABLE_EVENT_TYPES =  {
+    NORMAL : "NORMAL",
+    SERIOUS : "SERIOUS",
+    ALL : [
+        {value : "NORMAL", label : "EVENEMENT INDESIRABLE (EI)"},
+        {value : "SERIOUS", label : "EVENEMENT INDESIRABLE GRAVE (EIG)"},
+    ]
+};
+
+export const UDESIRABLE_EVENT_SEVERITY =  {
+    LOW : "LOW",
+    MEDIUM : "MEDIUM",
+    SEVERE : "SEVERE",
+    VERY_SERIOUS : "VERY_SERIOUS",
+    ALL : [
+        {value : "LOW", label : "Faible"},
+        {value : "MEDIUM", label : "Moyenne"},
+        {value : "SEVERE", label : "Grave"},
+        {value : "VERY_SERIOUS", label : "Très grave"}
+    ]
+};

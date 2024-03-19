@@ -4,6 +4,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import Beneficiaries from "./beneficiaries/Beneficiaries";
+import Employees from "./employees/Employees";
   
 export default function Humans() {
 
@@ -11,9 +12,10 @@ export default function Humans() {
     <div className="human_ressources">
       <Routes>
             <Route path={`beneficiaires/*`} element={<Beneficiaries />} />
+            <Route path={`employes/*`} element={<Employees />} />
             <Route
                 path="/"
-                element={<Navigate to={`beneficiaires`} replace />}
+                element={<Navigate to={`employes`} replace />}
             />
       </Routes>
     </div>

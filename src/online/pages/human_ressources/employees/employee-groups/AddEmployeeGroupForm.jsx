@@ -13,12 +13,12 @@ import TheTextField from '../../../../../_shared/components/form-fields/TheTextF
 import ImageFileField from '../../../../../_shared/components/form-fields/ImageFileField';
 import TheDesktopDatePicker from '../../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_BENEFICIARY_GROUP } from '../../../../../_shared/graphql/queries/BeneficiaryGroupQueries';
-import { POST_BENEFICIARY_GROUP, PUT_BENEFICIARY_GROUP } from '../../../../../_shared/graphql/mutations/BeneficiaryGroupMutations';
+import { GET_EMPLOYEE_GROUP } from '../../../../../_shared/graphql/queries/EmployeeGroupQueries';
+import { POST_EMPLOYEE_GROUP, PUT_EMPLOYEE_GROUP } from '../../../../../_shared/graphql/mutations/EmployeeGroupMutations';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import TheSwitch from '../../../../../_shared/components/form-fields/theSwitch';
 import TheDateTimePicker from '../../../../../_shared/components/form-fields/TheDateTimePicker';
-import { GET_BENEFICIARIES } from '../../../../../_shared/graphql/queries/BeneficiaryQueries';
+import { GET_EMPLOYEES } from '../../../../../_shared/graphql/queries/EmployeeQueries';
 import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
 
 const Item = styled(Stack)(({ theme }) => ({
@@ -29,7 +29,7 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title}) {
+export default function AddEmployeeGroupForm({ idEmployeeGroup, title}) {
     const  { setNotifyAlert,  setConfirmDialog} = useFeedBacks();
     const navigate = useNavigate();
     const validationSchema = yup.object({
@@ -38,36 +38,36 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title}) {
     const formik = useFormik({
         initialValues: {
             image : undefined,  number : '', name : '', 
-            description : '', observation : '', isActive : true, beneficiaries: []
+            description : '', observation : '', isActive : true, employees: []
           },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            let { image , ...beneficiaryGroupCopy } = values
-            beneficiaryGroupCopy.beneficiaries = beneficiaryGroupCopy.beneficiaries.map(i => i?.id)
-            if(idBeneficiaryGroup && idBeneficiaryGroup != ''){
-                onUpdateBeneficiaryGroup({ 
-                    id : beneficiaryGroupCopy.id, 
-                    beneficiaryGroupData : beneficiaryGroupCopy,
+            let { image , ...employeeGroupCopy } = values
+            employeeGroupCopy.employees = employeeGroupCopy.employees.map(i => i?.id)
+            if(idEmployeeGroup && idEmployeeGroup != ''){
+                onUpdateEmployeeGroup({ 
+                    id : employeeGroupCopy.id, 
+                    employeeGroupData : employeeGroupCopy,
                     image : image,
                     }
                 )
             }
-            else createBeneficiaryGroup({ 
+            else createEmployeeGroup({ 
                     variables: { 
-                        beneficiaryGroupData : beneficiaryGroupCopy,
+                        employeeGroupData : employeeGroupCopy,
                         image : image,
                     } 
                 })
         },
     });
     const { 
-        loading: loadingBeneficiaries, 
-        data: beneficiariesData, 
-        error: beneficiariesError, 
-        fetchMore:  fetchMoreBeneficiaries 
-    } = useQuery(GET_BENEFICIARIES, { fetchPolicy: "network-only", variables: { page: 1, limit: 10 }})
+        loading: loadingEmployees, 
+        data: employeesData, 
+        error: employeesError, 
+        fetchMore:  fetchMoreEmployees 
+    } = useQuery(GET_EMPLOYEES, { fetchPolicy: "network-only", variables: { page: 1, limit: 10 }})
 
-    const [createBeneficiaryGroup, { loading : loadingPost }] = useMutation(POST_BENEFICIARY_GROUP, {
+    const [createEmployeeGroup, { loading : loadingPost }] = useMutation(POST_EMPLOYEE_GROUP, {
         onCompleted: (data) => {
             console.log(data);
             setNotifyAlert({
@@ -75,19 +75,19 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title}) {
                 message: 'Ajouté avec succès',
                 type: 'success'
             })
-            let { __typename, ...beneficiaryGroupCopy } = data.createBeneficiaryGroup.beneficiaryGroup;
-        //   formik.setValues(beneficiaryGroupCopy);
-            navigate('/online/ressources-humaines/beneficiaires/groupes/liste');
+            let { __typename, ...employeeGroupCopy } = data.createEmployeeGroup.employeeGroup;
+        //   formik.setValues(employeeGroupCopy);
+            navigate('/online/ressources-humaines/employes/groupes/liste');
         },
-        update(cache, { data: { createBeneficiaryGroup } }) {
-            const newBeneficiaryGroup = createBeneficiaryGroup.beneficiaryGroup;
+        update(cache, { data: { createEmployeeGroup } }) {
+            const newEmployeeGroup = createEmployeeGroup.employeeGroup;
           
             cache.modify({
               fields: {
-                beneficiaryGroups(existingBeneficiaryGroups = { totalCount: 0, nodes: [] }) {
+                employeeGroups(existingEmployeeGroups = { totalCount: 0, nodes: [] }) {
                     return {
-                        totalCount: existingBeneficiaryGroups.totalCount + 1,
-                        nodes: [newBeneficiaryGroup, ...existingBeneficiaryGroups.nodes],
+                        totalCount: existingEmployeeGroups.totalCount + 1,
+                        nodes: [newEmployeeGroup, ...existingEmployeeGroups.nodes],
                     };
                 },
               },
@@ -102,7 +102,7 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title}) {
             })
         },
     })
-    const [updateBeneficiaryGroup, { loading : loadingPut }] = useMutation(PUT_BENEFICIARY_GROUP, {
+    const [updateEmployeeGroup, { loading : loadingPut }] = useMutation(PUT_EMPLOYEE_GROUP, {
         onCompleted: (data) => {
             console.log(data);
             setNotifyAlert({
@@ -110,24 +110,24 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title}) {
                 message: 'Modifié avec succès',
                 type: 'success'
             })
-            let { __typename, ...beneficiaryGroupCopy } = data.updateBeneficiaryGroup.beneficiaryGroup;
-        //   formik.setValues(beneficiaryGroupCopy);
-            navigate('/online/ressources-humaines/beneficiaires/groupes/liste');
+            let { __typename, ...employeeGroupCopy } = data.updateEmployeeGroup.employeeGroup;
+        //   formik.setValues(employeeGroupCopy);
+            navigate('/online/ressources-humaines/employes/groupes/liste');
         },
-        update(cache, { data: { updateBeneficiaryGroup } }) {
-            const updatedBeneficiaryGroup = updateBeneficiaryGroup.beneficiaryGroup;
+        update(cache, { data: { updateEmployeeGroup } }) {
+            const updatedEmployeeGroup = updateEmployeeGroup.employeeGroup;
           
             cache.modify({
               fields: {
-                beneficiaryGroups(existingBeneficiaryGroups = { totalCount: 0, nodes: [] }, { readField }) {
+                employeeGroups(existingEmployeeGroups = { totalCount: 0, nodes: [] }, { readField }) {
                     
-                    const updatedBeneficiaryGroups = existingBeneficiaryGroups.nodes.map((beneficiaryGroup) =>
-                        readField('id', beneficiaryGroup) === updatedBeneficiaryGroup.id ? updatedBeneficiaryGroup : beneficiaryGroup
+                    const updatedEmployeeGroups = existingEmployeeGroups.nodes.map((employeeGroup) =>
+                        readField('id', employeeGroup) === updatedEmployeeGroup.id ? updatedEmployeeGroup : employeeGroup
                     );
             
                     return {
-                        totalCount: existingBeneficiaryGroups.totalCount,
-                        nodes: updatedBeneficiaryGroups,
+                        totalCount: existingEmployeeGroups.totalCount,
+                        nodes: updatedEmployeeGroups,
                     };
                 },
               },
@@ -142,37 +142,37 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title}) {
             })
         },
     })
-    const onUpdateBeneficiaryGroup = (variables) => {
+    const onUpdateEmployeeGroup = (variables) => {
         setConfirmDialog({
           isOpen: true,
           title: 'ATTENTION',
           subTitle: "Voulez vous vraiment modifier ?",
           onConfirm: () => { setConfirmDialog({isOpen: false})
-                updateBeneficiaryGroup({ variables })
+                updateEmployeeGroup({ variables })
             }
         })
       }
-    const [getBeneficiaryGroup, { loading : loadingBeneficiaryGroup }] = useLazyQuery(GET_BENEFICIARY_GROUP, {
+    const [getEmployeeGroup, { loading : loadingEmployeeGroup }] = useLazyQuery(GET_EMPLOYEE_GROUP, {
         fetchPolicy: "network-only",
         onCompleted: (data) => {
-            let { __typename, ...beneficiaryGroupCopy } = data.beneficiaryGroup;
-            beneficiaryGroupCopy.beneficiaries = beneficiaryGroupCopy.beneficiaries ? beneficiaryGroupCopy.beneficiaries.map(i => i?.beneficiary) : []
-            formik.setValues(beneficiaryGroupCopy);
+            let { __typename, ...employeeGroupCopy } = data.employeeGroup;
+            employeeGroupCopy.employees = employeeGroupCopy.employees ? employeeGroupCopy.employees.map(i => i?.employee) : []
+            formik.setValues(employeeGroupCopy);
         },
         onError: (err) => console.log(err),
     })
     React.useEffect(()=>{
-        if(idBeneficiaryGroup){
-            getBeneficiaryGroup(({ variables: { id: idBeneficiaryGroup } }));
+        if(idEmployeeGroup){
+            getEmployeeGroup(({ variables: { id: idEmployeeGroup } }));
         }
-    }, [idBeneficiaryGroup])
+    }, [idEmployeeGroup])
     return (
         <Box sx={{ flexGrow: 1 }}>
             <Typography component="div" variant="h5">
                 {title} {formik.values.number}
             </Typography>
-            { loadingBeneficiaryGroup && <ProgressService type="form" />}
-            { !loadingBeneficiaryGroup &&
+            { loadingEmployeeGroup && <ProgressService type="form" />}
+            { !loadingEmployeeGroup &&
                 <form onSubmit={formik.handleSubmit}>
                     <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                         <Grid xs={2} sm={4} md={4}>
@@ -206,11 +206,11 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title}) {
                         </Grid>
                         <Grid xs={12} sm={12} md={12} item>
                             <Item>
-                                <TheAutocomplete options={beneficiariesData?.beneficiaries?.nodes} label="Bénificiaires"
-                                    placeholder="Ajouter un bénificiaire"
+                                <TheAutocomplete options={employeesData?.employees?.nodes} label="Employés"
+                                    placeholder="Ajouter un employé"
                                     limitTags={3}
-                                    value={formik.values.beneficiaries}
-                                    onChange={(e, newValue) => formik.setFieldValue('beneficiaries', newValue)}/>
+                                    value={formik.values.employees}
+                                    onChange={(e, newValue) => formik.setFieldValue('employees', newValue)}/>
                             </Item>
                         </Grid>
                         <Grid xs={12} sm={12} md={12}>
@@ -236,7 +236,7 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title}) {
                         </Grid>
                         <Grid xs={12} sm={12} md={12}>
                             <Item sx={{ justifyContent: 'end', flexDirection : 'row' }}>
-                                <Link to="/online/ressources-humaines/beneficiaires/groupes/liste" className="no_style">
+                                <Link to="/online/ressources-humaines/employes/groupes/liste" className="no_style">
                                     <Button variant="outlined" sx={{ marginRight : '10px' }}>Annuler</Button>
                                 </Link>
                                 <Button type="submit" variant="contained"

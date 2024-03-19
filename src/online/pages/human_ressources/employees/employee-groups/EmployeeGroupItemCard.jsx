@@ -8,51 +8,51 @@ import { Delete, PauseRounded, PlayArrowRounded, Edit, Article } from '@mui/icon
 import { Link } from 'react-router-dom';
 import { getFormatDateTime } from '../../../../../_shared/tools/functions';
 
-export default function BeneficiaryGroupItemCard({beneficiaryGroup, onDeleteBeneficiaryGroup, onUpdateBeneficiaryGroupState}) {
+export default function EmployeeGroupItemCard({employeeGroup, onDeleteEmployeeGroup, onUpdateEmployeeGroupState}) {
 //   const theme = useTheme();
   const [paused, setPaused] = React.useState(false)
   return (
     <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }}>
-      <Tooltip title={beneficiaryGroup?.name}>
-        <CardMedia component="img" width="100" height="100" alt={beneficiaryGroup?.name}
-          src={ beneficiaryGroup?.image ? beneficiaryGroup?.image : "https://mui.com/static/images/cards/real-estate.png"}
+      <Tooltip title={employeeGroup?.name}>
+        <CardMedia component="img" width="100" height="100" alt={employeeGroup?.name}
+          src={ employeeGroup?.image ? employeeGroup?.image : "https://mui.com/static/images/cards/real-estate.png"}
           sx={{ borderRadius: 0.6, height: 100, width: 100}}
         />
       </Tooltip>
       <Stack direction="column" spacing={2} alignItems="center">
         <Stack direction="column" spacing={0.2} alignItems="center">
           <Typography color="text.primary" fontWeight="medium" fontSize={18}>
-            {beneficiaryGroup?.name}
+            {employeeGroup?.name}
           </Typography>
             <Typography component="div" variant="caption" color="text.secondary" fontWeight="regular" >
-              À {`${getFormatDateTime(beneficiaryGroup?.startingDateTime)}`}
+              À {`${getFormatDateTime(employeeGroup?.startingDateTime)}`}
             </Typography>
         </Stack>
         <Stack direction="row" alignItems="center" spacing={1.5}>
           <Tooltip title="Supprimer">
             <IconButton aria-label="delete" size="small" sx={{ flexGrow: 0 }}
-              onClick={()=> onDeleteBeneficiaryGroup(beneficiaryGroup?.id)}>
+              onClick={()=> onDeleteEmployeeGroup(employeeGroup?.id)}>
               <Delete fontSize="small" />
             </IconButton>
           </Tooltip>
-          <Tooltip title={!beneficiaryGroup?.isActive ? 'Activer' : 'Désactiver'}>
+          <Tooltip title={!employeeGroup?.isActive ? 'Activer' : 'Désactiver'}>
             <IconButton
-              aria-label={!beneficiaryGroup?.isActive ? 'play' : 'pause'}
+              aria-label={!employeeGroup?.isActive ? 'play' : 'pause'}
               sx={{ mx: 1 }}
-              onClick={() => onUpdateBeneficiaryGroupState(beneficiaryGroup?.id)}
+              onClick={() => onUpdateEmployeeGroupState(employeeGroup?.id)}
             >
-              {!beneficiaryGroup?.isActive ? <PlayArrowRounded /> : <PauseRounded />}
+              {!employeeGroup?.isActive ? <PlayArrowRounded /> : <PauseRounded />}
             </IconButton>
           </Tooltip>
           <Tooltip title="Modifier">
-            <Link to={`/online/ressources-humaines/beneficiaires/groupes/modifier/${beneficiaryGroup?.id}`} className="no_style">
+            <Link to={`/online/ressources-humaines/employes/groupes/modifier/${employeeGroup?.id}`} className="no_style">
               <IconButton aria-label="edit" size="small">
                 <Edit fontSize="small" />
               </IconButton>
             </Link>
           </Tooltip>
           <Tooltip title="Détails">
-            <Link to={`/online/ressources-humaines/beneficiaires/groupes/details/${beneficiaryGroup?.id}`} className="no_style">
+            <Link to={`/online/ressources-humaines/employes/groupes/details/${employeeGroup?.id}`} className="no_style">
               <IconButton aria-label="edit" size="small">
                 <Article fontSize="small" />
               </IconButton>

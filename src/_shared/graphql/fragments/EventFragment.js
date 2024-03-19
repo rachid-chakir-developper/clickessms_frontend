@@ -2,6 +2,7 @@
 
 import { gql } from '@apollo/client';
 import { BENEFICIARY_MINI_INFOS } from './BeneficiaryFragment';
+import { EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
 
 export const EVENT_BASIC_INFOS = gql`
   fragment EventBasicInfosFragment on EventType {
@@ -13,6 +14,11 @@ export const EVENT_BASIC_INFOS = gql`
     endingDateTime
     description
     isActive
+    folder{
+      id
+      number
+      name
+    }
   }
 `;
 
@@ -33,9 +39,13 @@ export const EVENT_DETAILS = gql`
     beneficiaries{
       ...EventBeneficiaryTypeFragment
     }
+    employee{
+      ...EmployeeBasicInfosFragment
+    }
   }
   ${EVENT_BASIC_INFOS}
   ${EVENT_BENEFICIARY_DETAILS}
+  ${EMPLOYEE_BASIC_INFOS}
 `;
 
 export const EVENT_RECAP_DETAILS = gql`
@@ -45,8 +55,12 @@ export const EVENT_RECAP_DETAILS = gql`
     beneficiaries{
       ...EventBeneficiaryTypeFragment
     }
+    employee{
+      ...EmployeeBasicInfosFragment
+    }
   }
   ${EVENT_BASIC_INFOS}
   ${EVENT_BENEFICIARY_DETAILS}
+  ${EMPLOYEE_BASIC_INFOS}
 `;
 

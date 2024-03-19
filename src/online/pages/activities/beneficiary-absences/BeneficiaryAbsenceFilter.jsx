@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import {
+  TextField,
   Button,
   Grid,
-  IconButton,
-  Stack
+  Stack,
+  IconButton
 } from '@mui/material';
 import styled from '@emotion/styled';
-import TheTextField from '../../../_shared/components/form-fields/TheTextField';
-import TheDateTimePicker from '../../../_shared/components/form-fields/TheDateTimePicker';
+import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
+import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
 import { Close } from '@mui/icons-material';
 
 const Item = styled(Stack)(({ theme }) => ({
@@ -18,10 +19,10 @@ const Item = styled(Stack)(({ theme }) => ({
     color: theme.palette.text.secondary,
   }));
 
-const EmployeeFilter = ({ onFilterChange }) => {
+const BeneficiaryAbsenceFilter = ({ onFilterChange }) => {
   const [filterValues, setFilterValues] = useState({
-    startingDateTime: null,
-    endingDateTime: null,
+    recoveryDate: null,
+    returnDate: null,
     keyword: '',
   });
 
@@ -32,7 +33,7 @@ const EmployeeFilter = ({ onFilterChange }) => {
 
   const handleFilterClear = () => {
     // Pass the filter values to the parent component for handling the filtering logic
-    const filterValuesInit = { startingDateTime: null, endingDateTime: null, keyword: ''}
+    const filterValuesInit = { recoveryDate: null, returnDate: null, keyword: ''}
     setFilterValues(filterValuesInit)
     onFilterChange(filterValuesInit);
   };
@@ -55,19 +56,19 @@ const EmployeeFilter = ({ onFilterChange }) => {
                 <TheDateTimePicker
                     label="De"
                     type="date"
-                    name="startingDateTime"
-                    value={filterValues.startingDateTime}
-                    onChange={(e) => setFilterValues({ ...filterValues, startingDateTime: e })}
+                    name="recoveryDate"
+                    value={filterValues.recoveryDate}
+                    onChange={(e) => setFilterValues({ ...filterValues, recoveryDate: e })}
                 />
             </Item>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
             <Item>
                 <TheDateTimePicker
-                    label="À"
-                    name="endingDateTime"
-                    value={filterValues.endingDateTime}
-                    onChange={(e) => setFilterValues({ ...filterValues, endingDateTime: e })}
+                    label="De"
+                    name="returnDate"
+                    value={filterValues.returnDate}
+                    onChange={(e) => setFilterValues({ ...filterValues, returnDate: e })}
                 />
             </Item>
         </Grid>
@@ -85,4 +86,4 @@ const EmployeeFilter = ({ onFilterChange }) => {
   );
 };
 
-export default EmployeeFilter;
+export default BeneficiaryAbsenceFilter;

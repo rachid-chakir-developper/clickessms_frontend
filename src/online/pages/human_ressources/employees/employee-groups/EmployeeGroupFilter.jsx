@@ -19,7 +19,7 @@ const Item = styled(Stack)(({ theme }) => ({
     color: theme.palette.text.secondary,
   }));
 
-const BeneficiaryGroupFilter = ({ onFilterChange }) => {
+const EmployeeGroupFilter = ({ onFilterChange }) => {
   const [filterValues, setFilterValues] = useState({
     recoveryDate: null,
     returnDate: null,
@@ -86,4 +86,4 @@ const BeneficiaryGroupFilter = ({ onFilterChange }) => {
   );
 };
 
-export default BeneficiaryGroupFilter;
+export default EmployeeGroupFilter;

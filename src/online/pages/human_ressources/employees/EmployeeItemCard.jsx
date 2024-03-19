@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { Stack, Tooltip } from '@mui/material';
 import { Delete, PauseRounded, PlayArrowRounded, Edit, Folder, AccountBox } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import { useFeedBacks } from '../../../_shared/context/feedbacks/FeedBacksProvider';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
 export default function EmployeeItemCard({employee, onDeleteEmployee, onUpdateEmployeeState }) {
 //   const theme = useTheme();
@@ -54,7 +54,7 @@ export default function EmployeeItemCard({employee, onDeleteEmployee, onUpdateEm
             </IconButton>
           </Tooltip>
           <Tooltip title="Modifier">
-            <Link to={`/online/employes/modifier/${employee?.id}`} className="no_style">
+            <Link to={`/online/ressources-humaines/employes/modifier/${employee?.id}`} className="no_style">
               <IconButton aria-label="edit" size="small">
                 <Edit fontSize="small" />
               </IconButton>
@@ -67,7 +67,7 @@ export default function EmployeeItemCard({employee, onDeleteEmployee, onUpdateEm
             </IconButton>
           </Tooltip>}
           <Tooltip title="Détails">
-            <Link to={`/online/employes/details/${employee?.id}`} className="no_style">
+            <Link to={`/online/ressources-humaines/employes/details/${employee?.id}`} className="no_style">
               <IconButton aria-label="edit" size="small">
                 <AccountBox fontSize="small" />
               </IconButton>

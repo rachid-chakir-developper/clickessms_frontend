@@ -13,14 +13,16 @@ import TheTextField from '../../../../_shared/components/form-fields/TheTextFiel
 import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_EVENT } from '../../../../_shared/graphql/queries/EventQueries';
-import { POST_EVENT, PUT_EVENT } from '../../../../_shared/graphql/mutations/EventMutations';
+import { GET_BENEFICIARY_ABSENCE } from '../../../../_shared/graphql/queries/BeneficiaryAbsenceQueries';
+import { POST_BENEFICIARY_ABSENCE, PUT_BENEFICIARY_ABSENCE } from '../../../../_shared/graphql/mutations/BeneficiaryAbsenceMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
 import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
+import SelectCheckmarks from '../../../../_shared/components/form-fields/SelectCheckmarks';
+import { GET_DATAS_BENEFICIARY_ABSENCE } from '../../../../_shared/graphql/queries/DataQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -30,35 +32,34 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function AddEventForm({ idEvent, title}) {
+export default function AddBeneficiaryAbsenceForm({ idBeneficiaryAbsence, title}) {
     const  { setNotifyAlert,  setConfirmDialog} = useFeedBacks();
     const navigate = useNavigate();
     const validationSchema = yup.object({
-        title: yup .string("Entrez le nom d'événement").required("Le nom d'événement est obligatoire")
+        title: yup .string("Entrez le nom d'absence").required("Le nom d'absence est obligatoire")
       });
     const formik = useFormik({
         initialValues: {
-            image : undefined,  number : '', title : '', 
+            number : '', title : '', 
             startingDateTime : dayjs(new Date()), endingDateTime : dayjs(new Date()),
-            description : '', observation : '', isActive : true, beneficiaries: [], employee : null
+            comment : '', observation : '', beneficiaries: [], employee : null, reasons: [], otherReasons: ''
           },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            let { image , ...eventCopy } = values
-            eventCopy.beneficiaries = eventCopy.beneficiaries.map(i => i?.id)
-            eventCopy.employee = eventCopy.employee ? eventCopy.employee.id : null
-            if(idEvent && idEvent != ''){
-                onUpdateEvent({ 
-                    id : eventCopy.id, 
-                    eventData : eventCopy,
-                    image : image,
+            let beneficiaryAbsenceCopy = {...values}
+            beneficiaryAbsenceCopy.beneficiaries = beneficiaryAbsenceCopy.beneficiaries.map(i => i?.id)
+            beneficiaryAbsenceCopy.reasons = beneficiaryAbsenceCopy.reasons.map(i => i?.id)
+            beneficiaryAbsenceCopy.employee = beneficiaryAbsenceCopy.employee ? beneficiaryAbsenceCopy.employee.id : null
+            if(idBeneficiaryAbsence && idBeneficiaryAbsence != ''){
+                onUpdateBeneficiaryAbsence({ 
+                    id : beneficiaryAbsenceCopy.id, 
+                    beneficiaryAbsenceData : beneficiaryAbsenceCopy,
                     }
                 )
             }
-            else createEvent({ 
+            else createBeneficiaryAbsence({ 
                     variables: { 
-                        eventData : eventCopy,
-                        image : image,
+                        beneficiaryAbsenceData : beneficiaryAbsenceCopy
                     } 
                 })
         },
@@ -75,8 +76,14 @@ export default function AddEventForm({ idEvent, title}) {
         error: employeesError, 
         fetchMore:  fetchMoreEmployees 
       } = useQuery(GET_EMPLOYEES, { fetchPolicy: "network-only", variables: { page: 1, limit: 10 }})
+      const { 
+            loading: loadingDatas, 
+            data: dataData, 
+            error: datsError, 
+            fetchMore:  fetchMoreDatas  
+        } = useQuery(GET_DATAS_BENEFICIARY_ABSENCE, { fetchPolicy: "network-only" })
 
-    const [createEvent, { loading : loadingPost }] = useMutation(POST_EVENT, {
+    const [createBeneficiaryAbsence, { loading : loadingPost }] = useMutation(POST_BENEFICIARY_ABSENCE, {
         onCompleted: (data) => {
             console.log(data);
             setNotifyAlert({
@@ -84,19 +91,19 @@ export default function AddEventForm({ idEvent, title}) {
                 message: 'Ajouté avec succès',
                 type: 'success'
             })
-            let { __typename, ...eventCopy } = data.createEvent.event;
-        //   formik.setValues(eventCopy);
-            navigate('/online/activites/evenements/liste');
+            let { __typename, ...beneficiaryAbsenceCopy } = data.createBeneficiaryAbsence.beneficiaryAbsence;
+        //   formik.setValues(beneficiaryAbsenceCopy);
+            navigate('/online/activites/absences-beneficiaires/liste');
         },
-        update(cache, { data: { createEvent } }) {
-            const newEvent = createEvent.event;
+        update(cache, { data: { createBeneficiaryAbsence } }) {
+            const newBeneficiaryAbsence = createBeneficiaryAbsence.beneficiaryAbsence;
           
             cache.modify({
               fields: {
-                events(existingEvents = { totalCount: 0, nodes: [] }) {
+                beneficiaryAbsences(existingBeneficiaryAbsences = { totalCount: 0, nodes: [] }) {
                     return {
-                        totalCount: existingEvents.totalCount + 1,
-                        nodes: [newEvent, ...existingEvents.nodes],
+                        totalCount: existingBeneficiaryAbsences.totalCount + 1,
+                        nodes: [newBeneficiaryAbsence, ...existingBeneficiaryAbsences.nodes],
                     };
                 },
               },
@@ -111,7 +118,7 @@ export default function AddEventForm({ idEvent, title}) {
             })
         },
     })
-    const [updateEvent, { loading : loadingPut }] = useMutation(PUT_EVENT, {
+    const [updateBeneficiaryAbsence, { loading : loadingPut }] = useMutation(PUT_BENEFICIARY_ABSENCE, {
         onCompleted: (data) => {
             console.log(data);
             setNotifyAlert({
@@ -119,24 +126,24 @@ export default function AddEventForm({ idEvent, title}) {
                 message: 'Modifié avec succès',
                 type: 'success'
             })
-            let { __typename, ...eventCopy } = data.updateEvent.event;
-        //   formik.setValues(eventCopy);
-            navigate('/online/activites/evenements/liste');
+            let { __typename, ...beneficiaryAbsenceCopy } = data.updateBeneficiaryAbsence.beneficiaryAbsence;
+        //   formik.setValues(beneficiaryAbsenceCopy);
+            navigate('/online/activites/absences-beneficiaires/liste');
         },
-        update(cache, { data: { updateEvent } }) {
-            const updatedEvent = updateEvent.event;
+        update(cache, { data: { updateBeneficiaryAbsence } }) {
+            const updatedBeneficiaryAbsence = updateBeneficiaryAbsence.beneficiaryAbsence;
           
             cache.modify({
               fields: {
-                events(existingEvents = { totalCount: 0, nodes: [] }, { readField }) {
+                beneficiaryAbsences(existingBeneficiaryAbsences = { totalCount: 0, nodes: [] }, { readField }) {
                     
-                    const updatedEvents = existingEvents.nodes.map((event) =>
-                        readField('id', event) === updatedEvent.id ? updatedEvent : event
+                    const updatedBeneficiaryAbsences = existingBeneficiaryAbsences.nodes.map((beneficiaryAbsence) =>
+                        readField('id', beneficiaryAbsence) === updatedBeneficiaryAbsence.id ? updatedBeneficiaryAbsence : beneficiaryAbsence
                     );
             
                     return {
-                        totalCount: existingEvents.totalCount,
-                        nodes: updatedEvents,
+                        totalCount: existingBeneficiaryAbsences.totalCount,
+                        nodes: updatedBeneficiaryAbsences,
                     };
                 },
               },
@@ -151,40 +158,40 @@ export default function AddEventForm({ idEvent, title}) {
             })
         },
     })
-    const onUpdateEvent = (variables) => {
+    const onUpdateBeneficiaryAbsence = (variables) => {
         setConfirmDialog({
           isOpen: true,
           title: 'ATTENTION',
           subTitle: "Voulez vous vraiment modifier ?",
           onConfirm: () => { setConfirmDialog({isOpen: false})
-                updateEvent({ variables })
+                updateBeneficiaryAbsence({ variables })
             }
         })
       }
-    const [getEvent, { loading : loadingEvent }] = useLazyQuery(GET_EVENT, {
+    const [getBeneficiaryAbsence, { loading : loadingBeneficiaryAbsence }] = useLazyQuery(GET_BENEFICIARY_ABSENCE, {
         fetchPolicy: "network-only",
         onCompleted: (data) => {
-            let { __typename, ...eventCopy1 } = data.event;
-            let { folder, ...eventCopy } = eventCopy1;
-            eventCopy.startingDateTime = dayjs(eventCopy.startingDateTime)
-            eventCopy.endingDateTime = dayjs(eventCopy.endingDateTime)
-            eventCopy.beneficiaries = eventCopy.beneficiaries ? eventCopy.beneficiaries.map(i => i?.beneficiary) : []
-            formik.setValues(eventCopy);
+            let { __typename, ...beneficiaryAbsenceCopy1 } = data.beneficiaryAbsence;
+            let { folder, ...beneficiaryAbsenceCopy } = beneficiaryAbsenceCopy1;
+            beneficiaryAbsenceCopy.startingDateTime = dayjs(beneficiaryAbsenceCopy.startingDateTime)
+            beneficiaryAbsenceCopy.endingDateTime = dayjs(beneficiaryAbsenceCopy.endingDateTime)
+            beneficiaryAbsenceCopy.beneficiaries = beneficiaryAbsenceCopy.beneficiaries ? beneficiaryAbsenceCopy.beneficiaries.map(i => i?.beneficiary) : []
+            formik.setValues(beneficiaryAbsenceCopy);
         },
         onError: (err) => console.log(err),
     })
     React.useEffect(()=>{
-        if(idEvent){
-            getEvent(({ variables: { id: idEvent } }));
+        if(idBeneficiaryAbsence){
+            getBeneficiaryAbsence(({ variables: { id: idBeneficiaryAbsence } }));
         }
-    }, [idEvent])
+    }, [idBeneficiaryAbsence])
     return (
         <Box sx={{ flexGrow: 1 }}>
             <Typography component="div" variant="h5">
                 {title} {formik.values.number}
             </Typography>
-            { loadingEvent && <ProgressService type="form" />}
-            { !loadingEvent &&
+            { loadingBeneficiaryAbsence && <ProgressService type="form" />}
+            { !loadingBeneficiaryAbsence &&
                 <form onSubmit={formik.handleSubmit}>
                     <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                         <Grid xs={2} sm={4} md={4}>
@@ -205,15 +212,6 @@ export default function AddEventForm({ idEvent, title}) {
                                     helperText={formik.touched.title && formik.errors.title}
                                     disabled={loadingPost || loadingPut}
                                 />
-                            </Item>
-                        </Grid>
-                        <Grid xs={2} sm={4} md={4}>
-                            <Item>
-                                <ImageFileField variant="outlined" label="Image"
-                                    imageValue={formik.values.image}
-                                    onChange={(imageFile) => formik.setFieldValue('image', imageFile)}
-                                    disabled={loadingPost || loadingPut}
-                                    />
                             </Item>
                         </Grid>
                         <Grid xs={2} sm={4} md={4}>
@@ -253,14 +251,31 @@ export default function AddEventForm({ idEvent, title}) {
                                     onChange={(e, newValue) => formik.setFieldValue('beneficiaries', newValue)}/>
                             </Item>
                         </Grid>
+                        <Grid xs={2} sm={4} md={4} item>
+                            <Item>
+                                <SelectCheckmarks  options={dataData?.absenceReasons} label="Motifs"
+                                    placeholder="Ajouter un motif"
+                                    limitTags={3}
+                                    value={formik.values.reasons}
+                                    onChange={(e, newValue) => formik.setFieldValue('reasons', newValue)}/>
+                            </Item>
+                            <Item>
+                                <TheTextField variant="outlined" label="Autres motifs"
+                                    value={formik.values.otherReasons}
+                                    onChange={(e) => formik.setFieldValue('otherReasons', e.target.value)}
+                                    helperText="Si vous ne trouvez pas le motif dans la liste dessus."
+                                    disabled={loadingPost || loadingPut}
+                                />
+                            </Item>
+                        </Grid>
                         <Grid xs={12} sm={12} md={12}>
                             <Divider variant="middle" />
                         </Grid>
                         <Grid xs={12} sm={6} md={6}>
                             <Item>
-                                <TheTextField variant="outlined" label="Description" multiline rows={4}
-                                    value={formik.values.description}
-                                    onChange={(e) => formik.setFieldValue('description', e.target.value)}
+                                <TheTextField variant="outlined" label="Commentaire" multiline rows={4}
+                                    value={formik.values.comment}
+                                    onChange={(e) => formik.setFieldValue('comment', e.target.value)}
                                     disabled={loadingPost || loadingPut}
                                     />
                             </Item>
@@ -276,7 +291,7 @@ export default function AddEventForm({ idEvent, title}) {
                         </Grid>
                         <Grid xs={12} sm={12} md={12}>
                             <Item sx={{ justifyContent: 'end', flexDirection : 'row' }}>
-                                <Link to="/online/activites/evenements/liste" className="no_style">
+                                <Link to="/online/activites/absences-beneficiaires/liste" className="no_style">
                                     <Button variant="outlined" sx={{ marginRight : '10px' }}>Annuler</Button>
                                 </Link>
                                 <Button type="submit" variant="contained"

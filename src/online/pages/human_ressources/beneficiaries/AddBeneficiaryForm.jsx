@@ -288,36 +288,6 @@ export default function AddBeneficiaryForm({ idBeneficiary, title}) {
                         <Grid xs={12} sm={12} md={12}>
                             <Divider variant="middle" />
                         </Grid>
-                        <Grid xs={2} sm={4} md={4}>
-                            <Item>
-                                <TheTextField variant="outlined" label="IBAN (RIB)"
-                                    value={formik.values.iban}
-                                    onChange={(e) => formik.setFieldValue('iban', e.target.value)}
-                                    disabled={loadingPost || loadingPut}
-                                    />
-                            </Item>
-                        </Grid>
-                        <Grid xs={2} sm={4} md={4}>
-                            <Item>
-                                <TheTextField variant="outlined" label="BIC"
-                                    value={formik.values.bic}
-                                    onChange={(e) => formik.setFieldValue('bic', e.target.value)}
-                                    disabled={loadingPost || loadingPut}
-                                    />
-                            </Item>
-                        </Grid>
-                        <Grid xs={2} sm={4} md={4}>
-                            <Item>
-                                <TheTextField variant="outlined" label="Nom de la banque"
-                                    value={formik.values.bankName}
-                                    onChange={(e) => formik.setFieldValue('bankName', e.target.value)}
-                                    disabled={loadingPost || loadingPut}
-                                    />
-                            </Item>
-                        </Grid>
-                        <Grid xs={12} sm={12} md={12}>
-                            <Divider variant="middle" />
-                        </Grid>
                         <Grid xs={12} sm={6} md={6}>
                             <Item>
                                 <TheTextField variant="outlined" label="Description" multiline rows={4}

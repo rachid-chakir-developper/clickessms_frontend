@@ -9,13 +9,13 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
-import TheTextField from '../../../_shared/components/form-fields/TheTextField';
-import ImageFileField from '../../../_shared/components/form-fields/ImageFileField';
-import TheDesktopDatePicker from '../../../_shared/components/form-fields/TheDesktopDatePicker';
-import { useFeedBacks } from '../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_EMPLOYEE } from '../../../_shared/graphql/queries/EmployeeQueries';
-import { POST_EMPLOYEE, PUT_EMPLOYEE } from '../../../_shared/graphql/mutations/EmployeeMutations';
-import ProgressService from '../../../_shared/services/feedbacks/ProgressService';
+import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
+import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
+import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { GET_EMPLOYEE } from '../../../../_shared/graphql/queries/EmployeeQueries';
+import { POST_EMPLOYEE, PUT_EMPLOYEE } from '../../../../_shared/graphql/mutations/EmployeeMutations';
+import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -75,7 +75,7 @@ export default function AddEmployeeForm({ idEmployee, title}) {
             })
             let { __typename, ...employeeCopy } = data.createEmployee.employee;
         //   formik.setValues(employeeCopy);
-            navigate('/online/employes/liste');
+            navigate('/online/ressources-humaines/employes/liste');
         },
         update(cache, { data: { createEmployee } }) {
             const newEmployee = createEmployee.employee;
@@ -110,7 +110,7 @@ export default function AddEmployeeForm({ idEmployee, title}) {
             })
             let { __typename, ...employeeCopy } = data.updateEmployee.employee;
         //   formik.setValues(employeeCopy);
-            navigate('/online/employes/liste');
+            navigate('/online/ressources-humaines/employes/liste');
         },
         update(cache, { data: { updateEmployee } }) {
             const updatedEmployee = updateEmployee.employee;
@@ -383,7 +383,7 @@ export default function AddEmployeeForm({ idEmployee, title}) {
                         </Grid>
                         <Grid xs={12} sm={12} md={12}>
                             <Item sx={{ justifyContent: 'end', flexDirection : 'row' }}>
-                                <Link to="/online/employes/liste" className="no_style">
+                                <Link to="/online/ressources-humaines/employes/liste" className="no_style">
                                     <Button variant="outlined" sx={{ marginRight : '10px' }}>Annuler</Button>
                                 </Link>
                                 <Button type="submit" variant="contained"

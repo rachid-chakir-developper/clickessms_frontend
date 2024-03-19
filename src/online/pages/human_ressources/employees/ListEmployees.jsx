@@ -5,15 +5,15 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Alert, Button, Stack } from '@mui/material';
 import EmployeeItemCard from './EmployeeItemCard';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
-import { Add } from '@mui/icons-material';
+import { Add, List } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
-import { useFeedBacks } from '../../../_shared/context/feedbacks/FeedBacksProvider';
-import { DELETE_EMPLOYEE, PUT_EMPLOYEE_STATE } from '../../../_shared/graphql/mutations/EmployeeMutations';
-import { GET_EMPLOYEES } from '../../../_shared/graphql/queries/EmployeeQueries';
-import ProgressService from '../../../_shared/services/feedbacks/ProgressService';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { DELETE_EMPLOYEE, PUT_EMPLOYEE_STATE } from '../../../../_shared/graphql/mutations/EmployeeMutations';
+import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
+import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import EmployeeFilter from './EmployeeFilter';
-import PaginationControlled from '../../../_shared/components/helpers/PaginationControlled';
+import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -144,7 +144,29 @@ export default function ListEmployees() {
     <Grid container spacing={2} >
         <Grid item="true" xs={12}>
             <Box sx={{display : 'flex', justifyContent : 'flex-end', my : 3}}>
-              <Link to="/online/employes/ajouter" className="no_style">
+              <Link to="/online/ressources-humaines/employes/groupes" className="no_style">
+                <Button
+                      variant="contained"
+                      disableElevation
+                      color="inherit"
+                      sx={{ mr: 2 }}
+                      endIcon={<List />}
+                  >
+                      Liste des groupes
+                </Button>
+              </Link>
+              <Link to="/online/ressources-humaines/employes/groupes/ajouter" className="no_style">
+                <Button
+                      variant="contained"
+                      disableElevation
+                      color="inherit"
+                      sx={{ mr: 2 }}
+                      endIcon={<Add />}
+                  >
+                      Ajouter un groupe
+                </Button>
+              </Link>
+              <Link to="/online/ressources-humaines/employes/ajouter" className="no_style">
                 <Button variant="contained" endIcon={<Add />} >
                     Ajouter un employé
                 </Button>

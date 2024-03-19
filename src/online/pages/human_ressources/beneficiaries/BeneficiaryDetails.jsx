@@ -157,20 +157,6 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
               Date d'embauche: {getFormatDate(hiringDate)}
             </Typography>
           </Paper>
-          <Typography variant="h6" gutterBottom sx={{ mt:3 }}>
-            Informations Bancaires
-          </Typography>
-          <Paper sx={{ padding : 2}} variant="outlined">
-            <Typography variant="body1">
-              IBAN: {iban}
-            </Typography>
-            <Typography variant="body1">
-              BIC: {bic}
-            </Typography>
-            <Typography variant="body1">
-              Nom de la banque: {bankName}
-            </Typography>
-          </Paper>
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>

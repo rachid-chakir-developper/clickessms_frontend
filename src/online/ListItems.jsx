@@ -236,7 +236,7 @@ function  SecondaryListItems({open}){
                 <ListItemText primary="Beneficiaires" />
               </ListItemButton>
             </StyledNavLink>
-            <StyledNavLink to="/online/employes">
+            <StyledNavLink to="/online/ressources-humaines/employes">
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemIcon>
                   <Engineering />
@@ -297,6 +297,14 @@ function  MoreItems({open}){
                   <CalendarMonth />
                 </ListItemIcon>
                 <ListItemText primary="Evénéments" />
+              </ListItemButton>
+            </StyledNavLink>
+            <StyledNavLink to="/online/activites/absences-beneficiaires">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <CalendarMonth />
+                </ListItemIcon>
+                <ListItemText primary="Absences" />
               </ListItemButton>
             </StyledNavLink>
           </List>

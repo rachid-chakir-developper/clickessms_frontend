@@ -16,7 +16,6 @@ import {
 } from "react-router-dom";
 import Dashboard from './pages/dashboard/Dashboard';
 import ListItems from './ListItems';
-import Employees from './pages/employees/Employees';
 import Users from './pages/users/Users';
 import Materials from './pages/materials/Materials';
 import Vehicles from './pages/vehicles/Vehicles';
@@ -171,12 +170,11 @@ export default function Online() {
           <Route path={`partenariats/*`} element={<Partnerships />} />
           <Route path={`achats/*`} element={<Purchases />} />
           <Route path={`ventes/*`} element={<Sales />} />
-          <Route path={`ressources-humaines/*`} element={<Humans />} />
           <Route path={`activites/*`} element={<Activities />} />
           <Route path={`qualites/*`} element={<Qualities />} />
           <Route path={`administratif/*`} element={<Administratives />} />
-          
-          <Route path={`employes/*`} element={<Employees />} />
+          <Route path={`ressources-humaines/*`} element={<Humans />} />
+
           <Route path={`utilisateurs/*`} element={<Users />} />
           <Route path={`parametres/*`} element={<Settings />} />
           <Route path={`chat/*`} element={<Chat />} />

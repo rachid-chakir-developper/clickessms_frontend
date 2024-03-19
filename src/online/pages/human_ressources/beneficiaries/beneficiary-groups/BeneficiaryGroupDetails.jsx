@@ -4,12 +4,10 @@ import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {Box, Grid, Paper, ButtonBase, Typography, Divider,} from '@mui/material';
 
-import { UDESIRABLE_EVENT_RECAP } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
-import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import TitlebarImageList from '../../../_shared/components/media/TitlebarImageList';
-import { getFormatDateTime } from '../../../../_shared/tools/functions';
-import PersonCard from '../../../_shared/components/persons/PersonCard';
-import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
+import { BENEFICIARY_GROUP_RECAP } from '../../../../../_shared/graphql/queries/BeneficiaryGroupQueries';
+import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
+import { getFormatDateTime } from '../../../../../_shared/tools/functions';
+import BeneficiaryItemCard from '../../../human_ressources/beneficiaries/BeneficiaryItemCard';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -19,30 +17,30 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function UndesirableEventDetails() {
-  let { idUndesirableEvent } = useParams();
-  const [getUndesirableEvent, { 
-    loading : loadingUndesirableEvent,
-    data: undesirableEventData, 
-    error: undesirableEventError, 
-  }] = useLazyQuery(UDESIRABLE_EVENT_RECAP)
+export default function BeneficiaryGroupDetails() {
+  let { idBeneficiaryGroup } = useParams();
+  const [getBeneficiaryGroup, { 
+    loading : loadingBeneficiaryGroup,
+    data: beneficiaryGroupData, 
+    error: beneficiaryGroupError, 
+  }] = useLazyQuery(BENEFICIARY_GROUP_RECAP)
   React.useEffect(()=>{
-      if(idUndesirableEvent){
-          getUndesirableEvent(({ variables: { id: idUndesirableEvent } }));
+      if(idBeneficiaryGroup){
+          getBeneficiaryGroup(({ variables: { id: idBeneficiaryGroup } }));
       }
-  }, [idUndesirableEvent])
+  }, [idBeneficiaryGroup])
 
-  if(loadingUndesirableEvent) return <ProgressService type="form" />
+  if(loadingBeneficiaryGroup) return <ProgressService type="form" />
   return (
     <>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
-            <UndesirableEventMiniInfos undesirableEvent={undesirableEventData?.undesirableEvent}/>
+            <BeneficiaryGroupMiniInfos beneficiaryGroup={beneficiaryGroupData?.beneficiaryGroup}/>
           </Grid>
-          {/* <Grid item xs={5}>
-            <UndesirableEventOtherInfos undesirableEvent={undesirableEventData?.undesirableEvent}/>
-          </Grid> */}
+          <Grid item xs={5}>
+            <BeneficiaryGroupOtherInfos beneficiaryGroup={beneficiaryGroupData?.beneficiaryGroup}/>
+          </Grid>
           <Grid item xs={12} sx={{marginTop: 3, marginBottom: 3}}>
             <Divider/>
           </Grid>
@@ -52,7 +50,7 @@ export default function UndesirableEventDetails() {
                 Description
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {undesirableEventData?.undesirableEvent?.description}
+                {beneficiaryGroupData?.beneficiaryGroup?.description}
               </Typography>
             </Paper>
           </Grid>
@@ -62,7 +60,7 @@ export default function UndesirableEventDetails() {
                 Observation
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {undesirableEventData?.undesirableEvent?.observation}
+                {beneficiaryGroupData?.beneficiaryGroup?.observation}
               </Typography>
             </Paper>
           </Grid>
@@ -79,7 +77,7 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-function UndesirableEventMiniInfos({undesirableEvent}) {
+function BeneficiaryGroupMiniInfos({beneficiaryGroup}) {
   return (
     <Paper
       variant="outlined"
@@ -93,30 +91,30 @@ function UndesirableEventMiniInfos({undesirableEvent}) {
       }}
     >
       <Grid container spacing={2}>
-        {(undesirableEvent?.image && undesirableEvent?.image != '') &&
+        {(beneficiaryGroup?.image && beneficiaryGroup?.image != '') &&
         <Grid item>
           <ButtonBase sx={{ width: 128, height: 'auto' }}>
-            <Img alt="complex" src={undesirableEvent?.image} />
+            <Img alt="complex" src={beneficiaryGroup?.image} />
           </ButtonBase>
         </Grid>}
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
-                Réference : <b>{undesirableEvent?.number}</b>
+                Réference : <b>{beneficiaryGroup?.number}</b>
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {undesirableEvent?.title}
+                {beneficiaryGroup?.name}
               </Typography>
               <Divider sx={{marginTop : 2, marginBottom : 2}}/>
               <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b> {`${getFormatDateTime(undesirableEvent?.createdAt)}`} <br />
-                <b>Dernière modification: </b>{`${getFormatDateTime(undesirableEvent?.updatedAt)}`}
+                <b>Crée le: </b> {`${getFormatDateTime(beneficiaryGroup?.createdAt)}`} <br />
+                <b>Dernière modification: </b>{`${getFormatDateTime(beneficiaryGroup?.updatedAt)}`}
               </Typography>
               <Divider sx={{marginTop : 2, marginBottom : 2}}/>
               <Typography variant="body2" color="text.secondary">
-                <b>Date début prévue: </b> {`${getFormatDateTime(undesirableEvent?.startingDateTime)}`} <br />
-                <b>Date fin prévue: </b> {`${getFormatDateTime(undesirableEvent?.endingDateTime)}`}
+                <b>Date début prévue: </b> {`${getFormatDateTime(beneficiaryGroup?.startingDateTime)}`} <br />
+                <b>Date fin prévue: </b> {`${getFormatDateTime(beneficiaryGroup?.endingDateTime)}`}
               </Typography>
             </Grid>
           </Grid>
@@ -126,7 +124,7 @@ function UndesirableEventMiniInfos({undesirableEvent}) {
   );
 }
 
-function UndesirableEventOtherInfos({undesirableEvent}) {
+function BeneficiaryGroupOtherInfos({beneficiaryGroup}) {
   return (
     <Paper
       variant="outlined"
@@ -139,10 +137,10 @@ function UndesirableEventOtherInfos({undesirableEvent}) {
       }}
     >
       <Typography gutterBottom variant="subtitle3" component="h3">
-        Les Bénificiaires
+        Les bénificiaires
       </Typography>
       <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-        {undesirableEvent?.beneficiaries?.map((beneficiary, index) => (
+        {beneficiaryGroup?.beneficiaries?.map((beneficiary, index) => (
           <Grid xs={12} sm={12} md={12} key={index}>
             <Item>
               <BeneficiaryItemCard 

@@ -5,7 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Alert, Button, Stack } from '@mui/material';
 import BeneficiaryItemCard from './BeneficiaryItemCard';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
-import { Add } from '@mui/icons-material';
+import { Add, List } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
@@ -144,6 +144,28 @@ export default function ListBeneficiaries() {
     <Grid container spacing={2} >
         <Grid item="true" xs={12}>
             <Box sx={{display : 'flex', justifyContent : 'flex-end', my : 3}}>
+              <Link to="/online/ressources-humaines/beneficiaires/groupes" className="no_style">
+                <Button
+                      variant="contained"
+                      disableElevation
+                      color="inherit"
+                      sx={{ mr: 2 }}
+                      endIcon={<List />}
+                  >
+                      Liste des groupes
+                </Button>
+              </Link>
+              <Link to="/online/ressources-humaines/beneficiaires/groupes/ajouter" className="no_style">
+                <Button
+                      variant="contained"
+                      disableElevation
+                      color="inherit"
+                      sx={{ mr: 2 }}
+                      endIcon={<Add />}
+                  >
+                      Ajouter un groupe
+                </Button>
+              </Link>
               <Link to="/online/ressources-humaines/beneficiaires/ajouter" className="no_style">
                 <Button variant="contained" endIcon={<Add />} >
                     Ajouter un bénéficiaire

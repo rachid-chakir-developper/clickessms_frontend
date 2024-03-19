@@ -4,13 +4,23 @@ import CardMedia from '@mui/material/CardMedia';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { Stack, Tooltip } from '@mui/material';
-import { Delete, PauseRounded, PlayArrowRounded, Edit, Article } from '@mui/icons-material';
+import { Delete, PauseRounded, PlayArrowRounded, Edit, Article, Folder } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
 export default function EventItemCard({event, onDeleteEvent, onUpdateEventState}) {
 //   const theme = useTheme();
-  const [paused, setPaused] = React.useState(false)
+const  { setDialogListLibrary } = useFeedBacks();
+const onOpenDialogListLibrary = (folderParent) => {
+    setDialogListLibrary({
+      isOpen: true,
+      folderParent,
+      onClose: () => { 
+          setDialogListLibrary({isOpen: false})
+        }
+    })
+}
   return (
     <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }}>
       <Tooltip title={event?.title}>
@@ -51,6 +61,12 @@ export default function EventItemCard({event, onDeleteEvent, onUpdateEventState}
               </IconButton>
             </Link>
           </Tooltip>
+          {event?.folder && <Tooltip title="Pièces jointes">
+            <IconButton aria-label="Attachment" size="small" sx={{ flexGrow: 0 }}
+              onClick={()=> onOpenDialogListLibrary(event?.folder)}>
+              <Folder fontSize="small" />
+            </IconButton>
+          </Tooltip>}
           <Tooltip title="Détails">
             <Link to={`/online/activites/evenements/details/${event?.id}`} className="no_style">
               <IconButton aria-label="edit" size="small">

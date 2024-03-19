@@ -9,10 +9,10 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { GET_GROUPS } from '../../../../_shared/graphql/queries/UserQueries';
-import { DELETE_GROUP} from '../../../../_shared/graphql/mutations/UserMutations';
+import { GET_DATAS } from '../../../../_shared/graphql/queries/DataQueries';
+import { DELETE_DATA } from '../../../../_shared/graphql/mutations/DataMutations';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import DialogAddGroup from './DialogAddGroup';
+import DialogAddData from './DialogAddData';
 import { Alert, Avatar, List, ListItem, ListItemAvatar, ListItemText, Tooltip } from '@mui/material';
 import { Delete, Edit, Group } from '@mui/icons-material';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
@@ -26,22 +26,22 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function DialogListGroups({open, onClose}) {
+export default function DialogListDatas({open, onClose, data}) {
     const [openDialog, setOpenDialog] = React.useState(false);
     const  { setNotifyAlert,  setConfirmDialog} = useFeedBacks();
-    const [groupToEdit, setGroupToEdit] = React.useState()
-    const [getGroups, { loading : loadingGroups, data: groupsData, }] = useLazyQuery(GET_GROUPS)
+    const [dataToEdit, setDataToEdit] = React.useState()
+    const [getDatas, { loading : loadingDatas, data: datasData }] = useLazyQuery(GET_DATAS)
     React.useEffect(
         () => {
             if(open) {
-                getGroups();
+            getDatas(({ variables: { typeData: data.type } }));
             }
         },
         [open],
     );
-    const [deleteGroup, { loading : loadingDelete }] = useMutation(DELETE_GROUP, {
+    const [deleteData, { loading : loadingDelete }] = useMutation(DELETE_DATA, {
         onCompleted: (datas) => {
-            if(datas.deleteGroup.deleted){
+            if(datas.deleteData.deleted){
             setNotifyAlert({
                 isOpen: true,
                 message: 'Supprimé avec succès',
@@ -55,22 +55,22 @@ export default function DialogListGroups({open, onClose}) {
             })
             } 
         },
-        update(cache, { data: { deleteGroup } }) {
-            console.log('Updating cache after deletion:', deleteGroup);
+        update(cache, { data: { deleteData } }) {
+            console.log('Updating cache after deletion:', deleteData);
           
-            const deletedGroupId = deleteGroup.id;
+            const deletedDataId = deleteData.id;
           
             cache.modify({
               fields: {
-                groups(existingGroups = [], { readField }) {
+                datas(existingDatas = [], { readField }) {
           
-                    const updatedGroups = existingGroups.filter((group) =>
-                        readField('id', group) !== deletedGroupId
+                    const updatedDatas = existingDatas.filter((data) =>
+                        readField('id', data) !== deletedDataId
                     );
             
-                    console.log('Updated groups:', updatedGroups);
+                    console.log('Updated datas:', updatedDatas);
             
-                    return updatedGroups;
+                    return updatedDatas;
                 },
               },
             });
@@ -95,17 +95,17 @@ export default function DialogListGroups({open, onClose}) {
     };
     const handleClickEdit = (data) => {
         setOpenDialog(true);
-        setGroupToEdit(data);
+        setDataToEdit(data);
     };
     
 
-    const onDeleteGroup = (id) => {
+    const onDeleteData = (id) => {
         setConfirmDialog({
           isOpen: true,
           title: 'ATTENTION',
           subTitle: "Voulez vous vraiment supprimer ?",
           onConfirm: () => { setConfirmDialog({isOpen: false})
-                        deleteGroup({ variables: { id : id } })
+                        deleteData({ variables: { id : id } })
                       }
         })
     }
@@ -120,7 +120,7 @@ export default function DialogListGroups({open, onClose}) {
             fullWidth
         >
             <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                Liste des groupes
+                Liste des éléments "{data?.name}"
             </DialogTitle>
             <IconButton
                 aria-label="close"
@@ -136,21 +136,21 @@ export default function DialogListGroups({open, onClose}) {
             </IconButton>
             <DialogContent dividers>
                 <List dense={true}>
-                {loadingGroups && <ProgressService type="notification" />}
-                {groupsData?.groups?.length < 1 && !loadingGroups && <Alert severity="warning">La liste est vide pour le moment !</Alert>}
-                {groupsData?.groups?.map((group, index) => {
+                {loadingDatas && <ProgressService type="notification" />}
+                {datasData?.datas?.length < 1 && !loadingDatas && <Alert severity="warning">La liste est vide pour le moment !</Alert>}
+                {datasData?.datas?.map((data, index) => {
                     return <ListItem key={index}
                         secondaryAction={
                             <>
                                 <Tooltip title="Modifier">
                                     <IconButton edge="end" aria-label="supprimer"
-                                    onClick={()=> onDeleteGroup(group?.id)}>
+                                    onClick={()=> onDeleteData(data?.id)}>
                                         <Delete />
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip title="Modifier">
                                     <IconButton edge="end" aria-label="modifier"
-                                    onClick={() => handleClickEdit(group)}>
+                                    onClick={() => handleClickEdit(data)}>
                                         <Edit />
                                     </IconButton>
                                 </Tooltip>
@@ -163,7 +163,7 @@ export default function DialogListGroups({open, onClose}) {
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                        primary={group?.name}
+                        primary={data?.name}
                     />
                     </ListItem>
                 })}
@@ -175,7 +175,7 @@ export default function DialogListGroups({open, onClose}) {
                 </Button>
             </DialogActions>
         </BootstrapDialog>
-        <DialogAddGroup open={openDialog} onClose={closeDialog} groupToEdit={groupToEdit}/>
+        <DialogAddData open={openDialog} onClose={closeDialog} data={data} dataToEdit={dataToEdit}/>
     </div>
   );
 }

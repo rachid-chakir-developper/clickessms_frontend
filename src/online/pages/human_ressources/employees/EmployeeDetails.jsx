@@ -5,8 +5,8 @@ import { Box, Divider, Paper, Stack, alpha } from '@mui/material';
 import { Grid, Typography, Avatar, Card, CardContent } from '@mui/material';
 import dayjs from 'dayjs'; // Assurez-vous d'importer dayjs si vous l'utilisez pour la gestion des dates
 
-import { GET_EMPLOYEE } from '../../../_shared/graphql/queries/EmployeeQueries';
-import { getFormatDate, getFormatDateTime } from '../../../_shared/tools/functions';
+import { GET_EMPLOYEE } from '../../../../_shared/graphql/queries/EmployeeQueries';
+import { getFormatDate, getFormatDateTime } from '../../../../_shared/tools/functions';
 
 export default function EmployeeDetails() {
   let { idEmployee } = useParams();

@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
-export default function UndesirableEventItemCard({undesirableEvent, onDeleteUndesirableEvent, onUpdateUndesirableEventState}) {
+export default function BeneficiaryAbsenceItemCard({beneficiaryAbsence, onDeleteBeneficiaryAbsence}) {
 //   const theme = useTheme();
 const  { setDialogListLibrary } = useFeedBacks();
 const onOpenDialogListLibrary = (folderParent) => {
@@ -23,52 +23,43 @@ const onOpenDialogListLibrary = (folderParent) => {
 }
   return (
     <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }}>
-      <Tooltip title={undesirableEvent?.title}>
-        <CardMedia component="img" width="100" height="100" alt={undesirableEvent?.title}
-          src={ undesirableEvent?.image ? undesirableEvent?.image : "https://mui.com/static/images/cards/real-estate.png"}
+      <Tooltip title={beneficiaryAbsence?.title}>
+        <CardMedia component="img" width="100" height="100" alt={beneficiaryAbsence?.title}
+          src={ beneficiaryAbsence?.image ? beneficiaryAbsence?.image : "https://mui.com/static/images/cards/real-estate.png"}
           sx={{ borderRadius: 0.6, height: 100, width: 100}}
         />
       </Tooltip>
       <Stack direction="column" spacing={2} alignItems="center">
         <Stack direction="column" spacing={0.2} alignItems="center">
           <Typography color="text.primary" fontWeight="medium" fontSize={18}>
-            {undesirableEvent?.title}
+            {beneficiaryAbsence?.title}
           </Typography>
             <Typography component="div" variant="caption" color="text.secondary" fontWeight="regular" >
-              À {`${getFormatDateTime(undesirableEvent?.startingDateTime)}`}
+              À {`${getFormatDateTime(beneficiaryAbsence?.startingDateTime)}`}
             </Typography>
         </Stack>
         <Stack direction="row" alignItems="center" spacing={1.5}>
           <Tooltip title="Supprimer">
             <IconButton aria-label="delete" size="small" sx={{ flexGrow: 0 }}
-              onClick={()=> onDeleteUndesirableEvent(undesirableEvent?.id)}>
+              onClick={()=> onDeleteBeneficiaryAbsence(beneficiaryAbsence?.id)}>
               <Delete fontSize="small" />
             </IconButton>
           </Tooltip>
-          <Tooltip title={!undesirableEvent?.isActive ? 'Activer' : 'Désactiver'}>
-            <IconButton
-              aria-label={!undesirableEvent?.isActive ? 'play' : 'pause'}
-              sx={{ mx: 1 }}
-              onClick={() => onUpdateUndesirableEventState(undesirableEvent?.id)}
-            >
-              {!undesirableEvent?.isActive ? <PlayArrowRounded /> : <PauseRounded />}
-            </IconButton>
-          </Tooltip>
           <Tooltip title="Modifier">
-            <Link to={`/online/qualites/evenements-indesirables/modifier/${undesirableEvent?.id}`} className="no_style">
+            <Link to={`/online/activites/absences-beneficiaires/modifier/${beneficiaryAbsence?.id}`} className="no_style">
               <IconButton aria-label="edit" size="small">
                 <Edit fontSize="small" />
               </IconButton>
             </Link>
           </Tooltip>
-          {undesirableEvent?.folder && <Tooltip title="Pièces jointes">
+          {beneficiaryAbsence?.folder && <Tooltip title="Pièces jointes">
             <IconButton aria-label="Attachment" size="small" sx={{ flexGrow: 0 }}
-              onClick={()=> onOpenDialogListLibrary(undesirableEvent?.folder)}>
+              onClick={()=> onOpenDialogListLibrary(beneficiaryAbsence?.folder)}>
               <Folder fontSize="small" />
             </IconButton>
           </Tooltip>}
           <Tooltip title="Détails">
-            <Link to={`/online/qualites/evenements-indesirables/details/${undesirableEvent?.id}`} className="no_style">
+            <Link to={`/online/activites/absences-beneficiaires/details/${beneficiaryAbsence?.id}`} className="no_style">
               <IconButton aria-label="edit" size="small">
                 <Article fontSize="small" />
               </IconButton>
