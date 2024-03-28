@@ -33,3 +33,13 @@ export const GET_DATAS_UDESIRABLE_EVENT = gql`
   } 
   ${DATA_BASIC_INFOS}
 `
+
+
+export const GET_DATAS_MEETING = gql`
+  query{
+    meetingReasons : datas(typeData : "MeetingReason"){
+        ...DataBasicInfosFragment
+    }
+  } 
+  ${DATA_BASIC_INFOS}
+`

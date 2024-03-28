@@ -20,7 +20,7 @@ import { CalendarIcon } from '@mui/x-date-pickers';
 
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Collapse } from '@mui/material';
-import { Apartment, Block, CalendarMonth, Category, Diversity3, Engineering, ExpandLess, ExpandMore, Groups, Groups2, Groups3, Handshake, Map } from '@mui/icons-material';
+import { Apartment, Block, CalendarMonth, Category, Diversity3, Email, Engineering, ExpandLess, ExpandMore, Groups, Groups2, Groups3, Handshake, Map, Tty, Workspaces } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import { useFeedBacks } from '../_shared/context/feedbacks/FeedBacksProvider';
 import { LOGOUT_USER } from '../_shared/graphql/mutations/AuthMutations';
@@ -340,9 +340,25 @@ function  MoreItems({open}){
             <StyledNavLink to="/online/administratif/appels">
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemIcon>
-                  <CalendarMonth />
+                  <Tty />
                 </ListItemIcon>
                 <ListItemText primary="Appels" />
+              </ListItemButton>
+            </StyledNavLink>
+            <StyledNavLink to="/online/administratif/courriers">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <Email />
+                </ListItemIcon>
+                <ListItemText primary="Courriers" />
+              </ListItemButton>
+            </StyledNavLink>
+            <StyledNavLink to="/online/administratif/reunions">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <Workspaces />
+                </ListItemIcon>
+                <ListItemText primary="Réunions" />
               </ListItemButton>
             </StyledNavLink>
           </List>

@@ -29,6 +29,12 @@ const modulesToManage = [
             {name : "Types des événement indésirables graves", descreption : "", type : 'UndesirableEventSeriousType'},
             {name : "Fréquences des événement indésirables", descreption : "", type : 'UndesirableEventFrequency'},
           ]
+        },
+        {
+          title: 'Administratif',
+          datas: [
+            {name : "Motif de la réunion", descreption : "", type : 'MeetingReason'}
+          ]
         }
     ];
 

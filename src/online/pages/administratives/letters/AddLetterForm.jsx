@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Stack, Box,  Typography, InputAdornment, Button, Divider } from '@mui/material';
+import { Stack, Box,  Typography, InputAdornment, Button, Divider, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -13,8 +13,8 @@ import TheTextField from '../../../../_shared/components/form-fields/TheTextFiel
 import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_EVENT } from '../../../../_shared/graphql/queries/EventQueries';
-import { POST_EVENT, PUT_EVENT } from '../../../../_shared/graphql/mutations/EventMutations';
+import { GET_LETTER } from '../../../../_shared/graphql/queries/LetterQueries';
+import { POST_LETTER, PUT_LETTER } from '../../../../_shared/graphql/mutations/LetterMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
@@ -30,34 +30,34 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function AddEventForm({ idEvent, title}) {
+export default function AddLetterForm({ idLetter, title}) {
     const  { setNotifyAlert,  setConfirmDialog} = useFeedBacks();
     const navigate = useNavigate();
     const validationSchema = yup.object({
-        title: yup .string("Entrez le titre d'événement").required("Le titre d'événement est obligatoire")
+        title: yup .string("Entrez le titre d'courrier").required("Le titre d'courrier est obligatoire")
       });
     const formik = useFormik({
         initialValues: {
-            image : undefined,  number : '', title : '', 
-            startingDateTime : dayjs(new Date()), endingDateTime : dayjs(new Date()),
+            image : undefined,  number : '', title : '',  letterType: 'INCOMING',
+            entryDateTime : dayjs(new Date()),
             description : '', observation : '', isActive : true, beneficiaries: [], employee : null
           },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            let { image , ...eventCopy } = values
-            eventCopy.beneficiaries = eventCopy.beneficiaries.map(i => i?.id)
-            eventCopy.employee = eventCopy.employee ? eventCopy.employee.id : null
-            if(idEvent && idEvent != ''){
-                onUpdateEvent({ 
-                    id : eventCopy.id, 
-                    eventData : eventCopy,
+            let { image , ...letterCopy } = values
+            letterCopy.beneficiaries = letterCopy.beneficiaries.map(i => i?.id)
+            letterCopy.employee = letterCopy.employee ? letterCopy.employee.id : null
+            if(idLetter && idLetter != ''){
+                onUpdateLetter({ 
+                    id : letterCopy.id, 
+                    letterData : letterCopy,
                     image : image,
                     }
                 )
             }
-            else createEvent({ 
+            else createLetter({ 
                     variables: { 
-                        eventData : eventCopy,
+                        letterData : letterCopy,
                         image : image,
                     } 
                 })
@@ -76,7 +76,7 @@ export default function AddEventForm({ idEvent, title}) {
         fetchMore:  fetchMoreEmployees 
       } = useQuery(GET_EMPLOYEES, { fetchPolicy: "network-only", variables: { page: 1, limit: 10 }})
 
-    const [createEvent, { loading : loadingPost }] = useMutation(POST_EVENT, {
+    const [createLetter, { loading : loadingPost }] = useMutation(POST_LETTER, {
         onCompleted: (data) => {
             console.log(data);
             setNotifyAlert({
@@ -84,19 +84,19 @@ export default function AddEventForm({ idEvent, title}) {
                 message: 'Ajouté avec succès',
                 type: 'success'
             })
-            let { __typename, ...eventCopy } = data.createEvent.event;
-        //   formik.setValues(eventCopy);
-            navigate('/online/activites/evenements/liste');
+            let { __typename, ...letterCopy } = data.createLetter.letter;
+        //   formik.setValues(letterCopy);
+            navigate('/online/administratif/courriers/liste');
         },
-        update(cache, { data: { createEvent } }) {
-            const newEvent = createEvent.event;
+        update(cache, { data: { createLetter } }) {
+            const newLetter = createLetter.letter;
           
             cache.modify({
               fields: {
-                events(existingEvents = { totalCount: 0, nodes: [] }) {
+                letters(existingLetters = { totalCount: 0, nodes: [] }) {
                     return {
-                        totalCount: existingEvents.totalCount + 1,
-                        nodes: [newEvent, ...existingEvents.nodes],
+                        totalCount: existingLetters.totalCount + 1,
+                        nodes: [newLetter, ...existingLetters.nodes],
                     };
                 },
               },
@@ -111,7 +111,7 @@ export default function AddEventForm({ idEvent, title}) {
             })
         },
     })
-    const [updateEvent, { loading : loadingPut }] = useMutation(PUT_EVENT, {
+    const [updateLetter, { loading : loadingPut }] = useMutation(PUT_LETTER, {
         onCompleted: (data) => {
             console.log(data);
             setNotifyAlert({
@@ -119,24 +119,24 @@ export default function AddEventForm({ idEvent, title}) {
                 message: 'Modifié avec succès',
                 type: 'success'
             })
-            let { __typename, ...eventCopy } = data.updateEvent.event;
-        //   formik.setValues(eventCopy);
-            navigate('/online/activites/evenements/liste');
+            let { __typename, ...letterCopy } = data.updateLetter.letter;
+        //   formik.setValues(letterCopy);
+            navigate('/online/administratif/courriers/liste');
         },
-        update(cache, { data: { updateEvent } }) {
-            const updatedEvent = updateEvent.event;
+        update(cache, { data: { updateLetter } }) {
+            const updatedLetter = updateLetter.letter;
           
             cache.modify({
               fields: {
-                events(existingEvents = { totalCount: 0, nodes: [] }, { readField }) {
+                letters(existingLetters = { totalCount: 0, nodes: [] }, { readField }) {
                     
-                    const updatedEvents = existingEvents.nodes.map((event) =>
-                        readField('id', event) === updatedEvent.id ? updatedEvent : event
+                    const updatedLetters = existingLetters.nodes.map((letter) =>
+                        readField('id', letter) === updatedLetter.id ? updatedLetter : letter
                     );
             
                     return {
-                        totalCount: existingEvents.totalCount,
-                        nodes: updatedEvents,
+                        totalCount: existingLetters.totalCount,
+                        nodes: updatedLetters,
                     };
                 },
               },
@@ -151,40 +151,39 @@ export default function AddEventForm({ idEvent, title}) {
             })
         },
     })
-    const onUpdateEvent = (variables) => {
+    const onUpdateLetter = (variables) => {
         setConfirmDialog({
           isOpen: true,
           title: 'ATTENTION',
           subTitle: "Voulez vous vraiment modifier ?",
           onConfirm: () => { setConfirmDialog({isOpen: false})
-                updateEvent({ variables })
+                updateLetter({ variables })
             }
         })
       }
-    const [getEvent, { loading : loadingEvent }] = useLazyQuery(GET_EVENT, {
+    const [getLetter, { loading : loadingLetter }] = useLazyQuery(GET_LETTER, {
         fetchPolicy: "network-only",
         onCompleted: (data) => {
-            let { __typename, ...eventCopy1 } = data.event;
-            let { folder, ...eventCopy } = eventCopy1;
-            eventCopy.startingDateTime = dayjs(eventCopy.startingDateTime)
-            eventCopy.endingDateTime = dayjs(eventCopy.endingDateTime)
-            eventCopy.beneficiaries = eventCopy.beneficiaries ? eventCopy.beneficiaries.map(i => i?.beneficiary) : []
-            formik.setValues(eventCopy);
+            let { __typename, ...letterCopy1 } = data.letter;
+            let { folder, ...letterCopy } = letterCopy1;
+            letterCopy.entryDateTime = dayjs(letterCopy.entryDateTime)
+            letterCopy.beneficiaries = letterCopy.beneficiaries ? letterCopy.beneficiaries.map(i => i?.beneficiary) : []
+            formik.setValues(letterCopy);
         },
         onError: (err) => console.log(err),
     })
     React.useEffect(()=>{
-        if(idEvent){
-            getEvent(({ variables: { id: idEvent } }));
+        if(idLetter){
+            getLetter(({ variables: { id: idLetter } }));
         }
-    }, [idEvent])
+    }, [idLetter])
     return (
         <Box sx={{ flexGrow: 1 }}>
             <Typography component="div" variant="h5">
                 {title} {formik.values.number}
             </Typography>
-            { loadingEvent && <ProgressService type="form" />}
-            { !loadingEvent &&
+            { loadingLetter && <ProgressService type="form" />}
+            { !loadingLetter &&
                 <form onSubmit={formik.handleSubmit}>
                     <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                         <Grid xs={2} sm={4} md={4}>
@@ -195,7 +194,7 @@ export default function AddEventForm({ idEvent, title}) {
                                 />
                             </Item>
                         </Grid>
-                        <Grid xs={2} sm={4} md={4}>
+                        <Grid xs={2} sm={6} md={6}>
                             <Item>
                                 <TheTextField variant="outlined" label="Titre" id="title"
                                     value={formik.values.title} required
@@ -207,31 +206,31 @@ export default function AddEventForm({ idEvent, title}) {
                                 />
                             </Item>
                         </Grid>
-                        <Grid xs={2} sm={4} md={4}>
+                        <Grid xs={2} sm={2} md={2}>
                             <Item>
-                                <ImageFileField variant="outlined" label="Image"
-                                    imageValue={formik.values.image}
-                                    onChange={(imageFile) => formik.setFieldValue('image', imageFile)}
-                                    disabled={loadingPost || loadingPut}
-                                    />
+                                <FormControl fullWidth>
+                                    <InputLabel>Type d'courrier</InputLabel>
+                                    <Select
+                                        value={formik.values.letterType}
+                                        onChange={(e) => formik.setFieldValue('letterType', e.target.value)}
+                                        disabled={loadingPost || loadingPut}
+                                    >
+                                        <MenuItem value="INCOMING">Entrant</MenuItem>
+                                        <MenuItem value="OUTGOING">Sortant</MenuItem>
+                                    </Select>
+                                </FormControl>
                             </Item>
                         </Grid>
                         <Grid xs={2} sm={4} md={4}>
                             <Item>
                                 <TheDateTimePicker
-                                    label="Date et heure de début"
-                                    value={formik.values.startingDateTime}
-                                    onChange={(date) => formik.setFieldValue('startingDateTime', date)}
+                                    label="Date et heure"
+                                    value={formik.values.entryDateTime}
+                                    onChange={(date) => formik.setFieldValue('entryDateTime', date)}
                                     disabled={loadingPost || loadingPut}
                                 />
                             </Item>
                             <Item>
-                                <TheDateTimePicker
-                                    label="Date de fin"
-                                    value={formik.values.endingDateTime}
-                                    onChange={(date) => formik.setFieldValue('endingDateTime', date)}
-                                    disabled={loadingPost || loadingPut}
-                                />
                             </Item>
                         </Grid>
                         <Grid xs={2} sm={4} md={4}>
@@ -276,7 +275,7 @@ export default function AddEventForm({ idEvent, title}) {
                         </Grid>
                         <Grid xs={12} sm={12} md={12}>
                             <Item sx={{ justifyContent: 'end', flexDirection : 'row' }}>
-                                <Link to="/online/activites/evenements/liste" className="no_style">
+                                <Link to="/online/administratif/courriers/liste" className="no_style">
                                     <Button variant="outlined" sx={{ marginRight : '10px' }}>Annuler</Button>
                                 </Link>
                                 <Button type="submit" variant="contained"

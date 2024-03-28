@@ -13,14 +13,16 @@ import TheTextField from '../../../../_shared/components/form-fields/TheTextFiel
 import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_EVENT } from '../../../../_shared/graphql/queries/EventQueries';
-import { POST_EVENT, PUT_EVENT } from '../../../../_shared/graphql/mutations/EventMutations';
+import { GET_MEETING } from '../../../../_shared/graphql/queries/MeetingQueries';
+import { POST_MEETING, PUT_MEETING } from '../../../../_shared/graphql/mutations/MeetingMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
 import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
+import SelectCheckmarks from '../../../../_shared/components/form-fields/SelectCheckmarks';
+import { GET_DATAS_MEETING } from '../../../../_shared/graphql/queries/DataQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -30,35 +32,35 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function AddEventForm({ idEvent, title}) {
+export default function AddMeetingForm({ idMeeting, title}) {
     const  { setNotifyAlert,  setConfirmDialog} = useFeedBacks();
     const navigate = useNavigate();
     const validationSchema = yup.object({
-        title: yup .string("Entrez le titre d'événement").required("Le titre d'événement est obligatoire")
+        title: yup .string("Entrez l'objet de la réunion").required("L'objet de la réunion est obligatoire")
       });
     const formik = useFormik({
         initialValues: {
-            image : undefined,  number : '', title : '', 
+            number : '', title : '', videoCallLink: '',
             startingDateTime : dayjs(new Date()), endingDateTime : dayjs(new Date()),
-            description : '', observation : '', isActive : true, beneficiaries: [], employee : null
+            description : '', observation : '', participants: [], beneficiaries: [], employee : null, reasons: [], otherReasons: ''
           },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            let { image , ...eventCopy } = values
-            eventCopy.beneficiaries = eventCopy.beneficiaries.map(i => i?.id)
-            eventCopy.employee = eventCopy.employee ? eventCopy.employee.id : null
-            if(idEvent && idEvent != ''){
-                onUpdateEvent({ 
-                    id : eventCopy.id, 
-                    eventData : eventCopy,
-                    image : image,
+            let meetingCopy = {...values}
+            meetingCopy.participants = meetingCopy.participants.map(i => i?.id)
+            meetingCopy.beneficiaries = meetingCopy.beneficiaries.map(i => i?.id)
+            meetingCopy.reasons = meetingCopy.reasons.map(i => i?.id)
+            meetingCopy.employee = meetingCopy.employee ? meetingCopy.employee.id : null
+            if(idMeeting && idMeeting != ''){
+                onUpdateMeeting({ 
+                    id : meetingCopy.id, 
+                    meetingData : meetingCopy,
                     }
                 )
             }
-            else createEvent({ 
+            else createMeeting({ 
                     variables: { 
-                        eventData : eventCopy,
-                        image : image,
+                        meetingData : meetingCopy
                     } 
                 })
         },
@@ -75,8 +77,14 @@ export default function AddEventForm({ idEvent, title}) {
         error: employeesError, 
         fetchMore:  fetchMoreEmployees 
       } = useQuery(GET_EMPLOYEES, { fetchPolicy: "network-only", variables: { page: 1, limit: 10 }})
+      const { 
+            loading: loadingDatas, 
+            data: dataData, 
+            error: datsError, 
+            fetchMore:  fetchMoreDatas  
+        } = useQuery(GET_DATAS_MEETING, { fetchPolicy: "network-only" })
 
-    const [createEvent, { loading : loadingPost }] = useMutation(POST_EVENT, {
+    const [createMeeting, { loading : loadingPost }] = useMutation(POST_MEETING, {
         onCompleted: (data) => {
             console.log(data);
             setNotifyAlert({
@@ -84,19 +92,19 @@ export default function AddEventForm({ idEvent, title}) {
                 message: 'Ajouté avec succès',
                 type: 'success'
             })
-            let { __typename, ...eventCopy } = data.createEvent.event;
-        //   formik.setValues(eventCopy);
-            navigate('/online/activites/evenements/liste');
+            let { __typename, ...meetingCopy } = data.createMeeting.meeting;
+        //   formik.setValues(meetingCopy);
+            navigate('/online/administratif/reunions/liste');
         },
-        update(cache, { data: { createEvent } }) {
-            const newEvent = createEvent.event;
+        update(cache, { data: { createMeeting } }) {
+            const newMeeting = createMeeting.meeting;
           
             cache.modify({
               fields: {
-                events(existingEvents = { totalCount: 0, nodes: [] }) {
+                meetings(existingMeetings = { totalCount: 0, nodes: [] }) {
                     return {
-                        totalCount: existingEvents.totalCount + 1,
-                        nodes: [newEvent, ...existingEvents.nodes],
+                        totalCount: existingMeetings.totalCount + 1,
+                        nodes: [newMeeting, ...existingMeetings.nodes],
                     };
                 },
               },
@@ -111,7 +119,7 @@ export default function AddEventForm({ idEvent, title}) {
             })
         },
     })
-    const [updateEvent, { loading : loadingPut }] = useMutation(PUT_EVENT, {
+    const [updateMeeting, { loading : loadingPut }] = useMutation(PUT_MEETING, {
         onCompleted: (data) => {
             console.log(data);
             setNotifyAlert({
@@ -119,24 +127,24 @@ export default function AddEventForm({ idEvent, title}) {
                 message: 'Modifié avec succès',
                 type: 'success'
             })
-            let { __typename, ...eventCopy } = data.updateEvent.event;
-        //   formik.setValues(eventCopy);
-            navigate('/online/activites/evenements/liste');
+            let { __typename, ...meetingCopy } = data.updateMeeting.meeting;
+        //   formik.setValues(meetingCopy);
+            navigate('/online/administratif/reunions/liste');
         },
-        update(cache, { data: { updateEvent } }) {
-            const updatedEvent = updateEvent.event;
+        update(cache, { data: { updateMeeting } }) {
+            const updatedMeeting = updateMeeting.meeting;
           
             cache.modify({
               fields: {
-                events(existingEvents = { totalCount: 0, nodes: [] }, { readField }) {
+                meetings(existingMeetings = { totalCount: 0, nodes: [] }, { readField }) {
                     
-                    const updatedEvents = existingEvents.nodes.map((event) =>
-                        readField('id', event) === updatedEvent.id ? updatedEvent : event
+                    const updatedMeetings = existingMeetings.nodes.map((meeting) =>
+                        readField('id', meeting) === updatedMeeting.id ? updatedMeeting : meeting
                     );
             
                     return {
-                        totalCount: existingEvents.totalCount,
-                        nodes: updatedEvents,
+                        totalCount: existingMeetings.totalCount,
+                        nodes: updatedMeetings,
                     };
                 },
               },
@@ -151,40 +159,41 @@ export default function AddEventForm({ idEvent, title}) {
             })
         },
     })
-    const onUpdateEvent = (variables) => {
+    const onUpdateMeeting = (variables) => {
         setConfirmDialog({
           isOpen: true,
           title: 'ATTENTION',
           subTitle: "Voulez vous vraiment modifier ?",
           onConfirm: () => { setConfirmDialog({isOpen: false})
-                updateEvent({ variables })
+                updateMeeting({ variables })
             }
         })
       }
-    const [getEvent, { loading : loadingEvent }] = useLazyQuery(GET_EVENT, {
+    const [getMeeting, { loading : loadingMeeting }] = useLazyQuery(GET_MEETING, {
         fetchPolicy: "network-only",
         onCompleted: (data) => {
-            let { __typename, ...eventCopy1 } = data.event;
-            let { folder, ...eventCopy } = eventCopy1;
-            eventCopy.startingDateTime = dayjs(eventCopy.startingDateTime)
-            eventCopy.endingDateTime = dayjs(eventCopy.endingDateTime)
-            eventCopy.beneficiaries = eventCopy.beneficiaries ? eventCopy.beneficiaries.map(i => i?.beneficiary) : []
-            formik.setValues(eventCopy);
+            let { __typename, ...meetingCopy1 } = data.meeting;
+            let { folder, ...meetingCopy } = meetingCopy1;
+            meetingCopy.startingDateTime = dayjs(meetingCopy.startingDateTime)
+            meetingCopy.endingDateTime = dayjs(meetingCopy.endingDateTime)
+            meetingCopy.participants = meetingCopy.participants ? meetingCopy.participants.map(i => i?.employee) : []
+            meetingCopy.beneficiaries = meetingCopy.beneficiaries ? meetingCopy.beneficiaries.map(i => i?.beneficiary) : []
+            formik.setValues(meetingCopy);
         },
         onError: (err) => console.log(err),
     })
     React.useEffect(()=>{
-        if(idEvent){
-            getEvent(({ variables: { id: idEvent } }));
+        if(idMeeting){
+            getMeeting(({ variables: { id: idMeeting } }));
         }
-    }, [idEvent])
+    }, [idMeeting])
     return (
         <Box sx={{ flexGrow: 1 }}>
             <Typography component="div" variant="h5">
                 {title} {formik.values.number}
             </Typography>
-            { loadingEvent && <ProgressService type="form" />}
-            { !loadingEvent &&
+            { loadingMeeting && <ProgressService type="form" />}
+            { !loadingMeeting &&
                 <form onSubmit={formik.handleSubmit}>
                     <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                         <Grid xs={2} sm={4} md={4}>
@@ -197,7 +206,7 @@ export default function AddEventForm({ idEvent, title}) {
                         </Grid>
                         <Grid xs={2} sm={4} md={4}>
                             <Item>
-                                <TheTextField variant="outlined" label="Titre" id="title"
+                                <TheTextField variant="outlined" label="Objet" id="title"
                                     value={formik.values.title} required
                                     onChange={(e) => formik.setFieldValue('title', e.target.value)}
                                     onBlur={formik.handleBlur}
@@ -206,14 +215,12 @@ export default function AddEventForm({ idEvent, title}) {
                                     disabled={loadingPost || loadingPut}
                                 />
                             </Item>
-                        </Grid>
-                        <Grid xs={2} sm={4} md={4}>
                             <Item>
-                                <ImageFileField variant="outlined" label="Image"
-                                    imageValue={formik.values.image}
-                                    onChange={(imageFile) => formik.setFieldValue('image', imageFile)}
+                                <TheTextField variant="outlined" label="Lien de la visio"
+                                    value={formik.values.videoCallLink}
+                                    onChange={(e) => formik.setFieldValue('videoCallLink', e.target.value)}
                                     disabled={loadingPost || loadingPut}
-                                    />
+                                />
                             </Item>
                         </Grid>
                         <Grid xs={2} sm={4} md={4}>
@@ -246,11 +253,35 @@ export default function AddEventForm({ idEvent, title}) {
                         </Grid>
                         <Grid xs={2} sm={4} md={4} item>
                             <Item>
+                                <TheAutocomplete options={employeesData?.employees?.nodes} label="Participants"
+                                    placeholder="Ajouter un participant"
+                                    limitTags={3}
+                                    value={formik.values.participants}
+                                    onChange={(e, newValue) => formik.setFieldValue('participants', newValue)}/>
+                            </Item>
+                            <Item>
                                 <TheAutocomplete options={beneficiariesData?.beneficiaries?.nodes} label="Bénificiaires"
                                     placeholder="Ajouter un bénificiaire"
                                     limitTags={3}
                                     value={formik.values.beneficiaries}
                                     onChange={(e, newValue) => formik.setFieldValue('beneficiaries', newValue)}/>
+                            </Item>
+                        </Grid>
+                        <Grid xs={2} sm={4} md={4} item>
+                            <Item>
+                                <SelectCheckmarks  options={dataData?.meetingReasons} label="Motifs"
+                                    placeholder="Ajouter un motif"
+                                    limitTags={3}
+                                    value={formik.values.reasons}
+                                    onChange={(e, newValue) => formik.setFieldValue('reasons', newValue)}/>
+                            </Item>
+                            <Item>
+                                <TheTextField variant="outlined" label="Autres motifs"
+                                    value={formik.values.otherReasons}
+                                    onChange={(e) => formik.setFieldValue('otherReasons', e.target.value)}
+                                    helperText="Si vous ne trouvez pas le motif dans la liste dessus."
+                                    disabled={loadingPost || loadingPut}
+                                />
                             </Item>
                         </Grid>
                         <Grid xs={12} sm={12} md={12}>
@@ -276,7 +307,7 @@ export default function AddEventForm({ idEvent, title}) {
                         </Grid>
                         <Grid xs={12} sm={12} md={12}>
                             <Item sx={{ justifyContent: 'end', flexDirection : 'row' }}>
-                                <Link to="/online/activites/evenements/liste" className="no_style">
+                                <Link to="/online/administratif/reunions/liste" className="no_style">
                                     <Button variant="outlined" sx={{ marginRight : '10px' }}>Annuler</Button>
                                 </Link>
                                 <Button type="submit" variant="contained"
