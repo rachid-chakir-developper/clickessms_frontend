@@ -120,6 +120,7 @@ const getPlaceDetails = (placeId) => {
         address: result.formatted_address, // Adresse complète
         // Ajoutez d'autres détails si nécessaire
       };
+      console.log('result*****************', result)
       result.address_components.forEach((component) => {
         component.types.forEach((type) => {
           if (type === 'country') updatedAddress.country = component.long_name;

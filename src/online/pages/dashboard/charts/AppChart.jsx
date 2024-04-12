@@ -8,7 +8,7 @@ export default function AppChart({ data = [] }) {
 
   return (
     <React.Fragment>
-      <Title>Nombre des interventions cette semaine</Title>
+      <Title>Nombre d'événements indésirables</Title>
       <ResponsiveContainer>
         <LineChart
           data={data}
@@ -37,7 +37,7 @@ export default function AppChart({ data = [] }) {
                 ...theme.typography.body1,
               }}
             >
-              Intérventions
+              Événements
             </Label>
           </YAxis>
           <Line

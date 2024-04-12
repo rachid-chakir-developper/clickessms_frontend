@@ -30,11 +30,11 @@ import Settings from './pages/settings/Settings';
 import Logo from '../_shared/components/app/Logo';
 import AccountCard from './_shared/components/accounts/AccountCard';
 import Account from './pages/account/Account';
-import Establishments from './pages/establishments/Establishments';
 import Humans from './pages/human_ressources/Humans';
 import Activities from './pages/activities/Activities';
 import Qualities from './pages/qualities/Qualities';
 import Administratives from './pages/administratives/Administratives';
+import Companies from './pages/companies/Companies';
 
 const drawerWidth = 280;
 
@@ -162,7 +162,7 @@ export default function Online() {
               element={<Navigate to={`dashboard`} replace />}
           />
           <Route path={`carte/*`} element={<Maps />} />
-          <Route path={`etablissements/*`} element={<Establishments />} />
+          <Route path={`associations/*`} element={<Companies />} />
           <Route path={`vehicules/*`} element={<Vehicles />} />
           <Route path={`materiels/*`} element={<Materials />} />
           <Route path={`travaux/*`} element={<Works />} />

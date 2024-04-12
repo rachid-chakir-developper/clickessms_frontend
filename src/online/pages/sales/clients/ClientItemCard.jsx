@@ -24,7 +24,7 @@ export default function ClientItemCard({client, onDeleteClient, onUpdateClientSt
     <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }} >
       <Tooltip title={client?.name}>
         <CardMedia component="img" width="100" height="100" alt={client?.name}
-          src={ client?.photo ? client?.photo : "https://mui.com/static/images/cards/real-estate.png"}
+          src={ client?.photo ? client?.photo : "/default-placeholder.jpg"}
           sx={{ borderRadius: 0.6, height: 100, width: 100}}
         />
       </Tooltip>

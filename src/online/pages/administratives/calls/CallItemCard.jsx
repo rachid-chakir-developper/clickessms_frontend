@@ -15,7 +15,7 @@ export default function CallItemCard({call, onDeleteCall, onUpdateCallState}) {
     <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }}>
       <Tooltip title={call?.title}>
         <CardMedia component="img" width="100" height="100" alt={call?.title}
-          src={ call?.image ? call?.image : "https://mui.com/static/images/cards/real-estate.png"}
+          src={ call?.image ? call?.image : "/default-placeholder.jpg"}
           sx={{ borderRadius: 0.6, height: 100, width: 100}}
         />
       </Tooltip>

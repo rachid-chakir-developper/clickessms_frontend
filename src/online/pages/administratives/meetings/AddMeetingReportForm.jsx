@@ -27,7 +27,7 @@ const Item = styled(Stack)(({ theme }) => ({
 export default function AddMeetingReportForm({ idMeeting, title}) {
     const  { setNotifyAlert,  setConfirmDialog} = useFeedBacks();
     const validationSchema = yup.object({
-        name: yup .string('Entrez le nom de véhicule').required('Le nom de véhicule est obligatoire'),
+        name: yup .string('Entrez le nom de la réunion').required('Le nom de la réunion est obligatoire'),
       });
     const formik = useFormik({
         initialValues: {
@@ -35,23 +35,23 @@ export default function AddMeetingReportForm({ idMeeting, title}) {
           },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            let { image , ...meetingCopy } = values
+            let { image , ...meetingReportItemCopy } = values
             if(idMeeting && idMeeting != ''){
-                onUpdateMeeting({ 
-                    id : meetingCopy.id, 
-                    meetingData : meetingCopy,
+                onUpdateMeetingReportItem({ 
+                    id : meetingReportItemCopy.id, 
+                    meetingReportItemData : meetingReportItemCopy,
                     }
                 )
             }
-            else createMeeting({ 
+            else createMeetingReportItem({ 
                     variables: { 
-                        meetingData : meetingCopy,
+                        meetingReportItemData : meetingReportItemCopy,
                         image : image,
                     }
                 })
         },
     });
-    const [createMeeting, { loading : loadingPost }] = useMutation(POST_MEETING, {
+    const [createMeetingReportItem, { loading : loadingPost }] = useMutation(POST_MEETING, {
         onCompleted: (data) => {
             console.log(data);
             setNotifyAlert({
@@ -59,17 +59,17 @@ export default function AddMeetingReportForm({ idMeeting, title}) {
                 message: 'Ajouté avec succès',
                 type: 'success'
             })
-            let { __typename, ...meetingCopy } = data.createMeeting.meeting;
+            let { __typename, ...meetingReportItemCopy } = data.createMeetingReportItem.meetingReportItem;
         },
-        update(cache, { data: { createMeeting } }) {
-            const newMeeting = createMeeting.meeting;
+        update(cache, { data: { createMeetingReportItem } }) {
+            const newMeetingReportItem = createMeetingReportItem.meetingReportItem;
           
             cache.modify({
               fields: {
-                meetings(existingMeetings = { totalCount: 0, nodes: [] }) {
+                meetings(existingMeetingReportItems = { totalCount: 0, nodes: [] }) {
                     return {
-                        totalCount: existingMeetings.totalCount + 1,
-                        nodes: [newMeeting, ...existingMeetings.nodes],
+                        totalCount: existingMeetingReportItems.totalCount + 1,
+                        nodes: [newMeetingReportItem, ...existingMeetingReportItems.nodes],
                     };
                 },
               },
@@ -84,7 +84,7 @@ export default function AddMeetingReportForm({ idMeeting, title}) {
             })
         },
     })
-    const [updateMeeting, { loading : loadingPut }] = useMutation(PUT_MEETING, {
+    const [updateMeetingReportItem, { loading : loadingPut }] = useMutation(PUT_MEETING, {
         onCompleted: (data) => {
             console.log(data);
             setNotifyAlert({
@@ -92,22 +92,22 @@ export default function AddMeetingReportForm({ idMeeting, title}) {
                 message: 'Modifié avec succès',
                 type: 'success'
             })
-            let { __typename, ...meetingCopy } = data.updateMeeting.meeting;
+            let { __typename, ...meetingReportItemCopy } = data.updateMeetingReportItem.meetingReportItem;
         },
         update(cache, { data: { updateMeeting } }) {
-            const updatedMeeting = updateMeeting.meeting;
+            const updatedMeetingReportItem = updateMeetingReportItem.meetingReportItem;
           
             cache.modify({
               fields: {
-                meetings(existingMeetings = { totalCount: 0, nodes: [] }, { readField }) {
+                meetings(existingMeetingReportItems = { totalCount: 0, nodes: [] }, { readField }) {
                     
-                    const updatedMeetings = existingMeetings.nodes.map((meeting) =>
-                        readField('id', meeting) === updatedMeeting.id ? updatedMeeting : meeting
+                    const updatedMeetingReportItems = existingMeetingReportItems.nodes.map((meetingReportItem) =>
+                        readField('id', meetingReportItem) === updatedMeetingReportItem.id ? updatedMeetingReportItem : meetingReportItem
                     );
             
                     return {
-                        totalCount: existingMeetings.totalCount,
-                        nodes: updatedMeetings,
+                        totalCount: existingMeetingReportItems.totalCount,
+                        nodes: updatedMeetingReportItems,
                     };
                 },
               },
@@ -122,40 +122,40 @@ export default function AddMeetingReportForm({ idMeeting, title}) {
             })
         },
     })
-    const onUpdateMeeting = (variables) => {
+    const onUpdateMeetingReportItem = (variables) => {
         setConfirmDialog({
           isOpen: true,
           title: 'ATTENTION',
           subTitle: "Voulez vous vraiment modifier ?",
           onConfirm: () => { setConfirmDialog({isOpen: false})
-                updateMeeting({ variables })
+                updateMeetingReportItem({ variables })
             }
         })
       }
-    const [getMeeting, { loading : loadingMeeting }] = useLazyQuery(GET_MEETING, {
+    const [getMeetingReport, { loading : loadingMeetingReport }] = useLazyQuery(GET_MEETING, {
         fetchPolicy: "network-only",
         onCompleted: (data) => {
-            let { __typename, ...meetingCopy } = data.meeting;
-            if(!meetingCopy?.meetingReportItems) meetingCopy['meetingReportItems'] = [];
+            let { __typename, ...meetingReportCopy } = data.meetingReport;
+            if(!meetingReportCopy?.meetingReportItems) meetingReportCopy['meetingReportItems'] = [];
             let items = []
-            meetingCopy.meetingReportItems.forEach((item) =>{
+            meetingReportCopy.meetingReportItems.forEach((item) =>{
                 let { __typename, ...itemCopy } = item;
                 items.push(itemCopy)
             })
-            meetingCopy.meetingReportItems = items;
-            formik.setValues(meetingCopy);
+            meetingReportCopy.meetingReportItems = items;
+            formik.setValues(meetingReportCopy);
         },
         onError: (err) => console.log(err),
     })
     React.useEffect(()=>{
         if(idMeeting){
-            getMeeting(({ variables: { id: idMeeting } }));
+            getMeetingReport(({ variables: { id: idMeeting } }));
         }
     }, [idMeeting])
     const addChecklistItem = () => {
         formik.setValues({
           ...formik.values,
-          meetingReportItems: [...formik.values.meetingReportItems, { localisation: '', comment: '', description: '' }]
+          meetingReportItems: [...formik.values.meetingReportItems, { report: '', decision: '', pointsToReview: '' }]
         });
       };
     
@@ -173,8 +173,8 @@ export default function AddMeetingReportForm({ idMeeting, title}) {
             {title && <Typography component="div" variant="h5">
                 {title} {formik.values.number}
             </Typography>}
-            { loadingMeeting && <ProgressService type="form" />}
-            { !loadingMeeting &&
+            { loadingMeetingReport && <ProgressService type="form" />}
+            { !loadingMeetingReport &&
                 <form onSubmit={formik.handleSubmit}>
                     <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                         <Grid xs={12} sm={12} md={12} item>
@@ -185,27 +185,27 @@ export default function AddMeetingReportForm({ idMeeting, title}) {
                                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} key={index}>
                                     <Grid xs={12} sm={4} md={4} item>
                                         <Item>
-                                            <TheTextField variant="outlined" label="Localisation"
-                                                value={item.localisation}
-                                                onChange={(e) => formik.setFieldValue(`meetingReportItems.${index}.localisation`, e.target.value)}
+                                            <TheTextField variant="outlined" label="Raport"
+                                                value={item.report}
+                                                onChange={(e) => formik.setFieldValue(`meetingReportItems.${index}.report`, e.target.value)}
                                                 disabled={loadingPost || loadingPut}
                                                 />
                                         </Item>
                                     </Grid>
                                     <Grid xs={12} sm={4} md={4} item>
                                         <Item>
-                                            <TheTextField variant="outlined" label="Commentaire" multiline rows={4}
-                                                value={item.comment}
-                                                onChange={(e) => formik.setFieldValue(`meetingReportItems.${index}.comment`, e.target.value)}
+                                            <TheTextField variant="outlined" label="Décision" multiline rows={4}
+                                                value={item.decision}
+                                                onChange={(e) => formik.setFieldValue(`meetingReportItems.${index}.decision`, e.target.value)}
                                                 disabled={loadingPost || loadingPut}
                                                 />
                                         </Item>
                                     </Grid>
                                     <Grid xs={12} sm={4} md={4} item>
                                         <Item>
-                                            <TheTextField variant="outlined" label="Description" multiline rows={4}
-                                                value={item.description}
-                                                onChange={(e) => formik.setFieldValue(`meetingReportItems.${index}.description`, e.target.value)}
+                                            <TheTextField variant="outlined" label="Point à revoir" multiline rows={4}
+                                                value={item.pointsToReview}
+                                                onChange={(e) => formik.setFieldValue(`meetingReportItems.${index}.pointsToReview`, e.target.value)}
                                                 disabled={loadingPost || loadingPut}
                                                 InputProps={{
                                                     endAdornment: <InputAdornment position="end">

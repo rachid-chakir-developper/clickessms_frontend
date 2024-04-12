@@ -36,7 +36,7 @@ export default function TaskItemCard({task, onDeleteTask, onUpdateTaskState}) {
       <Stack direction="row" spacing={2} alignItems="center">
         <Tooltip title={task?.name}>
           <CardMedia component="img" width="100" height="100" alt={task?.name}
-            src={ task?.image ? task?.image : "https://mui.com/static/images/cards/real-estate.png"}
+            src={ task?.image ? task?.image : "/default-placeholder.jpg"}
             sx={{ borderRadius: 0.6, height: 100, width: 100, border : 'solid 1px #e1e1e1'}}
           />
         </Tooltip>

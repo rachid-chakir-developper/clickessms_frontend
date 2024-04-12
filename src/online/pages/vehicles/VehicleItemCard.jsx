@@ -24,7 +24,7 @@ export default function VehicleItemCard({vehicle, onDeleteVehicle, onUpdateVehic
     <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }}>
       <Tooltip title={vehicle?.name}>
         <CardMedia component="img" width="100" height="100" alt={vehicle?.name}
-          src={ vehicle?.image ? vehicle?.image : "https://mui.com/static/images/cards/real-estate.png"}
+          src={ vehicle?.image ? vehicle?.image : "/default-placeholder.jpg"}
           sx={{ borderRadius: 0.6, height: 100, width: 100}}
         />
       </Tooltip>

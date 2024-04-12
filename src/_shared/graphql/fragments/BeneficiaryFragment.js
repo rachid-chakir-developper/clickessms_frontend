@@ -1,7 +1,20 @@
 // BeneficiaryFragment.js
 
 import { gql } from '@apollo/client';
-import { FOLDER_MINI_INFOS } from './MediaFragment';
+
+export const BENEFICIARY_PHONE_INFOS = gql`
+  fragment BeneficiaryPhoneInfosFragment on BeneficiaryType {
+    id,
+    firstName,
+    lastName,
+    email
+    mobile
+    fix
+    photo
+    coverImage
+    isActive
+  }
+`;
 
 export const BENEFICIARY_MINI_INFOS = gql`
   fragment BeneficiaryMiniInfosFragment on BeneficiaryType {

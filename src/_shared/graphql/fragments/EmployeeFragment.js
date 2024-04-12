@@ -1,7 +1,21 @@
 // EmployeeFragment.js
 
 import { gql } from '@apollo/client';
-import { FOLDER_MINI_INFOS } from './MediaFragment';
+
+export const EMPLOYEE_PHONE_INFOS = gql`
+  fragment EmployeePhoneInfosFragment on EmployeeType {
+    id,
+    firstName,
+    lastName,
+    position
+    email
+    mobile
+    fix
+    photo
+    coverImage
+    isActive
+  }
+`;
 
 export const EMPLOYEE_MINI_INFOS = gql`
   fragment EmployeeMiniInfosFragment on EmployeeType {

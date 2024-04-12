@@ -24,7 +24,7 @@ export default function SupplierItemCard({supplier, onDeleteSupplier, onUpdateSu
     <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }} >
       <Tooltip title={supplier?.name}>
         <CardMedia component="img" width="100" height="100" alt={supplier?.name}
-          src={ supplier?.photo ? supplier?.photo : "https://mui.com/static/images/cards/real-estate.png"}
+          src={ supplier?.photo ? supplier?.photo : "/default-placeholder.jpg"}
           sx={{ borderRadius: 0.6, height: 100, width: 100}}
         />
       </Tooltip>

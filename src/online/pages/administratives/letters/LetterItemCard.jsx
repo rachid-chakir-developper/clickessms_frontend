@@ -15,7 +15,7 @@ export default function LetterItemCard({letter, onDeleteLetter, onUpdateLetterSt
     <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }}>
       <Tooltip title={letter?.title}>
         <CardMedia component="img" width="100" height="100" alt={letter?.title}
-          src={ letter?.image ? letter?.image : "https://mui.com/static/images/cards/real-estate.png"}
+          src={ letter?.image ? letter?.image : "/default-placeholder.jpg"}
           sx={{ borderRadius: 0.6, height: 100, width: 100}}
         />
       </Tooltip>

@@ -25,7 +25,7 @@ const onOpenDialogListLibrary = (folderParent) => {
     <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }}>
       <Tooltip title={undesirableEvent?.title}>
         <CardMedia component="img" width="100" height="100" alt={undesirableEvent?.title}
-          src={ undesirableEvent?.image ? undesirableEvent?.image : "https://mui.com/static/images/cards/real-estate.png"}
+          src={ undesirableEvent?.image ? undesirableEvent?.image : "/default-placeholder.jpg"}
           sx={{ borderRadius: 0.6, height: 100, width: 100}}
         />
       </Tooltip>

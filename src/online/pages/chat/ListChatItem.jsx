@@ -19,7 +19,7 @@ const ListChatItem = ({conversation}) => {
           <ListItemAvatar>
             
             {participants?.filter((p)=> p.user.id != creator.id)?.map((participant, index) => (
-                    <Avatar key={index} src={participant.user.photo ? participant.user?.photo : "https://mui.com/static/images/cards/real-estate.png"}>
+                    <Avatar key={index} src={participant.user.photo ? participant.user?.photo : "/default-placeholder.jpg"}>
                         {/* Vous pouvez ajouter une image d'utilisateur ici */}
                         {title}
                     </Avatar>

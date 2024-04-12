@@ -16,7 +16,7 @@ const ListMessagesItem = ({ message }) => {
       <ListItemAvatar>
         {!isSentByMe && (
           <Avatar
-            src={sender?.photo ? sender?.photo : 'https://mui.com/static/images/cards/real-estate.png'}
+            src={sender?.photo ? sender?.photo : '/default-placeholder.jpg'}
           >
             {`${sender?.firstName.charAt(0)} ${sender?.lastName.charAt(0)}`}
           </Avatar>

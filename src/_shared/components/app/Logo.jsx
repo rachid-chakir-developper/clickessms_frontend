@@ -90,7 +90,7 @@ const Logo = forwardRef(({ disabledLink = false, sx, color, ...other }, ref) => 
               : 
             logo}
             <Typography sx={{ marginLeft: 1, fontWeight: 600, fontSize: 18, color: color ? color : ''}}>
-                Clik'ESSMS
+                ROBERP
             </Typography>
         </Box>
     </Link>

@@ -32,10 +32,11 @@ function App() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: '#ee7f2e', // Couleur principale
+        main: '#432cf3', // Couleur principale
       },
       secondary: {
         main: '#003539', // Couleur secondaire
+        contrastText: '#333333'
       }
     },
   });

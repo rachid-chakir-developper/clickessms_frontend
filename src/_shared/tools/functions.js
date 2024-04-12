@@ -14,6 +14,28 @@ export const getStatusColor = (status) => {
   }
 };
 
+export const getStatusLebelColor = (status) => {
+  switch (status) {
+    case STATUS.FINISHED:
+      return 'primary';
+    case STATUS.STARTED:
+      return 'warning';
+    case STATUS.PENDING:
+      return 'info';
+    default:
+      return 'default';
+  }
+};
+
+// 'default',
+//     'primary',
+//     'secondary',
+//     'info',
+//     'success',
+//     'warning',
+//     'error',
+
+
 export const getStatusLabel = (status) => {
   return STATUS.ALL.find((s)=> s.value == status)?.label
 };

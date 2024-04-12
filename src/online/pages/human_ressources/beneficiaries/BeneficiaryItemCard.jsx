@@ -24,7 +24,7 @@ export default function BeneficiaryItemCard({beneficiary, onDeleteBeneficiary, o
     <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }} >
       <Tooltip title={`${beneficiary?.firstName} ${beneficiary?.lastName}`}>
         <CardMedia component="img" width="100" height="100" alt={`${beneficiary?.firstName} ${beneficiary?.lastName}`}
-          src={ beneficiary?.photo ? beneficiary?.photo : "https://mui.com/static/images/cards/real-estate.png"}
+          src={ beneficiary?.photo ? beneficiary?.photo : "/default-placeholder.jpg"}
           sx={{ borderRadius: 0.6, height: 100, width: 100}}
         />
       </Tooltip>

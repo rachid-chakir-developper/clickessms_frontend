@@ -21,6 +21,7 @@ import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDat
 import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
+import SearchNumbersAutocomplete from '../../../../_shared/components/form-fields/SearchNumbersAutocomplete';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -40,13 +41,42 @@ export default function AddCallForm({ idCall, title}) {
         initialValues: {
             image : undefined,  number : '', title : '',  callType: 'INCOMING',
             entryDateTime : dayjs(new Date()),
-            description : '', observation : '', isActive : true, beneficiaries: [], employee : null
+            description : '', observation : '', isActive : true, beneficiaries: [], employee : null, caller : null
           },
         validationSchema: validationSchema,
         onSubmit: (values) => {
             let { image , ...callCopy } = values
             callCopy.beneficiaries = callCopy.beneficiaries.map(i => i?.id)
             callCopy.employee = callCopy.employee ? callCopy.employee.id : null
+            console.log('callCopy.caller****************', callCopy.caller)
+            if(typeof callCopy?.caller === 'string'){
+                callCopy.caller = {phone: callCopy.caller, callerType: 'PhoneNumber'}
+            }else{
+                switch (callCopy?.caller?.callerType) {
+                    case 'Employee':
+                        callCopy.caller = {employee: callCopy.caller.caller.id, callerType: 'Employee'}
+                        break;
+                    case 'Client':
+                        callCopy.caller = {client: callCopy.caller.caller.id, callerType: 'Client'}
+                        break;
+                    case 'Beneficiary':
+                        callCopy.caller = {beneficiary: callCopy.caller.caller.id, callerType: 'Beneficiary'}
+                        break;
+                    case 'Supplier':
+                        callCopy.caller = {supplier: callCopy.caller.caller.id, callerType: 'Supplier'}
+                        break;
+                    case 'Establishment':
+                        callCopy.caller = {establishment: callCopy.caller.caller.id, callerType: 'Establishment'}
+                        break;
+                    case 'Partner':
+                        callCopy.caller = {partner: callCopy.caller.caller.id, callerType: 'Partner'}
+                        break;
+                
+                    default:
+                        callCopy.caller = {phoneNumber: callCopy.caller.caller.id, callerType: 'PhoneNumber'}
+                        break;
+                }
+            }
             if(idCall && idCall != ''){
                 onUpdateCall({ 
                     id : callCopy.id, 
@@ -168,6 +198,32 @@ export default function AddCallForm({ idCall, title}) {
             let { folder, ...callCopy } = callCopy1;
             callCopy.entryDateTime = dayjs(callCopy.entryDateTime)
             callCopy.beneficiaries = callCopy.beneficiaries ? callCopy.beneficiaries.map(i => i?.beneficiary) : []
+            switch (callCopy?.caller?.callerType) {
+                case 'Employee':
+                    callCopy.caller = {caller: callCopy.caller.employee, callerType: 'Employee'}
+                    break;
+                case 'Client':
+                    callCopy.caller = {caller: callCopy.caller.client, callerType: 'Client'}
+                    break;
+                case 'Beneficiary':
+                    callCopy.caller = {caller: callCopy.caller.beneficiary, callerType: 'Beneficiary'}
+                    break;
+                case 'Supplier':
+                    callCopy.caller = {caller: callCopy.caller.supplier, callerType: 'Supplier'}
+                    break;
+                case 'Establishment':
+                    callCopy.caller = {caller: callCopy.caller.establishment, callerType: 'Establishment'}
+                    break;
+                case 'Partner':
+                    callCopy.caller = {caller: callCopy.caller.partner, callerType: 'Partner'}
+                    break;
+            
+                default:
+                    callCopy.caller = {caller: callCopy.caller.phoneNumber, callerType: 'PhoneNumber'}
+                    break;
+            }
+            console.log(callCopy.caller)
+            
             formik.setValues(callCopy);
         },
         onError: (err) => console.log(err),
@@ -186,7 +242,7 @@ export default function AddCallForm({ idCall, title}) {
             { !loadingCall &&
                 <form onSubmit={formik.handleSubmit}>
                     <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                        <Grid xs={2} sm={4} md={4}>
+                        <Grid xs={2} sm={3} md={3}>
                             <Item>
                                 <TheTextField variant="outlined" label="Référence"
                                     value={formik.values.number}
@@ -194,7 +250,7 @@ export default function AddCallForm({ idCall, title}) {
                                 />
                             </Item>
                         </Grid>
-                        <Grid xs={2} sm={6} md={6}>
+                        <Grid xs={2} sm={4} md={4}>
                             <Item>
                                 <TheTextField variant="outlined" label="Titre" id="title"
                                     value={formik.values.title} required
@@ -221,7 +277,7 @@ export default function AddCallForm({ idCall, title}) {
                                 </FormControl>
                             </Item>
                         </Grid>
-                        <Grid xs={2} sm={4} md={4}>
+                        <Grid xs={2} sm={3} md={3}>
                             <Item>
                                 <TheDateTimePicker
                                     label="Date et heure"
@@ -243,7 +299,15 @@ export default function AddCallForm({ idCall, title}) {
                                     onChange={(e, newValue) => formik.setFieldValue('employee', newValue)}/>
                             </Item>
                         </Grid>
-                        <Grid xs={2} sm={4} md={4} item>
+                        <Grid xs={2} sm={4} md={4} item="true">
+                            <Item>
+                                <SearchNumbersAutocomplete options={beneficiariesData?.beneficiaries?.nodes} label="Qui a appelé ?"
+                                    placeholder="qui a appelé ?"
+                                    value={formik.values.caller}
+                                    onChange={(e, newValue) => formik.setFieldValue('caller', newValue)}/>
+                            </Item>
+                        </Grid>
+                        <Grid xs={2} sm={4} md={4} item="true">
                             <Item>
                                 <TheAutocomplete options={beneficiariesData?.beneficiaries?.nodes} label="Bénificiaires"
                                     placeholder="Ajouter un bénificiaire"

@@ -20,7 +20,7 @@ import { CalendarIcon } from '@mui/x-date-pickers';
 
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Collapse } from '@mui/material';
-import { Apartment, Block, CalendarMonth, Category, Diversity3, Email, Engineering, ExpandLess, ExpandMore, Groups, Groups2, Groups3, Handshake, Map, Tty, Workspaces } from '@mui/icons-material';
+import { Apartment, Block, Business, CalendarMonth, Category, Diversity3, Email, Engineering, Event, EventBusy, EventNote, ExpandLess, ChevronRight, Groups, Groups2, Groups3, Handshake, HomeRepairService, Map, Tty, Workspaces, Note, School, InterpreterMode, Construction, Backup, Devices, Computer, Microsoft, Group, Savings, Work, PriceChange } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import { useFeedBacks } from '../_shared/context/feedbacks/FeedBacksProvider';
 import { LOGOUT_USER } from '../_shared/graphql/mutations/AuthMutations';
@@ -41,7 +41,7 @@ const StyledNavLink = styled(NavLink)(({ theme }) => ({
 }));
 
 function  MainListItems({open}) {
-  const [openedItems, setOpenedItems] = React.useState(['partnerships', 'sales', 'purchases']);
+  const [openedItems, setOpenedItems] = React.useState(['establishment', 'activities', 'qualities', 'administratives', 'human_ressources']);
 
   const handleClickToOpenItem = (openedItem) => {
     if(openedItems.includes(openedItem)) setOpenedItems(openedItems.filter(item => item !== openedItem));
@@ -73,54 +73,168 @@ function  MainListItems({open}) {
           </ListItemButton>
         </ListItem>
       </StyledNavLink> */}
-      <StyledNavLink to="/online/etablissements">
-        <ListItem key={'vehicles'} disablePadding sx={{ display: 'block' }}>
-          <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
-            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Apartment /> </ListItemIcon>
-            <ListItemText primary={'Etablissements'} sx={{ opacity: open ? 1 : 0 }} />
-          </ListItemButton>
-        </ListItem>
-      </StyledNavLink>
-      <StyledNavLink to="/online/travaux/interventions">
-        <ListItem key={'tasks'} disablePadding sx={{ display: 'block' }}>
-          <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
-            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <EventAvailableIcon /> </ListItemIcon>
-            <ListItemText primary={'Interventions'} sx={{ opacity: open ? 1 : 0 }} />
-          </ListItemButton>
-        </ListItem>
-      </StyledNavLink>
-      <StyledNavLink to="/online/recuperations/objets">
-        <ListItem key={'tasks'} disablePadding sx={{ display: 'block' }}>
-          <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
-            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Category /> </ListItemIcon>
-            <ListItemText primary={'Récupérations'} sx={{ opacity: open ? 1 : 0 }} />
-          </ListItemButton>
-        </ListItem>
-      </StyledNavLink>
-      <StyledNavLink to="/online/materiels">
-        <ListItem key={'materials'} disablePadding sx={{ display: 'block' }}>
-          <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
-            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <ConstructionIcon /> </ListItemIcon>
-            <ListItemText primary={'Matériels'} sx={{ opacity: open ? 1 : 0 }} />
-          </ListItemButton>
-        </ListItem>
-      </StyledNavLink>
-      <StyledNavLink to="/online/vehicules">
-        <ListItem key={'vehicles'} disablePadding sx={{ display: 'block' }}>
-          <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
-            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <LocalShippingIcon /> </ListItemIcon>
-            <ListItemText primary={'Véhicules'} sx={{ opacity: open ? 1 : 0 }} />
-          </ListItemButton>
-        </ListItem>
-      </StyledNavLink>
-      <ListItem key={'partnerships'} disablePadding sx={{ display: 'block' }}>
-        <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('partnerships')}>
-          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Handshake /> </ListItemIcon>
-          <ListItemText primary={'partenariats'} sx={{ opacity: open ? 1 : 0 }} />
-          {openedItems.includes('partnerships') ? <ExpandLess /> : <ExpandMore />}
+      <ListItem key={'establishment'} disablePadding sx={{ display: 'block' }}>
+        <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('establishment')}>
+          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Business /> </ListItemIcon>
+          <ListItemText primary={'Etablissements'} sx={{ opacity: open ? 1 : 0 }} />
+          {openedItems.includes('establishment') ? <ExpandLess /> : <ChevronRight />}
         </ListItemButton>
-        <Collapse in={openedItems.includes('partnerships')} timeout="auto" unmountOnExit>
+        <Collapse in={openedItems.includes('establishment')} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+            <StyledNavLink to="/online/associations/etablissements">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <Apartment />
+                </ListItemIcon>
+                <ListItemText primary="Etablissements" />
+              </ListItemButton>
+            </StyledNavLink>
+            <StyledNavLink to="/online/associations/services">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <HomeRepairService />
+                </ListItemIcon>
+                <ListItemText primary="Services" />
+              </ListItemButton>
+            </StyledNavLink>
+          </List>
+        </Collapse>
+      </ListItem>
+      
+      <ListItem key={'qualities'} disablePadding sx={{ display: 'block' }}>
+        <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('qualities')}>
+          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Groups /> </ListItemIcon>
+          <ListItemText primary={'Qualité'} sx={{ opacity: open ? 1 : 0 }} />
+          {openedItems.includes('qualities') ? <ExpandLess /> : <ChevronRight />}
+        </ListItemButton>
+        <Collapse in={openedItems.includes('qualities')} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
+            <StyledNavLink to="/online/qualites/evenements-indesirables">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <EventNote />
+                </ListItemIcon>
+                <ListItemText primary="Evénéments Indésirables" />
+              </ListItemButton>
+            </StyledNavLink>
+            <ListItemButton sx={{ pl: 4 }} disabled>
+              <ListItemIcon>
+                <EventNote />
+              </ListItemIcon>
+              <ListItemText primary="RGPD" />
+            </ListItemButton>
+          </List>
+        </Collapse>
+      </ListItem>
+
+      <ListItem key={'activities'} disablePadding sx={{ display: 'block'}}>
+        <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('activities')}>
+          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Groups /> </ListItemIcon>
+          <ListItemText primary={'Activité'} sx={{ opacity: open ? 1 : 0 }} />
+          {openedItems.includes('activities') ? <ExpandLess /> : <ChevronRight />}
+        </ListItemButton>
+        <Collapse in={openedItems.includes('activities')} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <StyledNavLink to="/online/ressources-humaines/beneficiaires">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <Groups2 />
+                </ListItemIcon>
+                <ListItemText primary="Beneficiaires" />
+              </ListItemButton>
+            </StyledNavLink>
+            <StyledNavLink to="/online/activites/evenements">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <Event />
+                </ListItemIcon>
+                <ListItemText primary="Evénéments" />
+              </ListItemButton>
+            </StyledNavLink>
+            <StyledNavLink to="/online/activites/absences-beneficiaires">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <EventBusy />
+                </ListItemIcon>
+                <ListItemText primary="Absences" />
+              </ListItemButton>
+            </StyledNavLink>
+          </List>
+        </Collapse>
+      </ListItem>
+      
+      <ListItem key={'human_ressources'} disablePadding sx={{ display: 'block' }}>
+        <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('human_ressources')}>
+          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Groups /> </ListItemIcon>
+          <ListItemText primary={'Ressources humaines'} sx={{ opacity: open ? 1 : 0 }} />
+          {openedItems.includes('human_ressources') ? <ExpandLess /> : <ChevronRight />}
+        </ListItemButton>
+        <Collapse in={openedItems.includes('human_ressources')} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <StyledNavLink to="/online/ressources-humaines/employes">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <Engineering />
+                </ListItemIcon>
+                <ListItemText primary="Employés" />
+              </ListItemButton>
+            </StyledNavLink>
+            
+            <ListItemButton sx={{ pl: 4 }} disabled>
+              <ListItemIcon>
+                <School />
+              </ListItemIcon>
+              <ListItemText primary="Formations" />
+            </ListItemButton>
+            
+            <ListItemButton sx={{ pl: 4 }} disabled>
+              <ListItemIcon>
+                <InterpreterMode />
+              </ListItemIcon>
+              <ListItemText primary="Entretiens" />
+            </ListItemButton>
+          </List>
+        </Collapse>
+      </ListItem>
+      <ListItem key={'administratives'} disablePadding sx={{ display: 'block' }}>
+        <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('administratives')}>
+          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Groups /> </ListItemIcon>
+          <ListItemText primary={'Administratif'} sx={{ opacity: open ? 1 : 0 }} />
+          {openedItems.includes('administratives') ? <ExpandLess /> : <ChevronRight />}
+        </ListItemButton>
+        <Collapse in={openedItems.includes('administratives')} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <StyledNavLink to="/online/administratif/appels">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <Tty />
+                </ListItemIcon>
+                <ListItemText primary="Appels" />
+              </ListItemButton>
+            </StyledNavLink>
+            <StyledNavLink to="/online/administratif/courriers">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <Email />
+                </ListItemIcon>
+                <ListItemText primary="Courriers" />
+              </ListItemButton>
+            </StyledNavLink>
+            <StyledNavLink to="/online/administratif/reunions">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <Workspaces />
+                </ListItemIcon>
+                <ListItemText primary="Réunions" />
+              </ListItemButton>
+            </StyledNavLink>
+            
+            <ListItemButton sx={{ pl: 4 }} disabled>
+              <ListItemIcon>
+                <Note />
+              </ListItemIcon>
+              <ListItemText primary="CR Réunion" />
+            </ListItemButton>
             <StyledNavLink to="/online/partenariats/partenaires">
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemIcon>
@@ -129,17 +243,6 @@ function  MainListItems({open}) {
                 <ListItemText primary="Partenaires" />
               </ListItemButton>
             </StyledNavLink>
-          </List>
-        </Collapse>
-      </ListItem>
-      <ListItem key={'purchases'} disablePadding sx={{ display: 'block' }}>
-        <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('purchases')}>
-          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <ShoppingCartIcon /> </ListItemIcon>
-          <ListItemText primary={'Achats'} sx={{ opacity: open ? 1 : 0 }} />
-          {openedItems.includes('purchases') ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={openedItems.includes('purchases')} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
             <StyledNavLink to="/online/achats/fournisseurs">
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemIcon>
@@ -148,23 +251,12 @@ function  MainListItems({open}) {
                 <ListItemText primary="Fournisseurs" />
               </ListItemButton>
             </StyledNavLink>
-          </List>
-        </Collapse>
-      </ListItem>
-      <ListItem key={'sales'} disablePadding sx={{ display: 'block' }}>
-        <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('sales')}>
-          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <StorefrontIcon /> </ListItemIcon>
-          <ListItemText primary={'Ventes'} sx={{ opacity: open ? 1 : 0 }} />
-          {openedItems.includes('sales') ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={openedItems.includes('sales')} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <StyledNavLink to="/online/ventes/clients">
+            <StyledNavLink to="/online/recuperations/objets">
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemIcon>
-                  <Diversity3 />
+                  <Category />
                 </ListItemIcon>
-                <ListItemText primary="Clients" />
+                <ListItemText primary="Récupérations" />
               </ListItemButton>
             </StyledNavLink>
           </List>
@@ -220,33 +312,6 @@ function  SecondaryListItems({open}){
   }
   return (
     <>
-      <ListItem key={'human_ressources'} disablePadding sx={{ display: 'block' }}>
-        <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('human_ressources')}>
-          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Groups /> </ListItemIcon>
-          <ListItemText primary={'Ressources humaines'} sx={{ opacity: open ? 1 : 0 }} />
-          {openedItems.includes('human_ressources') ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={openedItems.includes('human_ressources')} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <StyledNavLink to="/online/ressources-humaines/beneficiaires">
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <Groups2 />
-                </ListItemIcon>
-                <ListItemText primary="Beneficiaires" />
-              </ListItemButton>
-            </StyledNavLink>
-            <StyledNavLink to="/online/ressources-humaines/employes">
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <Engineering />
-                </ListItemIcon>
-                <ListItemText primary="Employés" />
-              </ListItemButton>
-            </StyledNavLink>
-          </List>
-        </Collapse>
-      </ListItem>
       <StyledNavLink to="/online/utilisateurs">
         <ListItem key={'dashboard'} disablePadding sx={{ display: 'block' }}>
           <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
@@ -275,7 +340,7 @@ function  SecondaryListItems({open}){
 
 function  MoreItems({open}){
   
-  const [openedItems, setOpenedItems] = React.useState(['activities', 'qualities', 'administratives']);
+  const [openedItems, setOpenedItems] = React.useState(['partnerships', 'sales', 'purchases', 'Gouvernance']);
 
   const handleClickToOpenItem = (openedItem) => {
     if(openedItems.includes(openedItem)) setOpenedItems(openedItems.filter(item => item !== openedItem));
@@ -283,87 +348,222 @@ function  MoreItems({open}){
   };
   return (
     <>
-      <ListItem key={'activities'} disablePadding sx={{ display: 'block' }}>
-        <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('activities')}>
-          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Groups /> </ListItemIcon>
-          <ListItemText primary={'Activités'} sx={{ opacity: open ? 1 : 0 }} />
-          {openedItems.includes('activities') ? <ExpandLess /> : <ExpandMore />}
+    <ListItem key={'partnerships'} disablePadding sx={{ display: 'block' }}>
+      <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('partnerships')}>
+        <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Construction /> </ListItemIcon>
+        <ListItemText primary={'Service généraux'} sx={{ opacity: open ? 1 : 0 }} />
+        {openedItems.includes('partnerships') ? <ExpandLess /> : <ChevronRight />}
+      </ListItemButton>
+      <Collapse in={openedItems.includes('partnerships')} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <StyledNavLink to="/online/travaux/interventions">
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <EventAvailableIcon />
+              </ListItemIcon>
+              <ListItemText primary="Interventions" />
+            </ListItemButton>
+          </StyledNavLink>
+          <StyledNavLink to="/online/vehicules">
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <LocalShippingIcon />
+              </ListItemIcon>
+              <ListItemText primary="Parc automobile" />
+            </ListItemButton>
+          </StyledNavLink>
+            
+            <ListItemButton sx={{ pl: 4 }} disabled>
+              <ListItemIcon>
+                <School />
+              </ListItemIcon>
+              <ListItemText primary="Compteurs" />
+            </ListItemButton>
+            
+            <ListItemButton sx={{ pl: 4 }} disabled>
+              <ListItemIcon>
+                <InterpreterMode />
+              </ListItemIcon>
+              <ListItemText primary="Engagements" />
+            </ListItemButton>
+        </List>
+      </Collapse>
+    </ListItem>
+    <ListItem key={'sales'} disablePadding sx={{ display: 'block' }}>
+      <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('sales')}>
+        <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Work /> </ListItemIcon>
+        <ListItemText primary={'Finance'} sx={{ opacity: open ? 1 : 0 }} />
+        {openedItems.includes('sales') ? <ExpandLess /> : <ChevronRight />}
+      </ListItemButton>
+      <Collapse in={openedItems.includes('sales')} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+            
+            <ListItemButton sx={{ pl: 4 }} disabled>
+              <ListItemIcon>
+                <PriceChange />
+              </ListItemIcon>
+              <ListItemText primary="Dépenses" />
+            </ListItemButton>
+            <ListItemButton sx={{ pl: 4 }} disabled>
+              <ListItemIcon>
+                <HomeRepairService />
+              </ListItemIcon>
+              <ListItemText primary="Caisse" />
+            </ListItemButton>
+            <ListItemButton sx={{ pl: 4 }} disabled>
+              <ListItemIcon>
+                <Savings />
+              </ListItemIcon>
+              <ListItemText primary="Budget" />
+            </ListItemButton>
+        </List>
+      </Collapse>
+    </ListItem>
+    <ListItem key={'purchases'} disablePadding sx={{ display: 'block' }}>
+      <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('purchases')}>
+        <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <ShoppingCartIcon /> </ListItemIcon>
+        <ListItemText primary={'Informatique'} sx={{ opacity: open ? 1 : 0 }} />
+        {openedItems.includes('purchases') ? <ExpandLess /> : <ChevronRight />}
+      </ListItemButton>
+      <Collapse in={openedItems.includes('purchases')} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <StyledNavLink to="/online/materiels">
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <Computer />
+              </ListItemIcon>
+              <ListItemText primary="Matériels" />
+            </ListItemButton>
+          </StyledNavLink>
+            <ListItemButton sx={{ pl: 4 }} disabled>
+              <ListItemIcon>
+                <Microsoft />
+              </ListItemIcon>
+              <ListItemText primary="Logiciel" />
+            </ListItemButton>
+            <ListItemButton sx={{ pl: 4 }} disabled>
+              <ListItemIcon>
+                <Backup />
+              </ListItemIcon>
+              <ListItemText primary="Sauvegardes" />
+            </ListItemButton>
+        </List>
+      </Collapse>
+    </ListItem>
+    
+    <ListItem key={'Gouvernance'} disablePadding sx={{ display: 'block' }}>
+      <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('Gouvernance')}>
+        <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Groups2 /> </ListItemIcon>
+        <ListItemText primary={'Gouvernance'} sx={{ opacity: open ? 1 : 0 }} />
+        {openedItems.includes('Gouvernance') ? <ExpandLess /> : <ChevronRight />}
+      </ListItemButton>
+      <Collapse in={openedItems.includes('Gouvernance')} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+            
+            <ListItemButton sx={{ pl: 4 }} disabled>
+              <ListItemIcon>
+                <Group />
+              </ListItemIcon>
+              <ListItemText primary="Membres" />
+            </ListItemButton>
+            <ListItemButton sx={{ pl: 4 }} disabled>
+              <ListItemIcon>
+                <Note />
+              </ListItemIcon>
+              <ListItemText primary="CR Réunion" />
+            </ListItemButton>
+        </List>
+      </Collapse>
+    </ListItem>
+    {/* <StyledNavLink to="/online/travaux/interventions">
+      <ListItem key={'tasks'} disablePadding sx={{ display: 'block' }}>
+        <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
+          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <EventAvailableIcon /> </ListItemIcon>
+          <ListItemText primary={'Interventions'} sx={{ opacity: open ? 1 : 0 }} />
         </ListItemButton>
-        <Collapse in={openedItems.includes('activities')} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <StyledNavLink to="/online/activites/evenements">
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <CalendarMonth />
-                </ListItemIcon>
-                <ListItemText primary="Evénéments" />
-              </ListItemButton>
-            </StyledNavLink>
-            <StyledNavLink to="/online/activites/absences-beneficiaires">
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <CalendarMonth />
-                </ListItemIcon>
-                <ListItemText primary="Absences" />
-              </ListItemButton>
-            </StyledNavLink>
-          </List>
-        </Collapse>
       </ListItem>
-      <ListItem key={'qualities'} disablePadding sx={{ display: 'block' }}>
-        <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('qualities')}>
-          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Groups /> </ListItemIcon>
-          <ListItemText primary={'Qualités'} sx={{ opacity: open ? 1 : 0 }} />
-          {openedItems.includes('qualities') ? <ExpandLess /> : <ExpandMore />}
+    </StyledNavLink>
+    <StyledNavLink to="/online/recuperations/objets">
+      <ListItem key={'tasks'} disablePadding sx={{ display: 'block' }}>
+        <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
+          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Category /> </ListItemIcon>
+          <ListItemText primary={'Récupérations'} sx={{ opacity: open ? 1 : 0 }} />
         </ListItemButton>
-        <Collapse in={openedItems.includes('qualities')} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <StyledNavLink to="/online/qualites/evenements-indesirables">
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <CalendarMonth />
-                </ListItemIcon>
-                <ListItemText primary="Evénéments Indésirables" />
-              </ListItemButton>
-            </StyledNavLink>
-          </List>
-        </Collapse>
       </ListItem>
-      <ListItem key={'administratives'} disablePadding sx={{ display: 'block' }}>
-        <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('administratives')}>
-          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Groups /> </ListItemIcon>
-          <ListItemText primary={'Administratif'} sx={{ opacity: open ? 1 : 0 }} />
-          {openedItems.includes('administratives') ? <ExpandLess /> : <ExpandMore />}
+    </StyledNavLink>
+    <StyledNavLink to="/online/materiels">
+      <ListItem key={'materials'} disablePadding sx={{ display: 'block' }}>
+        <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
+          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <ConstructionIcon /> </ListItemIcon>
+          <ListItemText primary={'Matériels'} sx={{ opacity: open ? 1 : 0 }} />
         </ListItemButton>
-        <Collapse in={openedItems.includes('administratives')} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <StyledNavLink to="/online/administratif/appels">
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <Tty />
-                </ListItemIcon>
-                <ListItemText primary="Appels" />
-              </ListItemButton>
-            </StyledNavLink>
-            <StyledNavLink to="/online/administratif/courriers">
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <Email />
-                </ListItemIcon>
-                <ListItemText primary="Courriers" />
-              </ListItemButton>
-            </StyledNavLink>
-            <StyledNavLink to="/online/administratif/reunions">
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <Workspaces />
-                </ListItemIcon>
-                <ListItemText primary="Réunions" />
-              </ListItemButton>
-            </StyledNavLink>
-          </List>
-        </Collapse>
       </ListItem>
+    </StyledNavLink>
+     <StyledNavLink to="/online/vehicules">
+      <ListItem key={'vehicles'} disablePadding sx={{ display: 'block' }}>
+        <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
+          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <LocalShippingIcon /> </ListItemIcon>
+          <ListItemText primary={'Véhicules'} sx={{ opacity: open ? 1 : 0 }} />
+        </ListItemButton>
+      </ListItem>
+    </StyledNavLink>
+    <ListItem key={'partnerships'} disablePadding sx={{ display: 'block' }}>
+      <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('partnerships')}>
+        <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Handshake /> </ListItemIcon>
+        <ListItemText primary={'partenariats'} sx={{ opacity: open ? 1 : 0 }} />
+        {openedItems.includes('partnerships') ? <ExpandLess /> : <ChevronRight />}
+      </ListItemButton>
+      <Collapse in={openedItems.includes('partnerships')} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <StyledNavLink to="/online/partenariats/partenaires">
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <Groups3 />
+              </ListItemIcon>
+              <ListItemText primary="Partenaires" />
+            </ListItemButton>
+          </StyledNavLink>
+        </List>
+      </Collapse>
+    </ListItem>
+    <ListItem key={'purchases'} disablePadding sx={{ display: 'block' }}>
+      <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('purchases')}>
+        <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <ShoppingCartIcon /> </ListItemIcon>
+        <ListItemText primary={'Achats'} sx={{ opacity: open ? 1 : 0 }} />
+        {openedItems.includes('purchases') ? <ExpandLess /> : <ChevronRight />}
+      </ListItemButton>
+      <Collapse in={openedItems.includes('purchases')} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <StyledNavLink to="/online/achats/fournisseurs">
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <PeopleIcon />
+              </ListItemIcon>
+              <ListItemText primary="Fournisseurs" />
+            </ListItemButton>
+          </StyledNavLink>
+        </List>
+      </Collapse>
+    </ListItem>
+    <ListItem key={'sales'} disablePadding sx={{ display: 'block' }}>
+      <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={() => handleClickToOpenItem('sales')}>
+        <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <StorefrontIcon /> </ListItemIcon>
+        <ListItemText primary={'Ventes'} sx={{ opacity: open ? 1 : 0 }} />
+        {openedItems.includes('sales') ? <ExpandLess /> : <ChevronRight />}
+      </ListItemButton>
+      <Collapse in={openedItems.includes('sales')} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <StyledNavLink to="/online/ventes/clients">
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <Diversity3 />
+              </ListItemIcon>
+              <ListItemText primary="Clients" />
+            </ListItemButton>
+          </StyledNavLink>
+        </List>
+      </Collapse>
+    </ListItem> */}
     </>
   );
 }
@@ -374,7 +574,6 @@ export default function  ListItems({open}) {
       <List>
         <MainListItems open={open} />
       </List>
-      <Divider />
         <MoreItems open={open} />
       <Divider />
       <List>

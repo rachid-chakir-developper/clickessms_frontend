@@ -3,6 +3,20 @@
 import { gql } from '@apollo/client';
 import { BENEFICIARY_MINI_INFOS } from './BeneficiaryFragment';
 import { EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
+import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
+import { ESTABLISHMENT_SERVICE_MINI_INFOS } from './EstablishmentServiceFragment';
+
+
+
+export const UDESIRABLE_EVENT_ESTABLISHMENT_DETAILS = gql`
+  fragment UndesirableEventEstablishmentTypeFragment on UndesirableEventEstablishmentType {
+    id
+    establishment{
+      ...EstablishmentMiniInfosFragment
+    }
+  }
+  ${ESTABLISHMENT_MINI_INFOS}
+`;
 
 export const UDESIRABLE_EVENT_BASIC_INFOS = gql`
   fragment UndesirableEventBasicInfosFragment on UndesirableEventType {
@@ -15,12 +29,27 @@ export const UDESIRABLE_EVENT_BASIC_INFOS = gql`
     endingDateTime
     description
     isActive
+    status
+    establishments{
+      ...UndesirableEventEstablishmentTypeFragment
+    }
     folder{
       id
       number
       name
     }
   }
+  ${UDESIRABLE_EVENT_ESTABLISHMENT_DETAILS}
+`;
+
+export const UDESIRABLE_EVENT_ESTABLISHMENT_SERVICE_DETAILS = gql`
+  fragment UndesirableEventEstablishmentServiceTypeFragment on UndesirableEventEstablishmentServiceType {
+    id
+    establishmentService{
+      ...EstablishmentServiceMiniInfosFragment
+    }
+  }
+  ${ESTABLISHMENT_SERVICE_MINI_INFOS}
 `;
 
 export const UDESIRABLE_EVENT_BENEFICIARY_DETAILS = gql`
@@ -62,6 +91,9 @@ export const UDESIRABLE_EVENT_DETAILS = gql`
     courseFactsPlace
     circumstanceEventText
     observation
+    establishmentServices{
+      ...UndesirableEventEstablishmentServiceTypeFragment
+    }
     beneficiaries{
       ...UndesirableEventBeneficiaryTypeFragment
     }
@@ -89,6 +121,7 @@ export const UDESIRABLE_EVENT_DETAILS = gql`
     }
   }
   ${UDESIRABLE_EVENT_BASIC_INFOS}
+  ${UDESIRABLE_EVENT_ESTABLISHMENT_SERVICE_DETAILS}
   ${UDESIRABLE_EVENT_EMPLOYEE_DETAILS}
   ${UDESIRABLE_EVENT_PERSON_NOTIFIED_DETAILS}
   ${UDESIRABLE_EVENT_BENEFICIARY_DETAILS}
@@ -104,6 +137,9 @@ export const UDESIRABLE_EVENT_RECAP_DETAILS = gql`
     courseFactsPlace
     circumstanceEventText
     observation
+    establishmentServices{
+      ...UndesirableEventEstablishmentServiceTypeFragment
+    }
     beneficiaries{
       ...UndesirableEventBeneficiaryTypeFragment
     }
@@ -131,6 +167,8 @@ export const UDESIRABLE_EVENT_RECAP_DETAILS = gql`
     }
   }
   ${UDESIRABLE_EVENT_BASIC_INFOS}
+  ${UDESIRABLE_EVENT_ESTABLISHMENT_DETAILS}
+  ${UDESIRABLE_EVENT_ESTABLISHMENT_SERVICE_DETAILS}
   ${UDESIRABLE_EVENT_BENEFICIARY_DETAILS}
   ${UDESIRABLE_EVENT_PERSON_NOTIFIED_DETAILS}
   ${EMPLOYEE_BASIC_INFOS}

@@ -24,7 +24,7 @@ export default function MaterialItemCard({material, onDeleteMaterial, onUpdateMa
     <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }}>
       <Tooltip title={material?.name}>
         <CardMedia component="img" width="100" height="100" alt={material?.name}
-          src={ material?.image ? material?.image : "https://mui.com/static/images/cards/real-estate.png"}
+          src={ material?.image ? material?.image : "/default-placeholder.jpg"}
           sx={{ borderRadius: 0.6, height: 100, width: 100}}
         />
       </Tooltip>

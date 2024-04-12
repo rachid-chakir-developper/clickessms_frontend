@@ -12,14 +12,14 @@ import { getFormatTime, getStatusColor, getStatusLabel } from '../../../../_shar
 export default function Tasks({ tasks = [] }) {
   return (
     <React.Fragment>
-      <Title>Les interventions d'aujourd'hui</Title>
+      <Title>Événements à traiter</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Nom</TableCell>
-            <TableCell>Heure</TableCell>
-            <TableCell>Client</TableCell>
-            <TableCell>Adresse</TableCell>
+            <TableCell>Titre</TableCell>
+            <TableCell>Échéance</TableCell>
+            <TableCell>Établissement</TableCell>
+            <TableCell>Type</TableCell>
             <TableCell align="right">Etat</TableCell>
           </TableRow>
         </TableHead>
@@ -47,7 +47,7 @@ export default function Tasks({ tasks = [] }) {
           ))}
         </TableBody>
       </Table>
-      { tasks?.length < 1 && <Alert severity="warning">Aucune intervention pour aujourd'hui.</Alert> }
+      { tasks?.length < 1 && <Alert severity="warning">Aucun événement pour aujourd'hui.</Alert> }
     </React.Fragment>
   );
 }

@@ -39,7 +39,7 @@ export default function ListSettings() {
                     width="100"
                     height="100"
                     alt="123 Main St, Phoenix, AZ cover"
-                    src="https://mui.com/static/images/cards/real-estate.png"
+                    src="/default-placeholder.jpg"
                     sx={{
                     borderRadius: 0.5,
                     width: { xs: '100%', sm: 100 },
@@ -77,7 +77,7 @@ export default function ListSettings() {
                     width="100"
                     height="100"
                     alt="123 Main St, Phoenix, AZ cover"
-                    src="https://mui.com/static/images/cards/real-estate.png"
+                    src="/default-placeholder.jpg"
                     sx={{
                     borderRadius: 0.5,
                     width: { xs: '100%', sm: 100 },

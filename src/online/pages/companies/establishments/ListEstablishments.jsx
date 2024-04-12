@@ -8,13 +8,13 @@ import { useMutation } from '@apollo/client';
 import { Add } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
-import { useFeedBacks } from '../../../_shared/context/feedbacks/FeedBacksProvider';
-import { DELETE_ESTABLISHMENT, PUT_ESTABLISHMENT_STATE } from '../../../_shared/graphql/mutations/EstablishmentMutations';
-import { GET_ESTABLISHMENTS } from '../../../_shared/graphql/queries/EstablishmentQueries';
-import ProgressService from '../../../_shared/services/feedbacks/ProgressService';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { DELETE_ESTABLISHMENT, PUT_ESTABLISHMENT_STATE } from '../../../../_shared/graphql/mutations/EstablishmentMutations';
+import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
+import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import EstablishmentFilter from './EstablishmentFilter';
 import { useLazyQuery } from '@apollo/client';
-import PaginationControlled from '../../../_shared/components/helpers/PaginationControlled';
+import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -147,7 +147,7 @@ export default function ListEstablishments() {
     <Grid container spacing={2} >
         <Grid item="true" xs={12}>
             <Box sx={{display : 'flex', justifyContent : 'flex-end', my : 3}}>
-              <Link to="/online/etablissements/ajouter" className="no_style">
+              <Link to="/online/associations/etablissements/ajouter" className="no_style">
                 <Button variant="contained" endIcon={<Add />} >
                     Ajouter un établissement
                 </Button>

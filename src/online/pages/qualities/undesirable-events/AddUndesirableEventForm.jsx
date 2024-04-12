@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Stack, Box,  Typography, InputAdornment, Button, Divider, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Stack, Box,  Typography, Button, Divider, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,13 +10,10 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
-import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
-import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import { GET_UDESIRABLE_EVENT } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 import { POST_UDESIRABLE_EVENT, PUT_UDESIRABLE_EVENT } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
 import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
@@ -24,6 +21,8 @@ import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueri
 import { UDESIRABLE_EVENT_SEVERITY, UDESIRABLE_EVENT_TYPES } from '../../../../_shared/tools/constants';
 import { GET_DATAS_UDESIRABLE_EVENT } from '../../../../_shared/graphql/queries/DataQueries';
 import SelectCheckmarks from '../../../../_shared/components/form-fields/SelectCheckmarks';
+import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
+import { GET_ESTABLISHMENT_SERVICES } from '../../../../_shared/graphql/queries/EstablishmentServiceQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -45,11 +44,13 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title}) {
             startingDateTime : dayjs(new Date()), endingDateTime : dayjs(new Date()), undesirableEventType : UDESIRABLE_EVENT_TYPES.NORMAL,
             normalTypes : [], seriousTypes : [], frequency : null, severity: UDESIRABLE_EVENT_SEVERITY.MEDIUM,
             actionsTakenText : '', courseFactsDateTime: dayjs(new Date()), courseFactsPlace: '', circumstanceEventText: '',
-            isActive : true, employees: [], beneficiaries: [], notifiedPersons: [], otherNotifiedPersons: '', employee : null
+            isActive : true, establishments: [], establishmentServices: [], employees: [], beneficiaries: [], notifiedPersons: [], otherNotifiedPersons: '', employee : null
           },
         validationSchema: validationSchema,
         onSubmit: (values) => {
             let { image , ...undesirableEventCopy } = values
+            undesirableEventCopy.establishments = undesirableEventCopy.establishments.map(i => i?.id)
+            undesirableEventCopy.establishmentServices = undesirableEventCopy.establishmentServices.map(i => i?.id)
             undesirableEventCopy.employees = undesirableEventCopy.employees.map(i => i?.id)
             undesirableEventCopy.beneficiaries = undesirableEventCopy.beneficiaries.map(i => i?.id)
             undesirableEventCopy.notifiedPersons = undesirableEventCopy.notifiedPersons.map(i => i?.id)
@@ -72,6 +73,21 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title}) {
                 })
         },
     });
+    
+  const { 
+    loading: loadingEstablishments, 
+    data: establishmentsData, 
+    error: establishmentsError, 
+    fetchMore:  fetchMoreEstablishments 
+  } = useQuery(GET_ESTABLISHMENTS, { fetchPolicy: "network-only", variables: { page: 1, limit: 10 }})
+
+  const { 
+      loading: loadingEstablishmentServices, 
+      data: establishmentServicesData, 
+      error: establishmentServicesError, 
+      fetchMore:  fetchMoreEstablishmentServices 
+    } = useQuery(GET_ESTABLISHMENT_SERVICES, { fetchPolicy: "network-only", variables: { page: 1, limit: 10 }})
+
     const { 
         loading: loadingBeneficiaries, 
         data: beneficiariesData, 
@@ -185,6 +201,8 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title}) {
             undesirableEventCopy.startingDateTime = dayjs(undesirableEventCopy.startingDateTime)
             undesirableEventCopy.courseFactsDateTime = dayjs(undesirableEventCopy.courseFactsDateTime)
             undesirableEventCopy.endingDateTime = dayjs(undesirableEventCopy.endingDateTime)
+            undesirableEventCopy.establishments = undesirableEventCopy.establishments ? undesirableEventCopy.establishments.map(i => i?.establishment) : []
+            undesirableEventCopy.establishmentServices = undesirableEventCopy.establishmentServices ? undesirableEventCopy.establishmentServices.map(i => i?.establishmentService) : []
             undesirableEventCopy.beneficiaries = undesirableEventCopy.beneficiaries ? undesirableEventCopy.beneficiaries.map(i => i?.beneficiary) : []
             undesirableEventCopy.employees = undesirableEventCopy.employees ? undesirableEventCopy.employees.map(i => i?.employee) : []
             undesirableEventCopy.notifiedPersons = undesirableEventCopy.notifiedPersons ? undesirableEventCopy.notifiedPersons.map(i => i?.employee) : []
@@ -224,6 +242,20 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title}) {
                                     helperText={formik.touched.title && formik.errors.title}
                                     disabled={loadingPost || loadingPut}
                                 />
+                            </Item>
+                            <Item>
+                                <TheAutocomplete options={establishmentsData?.establishments?.nodes} label="Établissements"
+                                    placeholder="Ajouter un établissement"
+                                    limitTags={3}
+                                    value={formik.values.establishments}
+                                    onChange={(e, newValue) => formik.setFieldValue('establishments', newValue)}/>
+                            </Item>
+                            <Item>
+                                <TheAutocomplete options={establishmentServicesData?.establishmentServices?.nodes} label="services"
+                                    placeholder="Ajouter un service"
+                                    limitTags={3}
+                                    value={formik.values.establishmentServices}
+                                    onChange={(e, newValue) => formik.setFieldValue('establishmentServices', newValue)}/>
                             </Item>
                         </Grid>
                         <Grid xs={2} sm={4} md={4}>

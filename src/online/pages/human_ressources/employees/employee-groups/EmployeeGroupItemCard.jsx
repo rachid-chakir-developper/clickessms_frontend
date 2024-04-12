@@ -15,7 +15,7 @@ export default function EmployeeGroupItemCard({employeeGroup, onDeleteEmployeeGr
     <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }}>
       <Tooltip title={employeeGroup?.name}>
         <CardMedia component="img" width="100" height="100" alt={employeeGroup?.name}
-          src={ employeeGroup?.image ? employeeGroup?.image : "https://mui.com/static/images/cards/real-estate.png"}
+          src={ employeeGroup?.image ? employeeGroup?.image : "/default-placeholder.jpg"}
           sx={{ borderRadius: 0.6, height: 100, width: 100}}
         />
       </Tooltip>

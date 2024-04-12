@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { Box, Divider, Paper, Stack, alpha } from '@mui/material';
 import { Grid, Typography, Avatar,} from '@mui/material';
-import { GET_ESTABLISHMENT } from '../../../_shared/graphql/queries/EstablishmentQueries';
-import { getFormatDateTime } from '../../../_shared/tools/functions';
+import { GET_ESTABLISHMENT } from '../../../../_shared/graphql/queries/EstablishmentQueries';
+import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import styled from '@emotion/styled';
 import EstablishmentItemCard from './EstablishmentItemCard';
 
@@ -49,6 +49,7 @@ const EstablishmentDetailsPage = ({ establishment }) => {
     city,
     zipCode,
     address,
+    additionalAddress,
     mobile,
     fix,
     fax,
@@ -123,13 +124,12 @@ const EstablishmentDetailsPage = ({ establishment }) => {
               <Typography variant="h6" sx={{ fontStyle: 'italic' }}>
                   {siret}
               </Typography>
-              {address && address!=='' && <Typography variant="body2">
-                  {address}
+              {address && address!=='' && <Typography variant="body2" sx={{ textAlign: 'center' }}>
+                  {address} {additionalAddress} <br />
+                  {zipCode}  {city}
               </Typography>}
               {establishmentType && establishmentType!=='' && <Typography variant="body2">
-                Type: 
-                  {establishmentType === 'PRIMARY' && <b> Primaire</b>}
-                  {establishmentType === 'SECONDARY' && <b> Sécondaire</b>}
+                Type:  {establishmentType?.name}
               </Typography>}
               <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
                   {email}
@@ -175,20 +175,6 @@ const EstablishmentDetailsPage = ({ establishment }) => {
               />
             </Item>
           </Paper></>}
-          <Typography variant="h6" gutterBottom sx={{ mt:3 }}>
-            Informations Bancaires
-          </Typography>
-          <Paper sx={{ padding : 2}} variant="outlined">
-            <Typography variant="body1">
-              IBAN: {iban}
-            </Typography>
-            <Typography variant="body1">
-              BIC: {bic}
-            </Typography>
-            <Typography variant="body1">
-              Nom de la banque: {bankName}
-            </Typography>
-          </Paper>
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>

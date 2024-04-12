@@ -47,7 +47,7 @@ export const MEETING_DETAILS = gql`
     reasons{
       id
       name
-      descreption
+      description
     }
     otherReasons
     observation
@@ -74,7 +74,7 @@ export const MEETING_RECAP_DETAILS = gql`
     reasons{
       id
       name
-      descreption
+      description
     }
     otherReasons
     observation

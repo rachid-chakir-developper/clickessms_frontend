@@ -14,7 +14,7 @@ export default function UserItemCard({user, onDeleteUser, onUpdateUserState }) {
     <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }} >
       <Tooltip title={`${user?.firstName} ${user?.lastName}`}>
         <CardMedia component="img" width="100" height="100" alt={`${user?.firstName} ${user?.lastName}`}
-          src={ user?.photo ? user?.photo : "https://mui.com/static/images/cards/real-estate.png"}
+          src={ user?.photo ? user?.photo : "/default-placeholder.jpg"}
           sx={{ borderRadius: 0.6, height: 100, width: 100}}
         />
       </Tooltip>

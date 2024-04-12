@@ -16,24 +16,31 @@ const Item = styled(Stack)(({ theme }) => ({
 
 
 const modulesToManage = [
+  
         {
-          title: 'Activités',
+          title: 'Etablissments',
           datas: [
-            {name : "Motif de l'absence", descreption : "", type : 'AbsenceReason'}
+            {name : "Type de l'établissement", description : "", type : 'EstablishmentType'}
           ]
         },
         {
-          title: 'Qaulités',
+          title: 'Activités',
           datas: [
-            {name : "Types des événements indésirables normaux", descreption : "", type : 'UndesirableEventNormalType'},
-            {name : "Types des événement indésirables graves", descreption : "", type : 'UndesirableEventSeriousType'},
-            {name : "Fréquences des événement indésirables", descreption : "", type : 'UndesirableEventFrequency'},
+            {name : "Motif de l'absence", description : "", type : 'AbsenceReason'}
+          ]
+        },
+        {
+          title: 'Qualités',
+          datas: [
+            {name : "Types des événements indésirables normaux", description : "", type : 'UndesirableEventNormalType'},
+            {name : "Types des événement indésirables graves", description : "", type : 'UndesirableEventSeriousType'},
+            {name : "Fréquences des événement indésirables", description : "", type : 'UndesirableEventFrequency'},
           ]
         },
         {
           title: 'Administratif',
           datas: [
-            {name : "Motif de la réunion", descreption : "", type : 'MeetingReason'}
+            {name : "Motif de la réunion", description : "", type : 'MeetingReason'}
           ]
         }
     ];
@@ -110,7 +117,7 @@ export default function Datas() {
                                     {data.name}
                                   </Typography>
                                   <Typography variant="subtitle1" color="text.secondary" component="div">
-                                    {data.descreption}
+                                    {data.description}
                                   </Typography>
                                 </CardContent>
                                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', p: 1, height: '100%' }}>

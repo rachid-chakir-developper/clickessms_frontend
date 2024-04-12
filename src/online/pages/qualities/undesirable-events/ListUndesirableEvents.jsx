@@ -14,6 +14,7 @@ import { GET_UDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/Undes
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import UndesirableEventFilter from './UndesirableEventFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
+import TableListUndesirableEvents from './TableListUndesirableEvents';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -154,10 +155,10 @@ export default function ListUndesirableEvents() {
         <Grid item="true" xs={12}>
           <UndesirableEventFilter onFilterChange={handleFilterChange} />
         </Grid>
-        <Grid item="true" xs={12}>
+        {/* <Grid item="true" xs={12}>
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-              {loadingUndesirableEvents && <Grid key={'pgrs'}  item xs={2} sm={4} md={3}><ProgressService type="mediaCard" /></Grid>}
+              {loadingUndesirableEvents && <Grid key={'pgrs'}  item="true" xs={2} sm={4} md={3}><ProgressService type="mediaCard" /></Grid>}
               {undesirableEventsData?.undesirableEvents?.nodes?.length < 1 && !loadingUndesirableEvents && <Alert severity="warning">Aucun événement indésirable trouvé.</Alert>}
               {undesirableEventsData?.undesirableEvents?.nodes?.map((undesirableEvent, index) => (
                 <Grid xs={2} sm={4} md={3} key={index}>
@@ -172,6 +173,13 @@ export default function ListUndesirableEvents() {
               ))}
             </Grid>
           </Box>
+        </Grid> */}
+        <Grid item="true" xs={12}>
+          <TableListUndesirableEvents   loading={loadingUndesirableEvents}
+                                        rows={undesirableEventsData?.undesirableEvents?.nodes || []} 
+                                        onDeleteUndesirableEvent={onDeleteUndesirableEvent}
+                                        onUpdateUndesirableEventState={onUpdateUndesirableEventState}
+                                        />
         </Grid>
         <Grid item="true" xs={12}>
           <PaginationControlled

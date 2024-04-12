@@ -10,7 +10,7 @@ const size = {
 export default function AppPieChart({ data = [] }) {
   return (
     <>
-        <Title>Les interventions</Title>
+        <Title>EI & EIG</Title>
         <PieChart
                 series={[
                     {

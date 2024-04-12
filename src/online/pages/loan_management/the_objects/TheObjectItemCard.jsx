@@ -14,7 +14,7 @@ export default function TheObjectItemCard({theObject, onDeleteTheObject, onUpdat
     <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }}>
       <Tooltip title={theObject?.name}>
         <CardMedia component="img" width="100" height="100" alt={theObject?.name}
-          src={ theObject?.image ? theObject?.image : "https://mui.com/static/images/cards/real-estate.png"}
+          src={ theObject?.image ? theObject?.image : "/default-placeholder.jpg"}
           sx={{ borderRadius: 0.6, height: 100, width: 100}}
         />
       </Tooltip>

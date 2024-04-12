@@ -24,7 +24,7 @@ export default function PartnerItemCard({partner, onDeletePartner, onUpdatePartn
     <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }} >
       <Tooltip title={partner?.name}>
         <CardMedia component="img" width="100" height="100" alt={partner?.name}
-          src={ partner?.photo ? partner?.photo : "https://mui.com/static/images/cards/real-estate.png"}
+          src={ partner?.photo ? partner?.photo : "/default-placeholder.jpg"}
           sx={{ borderRadius: 0.6, height: 100, width: 100}}
         />
       </Tooltip>

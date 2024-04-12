@@ -10,6 +10,15 @@ export const GET_DATAS = gql`
     ${DATA_BASIC_INFOS}
 `
 
+
+export const GET_DATAS_ESTABLISHMENT_EVENT = gql`
+  query{
+    establishmentTypes : datas(typeData : "EstablishmentType"){
+        ...DataBasicInfosFragment
+    }
+  } 
+  ${DATA_BASIC_INFOS}
+  `
 export const GET_DATAS_BENEFICIARY_ABSENCE = gql`
   query{
     absenceReasons : datas(typeData : "AbsenceReason"){

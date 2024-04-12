@@ -32,7 +32,7 @@ const SearchResultList = ({ results, loading, keyword }) => {
                             <Link to={`/online/travaux/interventions/details/${task?.id}`} className="no_style">
                                 <ListItem alignItems="flex-start">
                                     <ListItemAvatar>
-                                    <Avatar alt={`Avatar ${index + 1}`} src={ task?.image ? task?.image : "https://mui.com/static/images/cards/real-estate.png"} />
+                                    <Avatar alt={`Avatar ${index + 1}`} src={ task?.image ? task?.image : "/default-placeholder.jpg"} />
                                     </ListItemAvatar>
                                     <ListItemText
                                     primary={task?.name}
@@ -69,7 +69,7 @@ const SearchResultList = ({ results, loading, keyword }) => {
                             <Link to={`/online/employes/modifier/${employee?.id}`} className="no_style">
                                 <ListItem alignItems="flex-start">
                                     <ListItemAvatar>
-                                    <Avatar alt={`Avatar ${index + 1}`} src={ employee?.photo ? employee?.photo : "https://mui.com/static/images/cards/real-estate.png"} />
+                                    <Avatar alt={`Avatar ${index + 1}`} src={ employee?.photo ? employee?.photo : "/default-placeholder.jpg"} />
                                     </ListItemAvatar>
                                     <ListItemText
                                     primary={`${employee?.firstName} ${employee?.lastName}`}
@@ -106,7 +106,7 @@ const SearchResultList = ({ results, loading, keyword }) => {
                             <Link to={`/online/ventes/clients/modifier/${client?.id}`} className="no_style">
                                 <ListItem alignItems="flex-start">
                                     <ListItemAvatar>
-                                    <Avatar alt={`Avatar ${index + 1}`} src={ client?.image ? client?.image : "https://mui.com/static/images/cards/real-estate.png"} />
+                                    <Avatar alt={`Avatar ${index + 1}`} src={ client?.image ? client?.image : "/default-placeholder.jpg"} />
                                     </ListItemAvatar>
                                     <ListItemText
                                     primary={client?.name}
@@ -143,7 +143,7 @@ const SearchResultList = ({ results, loading, keyword }) => {
                             <Link to={`/online/achats/fournisseurs/modifier/${supplier?.id}`} className="no_style">
                                 <ListItem alignItems="flex-start">
                                     <ListItemAvatar>
-                                    <Avatar alt={`Avatar ${index + 1}`} src={ supplier?.image ? supplier?.image : "https://mui.com/static/images/cards/real-estate.png"} />
+                                    <Avatar alt={`Avatar ${index + 1}`} src={ supplier?.image ? supplier?.image : "/default-placeholder.jpg"} />
                                     </ListItemAvatar>
                                     <ListItemText
                                     primary={supplier?.name}

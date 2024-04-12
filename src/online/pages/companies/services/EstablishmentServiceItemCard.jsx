@@ -6,9 +6,9 @@ import Typography from '@mui/material/Typography';
 import { Avatar, Stack, Tooltip } from '@mui/material';
 import { Delete, PauseRounded, PlayArrowRounded, Edit, Folder, AccountBox } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import { useFeedBacks } from '../../../_shared/context/feedbacks/FeedBacksProvider';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
-export default function EstablishmentItemCard({establishment, onDeleteEstablishment, onUpdateEstablishmentState }) {
+export default function EstablishmentServiceItemCard({establishmentService, onDeleteEstablishmentService, onUpdateEstablishmentServiceState }) {
 //   const theme = useTheme();
   const  { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -22,61 +22,58 @@ export default function EstablishmentItemCard({establishment, onDeleteEstablishm
   }
   return (
     <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }} >
-      <Tooltip title={establishment?.name}>
-        <CardMedia component="img" width="100" height="100" alt={establishment?.name}
-          src={ establishment?.logo ? establishment?.logo : "https://mui.com/static/images/cards/real-estate.png"}
+      <Tooltip title={establishmentService?.name}>
+        <CardMedia component="img" width="100" height="100" alt={establishmentService?.name}
+          src={ establishmentService?.image ? establishmentService?.image : "/default-placeholder.jpg"}
           sx={{ borderRadius: 0.6, height: 100, width: 100}}
         />
       </Tooltip>
       <Stack direction="column" spacing={2} alignItems="center">
         <Stack direction="column" spacing={0.2} alignItems="center">
           <Typography color="text.primary" fontWeight="medium" fontSize={18}>
-            {establishment?.name}
+            {establishmentService?.name}
           </Typography>
           <Typography color="text.primary" fontWeight="medium" fontSize={14}>
-            {establishment?.siret}
-          </Typography>
-          <Typography component="div" variant="caption" color="text.secondary" fontWeight="regular" >
-            {`${establishment?.email}`}
+            {establishmentService?.siret}
           </Typography>
         </Stack>
         <Stack direction="row" alignItems="center" spacing={1.5}>
-          { establishment?.establishmentParent && <Tooltip title={`L'éstablishment parent: ${establishment?.establishmentParent?.name}`}>
-            <Link to={`/online/etablissements/details/${establishment?.establishmentParent?.id}`} className="no_style">
-              <Avatar alt={`${establishment?.establishmentParent?.name}`} 
-                src={establishment?.establishmentParent?.photo} />
+          { establishmentService?.establishmentServiceParent && <Tooltip title={`L'éstablishment parent: ${establishmentService?.establishmentServiceParent?.name}`}>
+            <Link to={`/online/associations/services/details/${establishmentService?.establishmentServiceParent?.id}`} className="no_style">
+              <Avatar alt={`${establishmentService?.establishmentServiceParent?.name}`} 
+                src={establishmentService?.establishmentServiceParent?.image} />
             </Link>
           </Tooltip>}
-          {onDeleteEstablishment && <Tooltip title="Supprimer">
+          {onDeleteEstablishmentService && <Tooltip title="Supprimer">
             <IconButton aria-label="delete" size="small" sx={{ flexGrow: 0 }}
-              onClick={()=> onDeleteEstablishment(establishment?.id)}>
+              onClick={()=> onDeleteEstablishmentService(establishmentService?.id)}>
               <Delete fontSize="small" />
             </IconButton>
           </Tooltip>}
-          {onUpdateEstablishmentState && <Tooltip title={!establishment?.isActive ? 'Activer' : 'Désactiver'}>
+          {onUpdateEstablishmentServiceState && <Tooltip title={!establishmentService?.isActive ? 'Activer' : 'Désactiver'}>
             <IconButton
-              aria-label={!establishment?.isActive ? 'play' : 'pause'}
+              aria-label={!establishmentService?.isActive ? 'play' : 'pause'}
               sx={{ mx: 1 }}
-              onClick={() => onUpdateEstablishmentState(establishment?.id)}
+              onClick={() => onUpdateEstablishmentServiceState(establishmentService?.id)}
             >
-              {!establishment?.isActive ? <PlayArrowRounded /> : <PauseRounded />}
+              {!establishmentService?.isActive ? <PlayArrowRounded /> : <PauseRounded />}
             </IconButton>
           </Tooltip>}
           <Tooltip title="Modifier">
-            <Link to={`/online/etablissements/modifier/${establishment?.id}`} className="no_style">
+            <Link to={`/online/associations/services/modifier/${establishmentService?.id}`} className="no_style">
               <IconButton aria-label="edit" size="small">
                 <Edit fontSize="small" />
               </IconButton>
             </Link>
           </Tooltip>
-          {establishment?.folder && <Tooltip title="Pièces jointes">
+          {establishmentService?.folder && <Tooltip title="Pièces jointes">
             <IconButton aria-label="Attachment" size="small" sx={{ flexGrow: 0 }}
-              onClick={()=> onOpenDialogListLibrary(establishment?.folder)}>
+              onClick={()=> onOpenDialogListLibrary(establishmentService?.folder)}>
               <Folder fontSize="small" />
             </IconButton>
           </Tooltip>}
           <Tooltip title="Détails">
-            <Link to={`/online/etablissements/details/${establishment?.id}`} className="no_style">
+            <Link to={`/online/associations/services/details/${establishmentService?.id}`} className="no_style">
               <IconButton aria-label="edit" size="small">
                 <AccountBox fontSize="small" />
               </IconButton>

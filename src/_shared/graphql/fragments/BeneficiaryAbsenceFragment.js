@@ -36,7 +36,7 @@ export const BENEFICIARY_ABSENCE_DETAILS = gql`
     reasons{
       id
       name
-      descreption
+      description
     }
     otherReasons
     observation
@@ -58,7 +58,7 @@ export const BENEFICIARY_ABSENCE_RECAP_DETAILS = gql`
     reasons{
       id
       name
-      descreption
+      description
     }
     otherReasons
     observation

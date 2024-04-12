@@ -2,8 +2,8 @@ import { gql } from '@apollo/client';
 import { DATA_BASIC_INFOS } from '../fragments/DataFragment';
 
 export const POST_DATA = gql`
-    mutation createData($name: String! $descreption: String, $typeData: String!){
-        createData(name: $name, descreption: $descreption, typeData : $typeData) {
+    mutation createData($name: String! $description: String, $typeData: String!){
+        createData(name: $name, description: $description, typeData : $typeData) {
             data {
             ...DataBasicInfosFragment
             }
@@ -12,8 +12,8 @@ export const POST_DATA = gql`
     ${DATA_BASIC_INFOS}
 `
 export const PUT_DATA = gql`
-    mutation updateData($id: ID!, $name: String!, $descreption: String, $typeData: String!){
-        updateData(id : $id, name: $name, descreption: $descreption, typeData : $typeData) {
+    mutation updateData($id: ID!, $name: String!, $description: String, $typeData: String!){
+        updateData(id : $id, name: $name, description: $description, typeData : $typeData) {
             data {
                 ...DataBasicInfosFragment
             }

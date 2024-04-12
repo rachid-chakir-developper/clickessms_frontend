@@ -3,6 +3,19 @@
 import { gql } from '@apollo/client';
 import { FOLDER_MINI_INFOS } from './MediaFragment';
 
+export const ESTABLISHMENT_PHONE_INFOS = gql`
+  fragment EstablishmentPhoneInfosFragment on EstablishmentType {
+    id
+    number
+    name
+    mobile
+    fix
+    email
+    logo
+    isActive
+  }
+`
+
 export const ESTABLISHMENT_MINI_INFOS = gql`
   fragment EstablishmentMiniInfosFragment on EstablishmentType {
     id
@@ -19,6 +32,10 @@ export const ESTABLISHMENT_MINI_INFOS = gql`
 export const ESTABLISHMENT_BASIC_INFOS = gql`
   fragment EstablishmentBasicInfosFragment on EstablishmentType {
     ...EstablishmentMiniInfosFragment
+    establishmentType{
+      id
+      name
+    }
     establishmentParent{
       ...EstablishmentMiniInfosFragment
     }
@@ -40,6 +57,7 @@ export const ESTABLISHMENT_DETAILS = gql`
     city
     zipCode
     address
+    additionalAddress
     mobile
     fix
     fax
@@ -48,7 +66,6 @@ export const ESTABLISHMENT_DETAILS = gql`
     isActive
     description
     observation
-    establishmentType
   }
   ${ESTABLISHMENT_BASIC_INFOS}
 `;

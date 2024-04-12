@@ -3,6 +3,19 @@
 import { gql } from '@apollo/client';
 import { FOLDER_MINI_INFOS } from './MediaFragment';
 
+export const SUPPLIER_PHONE_INFOS = gql`
+  fragment SupplierPhoneInfosFragment on SupplierType {
+    id
+    number
+    name
+    mobile
+    fix
+    email
+    photo
+    isActive
+  }
+`
+
 export const SUPPLIER_BASIC_INFOS = gql`
   fragment SupplierBasicInfosFragment on SupplierType {
     id
