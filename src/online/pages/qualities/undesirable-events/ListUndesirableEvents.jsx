@@ -13,7 +13,7 @@ import {
   DELETE_UDESIRABLE_EVENT,
   PUT_UDESIRABLE_EVENT_STATE,
 } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
-import { GET_UDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
+import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import UndesirableEventFilter from './UndesirableEventFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
@@ -45,7 +45,7 @@ export default function ListUndesirableEvents() {
       error: undesirableEventsError,
       fetchMore: fetchMoreUndesirableEvents,
     },
-  ] = useLazyQuery(GET_UDESIRABLE_EVENTS, {
+  ] = useLazyQuery(GET_UNDESIRABLE_EVENTS, {
     variables: {
       undesirableEventFilter,
       page: paginator.page,
@@ -146,7 +146,7 @@ export default function ListUndesirableEvents() {
           });
         }
       },
-      refetchQueries: [{ query: GET_UDESIRABLE_EVENTS }],
+      refetchQueries: [{ query: GET_UNDESIRABLE_EVENTS }],
       onError: (err) => {
         console.log(err);
         setNotifyAlert({
