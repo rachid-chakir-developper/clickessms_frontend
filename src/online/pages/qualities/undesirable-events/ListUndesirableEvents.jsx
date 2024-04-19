@@ -9,7 +9,10 @@ import { Add } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { DELETE_UDESIRABLE_EVENT, PUT_UDESIRABLE_EVENT_STATE } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
+import {
+  DELETE_UDESIRABLE_EVENT,
+  PUT_UDESIRABLE_EVENT_STATE,
+} from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
 import { GET_UDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import UndesirableEventFilter from './UndesirableEventFilter';
@@ -26,136 +29,163 @@ const Item = styled(Stack)(({ theme }) => ({
 
 export default function ListUndesirableEvents() {
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
-  const [undesirableEventFilter, setUndesirableEventFilter] = React.useState(null);
+  const [undesirableEventFilter, setUndesirableEventFilter] =
+    React.useState(null);
   const handleFilterChange = (newFilter) => {
-    console.log('newFilter', newFilter)
+    console.log('newFilter', newFilter);
     setUndesirableEventFilter(newFilter);
   };
-  
-  const  { setNotifyAlert,  setConfirmDialog} = useFeedBacks();
-  const [getUndesirableEvents, { 
-          loading: loadingUndesirableEvents, 
-          data: undesirableEventsData, 
-          error: undesirableEventsError, 
-          fetchMore:  fetchMoreUndesirableEvents 
-        }] = useLazyQuery(GET_UDESIRABLE_EVENTS, { variables: { undesirableEventFilter, page: paginator.page, limit: paginator.limit }})
 
-  React.useEffect(() =>{
-    getUndesirableEvents()
-  }, [undesirableEventFilter, paginator])
-
-  const [deleteUndesirableEvent, { loading : loadingDelete }] = useMutation(DELETE_UDESIRABLE_EVENT, {
-    onCompleted: (datas) => {
-      if(datas.deleteUndesirableEvent.deleted){
-        setNotifyAlert({
-          isOpen: true,
-          message: 'Supprimé avec succès',
-          type: 'success'
-        })
-      }else{
-        setNotifyAlert({
-          isOpen: true,
-          message: `Non Supprimé ! ${datas.deleteUndesirableEvent.message}.`,
-          type: 'error'
-        })
-      } 
+  const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
+  const [
+    getUndesirableEvents,
+    {
+      loading: loadingUndesirableEvents,
+      data: undesirableEventsData,
+      error: undesirableEventsError,
+      fetchMore: fetchMoreUndesirableEvents,
     },
-    update(cache, { data: { deleteUndesirableEvent } }) {
-      console.log('Updating cache after deletion:', deleteUndesirableEvent);
-    
-      const deletedUndesirableEventId = deleteUndesirableEvent.id;
-    
-      cache.modify({
-        fields: {
-          undesirableEvents(existingUndesirableEvents = { totalCount: 0, nodes: [] }, { readField }) {
-    
-            const updatedUndesirableEvents = existingUndesirableEvents.nodes.filter((undesirableEvent) =>
-              readField('id', undesirableEvent) !== deletedUndesirableEventId
-            );
-    
-            console.log('Updated undesirableEvents:', updatedUndesirableEvents);
-    
-            return {
-              totalCount: existingUndesirableEvents.totalCount - 1,
-              nodes: updatedUndesirableEvents,
-            };
+  ] = useLazyQuery(GET_UDESIRABLE_EVENTS, {
+    variables: {
+      undesirableEventFilter,
+      page: paginator.page,
+      limit: paginator.limit,
+    },
+  });
+
+  React.useEffect(() => {
+    getUndesirableEvents();
+  }, [undesirableEventFilter, paginator]);
+
+  const [deleteUndesirableEvent, { loading: loadingDelete }] = useMutation(
+    DELETE_UDESIRABLE_EVENT,
+    {
+      onCompleted: (datas) => {
+        if (datas.deleteUndesirableEvent.deleted) {
+          setNotifyAlert({
+            isOpen: true,
+            message: 'Supprimé avec succès',
+            type: 'success',
+          });
+        } else {
+          setNotifyAlert({
+            isOpen: true,
+            message: `Non Supprimé ! ${datas.deleteUndesirableEvent.message}.`,
+            type: 'error',
+          });
+        }
+      },
+      update(cache, { data: { deleteUndesirableEvent } }) {
+        console.log('Updating cache after deletion:', deleteUndesirableEvent);
+
+        const deletedUndesirableEventId = deleteUndesirableEvent.id;
+
+        cache.modify({
+          fields: {
+            undesirableEvents(
+              existingUndesirableEvents = { totalCount: 0, nodes: [] },
+              { readField },
+            ) {
+              const updatedUndesirableEvents =
+                existingUndesirableEvents.nodes.filter(
+                  (undesirableEvent) =>
+                    readField('id', undesirableEvent) !==
+                    deletedUndesirableEventId,
+                );
+
+              console.log(
+                'Updated undesirableEvents:',
+                updatedUndesirableEvents,
+              );
+
+              return {
+                totalCount: existingUndesirableEvents.totalCount - 1,
+                nodes: updatedUndesirableEvents,
+              };
+            },
           },
-        },
-      });
+        });
+      },
+      onError: (err) => {
+        console.log(err);
+        setNotifyAlert({
+          isOpen: true,
+          message: 'Non Supprimé ! Veuillez réessayer.',
+          type: 'error',
+        });
+      },
     },
-    onError: (err) => {
-      console.log(err)
-      setNotifyAlert({
-        isOpen: true,
-        message: 'Non Supprimé ! Veuillez réessayer.',
-        type: 'error'
-      })
-    },
-  })
-  
+  );
+
   const onDeleteUndesirableEvent = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
-      subTitle: "Voulez vous vraiment supprimer ?",
-      onConfirm: () => { setConfirmDialog({isOpen: false})
-                    deleteUndesirableEvent({ variables: { id : id }})
-                  }
-    })
-  }
+      subTitle: 'Voulez vous vraiment supprimer ?',
+      onConfirm: () => {
+        setConfirmDialog({ isOpen: false });
+        deleteUndesirableEvent({ variables: { id: id } });
+      },
+    });
+  };
 
-  const [updateUndesirableEventState, { loading : loadingPutState }] = useMutation(PUT_UDESIRABLE_EVENT_STATE, {
-    onCompleted: (datas) => {
-      if(datas.updateUndesirableEventState.done){
+  const [updateUndesirableEventState, { loading: loadingPutState }] =
+    useMutation(PUT_UDESIRABLE_EVENT_STATE, {
+      onCompleted: (datas) => {
+        if (datas.updateUndesirableEventState.done) {
+          setNotifyAlert({
+            isOpen: true,
+            message: 'Changée avec succès',
+            type: 'success',
+          });
+        } else {
+          setNotifyAlert({
+            isOpen: true,
+            message: `Non changée ! ${datas.updateUndesirableEventState.message}.`,
+            type: 'error',
+          });
+        }
+      },
+      refetchQueries: [{ query: GET_UDESIRABLE_EVENTS }],
+      onError: (err) => {
+        console.log(err);
         setNotifyAlert({
           isOpen: true,
-          message: 'Changée avec succès',
-          type: 'success'
-        })
-      }else{
-        setNotifyAlert({
-          isOpen: true,
-          message: `Non changée ! ${datas.updateUndesirableEventState.message}.`,
-          type: 'error'
-        })
-      } 
-    },
-    refetchQueries :[{query : GET_UDESIRABLE_EVENTS}],
-    onError: (err) => {
-      console.log(err)
-      setNotifyAlert({
-        isOpen: true,
-        message: 'Non changée ! Veuillez réessayer.',
-        type: 'error'
-      })
-    },
-  })
-  
+          message: 'Non changée ! Veuillez réessayer.',
+          type: 'error',
+        });
+      },
+    });
+
   const onUpdateUndesirableEventState = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
-      subTitle: "Voulez vous vraiment changer ?",
-      onConfirm: () => { setConfirmDialog({isOpen: false})
-                        updateUndesirableEventState({ variables: { id : id }})
-                  }
-    })
-  }
+      subTitle: 'Voulez vous vraiment changer ?',
+      onConfirm: () => {
+        setConfirmDialog({ isOpen: false });
+        updateUndesirableEventState({ variables: { id: id } });
+      },
+    });
+  };
   return (
-    <Grid container spacing={2} >
-        <Grid item="true" xs={12}>
-            <Box sx={{display : 'flex', justifyContent : 'flex-end', my : 3}}>
-              <Link to="/online/qualites/evenements-indesirables/ajouter" className="no_style">
-                <Button variant="contained" endIcon={<Add />} >
-                    Ajouter un événement indésirable
-                </Button>
-              </Link>
-            </Box>
-        </Grid>
-        <Grid item="true" xs={12}>
-          <UndesirableEventFilter onFilterChange={handleFilterChange} />
-        </Grid>
-        {/* <Grid item="true" xs={12}>
+    <Grid container spacing={2}>
+      <Grid item="true" xs={12}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
+          <Link
+            to="/online/qualites/evenements-indesirables/ajouter"
+            className="no_style"
+          >
+            <Button variant="contained" endIcon={<Add />}>
+              Ajouter un événement indésirable
+            </Button>
+          </Link>
+        </Box>
+      </Grid>
+      <Grid item="true" xs={12}>
+        <UndesirableEventFilter onFilterChange={handleFilterChange} />
+      </Grid>
+      {/* <Grid item="true" xs={12}>
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
               {loadingUndesirableEvents && <Grid key={'pgrs'}  item="true" xs={2} sm={4} md={3}><ProgressService type="mediaCard" /></Grid>}
@@ -174,21 +204,22 @@ export default function ListUndesirableEvents() {
             </Grid>
           </Box>
         </Grid> */}
-        <Grid item="true" xs={12}>
-          <TableListUndesirableEvents   loading={loadingUndesirableEvents}
-                                        rows={undesirableEventsData?.undesirableEvents?.nodes || []} 
-                                        onDeleteUndesirableEvent={onDeleteUndesirableEvent}
-                                        onUpdateUndesirableEventState={onUpdateUndesirableEventState}
-                                        />
-        </Grid>
-        <Grid item="true" xs={12}>
-          <PaginationControlled
-            totalItems={undesirableEventsData?.undesirableEvents?.totalCount}  // Nombre total d'éléments
-            itemsPerPage={paginator.limit} // Nombre d'éléments par page
-            currentPage={1}
-            onChange={(page) => setPaginator({ ...paginator, page })}
-          />
-        </Grid>
+      <Grid item="true" xs={12}>
+        <TableListUndesirableEvents
+          loading={loadingUndesirableEvents}
+          rows={undesirableEventsData?.undesirableEvents?.nodes || []}
+          onDeleteUndesirableEvent={onDeleteUndesirableEvent}
+          onUpdateUndesirableEventState={onUpdateUndesirableEventState}
+        />
+      </Grid>
+      <Grid item="true" xs={12}>
+        <PaginationControlled
+          totalItems={undesirableEventsData?.undesirableEvents?.totalCount} // Nombre total d'éléments
+          itemsPerPage={paginator.limit} // Nombre d'éléments par page
+          currentPage={1}
+          onChange={(page) => setPaginator({ ...paginator, page })}
+        />
+      </Grid>
     </Grid>
   );
 }

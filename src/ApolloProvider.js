@@ -12,8 +12,8 @@ import { getMainDefinition, offsetLimitPagination } from '@apollo/client/utiliti
 import { createUploadLink } from 'apollo-upload-client'
 
 const envProd = false;
-const uri = envProd ? 'https://api.cessms.fr/graphql' : 'http://192.168.1.125:8000/graphql';
-const wss = envProd ? 'wss://api.cessms.fr/graphql' : 'ws://192.168.1.125:8000/graphql';
+const uri = envProd ? 'https://api.cessms.fr/graphql' : 'http://localhost:8000/graphql';
+const wss = envProd ? 'wss://api.cessms.fr/graphql' : 'ws://localhost:8000/graphql';
 
 let httpLink = createUploadLink
 ({

@@ -22,34 +22,49 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
-import { getFormatDate, getStatusLabel, getStatusLebelColor } from '../../../../_shared/tools/functions';
-import { Article, Delete, Done, Edit, Folder, MoreVert } from '@mui/icons-material';
+import {
+  getFormatDate,
+  getStatusLabel,
+  getStatusLebelColor,
+} from '../../../../_shared/tools/functions';
+import {
+  Article,
+  Delete,
+  Done,
+  Edit,
+  Folder,
+  MoreVert,
+} from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 
-
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: alpha(theme.palette.secondary.main, theme.palette.action.activatedOpacity),
-      color: theme.palette.secondary.contrastText,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-  }));
-  
-  const StyledTableRow = styled(TableRow)(({ theme, selected }) => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: selected ?  alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity) : theme.palette.action.hover,
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-      border: 0,
-    },
-  }));
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: alpha(
+      theme.palette.secondary.main,
+      theme.palette.action.activatedOpacity,
+    ),
+    color: theme.palette.secondary.contrastText,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme, selected }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: selected
+      ? alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity)
+      : theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -117,8 +132,14 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
-    props;
+  const {
+    onSelectAllClick,
+    order,
+    orderBy,
+    numSelected,
+    rowCount,
+    onRequestSort,
+  } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -173,7 +194,10 @@ function EnhancedTableToolbar(props) {
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
           bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+            alpha(
+              theme.palette.primary.main,
+              theme.palette.action.activatedOpacity,
+            ),
         }),
       }}
     >
@@ -184,7 +208,9 @@ function EnhancedTableToolbar(props) {
           variant="subtitle1"
           component="div"
         >
-          {numSelected === 1 ? 'un élément séléctionné' : `${numSelected} éléments séléctionnés`}
+          {numSelected === 1
+            ? 'un élément séléctionné'
+            : `${numSelected} éléments séléctionnés`}
         </Typography>
       ) : (
         <Typography
@@ -214,215 +240,268 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListUndesirableEvents({loading, rows, onDeleteUndesirableEvent, onUpdateUndesirableEventState}) {
-    const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('calories');
-    const [selected, setSelected] = React.useState([]);
-    const [page, setPage] = React.useState(0);
-    const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    
-    const  { setDialogListLibrary } = useFeedBacks();
-    const onOpenDialogListLibrary = (folderParent) => {
-        setDialogListLibrary({
-        isOpen: true,
-        folderParent,
-        onClose: () => { 
-            setDialogListLibrary({isOpen: false})
-            }
-        })
+export default function TableListUndesirableEvents({
+  loading,
+  rows,
+  onDeleteUndesirableEvent,
+  onUpdateUndesirableEventState,
+}) {
+  const [order, setOrder] = React.useState('asc');
+  const [orderBy, setOrderBy] = React.useState('calories');
+  const [selected, setSelected] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const { setDialogListLibrary } = useFeedBacks();
+  const onOpenDialogListLibrary = (folderParent) => {
+    setDialogListLibrary({
+      isOpen: true,
+      folderParent,
+      onClose: () => {
+        setDialogListLibrary({ isOpen: false });
+      },
+    });
+  };
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelected = rows?.map((n) => n.id);
+      setSelected(newSelected);
+      return;
     }
+    setSelected([]);
+  };
 
-    const handleRequestSort = (event, property) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
-    };
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected = [];
 
-    const handleSelectAllClick = (event) => {
-        if (event.target.checked) {
-        const newSelected = rows?.map((n) => n.id);
-        setSelected(newSelected);
-        return;
-        }
-        setSelected([]);
-    };
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1),
+      );
+    }
+    setSelected(newSelected);
+  };
 
-    const handleClick = (event, id) => {
-        const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
+  const isSelected = (id) => selected.indexOf(id) !== -1;
 
-        if (selectedIndex === -1) {
-        newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-        newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-        newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-        newSelected = newSelected.concat(
-            selected.slice(0, selectedIndex),
-            selected.slice(selectedIndex + 1),
-        );
-        }
-        setSelected(newSelected);
-    };
+  // Avoid a layout jump when reaching the last page with empty rows?.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows?.length) : 0;
+  const visibleRows = React.useMemo(
+    () =>
+      stableSort(rows, getComparator(order, orderBy)).slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage,
+      ),
+    [rows, order, orderBy, page, rowsPerPage],
+  );
 
+  const [anchorElList, setAnchorElList] = React.useState([]);
+  return (
+    <Box sx={{ width: '100%' }}>
+      <Paper sx={{ width: '100%', mb: 2 }}>
+        <EnhancedTableToolbar numSelected={selected.length} />
+        <TableContainer>
+          <Table
+            sx={{ minWidth: 750 }}
+            aria-labelledby="tableTitle"
+            size="medium"
+          >
+            <EnhancedTableHead
+              numSelected={selected.length}
+              order={order}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={rows?.length}
+            />
+            <TableBody>
+              {loading && (
+                <StyledTableRow>
+                  <StyledTableCell colSpan="7">
+                    <ProgressService type="text" />
+                  </StyledTableCell>
+                </StyledTableRow>
+              )}
+              {rows?.length < 1 && !loading && (
+                <StyledTableRow>
+                  <StyledTableCell colSpan="7">
+                    <Alert severity="warning">
+                      Aucun événement indésirable trouvé.
+                    </Alert>
+                  </StyledTableCell>
+                </StyledTableRow>
+              )}
+              {visibleRows?.map((row, index) => {
+                if (!anchorElList[index]) {
+                  anchorElList[index] = null;
+                }
 
+                const handleOpenMenu = (event) => {
+                  // Utilisez l'index de la ligne pour mettre à jour l'état d'ancrage correspondant
+                  const newAnchorElList = [...anchorElList];
+                  newAnchorElList[index] = event.currentTarget;
+                  setAnchorElList(newAnchorElList);
+                };
 
+                const handleCloseMenu = () => {
+                  // Réinitialisez l'état d'ancrage de la ligne correspondante à null
+                  const newAnchorElList = [...anchorElList];
+                  newAnchorElList[index] = null;
+                  setAnchorElList(newAnchorElList);
+                };
 
-    const isSelected = (id) => selected.indexOf(id) !== -1;
+                const open = Boolean(anchorElList[index]);
+                const id = open ? `simple-popover-${index}` : undefined;
 
-    // Avoid a layout jump when reaching the last page with empty rows?.
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows?.length) : 0;
-    const visibleRows = React.useMemo(
-        () =>
-            stableSort(rows, getComparator(order, orderBy)).slice(
-            page * rowsPerPage,
-            page * rowsPerPage + rowsPerPage,
-            ),
-        [rows, order, orderBy, page, rowsPerPage],
-        );
+                const isItemSelected = isSelected(row.id);
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-        const [anchorElList, setAnchorElList] = React.useState([]);
-    return (
-        <Box sx={{ width: '100%' }}>
-        <Paper sx={{ width: '100%', mb: 2 }}>
-            <EnhancedTableToolbar numSelected={selected.length} />
-            <TableContainer>
-            <Table
-                sx={{ minWidth: 750 }}
-                aria-labelledby="tableTitle"
-                size="medium"
-            >
-                <EnhancedTableHead
-                numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
-                onSelectAllClick={handleSelectAllClick}
-                onRequestSort={handleRequestSort}
-                rowCount={rows?.length}
-                />
-                <TableBody>
-                {loading && <StyledTableRow><StyledTableCell colSpan="7"><ProgressService type="text" /></StyledTableCell></StyledTableRow>}
-                {rows?.length < 1 && !loading && <StyledTableRow><StyledTableCell colSpan="7"><Alert severity="warning">Aucun événement indésirable trouvé.</Alert></StyledTableCell></StyledTableRow>}
-                {visibleRows?.map((row, index) => {
-                        if (!anchorElList[index]) {
-                            anchorElList[index] = null;
-                        }
-                    
-                        const handleOpenMenu = (event) => {
-                            // Utilisez l'index de la ligne pour mettre à jour l'état d'ancrage correspondant
-                            const newAnchorElList = [...anchorElList];
-                            newAnchorElList[index] = event.currentTarget;
-                            setAnchorElList(newAnchorElList);
-                        };
-                    
-                        const handleCloseMenu = () => {
-                            // Réinitialisez l'état d'ancrage de la ligne correspondante à null
-                            const newAnchorElList = [...anchorElList];
-                            newAnchorElList[index] = null;
-                            setAnchorElList(newAnchorElList);
-                        };
-                    
-                        const open = Boolean(anchorElList[index]);
-                        const id = open ? `simple-popover-${index}` : undefined;
-                    
-                    const isItemSelected = isSelected(row.id);
-                    const labelId = `enhanced-table-checkbox-${index}`;
-
-                    return (
-                    <StyledTableRow
-                        hover
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.id}
-                        selected={isItemSelected}
-                        sx={{ cursor: 'pointer' }}
+                return (
+                  <StyledTableRow
+                    hover
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={row.id}
+                    selected={isItemSelected}
+                    sx={{ cursor: 'pointer' }}
+                  >
+                    <StyledTableCell padding="checkbox">
+                      <Checkbox
+                        onClick={(event) => handleClick(event, row.id)}
+                        color="primary"
+                        checked={isItemSelected}
+                        inputProps={{
+                          'aria-labelledby': labelId,
+                        }}
+                      />
+                    </StyledTableCell>
+                    <StyledTableCell
+                      component="th"
+                      id={labelId}
+                      scope="row"
+                      padding="none"
                     >
-                        <StyledTableCell padding="checkbox">
-                        <Checkbox
-                            onClick={(event) => handleClick(event, row.id)}
-                            color="primary"
-                            checked={isItemSelected}
-                            inputProps={{
-                            'aria-labelledby': labelId,
-                            }}
-                        />
-                        </StyledTableCell>
-                        <StyledTableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
+                      {row.title}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
+                    <StyledTableCell align="left">
+                      <Stack direction="row" spacing={1}>
+                        {row?.establishments.map((establishment, index) => {
+                          return (
+                            <Chip
+                              key={index}
+                              avatar={
+                                <Avatar
+                                  alt={establishment?.establishment?.name}
+                                  src={
+                                    establishment?.establishment?.logo
+                                      ? establishment?.establishment?.logo
+                                      : '/default-placeholder.jpg'
+                                  }
+                                />
+                              }
+                              label={establishment?.establishment?.name}
+                              variant="outlined"
+                            />
+                          );
+                        })}
+                      </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      <AppLabel color={getStatusLebelColor(row?.status)}>
+                        {getStatusLabel(row?.status)}
+                      </AppLabel>
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      <IconButton
+                        aria-describedby={id}
+                        onClick={handleOpenMenu}
+                      >
+                        <MoreVert />
+                      </IconButton>
+                      <Popover
+                        open={open}
+                        anchorEl={anchorElList[index]}
+                        onClose={handleCloseMenu}
+                        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                        transformOrigin={{
+                          vertical: 'top',
+                          horizontal: 'right',
+                        }}
+                      >
+                        <Link
+                          to={`/online/qualites/evenements-indesirables/details/${row?.id}`}
+                          className="no_style"
                         >
-                        {row.title}
-                        </StyledTableCell>
-                        <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
-                        <StyledTableCell align="left">
-                            <Stack direction="row" spacing={1}>
-                                {row?.establishments.map((establishment, index) => {
-                                        return <Chip
-                                            key={index}
-                                            avatar={<Avatar alt={establishment?.establishment?.name} src={ establishment?.establishment?.logo ? establishment?.establishment?.logo : "/default-placeholder.jpg"} />}
-                                            label={establishment?.establishment?.name}
-                                            variant="outlined"
-                                        />
-                                })}
-                            </Stack>
-                        </StyledTableCell>
-                        <StyledTableCell align="right">
-                            <AppLabel color={getStatusLebelColor(row?.status)}>{getStatusLabel(row?.status)}</AppLabel>
-                        </StyledTableCell>
-                        <StyledTableCell align="right">
-                            <IconButton aria-describedby={id} onClick={handleOpenMenu}>
-                                <MoreVert />
-                            </IconButton>
-                            <Popover
-                                open={open}
-                                anchorEl={anchorElList[index]}
-                                onClose={handleCloseMenu}
-                                anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-                                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                            >
-                                <Link to={`/online/qualites/evenements-indesirables/details/${row?.id}`} className="no_style">
-                                    <MenuItem onClick={handleCloseMenu}>
-                                        <Article sx={{ mr: 2 }} />
-                                        Détails
-                                    </MenuItem>
-                                </Link>
-                                <MenuItem onClick={ ()=> {onOpenDialogListLibrary(row?.folder); handleCloseMenu()}}>
-                                    <Folder sx={{ mr: 2 }} />
-                                    Bibliothèque
-                                </MenuItem>
-                                <Link to={`/online/qualites/evenements-indesirables/modifier/${row?.id}`} className="no_style">
-                                <MenuItem onClick={handleCloseMenu}>
-                                    <Edit sx={{ mr: 2 }} />
-                                    Modifier
-                                </MenuItem>
-                                </Link>
-                                <MenuItem onClick={()=> {onDeleteUndesirableEvent(row?.id); handleCloseMenu()}} sx={{ color: 'error.main' }}>
-                                    <Delete sx={{ mr: 2 }} />
-                                    Supprimer
-                                </MenuItem>
-                            </Popover>
-                        </StyledTableCell>
-                    </StyledTableRow>
-                    );
-                })}
-                {emptyRows > 0 && (
-                    <StyledTableRow
-                    style={{
-                        height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                    >
-                    <StyledTableCell colSpan={6} />
-                    </StyledTableRow>
-                )}
-                </TableBody>
-            </Table>
-            </TableContainer>
-        </Paper>
-        </Box>
-    );
+                          <MenuItem onClick={handleCloseMenu}>
+                            <Article sx={{ mr: 2 }} />
+                            Détails
+                          </MenuItem>
+                        </Link>
+                        <MenuItem
+                          onClick={() => {
+                            onOpenDialogListLibrary(row?.folder);
+                            handleCloseMenu();
+                          }}
+                        >
+                          <Folder sx={{ mr: 2 }} />
+                          Bibliothèque
+                        </MenuItem>
+                        <Link
+                          to={`/online/qualites/evenements-indesirables/modifier/${row?.id}`}
+                          className="no_style"
+                        >
+                          <MenuItem onClick={handleCloseMenu}>
+                            <Edit sx={{ mr: 2 }} />
+                            Modifier
+                          </MenuItem>
+                        </Link>
+                        <MenuItem
+                          onClick={() => {
+                            onDeleteUndesirableEvent(row?.id);
+                            handleCloseMenu();
+                          }}
+                          sx={{ color: 'error.main' }}
+                        >
+                          <Delete sx={{ mr: 2 }} />
+                          Supprimer
+                        </MenuItem>
+                      </Popover>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                );
+              })}
+              {emptyRows > 0 && (
+                <StyledTableRow
+                  style={{
+                    height: (dense ? 33 : 53) * emptyRows,
+                  }}
+                >
+                  <StyledTableCell colSpan={6} />
+                </StyledTableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+    </Box>
+  );
 }
