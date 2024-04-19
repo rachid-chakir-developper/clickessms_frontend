@@ -17,6 +17,7 @@ import { GET_EVENTS } from '../../../../_shared/graphql/queries/EventQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import EventFilter from './EventFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
+import TableListEvents from './TableListEvents';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -167,33 +168,12 @@ export default function ListEvents() {
         <EventFilter onFilterChange={handleFilterChange} />
       </Grid>
       <Grid item="true" xs={12}>
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-          >
-            {loadingEvents && (
-              <Grid key={'pgrs'} item xs={2} sm={4} md={3}>
-                <ProgressService type="mediaCard" />
-              </Grid>
-            )}
-            {eventsData?.events?.nodes?.length < 1 && !loadingEvents && (
-              <Alert severity="warning">Aucun événement trouvé.</Alert>
-            )}
-            {eventsData?.events?.nodes?.map((event, index) => (
-              <Grid xs={2} sm={4} md={3} key={index}>
-                <Item>
-                  <EventItemCard
-                    event={event}
-                    onDeleteEvent={onDeleteEvent}
-                    onUpdateEventState={onUpdateEventState}
-                  />
-                </Item>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+        <TableListEvents
+          loading={loadingEvents}
+          rows={eventsData?.events?.nodes || []}
+          onDeleteEvent={onDeleteEvent}
+          onUpdateEventState={onUpdateEventState}
+        />
       </Grid>
       <Grid item="true" xs={12}>
         <PaginationControlled

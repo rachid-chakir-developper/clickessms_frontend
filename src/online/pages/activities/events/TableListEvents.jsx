@@ -109,19 +109,13 @@ const headCells = [
     id: 'startingDateTime',
     numeric: false,
     disablePadding: false,
-    label: 'Date',
+    label: 'Date de début',
   },
   {
-    id: 'establishments',
+    id: 'endingDateTime',
     numeric: false,
     disablePadding: false,
-    label: 'Etablissements',
-  },
-  {
-    id: 'status',
-    numeric: true,
-    disablePadding: false,
-    label: 'Status',
+    label: 'Date de fin',
   },
   {
     id: 'action',
@@ -219,7 +213,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les événements indésirables
+          Les événements / transmissions
         </Typography>
       )}
 
@@ -240,11 +234,11 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListUndesirableEvents({
+export default function TableListEvents({
   loading,
   rows,
-  onDeleteUndesirableEvent,
-  onUpdateUndesirableEventState,
+  onDeleteEvent,
+  onUpdateEventState,
 }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -252,6 +246,10 @@ export default function TableListUndesirableEvents({
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  React.useEffect(() => {
+    console.log(loading, rows);
+  }, [loading, rows]);
 
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -342,9 +340,7 @@ export default function TableListUndesirableEvents({
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
                   <StyledTableCell colSpan="7">
-                    <Alert severity="warning">
-                      Aucun événement indésirable trouvé.
-                    </Alert>
+                    <Alert severity="warning">Aucun événement trouvé.</Alert>
                   </StyledTableCell>
                 </StyledTableRow>
               )}
@@ -402,34 +398,7 @@ export default function TableListUndesirableEvents({
                       {row.title}
                     </StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" spacing={1}>
-                        {row?.establishments?.map((establishment, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={establishment?.establishment?.name}
-                                  src={
-                                    establishment?.establishment?.logo
-                                      ? establishment?.establishment?.logo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={establishment?.establishment?.name}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      <AppLabel color={getStatusLebelColor(row?.status)}>
-                        {getStatusLabel(row?.status)}
-                      </AppLabel>
-                    </StyledTableCell>
+                    <StyledTableCell align="left">{`${getFormatDate(row?.endingDateTime)}`}</StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -448,7 +417,7 @@ export default function TableListUndesirableEvents({
                         }}
                       >
                         <Link
-                          to={`/online/qualites/evenements-indesirables/details/${row?.id}`}
+                          to={`/online/activites/evenements/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -466,7 +435,7 @@ export default function TableListUndesirableEvents({
                           Bibliothèque
                         </MenuItem>
                         <Link
-                          to={`/online/qualites/evenements-indesirables/modifier/${row?.id}`}
+                          to={`/online/activites/evenements/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -476,7 +445,7 @@ export default function TableListUndesirableEvents({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteUndesirableEvent(row?.id);
+                            onDeleteEvent(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}
