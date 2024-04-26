@@ -14,7 +14,7 @@ export const SUPPLIER_PHONE_INFOS = gql`
     photo
     isActive
   }
-`
+`;
 
 export const SUPPLIER_BASIC_INFOS = gql`
   fragment SupplierBasicInfosFragment on SupplierType {
@@ -26,12 +26,12 @@ export const SUPPLIER_BASIC_INFOS = gql`
     photo
     coverImage
     isActive
-    folder{
+    folder {
       ...FolderMiniInfosFragment
     }
   }
   ${FOLDER_MINI_INFOS}
-`
+`;
 export const SUPPLIER_DETAILS = gql`
   fragment SupplierDetailsFragment on SupplierType {
     ...SupplierBasicInfosFragment

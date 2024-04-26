@@ -13,11 +13,23 @@ export default function SearchResultsSkeleton() {
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
           <Avatar>
-            <Skeleton animation="wave" variant="circle" width={40} height={40} />
+            <Skeleton
+              animation="wave"
+              variant="circle"
+              width={40}
+              height={40}
+            />
           </Avatar>
         </ListItemAvatar>
         <ListItemText
-          primary={<Skeleton animation="wave" height={20} width="80%" style={{ marginBottom: 6 }} />}
+          primary={
+            <Skeleton
+              animation="wave"
+              height={20}
+              width="80%"
+              style={{ marginBottom: 6 }}
+            />
+          }
           secondary={
             <React.Fragment>
               <Typography

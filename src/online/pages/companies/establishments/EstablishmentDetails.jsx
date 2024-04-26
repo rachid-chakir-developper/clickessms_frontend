@@ -2,13 +2,11 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { Box, Divider, Paper, Stack, alpha } from '@mui/material';
-import { Grid, Typography, Avatar,} from '@mui/material';
+import { Grid, Typography, Avatar } from '@mui/material';
 import { GET_ESTABLISHMENT } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import styled from '@emotion/styled';
 import EstablishmentItemCard from './EstablishmentItemCard';
-
-
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -18,19 +16,25 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-
 export default function EstablishmentDetails() {
   let { idEstablishment } = useParams();
-  const [getEstablishment, { loading : loadingEstablishment, data: establishmentData }] = useLazyQuery(GET_ESTABLISHMENT)
-React.useEffect(()=>{
-    if(idEstablishment){
-        getEstablishment(({ variables: { id: idEstablishment } }));
+  const [
+    getEstablishment,
+    { loading: loadingEstablishment, data: establishmentData },
+  ] = useLazyQuery(GET_ESTABLISHMENT);
+  React.useEffect(() => {
+    if (idEstablishment) {
+      getEstablishment({ variables: { id: idEstablishment } });
     }
-}, [idEstablishment])
+  }, [idEstablishment]);
 
   return (
     <Stack>
-        {establishmentData?.establishment && <EstablishmentDetailsPage establishment={establishmentData?.establishment} />}
+      {establishmentData?.establishment && (
+        <EstablishmentDetailsPage
+          establishment={establishmentData?.establishment}
+        />
+      )}
     </Stack>
   );
 }
@@ -65,7 +69,7 @@ const EstablishmentDetailsPage = ({ establishment }) => {
     establishmentParent,
     isActive,
     createdAt,
-    updatedAt
+    updatedAt,
   } = establishment;
 
   return (
@@ -94,17 +98,18 @@ const EstablishmentDetailsPage = ({ establishment }) => {
               justifyContent: 'center',
               alignItems: 'center',
               bgcolor: (theme) => alpha(theme.palette.primary.main, 0.5),
-              boxShadow: '0px 0px 30px rgba(0, 0, 0, 0.2) inset'
+              boxShadow: '0px 0px 30px rgba(0, 0, 0, 0.2) inset',
             }}
           >
             <Avatar
-                src={logo}
-                alt={name}
-                sx={{
-                  width: 100, height: 100,
-                  boxShadow: '0px 0px 4px rgba(0, 0, 0, 0.5)', // Ajoutez l'ombre extérieure ici
-                  border: '2px solid white', // Ajoutez une bordure blanche autour de l'avatar si nécessaire
-                }}
+              src={logo}
+              alt={name}
+              sx={{
+                width: 100,
+                height: 100,
+                boxShadow: '0px 0px 4px rgba(0, 0, 0, 0.5)', // Ajoutez l'ombre extérieure ici
+                border: '2px solid white', // Ajoutez une bordure blanche autour de l'avatar si nécessaire
+              }}
             />
             <Box
               sx={{
@@ -122,67 +127,75 @@ const EstablishmentDetailsPage = ({ establishment }) => {
                 {name}
               </Typography>
               <Typography variant="h6" sx={{ fontStyle: 'italic' }}>
-                  {siret}
+                {siret}
               </Typography>
-              {address && address!=='' && <Typography variant="body2" sx={{ textAlign: 'center' }}>
+              {address && address !== '' && (
+                <Typography variant="body2" sx={{ textAlign: 'center' }}>
                   {address} {additionalAddress} <br />
-                  {zipCode}  {city}
-              </Typography>}
-              {establishmentType && establishmentType!=='' && <Typography variant="body2">
-                Type:  {establishmentType?.name}
-              </Typography>}
+                  {zipCode} {city}
+                </Typography>
+              )}
+              {establishmentType && establishmentType !== '' && (
+                <Typography variant="body2">
+                  Type: {establishmentType?.name}
+                </Typography>
+              )}
               <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-                  {email}
+                {email}
               </Typography>
-              {mobile && mobile!=='' && <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+              {mobile && mobile !== '' && (
+                <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
                   {mobile}
-              </Typography>}
-              {fix && fix!=='' && <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+                </Typography>
+              )}
+              {fix && fix !== '' && (
+                <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
                   {fix}
-              </Typography>}
+                </Typography>
+              )}
             </Box>
           </Box>
         </Paper>
       </Grid>
       {/* Autres informations de l'employé */}
       <Grid item xs={12} sm={8}>
-        <Paper sx={{ padding : 2}}>
+        <Paper sx={{ padding: 2 }}>
           <Typography variant="h6" gutterBottom>
             Informations supplémentaires
           </Typography>
-          <Paper sx={{ padding : 2}} variant="outlined">
-            <Typography variant="body1">
-              Réference: {number}
-            </Typography>
+          <Paper sx={{ padding: 2 }} variant="outlined">
+            <Typography variant="body1">Réference: {number}</Typography>
             <Typography variant="body1">
               Nom de responsable: {managerName}
             </Typography>
-            <Divider sx={{marginTop : 2, marginBottom : 2}}/>
+            <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
             <Typography variant="body1">
-                Ajouté le: {getFormatDateTime(createdAt)}
+              Ajouté le: {getFormatDateTime(createdAt)}
             </Typography>
             <Typography variant="body1">
-                Dernière modification: {getFormatDateTime(updatedAt)}
+              Dernière modification: {getFormatDateTime(updatedAt)}
             </Typography>
           </Paper>
-          {establishmentParent && <><Typography variant="h6" gutterBottom sx={{ mt:3 }}>
-            Etablissement parent
-          </Typography>
-          <Paper sx={{ padding : 2}} variant="outlined">
-            <Item>
-              <EstablishmentItemCard 
-                                establishment={establishmentParent}
-              />
-            </Item>
-          </Paper></>}
+          {establishmentParent && (
+            <>
+              <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+                Etablissement parent
+              </Typography>
+              <Paper sx={{ padding: 2 }} variant="outlined">
+                <Item>
+                  <EstablishmentItemCard establishment={establishmentParent} />
+                </Item>
+              </Paper>
+            </>
+          )}
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>
-        <Paper sx={{ padding : 2}}>
+        <Paper sx={{ padding: 2 }}>
           <Typography variant="h6" gutterBottom>
             Description
           </Typography>
-          <Paper sx={{ padding : 2}} variant="outlined">
+          <Paper sx={{ padding: 2 }} variant="outlined">
             <Typography variant="body1">
               {description ? description : "Aucune description pour l'instant"}
             </Typography>
@@ -190,37 +203,37 @@ const EstablishmentDetailsPage = ({ establishment }) => {
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>
-        <Paper sx={{ padding : 2}}>
+        <Paper sx={{ padding: 2 }}>
           <Typography variant="h6" gutterBottom>
             Observation
           </Typography>
-          <Paper sx={{ padding : 2}} variant="outlined">
+          <Paper sx={{ padding: 2 }} variant="outlined">
             <Typography variant="body1">
               {observation ? observation : "Aucune observation pour l'instant"}
             </Typography>
           </Paper>
         </Paper>
       </Grid>
-      {establishmentChilds?.length > 0 && <Grid item xs={12} sm={12}>
-        <Paper sx={{ padding : 2}}>
-          <Typography variant="h6" gutterBottom>
-            Les établissements fils
-          </Typography>
-          <Paper sx={{ padding : 2}} variant="outlined">
-            <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
-              {establishmentChilds?.map((establishment, index) => (
-                <Grid xs={2} sm={4} md={3} key={index}>
-                  <Item>
-                    <EstablishmentItemCard 
-                                      establishment={establishment}
-                    />
-                  </Item>
-                </Grid>
-              ))}
-            </Grid>
+      {establishmentChilds?.length > 0 && (
+        <Grid item xs={12} sm={12}>
+          <Paper sx={{ padding: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Les établissements fils
+            </Typography>
+            <Paper sx={{ padding: 2 }} variant="outlined">
+              <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
+                {establishmentChilds?.map((establishment, index) => (
+                  <Grid xs={2} sm={4} md={3} key={index}>
+                    <Item>
+                      <EstablishmentItemCard establishment={establishment} />
+                    </Item>
+                  </Grid>
+                ))}
+              </Grid>
+            </Paper>
           </Paper>
-        </Paper>
-      </Grid>}
+        </Grid>
+      )}
     </Grid>
   );
 };

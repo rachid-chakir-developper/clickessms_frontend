@@ -1,15 +1,15 @@
-import { gql } from "@apollo/client";
-import { EMPLOYEE_BASIC_INFOS } from "./EmployeeFragment";
-import { CLIENT_BASIC_INFOS } from "./ClientFragment";
+import { gql } from '@apollo/client';
+import { EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
+import { CLIENT_BASIC_INFOS } from './ClientFragment';
 
 // Fragment pour obtenir des informations de base sur un projet
 export const PROJECT_BASIC_INFOS = gql`
   fragment ProjectBasicInfosFragment on Project {
-    id,
-    number,
-    name,
-    photo,
-    description,
+    id
+    number
+    name
+    photo
+    description
     observation
   }
 `;
@@ -18,21 +18,21 @@ export const PROJECT_BASIC_INFOS = gql`
 export const PROJECT_DETAILS = gql`
   fragment ProjectDetailsFragment on Project {
     ...ProjectBasicInfosFragment
-    startingDate,
-    endingDate,
-    estimatedBudget,
-    latitude,
-    longitude,
-    city,
-    zipCode,
-    address,
-    isActive,
-    category,
-    size,
-    owners{
+    startingDate
+    endingDate
+    estimatedBudget
+    latitude
+    longitude
+    city
+    zipCode
+    address
+    isActive
+    category
+    size
+    owners {
       ...ClientBasicInfosFragment
-    },
-    managers{
+    }
+    managers {
       ...EmployeeBasicInfosFragment
     }
   }

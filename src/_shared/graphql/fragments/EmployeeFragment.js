@@ -4,9 +4,9 @@ import { gql } from '@apollo/client';
 
 export const EMPLOYEE_PHONE_INFOS = gql`
   fragment EmployeePhoneInfosFragment on EmployeeType {
-    id,
-    firstName,
-    lastName,
+    id
+    firstName
+    lastName
     position
     email
     mobile
@@ -19,9 +19,9 @@ export const EMPLOYEE_PHONE_INFOS = gql`
 
 export const EMPLOYEE_MINI_INFOS = gql`
   fragment EmployeeMiniInfosFragment on EmployeeType {
-    id,
-    firstName,
-    lastName,
+    id
+    firstName
+    lastName
     position
     email
     photo
@@ -33,10 +33,10 @@ export const EMPLOYEE_MINI_INFOS = gql`
 export const EMPLOYEE_BASIC_INFOS = gql`
   fragment EmployeeBasicInfosFragment on EmployeeType {
     ...EmployeeMiniInfosFragment
-    folder{
-        id
-        number
-        name
+    folder {
+      id
+      number
+      name
     }
   }
   ${EMPLOYEE_MINI_INFOS}
@@ -45,26 +45,26 @@ export const EMPLOYEE_BASIC_INFOS = gql`
 export const EMPLOYEE_DETAILS = gql`
   fragment EmployeeDetailsFragment on EmployeeType {
     ...EmployeeBasicInfosFragment
-    hiringDate,
-    probationEndDate,
-    workEndDate,
-    startingSalary,
-    description,
+    hiringDate
+    probationEndDate
+    workEndDate
+    startingSalary
+    description
     latitude
     longitude
     country
-    city,
-    zipCode,
-    address,
-    mobile,
-    fix,
-    fax,
-    webSite,
-    otherContacts,
-    iban,
+    city
+    zipCode
+    address
+    mobile
+    fix
+    fax
+    webSite
+    otherContacts
+    iban
     bic
-    bankName,
-    isActive,
+    bankName
+    isActive
     observation
   }
   ${EMPLOYEE_BASIC_INFOS}

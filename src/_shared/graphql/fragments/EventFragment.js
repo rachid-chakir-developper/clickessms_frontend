@@ -14,7 +14,7 @@ export const EVENT_BASIC_INFOS = gql`
     endingDateTime
     description
     isActive
-    folder{
+    folder {
       id
       number
       name
@@ -25,7 +25,7 @@ export const EVENT_BASIC_INFOS = gql`
 export const EVENT_BENEFICIARY_DETAILS = gql`
   fragment EventBeneficiaryTypeFragment on EventBeneficiaryType {
     id
-    beneficiary{
+    beneficiary {
       ...BeneficiaryMiniInfosFragment
     }
   }
@@ -36,10 +36,10 @@ export const EVENT_DETAILS = gql`
   fragment EventDetailsFragment on EventType {
     ...EventBasicInfosFragment
     observation
-    beneficiaries{
+    beneficiaries {
       ...EventBeneficiaryTypeFragment
     }
-    employee{
+    employee {
       ...EmployeeBasicInfosFragment
     }
   }
@@ -52,10 +52,10 @@ export const EVENT_RECAP_DETAILS = gql`
   fragment EventRecapDetailsFragment on EventType {
     ...EventBasicInfosFragment
     observation
-    beneficiaries{
+    beneficiaries {
       ...EventBeneficiaryTypeFragment
     }
-    employee{
+    employee {
       ...EmployeeBasicInfosFragment
     }
   }
@@ -63,4 +63,3 @@ export const EVENT_RECAP_DETAILS = gql`
   ${EVENT_BENEFICIARY_DETAILS}
   ${EMPLOYEE_BASIC_INFOS}
 `;
-

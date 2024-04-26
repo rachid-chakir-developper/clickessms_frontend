@@ -2,7 +2,14 @@ import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import {Box, Grid, Paper, ButtonBase, Typography, Divider,} from '@mui/material';
+import {
+  Box,
+  Grid,
+  Paper,
+  ButtonBase,
+  Typography,
+  Divider,
+} from '@mui/material';
 
 import { LETTER_RECAP } from '../../../../_shared/graphql/queries/LetterQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
@@ -21,33 +28,32 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function LetterDetails() {
   let { idLetter } = useParams();
-  const [getLetter, { 
-    loading : loadingLetter,
-    data: letterData, 
-    error: letterError, 
-  }] = useLazyQuery(LETTER_RECAP)
-  React.useEffect(()=>{
-      if(idLetter){
-          getLetter(({ variables: { id: idLetter } }));
-      }
-  }, [idLetter])
+  const [
+    getLetter,
+    { loading: loadingLetter, data: letterData, error: letterError },
+  ] = useLazyQuery(LETTER_RECAP);
+  React.useEffect(() => {
+    if (idLetter) {
+      getLetter({ variables: { id: idLetter } });
+    }
+  }, [idLetter]);
 
-  if(loadingLetter) return <ProgressService type="form" />
+  if (loadingLetter) return <ProgressService type="form" />;
   return (
     <>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
-            <LetterMiniInfos letter={letterData?.letter}/>
+            <LetterMiniInfos letter={letterData?.letter} />
           </Grid>
           <Grid item xs={5}>
-            <LetterOtherInfos letter={letterData?.letter}/>
+            <LetterOtherInfos letter={letterData?.letter} />
           </Grid>
-          <Grid item xs={12} sx={{marginTop: 3, marginBottom: 3}}>
-            <Divider/>
+          <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
+            <Divider />
           </Grid>
           <Grid item xs={6}>
-            <Paper sx={{ padding : 2}} variant="outlined">
+            <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Description
               </Typography>
@@ -57,7 +63,7 @@ export default function LetterDetails() {
             </Paper>
           </Grid>
           <Grid item xs={6}>
-            <Paper sx={{ padding : 2}} variant="outlined">
+            <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Observation
               </Typography>
@@ -79,7 +85,7 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-function LetterMiniInfos({letter}) {
+function LetterMiniInfos({ letter }) {
   return (
     <Paper
       variant="outlined"
@@ -93,12 +99,13 @@ function LetterMiniInfos({letter}) {
       }}
     >
       <Grid container spacing={2}>
-        {(letter?.image && letter?.image != '') &&
-        <Grid item>
-          <ButtonBase sx={{ width: 128, height: 'auto' }}>
-            <Img alt="complex" src={letter?.image} />
-          </ButtonBase>
-        </Grid>}
+        {letter?.image && letter?.image != '' && (
+          <Grid item>
+            <ButtonBase sx={{ width: 128, height: 'auto' }}>
+              <Img alt="complex" src={letter?.image} />
+            </ButtonBase>
+          </Grid>
+        )}
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
@@ -108,15 +115,19 @@ function LetterMiniInfos({letter}) {
               <Typography gutterBottom variant="subtitle1" component="div">
                 {letter?.title}
               </Typography>
-              <Divider sx={{marginTop : 2, marginBottom : 2}}/>
+              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b> {`${getFormatDateTime(letter?.createdAt)}`} <br />
-                <b>Dernière modification: </b>{`${getFormatDateTime(letter?.updatedAt)}`}
+                <b>Crée le: </b> {`${getFormatDateTime(letter?.createdAt)}`}{' '}
+                <br />
+                <b>Dernière modification: </b>
+                {`${getFormatDateTime(letter?.updatedAt)}`}
               </Typography>
-              <Divider sx={{marginTop : 2, marginBottom : 2}}/>
+              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Date début prévue: </b> {`${getFormatDateTime(letter?.startingDateTime)}`} <br />
-                <b>Date fin prévue: </b> {`${getFormatDateTime(letter?.endingDateTime)}`}
+                <b>Date début prévue: </b>{' '}
+                {`${getFormatDateTime(letter?.startingDateTime)}`} <br />
+                <b>Date fin prévue: </b>{' '}
+                {`${getFormatDateTime(letter?.endingDateTime)}`}
               </Typography>
             </Grid>
           </Grid>
@@ -126,7 +137,7 @@ function LetterMiniInfos({letter}) {
   );
 }
 
-function LetterOtherInfos({letter}) {
+function LetterOtherInfos({ letter }) {
   return (
     <Paper
       variant="outlined"
@@ -145,9 +156,7 @@ function LetterOtherInfos({letter}) {
         {letter?.beneficiaries?.map((beneficiary, index) => (
           <Grid xs={12} sm={12} md={12} key={index}>
             <Item>
-              <BeneficiaryItemCard 
-                                beneficiary={beneficiary?.beneficiary} 
-              />
+              <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
             </Item>
           </Grid>
         ))}
@@ -155,4 +164,3 @@ function LetterOtherInfos({letter}) {
     </Paper>
   );
 }
-

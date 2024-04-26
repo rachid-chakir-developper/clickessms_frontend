@@ -32,7 +32,7 @@ export const FILE_DETAILS = gql`
     isActive
     createdAt
     updatedAt
-    creator{
+    creator {
       ...UserBasicInfosFragment
     }
   }
@@ -56,7 +56,7 @@ export const CHILD_FILE_DETAILS = gql`
     isActive
     createdAt
     updatedAt
-    creator{
+    creator {
       ...UserBasicInfosFragment
     }
   }
@@ -79,8 +79,8 @@ export const FOLDER_BASIC_INFOS = gql`
     observation
     createdAt
     updatedAt
-    creator{
-        ...UserBasicInfosFragment
+    creator {
+      ...UserBasicInfosFragment
     }
   }
   ${FOLDER_MINI_INFOS}
@@ -97,8 +97,8 @@ export const CHILD_FOLDER_BASIC_INFOS = gql`
     observation
     createdAt
     updatedAt
-    creator{
-        ...UserBasicInfosFragment
+    creator {
+      ...UserBasicInfosFragment
     }
   }
   ${USER_BASIC_INFOS}
@@ -107,14 +107,14 @@ export const CHILD_FOLDER_BASIC_INFOS = gql`
 export const FOLDER_DETAILS = gql`
   fragment FolderDetailsFragment on FolderType {
     ...FolderBasicInfosFragment
-    folder{
-        ...FolderMiniInfosFragment
+    folder {
+      ...FolderMiniInfosFragment
     }
-    folders{
-        ...ChildrenFolderBasicInfosFragment
+    folders {
+      ...ChildrenFolderBasicInfosFragment
     }
-    files{
-        ...ChildrenFileDetailsFragment
+    files {
+      ...ChildrenFileDetailsFragment
     }
   }
   ${FOLDER_MINI_INFOS}

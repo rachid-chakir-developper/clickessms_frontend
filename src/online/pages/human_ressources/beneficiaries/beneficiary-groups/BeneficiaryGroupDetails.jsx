@@ -2,7 +2,14 @@ import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import {Box, Grid, Paper, ButtonBase, Typography, Divider,} from '@mui/material';
+import {
+  Box,
+  Grid,
+  Paper,
+  ButtonBase,
+  Typography,
+  Divider,
+} from '@mui/material';
 
 import { BENEFICIARY_GROUP_RECAP } from '../../../../../_shared/graphql/queries/BeneficiaryGroupQueries';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
@@ -19,33 +26,40 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function BeneficiaryGroupDetails() {
   let { idBeneficiaryGroup } = useParams();
-  const [getBeneficiaryGroup, { 
-    loading : loadingBeneficiaryGroup,
-    data: beneficiaryGroupData, 
-    error: beneficiaryGroupError, 
-  }] = useLazyQuery(BENEFICIARY_GROUP_RECAP)
-  React.useEffect(()=>{
-      if(idBeneficiaryGroup){
-          getBeneficiaryGroup(({ variables: { id: idBeneficiaryGroup } }));
-      }
-  }, [idBeneficiaryGroup])
+  const [
+    getBeneficiaryGroup,
+    {
+      loading: loadingBeneficiaryGroup,
+      data: beneficiaryGroupData,
+      error: beneficiaryGroupError,
+    },
+  ] = useLazyQuery(BENEFICIARY_GROUP_RECAP);
+  React.useEffect(() => {
+    if (idBeneficiaryGroup) {
+      getBeneficiaryGroup({ variables: { id: idBeneficiaryGroup } });
+    }
+  }, [idBeneficiaryGroup]);
 
-  if(loadingBeneficiaryGroup) return <ProgressService type="form" />
+  if (loadingBeneficiaryGroup) return <ProgressService type="form" />;
   return (
     <>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
-            <BeneficiaryGroupMiniInfos beneficiaryGroup={beneficiaryGroupData?.beneficiaryGroup}/>
+            <BeneficiaryGroupMiniInfos
+              beneficiaryGroup={beneficiaryGroupData?.beneficiaryGroup}
+            />
           </Grid>
           <Grid item xs={5}>
-            <BeneficiaryGroupOtherInfos beneficiaryGroup={beneficiaryGroupData?.beneficiaryGroup}/>
+            <BeneficiaryGroupOtherInfos
+              beneficiaryGroup={beneficiaryGroupData?.beneficiaryGroup}
+            />
           </Grid>
-          <Grid item xs={12} sx={{marginTop: 3, marginBottom: 3}}>
-            <Divider/>
+          <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
+            <Divider />
           </Grid>
           <Grid item xs={6}>
-            <Paper sx={{ padding : 2}} variant="outlined">
+            <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Description
               </Typography>
@@ -55,7 +69,7 @@ export default function BeneficiaryGroupDetails() {
             </Paper>
           </Grid>
           <Grid item xs={6}>
-            <Paper sx={{ padding : 2}} variant="outlined">
+            <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Observation
               </Typography>
@@ -77,7 +91,7 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-function BeneficiaryGroupMiniInfos({beneficiaryGroup}) {
+function BeneficiaryGroupMiniInfos({ beneficiaryGroup }) {
   return (
     <Paper
       variant="outlined"
@@ -91,12 +105,13 @@ function BeneficiaryGroupMiniInfos({beneficiaryGroup}) {
       }}
     >
       <Grid container spacing={2}>
-        {(beneficiaryGroup?.image && beneficiaryGroup?.image != '') &&
-        <Grid item>
-          <ButtonBase sx={{ width: 128, height: 'auto' }}>
-            <Img alt="complex" src={beneficiaryGroup?.image} />
-          </ButtonBase>
-        </Grid>}
+        {beneficiaryGroup?.image && beneficiaryGroup?.image != '' && (
+          <Grid item>
+            <ButtonBase sx={{ width: 128, height: 'auto' }}>
+              <Img alt="complex" src={beneficiaryGroup?.image} />
+            </ButtonBase>
+          </Grid>
+        )}
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
@@ -106,15 +121,20 @@ function BeneficiaryGroupMiniInfos({beneficiaryGroup}) {
               <Typography gutterBottom variant="subtitle1" component="div">
                 {beneficiaryGroup?.name}
               </Typography>
-              <Divider sx={{marginTop : 2, marginBottom : 2}}/>
+              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b> {`${getFormatDateTime(beneficiaryGroup?.createdAt)}`} <br />
-                <b>Dernière modification: </b>{`${getFormatDateTime(beneficiaryGroup?.updatedAt)}`}
+                <b>Crée le: </b>{' '}
+                {`${getFormatDateTime(beneficiaryGroup?.createdAt)}`} <br />
+                <b>Dernière modification: </b>
+                {`${getFormatDateTime(beneficiaryGroup?.updatedAt)}`}
               </Typography>
-              <Divider sx={{marginTop : 2, marginBottom : 2}}/>
+              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Date début prévue: </b> {`${getFormatDateTime(beneficiaryGroup?.startingDateTime)}`} <br />
-                <b>Date fin prévue: </b> {`${getFormatDateTime(beneficiaryGroup?.endingDateTime)}`}
+                <b>Date début prévue: </b>{' '}
+                {`${getFormatDateTime(beneficiaryGroup?.startingDateTime)}`}{' '}
+                <br />
+                <b>Date fin prévue: </b>{' '}
+                {`${getFormatDateTime(beneficiaryGroup?.endingDateTime)}`}
               </Typography>
             </Grid>
           </Grid>
@@ -124,7 +144,7 @@ function BeneficiaryGroupMiniInfos({beneficiaryGroup}) {
   );
 }
 
-function BeneficiaryGroupOtherInfos({beneficiaryGroup}) {
+function BeneficiaryGroupOtherInfos({ beneficiaryGroup }) {
   return (
     <Paper
       variant="outlined"
@@ -143,9 +163,7 @@ function BeneficiaryGroupOtherInfos({beneficiaryGroup}) {
         {beneficiaryGroup?.beneficiaries?.map((beneficiary, index) => (
           <Grid xs={12} sm={12} md={12} key={index}>
             <Item>
-              <BeneficiaryItemCard 
-                                beneficiary={beneficiary?.beneficiary} 
-              />
+              <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
             </Item>
           </Grid>
         ))}
@@ -153,4 +171,3 @@ function BeneficiaryGroupOtherInfos({beneficiaryGroup}) {
     </Paper>
   );
 }
-

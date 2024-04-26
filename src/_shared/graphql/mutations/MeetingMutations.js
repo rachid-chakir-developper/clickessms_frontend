@@ -4,7 +4,7 @@ import { MEETING_BASIC_INFOS } from '../fragments/MeetingFragment';
 export const POST_MEETING = gql`
   mutation CreateMeeting($meetingData: MeetingInput!) {
     createMeeting(meetingData: $meetingData) {
-      meeting{
+      meeting {
         ...MeetingBasicInfosFragment
       }
     }
@@ -15,7 +15,7 @@ export const POST_MEETING = gql`
 export const PUT_MEETING = gql`
   mutation UpdateMeeting($id: ID!, $meetingData: MeetingInput!) {
     updateMeeting(id: $id, meetingData: $meetingData) {
-      meeting{
+      meeting {
         ...MeetingBasicInfosFragment
       }
     }
@@ -25,11 +25,11 @@ export const PUT_MEETING = gql`
 
 export const PUT_MEETING_STATE = gql`
   mutation UpdateMeetingState($id: ID!) {
-    updateMeetingState(id: $id){
+    updateMeetingState(id: $id) {
       done
       success
       message
-      meeting{
+      meeting {
         ...MeetingBasicInfosFragment
       }
     }
@@ -39,7 +39,7 @@ export const PUT_MEETING_STATE = gql`
 
 export const DELETE_MEETING = gql`
   mutation DeleteMeeting($id: ID!) {
-    deleteMeeting(id: $id){
+    deleteMeeting(id: $id) {
       id
       success
       deleted

@@ -5,6 +5,13 @@ import { useParams } from 'react-router-dom';
 export default function AddEmployee() {
   let { idEmployee } = useParams();
   return (
-    <AddEmployeeForm idEmployee={idEmployee} title={(idEmployee && idEmployee > 0) ? `Modifier l'employé` : `Ajouter un employé`}/>
+    <AddEmployeeForm
+      idEmployee={idEmployee}
+      title={
+        idEmployee && idEmployee > 0
+          ? `Modifier l'employé`
+          : `Ajouter un employé`
+      }
+    />
   );
 }

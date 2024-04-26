@@ -5,19 +5,14 @@ import '@fontsource/roboto/700.css';
 
 import './App.css';
 import ApolloProvider from './ApolloProvider';
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr'; // Importer le local français pour Day.js
 
-import Offline from './offline/Offline'
+import Offline from './offline/Offline';
 import Online from './online/Online';
 import { FeedBacksProvider } from './_shared/context/feedbacks/FeedBacksProvider';
 import { SessionProvider } from './_shared/context/SessionProvider';
@@ -37,8 +32,8 @@ function App() {
       },
       secondary: {
         main: '#003539', // Couleur secondaire
-        contrastText: '#333333'
-      }
+        contrastText: '#333333',
+      },
     },
   });
 
@@ -51,8 +46,22 @@ function App() {
               <LocalizationProvider dateAdapter={AdapterDayjs} locale="fr">
                 <BrowserRouter>
                   <Routes>
-                    <Route path="/offline/*" element={<AuthGuardRoute guest><Offline /></AuthGuardRoute>} />
-                    <Route path="/online/*" element={<AuthGuardRoute authenticated><Online /></AuthGuardRoute>} />
+                    <Route
+                      path="/offline/*"
+                      element={
+                        <AuthGuardRoute guest>
+                          <Offline />
+                        </AuthGuardRoute>
+                      }
+                    />
+                    <Route
+                      path="/online/*"
+                      element={
+                        <AuthGuardRoute authenticated>
+                          <Online />
+                        </AuthGuardRoute>
+                      }
+                    />
                     <Route
                       path="/"
                       element={<Navigate to="online" replace />}
@@ -72,6 +81,4 @@ function App() {
   );
 }
 
-
 export default App;
-

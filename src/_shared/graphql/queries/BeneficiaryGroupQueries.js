@@ -1,5 +1,9 @@
 import { gql } from '@apollo/client';
-import { BENEFICIARY_GROUP_BASIC_INFOS, BENEFICIARY_GROUP_DETAILS, BENEFICIARY_GROUP_RECAP_DETAILS } from '../fragments/BeneficiaryGroupFragment';
+import {
+  BENEFICIARY_GROUP_BASIC_INFOS,
+  BENEFICIARY_GROUP_DETAILS,
+  BENEFICIARY_GROUP_RECAP_DETAILS,
+} from '../fragments/BeneficiaryGroupFragment';
 
 export const GET_BENEFICIARY_GROUP = gql`
   query GetBeneficiaryGroup($id: ID!) {
@@ -11,17 +15,26 @@ export const GET_BENEFICIARY_GROUP = gql`
 `;
 
 export const GET_BENEFICIARY_GROUPS = gql`
-  query GetBeneficiaryGroups($beneficiaryGroupFilter: BeneficiaryGroupFilterInput, $offset: Int, $limit: Int, $page: Int){
-    beneficiaryGroups(beneficiaryGroupFilter : $beneficiaryGroupFilter, offset : $offset, limit : $limit, page : $page){
+  query GetBeneficiaryGroups(
+    $beneficiaryGroupFilter: BeneficiaryGroupFilterInput
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    beneficiaryGroups(
+      beneficiaryGroupFilter: $beneficiaryGroupFilter
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
       totalCount
-      nodes{
+      nodes {
         ...BeneficiaryGroupBasicInfosFragment
       }
     }
   }
   ${BENEFICIARY_GROUP_BASIC_INFOS}
 `;
-
 
 export const BENEFICIARY_GROUP_RECAP = gql`
   query GetBeneficiaryGroup($id: ID!) {

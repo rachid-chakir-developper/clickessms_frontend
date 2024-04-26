@@ -1,5 +1,9 @@
 import { gql } from '@apollo/client';
-import { CALL_BASIC_INFOS, CALL_DETAILS, CALL_RECAP_DETAILS } from '../fragments/CallFragment';
+import {
+  CALL_BASIC_INFOS,
+  CALL_DETAILS,
+  CALL_RECAP_DETAILS,
+} from '../fragments/CallFragment';
 
 export const GET_CALL = gql`
   query GetCall($id: ID!) {
@@ -11,17 +15,26 @@ export const GET_CALL = gql`
 `;
 
 export const GET_CALLS = gql`
-  query GetCalls($callFilter: CallFilterInput, $offset: Int, $limit: Int, $page: Int){
-    calls(callFilter : $callFilter, offset : $offset, limit : $limit, page : $page){
+  query GetCalls(
+    $callFilter: CallFilterInput
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    calls(
+      callFilter: $callFilter
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
       totalCount
-      nodes{
+      nodes {
         ...CallBasicInfosFragment
       }
     }
   }
   ${CALL_BASIC_INFOS}
 `;
-
 
 export const CALL_RECAP = gql`
   query GetCall($id: ID!) {

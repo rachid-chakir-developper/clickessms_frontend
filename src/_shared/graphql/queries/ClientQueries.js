@@ -1,5 +1,8 @@
 import { gql } from '@apollo/client';
-import { CLIENT_BASIC_INFOS, CLIENT_DETAILS } from '../fragments/ClientFragment';
+import {
+  CLIENT_BASIC_INFOS,
+  CLIENT_DETAILS,
+} from '../fragments/ClientFragment';
 
 export const GET_CLIENT = gql`
   query GetClient($id: ID!) {
@@ -11,10 +14,20 @@ export const GET_CLIENT = gql`
 `;
 
 export const GET_CLIENTS = gql`
-  query GetClients($clientFilter: ClientFilterInput, $offset: Int, $limit: Int, $page: Int){
-    clients(clientFilter: $clientFilter, offset : $offset, limit : $limit, page : $page){
+  query GetClients(
+    $clientFilter: ClientFilterInput
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    clients(
+      clientFilter: $clientFilter
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
       totalCount
-      nodes{
+      nodes {
         ...ClientBasicInfosFragment
       }
     }

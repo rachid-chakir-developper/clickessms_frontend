@@ -5,6 +5,8 @@
   "scripts": {
     "build": "react-scripts build",
     "eject": "react-scripts eject",
+    "format": "prettier --write 'src/**/*.{js,jsx,css}'",
+    "format-check": "prettier --check 'src/**/*.{js,jsx,css}'",
     "start": "react-scripts start",
     "test": "react-scripts test"
   },

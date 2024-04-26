@@ -15,7 +15,7 @@ export const USER_BASIC_INFOS = gql`
     currentLatitude
     currentLongitude
     isActive
-    employee{
+    employee {
       ...EmployeeMiniInfosFragment
     }
   }
@@ -46,13 +46,13 @@ export const USER_BASIC_INFOS = gql`
 export const USER_DETAILS = gql`
   fragment UserDetailsFragment on UserType {
     ...UserBasicInfosFragment
-    description,
-    observation,
-    groups{
+    description
+    observation
+    groups {
       id
       name
     }
-    userPermissions{
+    userPermissions {
       id
       name
     }

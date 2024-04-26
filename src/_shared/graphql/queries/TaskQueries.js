@@ -1,5 +1,9 @@
 import { gql } from '@apollo/client';
-import { TASK_BASIC_INFOS, TASK_DETAILS, TASK_RECAP } from '../fragments/TaskFragment';
+import {
+  TASK_BASIC_INFOS,
+  TASK_DETAILS,
+  TASK_RECAP,
+} from '../fragments/TaskFragment';
 
 export const GET_TASK = gql`
   query GetTask($id: ID!) {
@@ -11,10 +15,20 @@ export const GET_TASK = gql`
 `;
 
 export const GET_TASKS = gql`
-  query GetTasks($taskFilter: TaskFilterInput, $offset: Int, $limit: Int, $page: Int){
-    tasks(taskFilter: $taskFilter, offset : $offset, limit : $limit, page : $page){
+  query GetTasks(
+    $taskFilter: TaskFilterInput
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    tasks(
+      taskFilter: $taskFilter
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
       totalCount
-      nodes{
+      nodes {
         ...TaskBasicInfosFragment
       }
     }

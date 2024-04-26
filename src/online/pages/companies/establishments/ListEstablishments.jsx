@@ -9,7 +9,10 @@ import { Add } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { DELETE_ESTABLISHMENT, PUT_ESTABLISHMENT_STATE } from '../../../../_shared/graphql/mutations/EstablishmentMutations';
+import {
+  DELETE_ESTABLISHMENT,
+  PUT_ESTABLISHMENT_STATE,
+} from '../../../../_shared/graphql/mutations/EstablishmentMutations';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import EstablishmentFilter from './EstablishmentFilter';
@@ -28,162 +31,197 @@ export default function ListEstablishments() {
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
   const [establishmentFilter, setEstablishmentFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
-    console.log('newFilter', newFilter)
+    console.log('newFilter', newFilter);
     setEstablishmentFilter(newFilter);
   };
-  
-  const  { setNotifyAlert,  setConfirmDialog} = useFeedBacks();
-  const [getEstablishments, { 
-          loading: loadingEstablishments, 
-          data: establishmentsData, 
-          error: establishmentsError, 
-          fetchMore:  fetchMoreEstablishments 
-        }] = useLazyQuery(GET_ESTABLISHMENTS, { variables: { establishmentFilter, page: paginator.page, limit: paginator.limit }})
 
-  React.useEffect(() =>{
-    getEstablishments()
-  }, [establishmentFilter, paginator])
-
-  const [deleteEstablishment, { loading : loadingDelete }] = useMutation(DELETE_ESTABLISHMENT, {
-    onCompleted: (datas) => {
-      if(datas.deleteEstablishment.deleted){
-        setNotifyAlert({
-          isOpen: true,
-          message: 'Supprimé avec succès',
-          type: 'success'
-        })
-      }else{
-        setNotifyAlert({
-          isOpen: true,
-          message: `Non Supprimé ! ${datas.deleteEstablishment.message}.`,
-          type: 'error'
-        })
-      } 
+  const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
+  const [
+    getEstablishments,
+    {
+      loading: loadingEstablishments,
+      data: establishmentsData,
+      error: establishmentsError,
+      fetchMore: fetchMoreEstablishments,
     },
-    update(cache, { data: { deleteEstablishment } }) {
-      console.log('Updating cache after deletion:', deleteEstablishment);
-    
-      const deletedEstablishmentId = deleteEstablishment.id;
-    
-      cache.modify({
-        fields: {
-          establishments(existingEstablishments = { totalCount: 0, nodes: [] }, { readField }) {
-    
-            const updatedEstablishments = existingEstablishments.nodes.filter((establishment) =>
-              readField('id', establishment) !== deletedEstablishmentId
-            );
-    
-            console.log('Updated establishments:', updatedEstablishments);
-    
-            return {
-              totalCount: existingEstablishments.totalCount - 1,
-              nodes: updatedEstablishments,
-            };
+  ] = useLazyQuery(GET_ESTABLISHMENTS, {
+    variables: {
+      establishmentFilter,
+      page: paginator.page,
+      limit: paginator.limit,
+    },
+  });
+
+  React.useEffect(() => {
+    getEstablishments();
+  }, [establishmentFilter, paginator]);
+
+  const [deleteEstablishment, { loading: loadingDelete }] = useMutation(
+    DELETE_ESTABLISHMENT,
+    {
+      onCompleted: (datas) => {
+        if (datas.deleteEstablishment.deleted) {
+          setNotifyAlert({
+            isOpen: true,
+            message: 'Supprimé avec succès',
+            type: 'success',
+          });
+        } else {
+          setNotifyAlert({
+            isOpen: true,
+            message: `Non Supprimé ! ${datas.deleteEstablishment.message}.`,
+            type: 'error',
+          });
+        }
+      },
+      update(cache, { data: { deleteEstablishment } }) {
+        console.log('Updating cache after deletion:', deleteEstablishment);
+
+        const deletedEstablishmentId = deleteEstablishment.id;
+
+        cache.modify({
+          fields: {
+            establishments(
+              existingEstablishments = { totalCount: 0, nodes: [] },
+              { readField },
+            ) {
+              const updatedEstablishments = existingEstablishments.nodes.filter(
+                (establishment) =>
+                  readField('id', establishment) !== deletedEstablishmentId,
+              );
+
+              console.log('Updated establishments:', updatedEstablishments);
+
+              return {
+                totalCount: existingEstablishments.totalCount - 1,
+                nodes: updatedEstablishments,
+              };
+            },
           },
-        },
-      });
+        });
+      },
+      onError: (err) => {
+        console.log(err);
+        setNotifyAlert({
+          isOpen: true,
+          message: 'Non Supprimé ! Veuillez réessayer.',
+          type: 'error',
+        });
+      },
     },
-    onError: (err) => {
-      console.log(err)
-      setNotifyAlert({
-        isOpen: true,
-        message: 'Non Supprimé ! Veuillez réessayer.',
-        type: 'error'
-      })
-    },
-  })
-  
+  );
+
   const onDeleteEstablishment = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
-      subTitle: "Voulez vous vraiment supprimer ?",
-      onConfirm: () => { setConfirmDialog({isOpen: false})
-                    deleteEstablishment({ variables: { id : id }})
-                  }
-    })
-  }
+      subTitle: 'Voulez vous vraiment supprimer ?',
+      onConfirm: () => {
+        setConfirmDialog({ isOpen: false });
+        deleteEstablishment({ variables: { id: id } });
+      },
+    });
+  };
 
-  const [updateEstablishmentState, { loading : loadingPutState }] = useMutation(PUT_ESTABLISHMENT_STATE, {
-    onCompleted: (datas) => {
-      if(datas.updateEstablishmentState.done){
+  const [updateEstablishmentState, { loading: loadingPutState }] = useMutation(
+    PUT_ESTABLISHMENT_STATE,
+    {
+      onCompleted: (datas) => {
+        if (datas.updateEstablishmentState.done) {
+          setNotifyAlert({
+            isOpen: true,
+            message: 'Changée avec succès',
+            type: 'success',
+          });
+        } else {
+          setNotifyAlert({
+            isOpen: true,
+            message: `Non changée ! ${datas.updateEstablishmentState.message}.`,
+            type: 'error',
+          });
+        }
+      },
+      refetchQueries: [{ query: GET_ESTABLISHMENTS }],
+      onError: (err) => {
+        console.log(err);
         setNotifyAlert({
           isOpen: true,
-          message: 'Changée avec succès',
-          type: 'success'
-        })
-      }else{
-        setNotifyAlert({
-          isOpen: true,
-          message: `Non changée ! ${datas.updateEstablishmentState.message}.`,
-          type: 'error'
-        })
-      } 
+          message: 'Non changée ! Veuillez réessayer.',
+          type: 'error',
+        });
+      },
     },
-    refetchQueries :[{query : GET_ESTABLISHMENTS}],
-    onError: (err) => {
-      console.log(err)
-      setNotifyAlert({
-        isOpen: true,
-        message: 'Non changée ! Veuillez réessayer.',
-        type: 'error'
-      })
-    },
-  })
-  
+  );
+
   const onUpdateEstablishmentState = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
-      subTitle: "Voulez vous vraiment changer ?",
-      onConfirm: () => { setConfirmDialog({isOpen: false})
-                        updateEstablishmentState({ variables: { id : id }})
-                  }
-    })
-  }
-
+      subTitle: 'Voulez vous vraiment changer ?',
+      onConfirm: () => {
+        setConfirmDialog({ isOpen: false });
+        updateEstablishmentState({ variables: { id: id } });
+      },
+    });
+  };
 
   return (
-    <Grid container spacing={2} >
-        <Grid item="true" xs={12}>
-            <Box sx={{display : 'flex', justifyContent : 'flex-end', my : 3}}>
-              <Link to="/online/associations/etablissements/ajouter" className="no_style">
-                <Button variant="contained" endIcon={<Add />} >
-                    Ajouter un établissement
-                </Button>
-              </Link>
-            </Box>
-        </Grid>
-        <Grid item="true" xs={12}>
-          <EstablishmentFilter onFilterChange={handleFilterChange} />
-        </Grid>
-        <Grid item="true" xs={12}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-              {loadingEstablishments && <Grid key={'pgrs'}  item xs={2} sm={4} md={3}><ProgressService type="mediaCard" /></Grid>}
-              {establishmentsData?.establishments?.nodes.length < 1 && !loadingEstablishments && <Alert severity="warning">Aucun établissement trouvé.</Alert>}
-              {establishmentsData?.establishments?.nodes?.map((establishment, index) => (
+    <Grid container spacing={2}>
+      <Grid item="true" xs={12}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
+          <Link
+            to="/online/associations/etablissements/ajouter"
+            className="no_style"
+          >
+            <Button variant="contained" endIcon={<Add />}>
+              Ajouter un établissement
+            </Button>
+          </Link>
+        </Box>
+      </Grid>
+      <Grid item="true" xs={12}>
+        <EstablishmentFilter onFilterChange={handleFilterChange} />
+      </Grid>
+      <Grid item="true" xs={12}>
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid
+            container
+            spacing={{ xs: 2, md: 3 }}
+            columns={{ xs: 4, sm: 8, md: 12 }}
+          >
+            {loadingEstablishments && (
+              <Grid key={'pgrs'} item xs={2} sm={4} md={3}>
+                <ProgressService type="mediaCard" />
+              </Grid>
+            )}
+            {establishmentsData?.establishments?.nodes.length < 1 &&
+              !loadingEstablishments && (
+                <Alert severity="warning">Aucun établissement trouvé.</Alert>
+              )}
+            {establishmentsData?.establishments?.nodes?.map(
+              (establishment, index) => (
                 <Grid xs={2} sm={4} md={3} key={index}>
                   <Item>
-                    <EstablishmentItemCard 
-                                      establishment={establishment} 
-                                      onDeleteEstablishment={onDeleteEstablishment} 
-                                      onUpdateEstablishmentState={onUpdateEstablishmentState}
+                    <EstablishmentItemCard
+                      establishment={establishment}
+                      onDeleteEstablishment={onDeleteEstablishment}
+                      onUpdateEstablishmentState={onUpdateEstablishmentState}
                     />
                   </Item>
                 </Grid>
-              ))}
-            </Grid>
-          </Box>
-        </Grid>
-        <Grid item="true" xs={12}>
-          <PaginationControlled
-            totalItems={establishmentsData?.establishments?.totalCount}  // Nombre total d'éléments
-            itemsPerPage={paginator.limit} // Nombre d'éléments par page
-            currentPage={1}
-            onChange={(page) => setPaginator({ ...paginator, page })}
-          />
-        </Grid>
+              ),
+            )}
+          </Grid>
+        </Box>
+      </Grid>
+      <Grid item="true" xs={12}>
+        <PaginationControlled
+          totalItems={establishmentsData?.establishments?.totalCount} // Nombre total d'éléments
+          itemsPerPage={paginator.limit} // Nombre d'éléments par page
+          currentPage={1}
+          onChange={(page) => setPaginator({ ...paginator, page })}
+        />
+      </Grid>
     </Grid>
   );
 }

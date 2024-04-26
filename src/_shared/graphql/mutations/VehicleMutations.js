@@ -2,9 +2,9 @@ import { gql } from '@apollo/client';
 import { VEHICLE_BASIC_INFOS } from '../fragments/VehicleFragment';
 
 export const POST_VEHICLE = gql`
-  mutation CreateVehicle($vehicleData: VehicleInput!, $image : Upload) {
-    createVehicle(vehicleData: $vehicleData, image : $image) {
-      vehicle{
+  mutation CreateVehicle($vehicleData: VehicleInput!, $image: Upload) {
+    createVehicle(vehicleData: $vehicleData, image: $image) {
+      vehicle {
         ...VehicleBasicInfosFragment
       }
     }
@@ -13,9 +13,13 @@ export const POST_VEHICLE = gql`
 `;
 
 export const PUT_VEHICLE = gql`
-  mutation UpdateVehicle($id: ID!, $vehicleData: VehicleInput!, $image : Upload) {
-    updateVehicle(id: $id, vehicleData: $vehicleData, image : $image) {
-      vehicle{
+  mutation UpdateVehicle(
+    $id: ID!
+    $vehicleData: VehicleInput!
+    $image: Upload
+  ) {
+    updateVehicle(id: $id, vehicleData: $vehicleData, image: $image) {
+      vehicle {
         ...VehicleBasicInfosFragment
       }
     }
@@ -25,11 +29,11 @@ export const PUT_VEHICLE = gql`
 
 export const PUT_VEHICLE_STATE = gql`
   mutation UpdateVehicleState($id: ID!) {
-    updateVehicleState(id: $id){
+    updateVehicleState(id: $id) {
       done
       success
       message
-      vehicle{
+      vehicle {
         ...VehicleBasicInfosFragment
       }
     }
@@ -39,7 +43,7 @@ export const PUT_VEHICLE_STATE = gql`
 
 export const DELETE_VEHICLE = gql`
   mutation DeleteVehicle($id: ID!) {
-    deleteVehicle(id: $id){
+    deleteVehicle(id: $id) {
       id
       success
       deleted

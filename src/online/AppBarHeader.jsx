@@ -37,15 +37,13 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-export default function AppBarHeader({open, handleDrawerToggle}) {
-
+export default function AppBarHeader({ open, handleDrawerToggle }) {
   const theme = useTheme();
 
   const PRIMARY_LIGHT = theme.palette.primary.light;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -133,18 +131,18 @@ export default function AppBarHeader({open, handleDrawerToggle}) {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" open={open}>
         <Toolbar>
-          { !open &&
+          {!open && (
             <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-            onClick={handleDrawerToggle}
-          >
-            <MenuIcon />
-          </IconButton>
-          }
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              sx={{ mr: 2 }}
+              onClick={handleDrawerToggle}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
           {/* <Typography
             variant="h6"
             noWrap

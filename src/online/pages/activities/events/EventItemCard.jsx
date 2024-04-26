@@ -4,29 +4,47 @@ import CardMedia from '@mui/material/CardMedia';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { Stack, Tooltip } from '@mui/material';
-import { Delete, PauseRounded, PlayArrowRounded, Edit, Article, Folder } from '@mui/icons-material';
+import {
+  Delete,
+  PauseRounded,
+  PlayArrowRounded,
+  Edit,
+  Article,
+  Folder,
+} from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
-export default function EventItemCard({event, onDeleteEvent, onUpdateEventState}) {
-//   const theme = useTheme();
-const  { setDialogListLibrary } = useFeedBacks();
-const onOpenDialogListLibrary = (folderParent) => {
+export default function EventItemCard({
+  event,
+  onDeleteEvent,
+  onUpdateEventState,
+}) {
+  //   const theme = useTheme();
+  const { setDialogListLibrary } = useFeedBacks();
+  const onOpenDialogListLibrary = (folderParent) => {
     setDialogListLibrary({
       isOpen: true,
       folderParent,
-      onClose: () => { 
-          setDialogListLibrary({isOpen: false})
-        }
-    })
-}
+      onClose: () => {
+        setDialogListLibrary({ isOpen: false });
+      },
+    });
+  };
   return (
-    <Card variant="outlined" sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2, }}>
+    <Card
+      variant="outlined"
+      sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2 }}
+    >
       <Tooltip title={event?.title}>
-        <CardMedia component="img" width="100" height="100" alt={event?.title}
-          src={ event?.image ? event?.image : "/default-placeholder.jpg"}
-          sx={{ borderRadius: 0.6, height: 100, width: 100}}
+        <CardMedia
+          component="img"
+          width="100"
+          height="100"
+          alt={event?.title}
+          src={event?.image ? event?.image : '/default-placeholder.jpg'}
+          sx={{ borderRadius: 0.6, height: 100, width: 100 }}
         />
       </Tooltip>
       <Stack direction="column" spacing={2} alignItems="center">
@@ -34,14 +52,23 @@ const onOpenDialogListLibrary = (folderParent) => {
           <Typography color="text.primary" fontWeight="medium" fontSize={18}>
             {event?.title}
           </Typography>
-            <Typography component="div" variant="caption" color="text.secondary" fontWeight="regular" >
-              À {`${getFormatDateTime(event?.startingDateTime)}`}
-            </Typography>
+          <Typography
+            component="div"
+            variant="caption"
+            color="text.secondary"
+            fontWeight="regular"
+          >
+            À {`${getFormatDateTime(event?.startingDateTime)}`}
+          </Typography>
         </Stack>
         <Stack direction="row" alignItems="center" spacing={1.5}>
           <Tooltip title="Supprimer">
-            <IconButton aria-label="delete" size="small" sx={{ flexGrow: 0 }}
-              onClick={()=> onDeleteEvent(event?.id)}>
+            <IconButton
+              aria-label="delete"
+              size="small"
+              sx={{ flexGrow: 0 }}
+              onClick={() => onDeleteEvent(event?.id)}
+            >
               <Delete fontSize="small" />
             </IconButton>
           </Tooltip>
@@ -55,20 +82,32 @@ const onOpenDialogListLibrary = (folderParent) => {
             </IconButton>
           </Tooltip>
           <Tooltip title="Modifier">
-            <Link to={`/online/activites/evenements/modifier/${event?.id}`} className="no_style">
+            <Link
+              to={`/online/activites/evenements/modifier/${event?.id}`}
+              className="no_style"
+            >
               <IconButton aria-label="edit" size="small">
                 <Edit fontSize="small" />
               </IconButton>
             </Link>
           </Tooltip>
-          {event?.folder && <Tooltip title="Pièces jointes">
-            <IconButton aria-label="Attachment" size="small" sx={{ flexGrow: 0 }}
-              onClick={()=> onOpenDialogListLibrary(event?.folder)}>
-              <Folder fontSize="small" />
-            </IconButton>
-          </Tooltip>}
+          {event?.folder && (
+            <Tooltip title="Pièces jointes">
+              <IconButton
+                aria-label="Attachment"
+                size="small"
+                sx={{ flexGrow: 0 }}
+                onClick={() => onOpenDialogListLibrary(event?.folder)}
+              >
+                <Folder fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          )}
           <Tooltip title="Détails">
-            <Link to={`/online/activites/evenements/details/${event?.id}`} className="no_style">
+            <Link
+              to={`/online/activites/evenements/details/${event?.id}`}
+              className="no_style"
+            >
               <IconButton aria-label="edit" size="small">
                 <Article fontSize="small" />
               </IconButton>

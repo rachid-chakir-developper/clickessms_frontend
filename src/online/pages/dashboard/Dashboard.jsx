@@ -34,15 +34,15 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Dashboard() {
-  const { 
-      loading: loadingDashboard, 
-      data: dashboardData, 
-      error: dashboardError, 
-    } = useQuery(GET_DASHBOARD, {fetchPolicy: "network-only"})
+  const {
+    loading: loadingDashboard,
+    data: dashboardData,
+    error: dashboardError,
+  } = useQuery(GET_DASHBOARD, { fetchPolicy: 'network-only' });
   return (
     <>
-      { loadingDashboard && <ProgressService type="dashboard" />}
-      { !loadingDashboard &&
+      {loadingDashboard && <ProgressService type="dashboard" />}
+      {!loadingDashboard && (
         <Grid container spacing={3}>
           {/* <Grid item xs={12} md={4} lg={4}>
             <Item>
@@ -93,7 +93,7 @@ export default function Dashboard() {
             </Item>
           </Grid> */}
         </Grid>
-      }
+      )}
     </>
   );
 }

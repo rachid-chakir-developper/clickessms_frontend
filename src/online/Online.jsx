@@ -9,11 +9,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import AppBarHeader from './AppBarHeader';
 
-import {
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './pages/dashboard/Dashboard';
 import ListItems from './ListItems';
 import Users from './pages/users/Users';
@@ -56,7 +52,7 @@ const openedMixin = (theme) => ({
   overflowX: 'hidden',
   '&::-webkit-scrollbar': {
     width: '6px',
-    display: 'none'
+    display: 'none',
   },
   '&::-webkit-scrollbar-track': {
     backgroundColor: 'transparent',
@@ -70,9 +66,9 @@ const openedMixin = (theme) => ({
   },
   '&:hover': {
     '&::-webkit-scrollbar': {
-      display: 'block'
-    }
-  }
+      display: 'block',
+    },
+  },
 });
 
 const closedMixin = (theme) => ({
@@ -83,7 +79,7 @@ const closedMixin = (theme) => ({
   overflowX: 'hidden',
   '&::-webkit-scrollbar': {
     width: '6px',
-    display: 'none'
+    display: 'none',
   },
   '&::-webkit-scrollbar-track': {
     backgroundColor: 'transparent',
@@ -97,8 +93,8 @@ const closedMixin = (theme) => ({
   },
   '&:hover': {
     '&::-webkit-scrollbar': {
-      display: 'block'
-    }
+      display: 'block',
+    },
   },
   width: `calc(${theme.spacing(7)} + 1px)`,
   [theme.breakpoints.up('sm')]: {
@@ -106,22 +102,22 @@ const closedMixin = (theme) => ({
   },
 });
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme),
-    }),
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+  ...(open && {
+    ...openedMixin(theme),
+    '& .MuiDrawer-paper': openedMixin(theme),
   }),
-);
+  ...(!open && {
+    ...closedMixin(theme),
+    '& .MuiDrawer-paper': closedMixin(theme),
+  }),
+}));
 
 export default function Online() {
   const theme = useTheme();
@@ -141,26 +137,36 @@ export default function Online() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBarHeader open={open} handleDrawerToggle={handleDrawerToggle}/>
+      <AppBarHeader open={open} handleDrawerToggle={handleDrawerToggle} />
       <Drawer variant="permanent" open={open}>
-        <DrawerHeader sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <DrawerHeader
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
           <Logo />
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === 'rtl' ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <AccountCard open={open} />
         <ListItems open={open} />
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3, width: '100%', height: '100%' }}>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, p: 3, width: '100%', height: '100%' }}
+      >
         <DrawerHeader />
         <Routes>
           <Route path={`dashboard/*`} element={<Dashboard />} />
-          <Route
-              path="/"
-              element={<Navigate to={`dashboard`} replace />}
-          />
+          <Route path="/" element={<Navigate to={`dashboard`} replace />} />
           <Route path={`carte/*`} element={<Maps />} />
           <Route path={`associations/*`} element={<Companies />} />
           <Route path={`vehicules/*`} element={<Vehicles />} />

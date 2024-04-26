@@ -1,5 +1,8 @@
 import { gql } from '@apollo/client';
-import { VEHICLE_BASIC_INFOS, VEHICLE_DETAILS } from '../fragments/VehicleFragment';
+import {
+  VEHICLE_BASIC_INFOS,
+  VEHICLE_DETAILS,
+} from '../fragments/VehicleFragment';
 
 export const GET_VEHICLE = gql`
   query GetVehicle($id: ID!) {
@@ -11,10 +14,20 @@ export const GET_VEHICLE = gql`
 `;
 
 export const GET_VEHICLES = gql`
-  query GetVehicles($vehicleFilter: VehicleFilterInput, $offset: Int, $limit: Int, $page: Int){
-    vehicles(vehicleFilter: $vehicleFilter, offset : $offset, limit : $limit, page : $page){
+  query GetVehicles(
+    $vehicleFilter: VehicleFilterInput
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    vehicles(
+      vehicleFilter: $vehicleFilter
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
       totalCount
-      nodes{
+      nodes {
         ...VehicleBasicInfosFragment
       }
     }

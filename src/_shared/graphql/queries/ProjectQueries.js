@@ -1,5 +1,8 @@
-import { gql } from "@apollo/client";
-import { PROJECT_BASIC_INFOS, PROJECT_DETAILS } from "../fragments/ProjectFragment";
+import { gql } from '@apollo/client';
+import {
+  PROJECT_BASIC_INFOS,
+  PROJECT_DETAILS,
+} from '../fragments/ProjectFragment';
 
 // Requête pour obtenir la liste des projets
 export const GET_PROJECTS = gql`

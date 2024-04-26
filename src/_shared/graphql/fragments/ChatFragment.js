@@ -6,9 +6,9 @@ import { USER_BASIC_INFOS } from './UserFragment';
 export const PARTICIPANT_BASIC_INFOS = gql`
   fragment ParticipantConversationBasicInfosFragment on ParticipantConversationType {
     id
-    user{
-        ...UserBasicInfosFragment
-      }
+    user {
+      ...UserBasicInfosFragment
+    }
     createdAt
     updatedAt
   }
@@ -18,9 +18,9 @@ export const PARTICIPANT_BASIC_INFOS = gql`
 export const MESSAGE_BASIC_INFOS = gql`
   fragment MessageBasicInfosFragment on MessageType {
     id
-    sender{
-        ...UserBasicInfosFragment
-      }
+    sender {
+      ...UserBasicInfosFragment
+    }
     isSentByMe
     text
     isRead
@@ -41,13 +41,13 @@ export const MESSAGE_DETAILS = gql`
 export const CONVERSATION_DETAILS = gql`
   fragment ConversationDetailsFragment on ConversationType {
     id
-    creator{
-        ...UserBasicInfosFragment
-      }
-    participants{
-        ...ParticipantConversationBasicInfosFragment
+    creator {
+      ...UserBasicInfosFragment
     }
-    lastMessage{
+    participants {
+      ...ParticipantConversationBasicInfosFragment
+    }
+    lastMessage {
       ...MessageDetailsFragment
     }
     notSeenCount

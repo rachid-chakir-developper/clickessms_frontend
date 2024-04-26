@@ -17,7 +17,7 @@ export const EMPLOYEE_GROUP_BASIC_INFOS = gql`
 export const EMPLOYEE_GROUP_ITEM_DETAILS = gql`
   fragment EmployeeGroupItemTypeFragment on EmployeeGroupItemType {
     id
-    employee{
+    employee {
       ...EmployeeBasicInfosFragment
     }
   }
@@ -28,7 +28,7 @@ export const EMPLOYEE_GROUP_DETAILS = gql`
   fragment EmployeeGroupDetailsFragment on EmployeeGroupType {
     ...EmployeeGroupBasicInfosFragment
     observation
-    employees{
+    employees {
       ...EmployeeGroupItemTypeFragment
     }
   }
@@ -40,13 +40,10 @@ export const EMPLOYEE_GROUP_RECAP_DETAILS = gql`
   fragment EmployeeGroupRecapDetailsFragment on EmployeeGroupType {
     ...EmployeeGroupBasicInfosFragment
     observation
-    employees{
+    employees {
       ...EmployeeGroupItemTypeFragment
     }
   }
   ${EMPLOYEE_GROUP_BASIC_INFOS}
   ${EMPLOYEE_GROUP_ITEM_DETAILS}
 `;
-
-
-

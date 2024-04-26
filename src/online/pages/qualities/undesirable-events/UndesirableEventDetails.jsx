@@ -2,7 +2,14 @@ import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import {Box, Grid, Paper, ButtonBase, Typography, Divider,} from '@mui/material';
+import {
+  Box,
+  Grid,
+  Paper,
+  ButtonBase,
+  Typography,
+  Divider,
+} from '@mui/material';
 
 import { UDESIRABLE_EVENT_RECAP } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
@@ -21,33 +28,40 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function UndesirableEventDetails() {
   let { idUndesirableEvent } = useParams();
-  const [getUndesirableEvent, { 
-    loading : loadingUndesirableEvent,
-    data: undesirableEventData, 
-    error: undesirableEventError, 
-  }] = useLazyQuery(UDESIRABLE_EVENT_RECAP)
-  React.useEffect(()=>{
-      if(idUndesirableEvent){
-          getUndesirableEvent(({ variables: { id: idUndesirableEvent } }));
-      }
-  }, [idUndesirableEvent])
+  const [
+    getUndesirableEvent,
+    {
+      loading: loadingUndesirableEvent,
+      data: undesirableEventData,
+      error: undesirableEventError,
+    },
+  ] = useLazyQuery(UDESIRABLE_EVENT_RECAP);
+  React.useEffect(() => {
+    if (idUndesirableEvent) {
+      getUndesirableEvent({ variables: { id: idUndesirableEvent } });
+    }
+  }, [idUndesirableEvent]);
 
-  if(loadingUndesirableEvent) return <ProgressService type="form" />
+  if (loadingUndesirableEvent) return <ProgressService type="form" />;
   return (
     <>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
-            <UndesirableEventMiniInfos undesirableEvent={undesirableEventData?.undesirableEvent}/>
+            <UndesirableEventMiniInfos
+              undesirableEvent={undesirableEventData?.undesirableEvent}
+            />
           </Grid>
           <Grid item xs={5}>
-            <UndesirableEventOtherInfos undesirableEvent={undesirableEventData?.undesirableEvent}/>
+            <UndesirableEventOtherInfos
+              undesirableEvent={undesirableEventData?.undesirableEvent}
+            />
           </Grid>
-          <Grid item xs={12} sx={{marginTop: 3, marginBottom: 3}}>
-            <Divider/>
+          <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
+            <Divider />
           </Grid>
           <Grid item xs={6}>
-            <Paper sx={{ padding : 2}} variant="outlined">
+            <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Description
               </Typography>
@@ -57,7 +71,7 @@ export default function UndesirableEventDetails() {
             </Paper>
           </Grid>
           <Grid item xs={6}>
-            <Paper sx={{ padding : 2}} variant="outlined">
+            <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Observation
               </Typography>
@@ -79,7 +93,7 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-function UndesirableEventMiniInfos({undesirableEvent}) {
+function UndesirableEventMiniInfos({ undesirableEvent }) {
   return (
     <Paper
       variant="outlined"
@@ -93,12 +107,13 @@ function UndesirableEventMiniInfos({undesirableEvent}) {
       }}
     >
       <Grid container spacing={2}>
-        {(undesirableEvent?.image && undesirableEvent?.image != '') &&
-        <Grid item>
-          <ButtonBase sx={{ width: 128, height: 'auto' }}>
-            <Img alt="complex" src={undesirableEvent?.image} />
-          </ButtonBase>
-        </Grid>}
+        {undesirableEvent?.image && undesirableEvent?.image != '' && (
+          <Grid item>
+            <ButtonBase sx={{ width: 128, height: 'auto' }}>
+              <Img alt="complex" src={undesirableEvent?.image} />
+            </ButtonBase>
+          </Grid>
+        )}
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
@@ -108,15 +123,20 @@ function UndesirableEventMiniInfos({undesirableEvent}) {
               <Typography gutterBottom variant="subtitle1" component="div">
                 {undesirableEvent?.title}
               </Typography>
-              <Divider sx={{marginTop : 2, marginBottom : 2}}/>
+              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b> {`${getFormatDateTime(undesirableEvent?.createdAt)}`} <br />
-                <b>Dernière modification: </b>{`${getFormatDateTime(undesirableEvent?.updatedAt)}`}
+                <b>Crée le: </b>{' '}
+                {`${getFormatDateTime(undesirableEvent?.createdAt)}`} <br />
+                <b>Dernière modification: </b>
+                {`${getFormatDateTime(undesirableEvent?.updatedAt)}`}
               </Typography>
-              <Divider sx={{marginTop : 2, marginBottom : 2}}/>
+              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Date début prévue: </b> {`${getFormatDateTime(undesirableEvent?.startingDateTime)}`} <br />
-                <b>Date fin prévue: </b> {`${getFormatDateTime(undesirableEvent?.endingDateTime)}`}
+                <b>Date début prévue: </b>{' '}
+                {`${getFormatDateTime(undesirableEvent?.startingDateTime)}`}{' '}
+                <br />
+                <b>Date fin prévue: </b>{' '}
+                {`${getFormatDateTime(undesirableEvent?.endingDateTime)}`}
               </Typography>
             </Grid>
           </Grid>
@@ -126,7 +146,7 @@ function UndesirableEventMiniInfos({undesirableEvent}) {
   );
 }
 
-function UndesirableEventOtherInfos({undesirableEvent}) {
+function UndesirableEventOtherInfos({ undesirableEvent }) {
   return (
     <Paper
       variant="outlined"
@@ -145,9 +165,7 @@ function UndesirableEventOtherInfos({undesirableEvent}) {
         {undesirableEvent?.beneficiaries?.map((beneficiary, index) => (
           <Grid xs={12} sm={12} md={12} key={index}>
             <Item>
-              <BeneficiaryItemCard 
-                                beneficiary={beneficiary?.beneficiary} 
-              />
+              <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
             </Item>
           </Grid>
         ))}
@@ -155,4 +173,3 @@ function UndesirableEventOtherInfos({undesirableEvent}) {
     </Paper>
   );
 }
-

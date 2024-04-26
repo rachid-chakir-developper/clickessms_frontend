@@ -1,5 +1,9 @@
 import { gql } from '@apollo/client';
-import { MEETING_BASIC_INFOS, MEETING_DETAILS, MEETING_RECAP_DETAILS } from '../fragments/MeetingFragment';
+import {
+  MEETING_BASIC_INFOS,
+  MEETING_DETAILS,
+  MEETING_RECAP_DETAILS,
+} from '../fragments/MeetingFragment';
 
 export const GET_MEETING = gql`
   query GetMeeting($id: ID!) {
@@ -11,17 +15,26 @@ export const GET_MEETING = gql`
 `;
 
 export const GET_MEETINGS = gql`
-  query GetMeetings($meetingFilter: MeetingFilterInput, $offset: Int, $limit: Int, $page: Int){
-    meetings(meetingFilter : $meetingFilter, offset : $offset, limit : $limit, page : $page){
+  query GetMeetings(
+    $meetingFilter: MeetingFilterInput
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    meetings(
+      meetingFilter: $meetingFilter
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
       totalCount
-      nodes{
+      nodes {
         ...MeetingBasicInfosFragment
       }
     }
   }
   ${MEETING_BASIC_INFOS}
 `;
-
 
 export const MEETING_RECAP = gql`
   query GetMeeting($id: ID!) {

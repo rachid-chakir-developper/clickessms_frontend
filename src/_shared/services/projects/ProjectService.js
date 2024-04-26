@@ -1,18 +1,23 @@
-import { useQuery, useLazyQuery, useSubscription, useMutation } from "@apollo/client";
+import {
+  useQuery,
+  useLazyQuery,
+  useSubscription,
+  useMutation,
+} from '@apollo/client';
 import {
   GET_PROJECTS,
-  GET_PROJECT_DETAILS
-} from "../../graphql/queries/ProjectQueries"; // Importez vos requêtes GraphQL depuis un autre fichier
+  GET_PROJECT_DETAILS,
+} from '../../graphql/queries/ProjectQueries'; // Importez vos requêtes GraphQL depuis un autre fichier
 import {
   CREATE_PROJECT,
   UPDATE_PROJECT,
-  DELETE_PROJECT
-} from "../../graphql/mutations/ProjectMutations"; // Importez vos requêtes GraphQL depuis un autre fichier
+  DELETE_PROJECT,
+} from '../../graphql/mutations/ProjectMutations'; // Importez vos requêtes GraphQL depuis un autre fichier
 import {
   PROJECT_CREATED_SUBSCRIPTION,
   PROJECT_UPDATED_SUBSCRIPTION,
-  PROJECT_DELETED_SUBSCRIPTION
-} from "../../graphql/subscriptions/ProjectSubscriptions"; // Importez vos requêtes GraphQL depuis un autre fichier
+  PROJECT_DELETED_SUBSCRIPTION,
+} from '../../graphql/subscriptions/ProjectSubscriptions'; // Importez vos requêtes GraphQL depuis un autre fichier
 
 // Fonction pour obtenir la liste des projets
 export function useGetProjects() {

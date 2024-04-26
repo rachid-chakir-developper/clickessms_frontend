@@ -12,7 +12,7 @@ export const BENEFICIARY_ABSENCE_BASIC_INFOS = gql`
     startingDateTime
     endingDateTime
     comment
-    folder{
+    folder {
       id
       number
       name
@@ -23,7 +23,7 @@ export const BENEFICIARY_ABSENCE_BASIC_INFOS = gql`
 export const BENEFICIARY_ABSENCE_ITEM_DETAILS = gql`
   fragment BeneficiaryAbsenceItemTypeFragment on BeneficiaryAbsenceItemType {
     id
-    beneficiary{
+    beneficiary {
       ...BeneficiaryMiniInfosFragment
     }
   }
@@ -33,17 +33,17 @@ export const BENEFICIARY_ABSENCE_ITEM_DETAILS = gql`
 export const BENEFICIARY_ABSENCE_DETAILS = gql`
   fragment BeneficiaryAbsenceDetailsFragment on BeneficiaryAbsenceType {
     ...BeneficiaryAbsenceBasicInfosFragment
-    reasons{
+    reasons {
       id
       name
       description
     }
     otherReasons
     observation
-    beneficiaries{
+    beneficiaries {
       ...BeneficiaryAbsenceItemTypeFragment
     }
-    employee{
+    employee {
       ...EmployeeBasicInfosFragment
     }
   }
@@ -55,17 +55,17 @@ export const BENEFICIARY_ABSENCE_DETAILS = gql`
 export const BENEFICIARY_ABSENCE_RECAP_DETAILS = gql`
   fragment BeneficiaryAbsenceRecapDetailsFragment on BeneficiaryAbsenceType {
     ...BeneficiaryAbsenceBasicInfosFragment
-    reasons{
+    reasons {
       id
       name
       description
     }
     otherReasons
     observation
-    beneficiaries{
+    beneficiaries {
       ...BeneficiaryAbsenceItemTypeFragment
     }
-    employee{
+    employee {
       ...EmployeeBasicInfosFragment
     }
   }
@@ -73,4 +73,3 @@ export const BENEFICIARY_ABSENCE_RECAP_DETAILS = gql`
   ${BENEFICIARY_ABSENCE_ITEM_DETAILS}
   ${EMPLOYEE_BASIC_INFOS}
 `;
-

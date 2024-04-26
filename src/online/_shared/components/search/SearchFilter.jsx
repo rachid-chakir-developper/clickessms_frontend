@@ -1,22 +1,17 @@
 import React, { useState } from 'react';
-import {
-  Button,
-  Grid,
-  IconButton,
-  Stack
-} from '@mui/material';
+import { Button, Grid, IconButton, Stack } from '@mui/material';
 import styled from '@emotion/styled';
 import { Close } from '@mui/icons-material';
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
 
 const Item = styled(Stack)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(2),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
 
 const SearchFilter = ({ onFilterChange }) => {
   const [filterValues, setFilterValues] = useState({
@@ -32,29 +27,36 @@ const SearchFilter = ({ onFilterChange }) => {
 
   const handleFilterClear = () => {
     // Pass the filter values to the parent component for handling the filtering logic
-    const filterValuesInit = { startingDateTime: null, endingDateTime: null, keyword: ''}
-    setFilterValues(filterValuesInit)
+    const filterValuesInit = {
+      startingDateTime: null,
+      endingDateTime: null,
+      keyword: '',
+    };
+    setFilterValues(filterValuesInit);
     onFilterChange(filterValuesInit);
   };
 
-    React.useEffect(() =>{
-        handleFilterSubmit()
-    }, [filterValues])
+  React.useEffect(() => {
+    handleFilterSubmit();
+  }, [filterValues]);
 
   return (
     <Grid container spacing={2}>
-        <Grid item xs={12} md={12}>
-            <Item>
-                <TheTextField variant="outlined"
-                    label="Recherche"
-                    placeholder="Recherche..."
-                    name="keyword"
-                    value={filterValues.keyword}
-                    onChange={(e) => setFilterValues({ ...filterValues, keyword: e.target.value })}
-                />
-            </Item>
-        </Grid>
-        {/* <Grid item xs={12} sm={6} md={3}>
+      <Grid item xs={12} md={12}>
+        <Item>
+          <TheTextField
+            variant="outlined"
+            label="Recherche"
+            placeholder="Recherche..."
+            name="keyword"
+            value={filterValues.keyword}
+            onChange={(e) =>
+              setFilterValues({ ...filterValues, keyword: e.target.value })
+            }
+          />
+        </Item>
+      </Grid>
+      {/* <Grid item xs={12} sm={6} md={3}>
             <Item>
                 <TheDateTimePicker
                     label="De"

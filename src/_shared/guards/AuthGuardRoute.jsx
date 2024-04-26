@@ -8,12 +8,12 @@ const AuthGuardRoute = ({ authenticated, guest, children, ...props }) => {
   if (authenticated && !user) {
     // Si l'utilisateur n'est pas authentifié et la route nécessite une authentification,
     // naviguer vers la page de connexion
-    return <Navigate to="/login" replace/>;
+    return <Navigate to="/login" replace />;
   }
   if (guest && user) {
     // Si l'utilisateur n'est pas authentifié et la route nécessite une authentification,
     // naviguer vers la page de connexion
-    return <Navigate to="/" replace/>;
+    return <Navigate to="/" replace />;
   }
   return children;
 };

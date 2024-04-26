@@ -9,7 +9,18 @@ import { StyledLabel } from './styles';
 // ----------------------------------------------------------------------
 
 const AppLabel = forwardRef(
-  ({ children, color = 'default', variant = 'soft', startIcon, endIcon, sx, ...other }, ref) => {
+  (
+    {
+      children,
+      color = 'default',
+      variant = 'soft',
+      startIcon,
+      endIcon,
+      sx,
+      ...other
+    },
+    ref,
+  ) => {
     const theme = useTheme();
 
     const iconStyles = {
@@ -38,7 +49,7 @@ const AppLabel = forwardRef(
         {endIcon && <Box sx={{ ml: 0.75, ...iconStyles }}> {endIcon} </Box>}
       </StyledLabel>
     );
-  }
+  },
 );
 
 AppLabel.propTypes = {

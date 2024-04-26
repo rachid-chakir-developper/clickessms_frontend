@@ -17,10 +17,10 @@ export const VEHICLE_BASIC_INFOS = gql`
     isBought
     designation
     isActive
-    driver{
+    driver {
       ...UserBasicInfosFragment
     }
-    folder{
+    folder {
       ...FolderMiniInfosFragment
     }
   }

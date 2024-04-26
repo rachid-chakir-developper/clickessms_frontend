@@ -9,7 +9,7 @@ export const COMMENT_BASIC_INFOS = gql`
     text
     image
     createdAt
-    creator{
+    creator {
       ...UserBasicInfosFragment
     }
   }

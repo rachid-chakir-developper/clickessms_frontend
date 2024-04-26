@@ -1,5 +1,9 @@
 import { gql } from '@apollo/client';
-import { CONVERSATION_DETAILS, MESSAGE_BASIC_INFOS, MESSAGE_DETAILS } from '../fragments/ChatFragment';
+import {
+  CONVERSATION_DETAILS,
+  MESSAGE_BASIC_INFOS,
+  MESSAGE_DETAILS,
+} from '../fragments/ChatFragment';
 
 export const GET_CONVERSATION = gql`
   query GetConversation($id: ID!) {
@@ -11,11 +15,11 @@ export const GET_CONVERSATION = gql`
 `;
 
 export const GET_CONVERSATIONS = gql`
-  query GetConversations($offset: Int, $limit: Int, $page: Int){
-    conversations(offset : $offset, limit : $limit, page : $page){
+  query GetConversations($offset: Int, $limit: Int, $page: Int) {
+    conversations(offset: $offset, limit: $limit, page: $page) {
       totalCount
       notSeenCount
-      nodes{
+      nodes {
         ...ConversationDetailsFragment
       }
     }
@@ -35,10 +39,22 @@ export const GET_MESSAGE = gql`
 `;
 
 export const GET_MESSAGES = gql`
-  query GetMessages($conversationId: ID , $participantId: ID, $offset: Int, $limit: Int, $page: Int){
-    messages(conversationId : $conversationId, participantId : $participantId, offset : $offset, limit : $limit, page : $page){
+  query GetMessages(
+    $conversationId: ID
+    $participantId: ID
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    messages(
+      conversationId: $conversationId
+      participantId: $participantId
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
       totalCount
-      nodes{
+      nodes {
         ...MessageBasicInfosFragment
       }
     }

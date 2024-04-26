@@ -30,10 +30,10 @@ export const TASK_BASIC_INFOS = gql`
     priority
     workLevel
     status
-    client{
+    client {
       ...ClientBasicInfosFragment
     }
-    folder{
+    folder {
       ...FolderMiniInfosFragment
     }
   }
@@ -55,22 +55,22 @@ export const TASK_STEP_BASIC_INFOS = gql`
 export const TASK_STEP_DETAILS = gql`
   fragment TaskStepDetailsFragment on TaskStepType {
     ...TaskStepBasicInfosFragment
-    images{
+    images {
       id
       caption
       image
-      creator{
+      creator {
         ...UserBasicInfosFragment
       }
       createdAt
       updatedAt
     }
-    videos{
+    videos {
       id
       caption
       video
       thumbnail
-      creator{
+      creator {
         ...UserBasicInfosFragment
       }
       createdAt
@@ -84,7 +84,7 @@ export const TASK_STEP_DETAILS = gql`
 export const TASK_STEP_RECAP_INFOS = gql`
   fragment TaskStepRecapInfosFragment on TaskStepType {
     ...TaskStepDetailsFragment
-    comments{
+    comments {
       ...CommentBasicInfosFragment
     }
   }
@@ -106,7 +106,7 @@ export const TASK_CHECK_LIST_DETAILS = gql`
 export const TASK_WORKER_DETAILS = gql`
   fragment TaskWorkerTypeFragment on TaskWorkerType {
     id
-    employee{
+    employee {
       ...EmployeeBasicInfosFragment
     }
   }
@@ -116,7 +116,7 @@ export const TASK_WORKER_DETAILS = gql`
 export const TASK_VEHICLE_DETAILS = gql`
   fragment TaskVehicleTypeFragment on TaskVehicleType {
     id
-    vehicle{
+    vehicle {
       ...VehicleBasicInfosFragment
     }
   }
@@ -126,7 +126,7 @@ export const TASK_VEHICLE_DETAILS = gql`
 export const TASK_MATERIAL_DETAILS = gql`
   fragment TaskMaterialTypeFragment on TaskMaterialType {
     id
-    material{
+    material {
       ...MaterialBasicInfosFragment
     }
   }
@@ -169,16 +169,16 @@ export const TASK_DETAILS = gql`
     totalPriceTtc
     isDisplayPrice
     isFromQuote
-    workers{
+    workers {
       ...TaskWorkerTypeFragment
     }
-    vehicles{
+    vehicles {
       ...TaskVehicleTypeFragment
     }
-    materials{
+    materials {
       ...TaskMaterialTypeFragment
     }
-    taskChecklist{
+    taskChecklist {
       ...TaskChecklistItemFragment
     }
   }
@@ -199,10 +199,10 @@ export const SIGNATURE_DETAILS = gql`
     authorEmail
     satisfaction
     comment
-    author{
+    author {
       ...UserBasicInfosFragment
     }
-    creator{
+    creator {
       ...UserBasicInfosFragment
     }
     createdAt
@@ -248,25 +248,25 @@ export const TASK_RECAP = gql`
     isFromQuote
     createdAt
     updatedAt
-    workers{
+    workers {
       ...TaskWorkerTypeFragment
     }
-    vehicles{
+    vehicles {
       ...TaskVehicleTypeFragment
     }
-    materials{
+    materials {
       ...TaskMaterialTypeFragment
     }
-    taskChecklist{
+    taskChecklist {
       ...TaskChecklistItemFragment
     }
-    taskSteps{
+    taskSteps {
       ...TaskStepRecapInfosFragment
     }
-    employeeSignature{
+    employeeSignature {
       ...SignatureTypeFragment
     }
-    clientSignature{
+    clientSignature {
       ...SignatureTypeFragment
     }
   }

@@ -1,5 +1,8 @@
 import { gql } from '@apollo/client';
-import { NOTIFICATION_BASIC_INFOS, NOTIFICATION_DETAILS } from '../fragments/NotificationFragment';
+import {
+  NOTIFICATION_BASIC_INFOS,
+  NOTIFICATION_DETAILS,
+} from '../fragments/NotificationFragment';
 
 export const GET_NOTIFICATION = gql`
   query GetNotification($id: ID!) {
@@ -11,11 +14,11 @@ export const GET_NOTIFICATION = gql`
 `;
 
 export const GET_NOTIFICATIONS = gql`
-  query GetNotifications($offset: Int, $limit: Int, $page: Int){
-    notifications(offset : $offset, limit : $limit, page : $page){
+  query GetNotifications($offset: Int, $limit: Int, $page: Int) {
+    notifications(offset: $offset, limit: $limit, page: $page) {
       totalCount
       notSeenCount
-      nodes{
+      nodes {
         ...NotificationBasicInfosFragment
       }
     }

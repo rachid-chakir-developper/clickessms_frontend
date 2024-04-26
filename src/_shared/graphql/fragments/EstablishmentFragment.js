@@ -14,7 +14,7 @@ export const ESTABLISHMENT_PHONE_INFOS = gql`
     logo
     isActive
   }
-`
+`;
 
 export const ESTABLISHMENT_MINI_INFOS = gql`
   fragment EstablishmentMiniInfosFragment on EstablishmentType {
@@ -27,29 +27,29 @@ export const ESTABLISHMENT_MINI_INFOS = gql`
     coverImage
     isActive
   }
-`
+`;
 
 export const ESTABLISHMENT_BASIC_INFOS = gql`
   fragment EstablishmentBasicInfosFragment on EstablishmentType {
     ...EstablishmentMiniInfosFragment
-    establishmentType{
+    establishmentType {
       id
       name
     }
-    establishmentParent{
+    establishmentParent {
       ...EstablishmentMiniInfosFragment
     }
-    folder{
+    folder {
       ...FolderMiniInfosFragment
     }
   }
   ${ESTABLISHMENT_MINI_INFOS}
   ${FOLDER_MINI_INFOS}
-`
+`;
 export const ESTABLISHMENT_DETAILS = gql`
   fragment EstablishmentDetailsFragment on EstablishmentType {
     ...EstablishmentBasicInfosFragment
-    establishmentChilds{
+    establishmentChilds {
       ...EstablishmentBasicInfosFragment
     }
     latitude

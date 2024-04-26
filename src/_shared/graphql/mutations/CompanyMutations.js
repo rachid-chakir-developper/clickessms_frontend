@@ -2,9 +2,17 @@ import { gql } from '@apollo/client';
 import { COMPANY_BASIC_INFOS } from '../fragments/CompanyFragment';
 
 export const POST_COMPANY = gql`
-  mutation CreateCompany($companyData: CompanyInput!, $logo : Upload, $coverImage : Upload) {
-    createCompany(companyData: $companyData, logo : $logo, coverImage : $coverImage) {
-      company{
+  mutation CreateCompany(
+    $companyData: CompanyInput!
+    $logo: Upload
+    $coverImage: Upload
+  ) {
+    createCompany(
+      companyData: $companyData
+      logo: $logo
+      coverImage: $coverImage
+    ) {
+      company {
         ...CompanyBasicInfosFragment
       }
     }
@@ -13,9 +21,19 @@ export const POST_COMPANY = gql`
 `;
 
 export const PUT_COMPANY = gql`
-  mutation UpdateCompany($id: ID, $companyData: CompanyInput!, $logo : Upload, $coverImage : Upload) {
-    updateCompany(id: $id, companyData: $companyData, logo : $logo, coverImage : $coverImage) {
-      company{
+  mutation UpdateCompany(
+    $id: ID
+    $companyData: CompanyInput!
+    $logo: Upload
+    $coverImage: Upload
+  ) {
+    updateCompany(
+      id: $id
+      companyData: $companyData
+      logo: $logo
+      coverImage: $coverImage
+    ) {
+      company {
         ...CompanyBasicInfosFragment
       }
     }
@@ -25,7 +43,7 @@ export const PUT_COMPANY = gql`
 
 export const DELETE_COMPANY = gql`
   mutation DeleteCompany($id: ID!) {
-    deleteCompany(id: $id){
+    deleteCompany(id: $id) {
       id
       success
       deleted

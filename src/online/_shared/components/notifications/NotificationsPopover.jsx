@@ -14,161 +14,206 @@ import ListSubheader from '@mui/material/ListSubheader';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
 import { Stack } from '@mui/material';
-import { AccessTimeOutlined, DoneAll, Notifications } from '@mui/icons-material';
+import {
+  AccessTimeOutlined,
+  DoneAll,
+  Notifications,
+} from '@mui/icons-material';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import { Link } from 'react-router-dom';
 
-export default function NotificationsPopover({notifications = [], notSeenCount=0, loadMoreNotification, onMarkNotificationsAsSeen}) {
-    const [open, setOpen] = useState(null);
+export default function NotificationsPopover({
+  notifications = [],
+  notSeenCount = 0,
+  loadMoreNotification,
+  onMarkNotificationsAsSeen,
+}) {
+  const [open, setOpen] = useState(null);
 
-    const handleOpen = (event) => {
-        setOpen(event.currentTarget);
-    };
+  const handleOpen = (event) => {
+    setOpen(event.currentTarget);
+  };
 
-    const handleClose = () => {
-        setOpen(null);
-    };
+  const handleClose = () => {
+    setOpen(null);
+  };
 
+  return (
+    <>
+      <IconButton
+        size="large"
+        color={open ? 'default' : 'inherit'}
+        onClick={handleOpen}
+      >
+        <Badge badgeContent={notSeenCount} color="error">
+          <Notifications />
+        </Badge>
+      </IconButton>
 
-    return (
-        <>
-        <IconButton size="large" color={open ? 'default' : 'inherit'} onClick={handleOpen}>
-            <Badge badgeContent={notSeenCount} color="error">
-                <Notifications />
-            </Badge>
-        </IconButton>
-
-        <Popover
-            open={!!open}
-            anchorEl={open}
-            onClose={handleClose}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            PaperProps={{
-            sx: {
-                mt: 1.5,
-                ml: 0.75,
-                width: 360,
-                maxHeight: '500px',
-                '&::-webkit-scrollbar': {
-                width: '6px',
-                display: 'none'
-                },
-                '&::-webkit-scrollbar-track': {
-                backgroundColor: 'transparent',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                backgroundColor: '#888',
-                borderRadius: '0px',
-                },
-                '&::-webkit-scrollbar-thumb:hover': {
-                backgroundColor: '#555',
-                },
-                '&:hover': {
-                '&::-webkit-scrollbar': {
-                    display: 'block'
-                }
-                }
+      <Popover
+        open={!!open}
+        anchorEl={open}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        PaperProps={{
+          sx: {
+            mt: 1.5,
+            ml: 0.75,
+            width: 360,
+            maxHeight: '500px',
+            '&::-webkit-scrollbar': {
+              width: '6px',
+              display: 'none',
             },
-            }}
-        >
-            <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
-            <Box sx={{ flexGrow: 1 }}>
-                <Typography variant="subtitle1">Notifications</Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    {notSeenCount < 1 && <span>Vous n'avez aucune nouvelle notification</span>}
-                    {notSeenCount === 1 && <span>Vous avez une nouvelle notification</span>}
-                    {notSeenCount > 1 && <span>Vous avez {notSeenCount} nouvelles notifications</span>}
-                </Typography>
-            </Box>
+            '&::-webkit-scrollbar-track': {
+              backgroundColor: 'transparent',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: '#888',
+              borderRadius: '0px',
+            },
+            '&::-webkit-scrollbar-thumb:hover': {
+              backgroundColor: '#555',
+            },
+            '&:hover': {
+              '&::-webkit-scrollbar': {
+                display: 'block',
+              },
+            },
+          },
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
+          <Box sx={{ flexGrow: 1 }}>
+            <Typography variant="subtitle1">Notifications</Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              {notSeenCount < 1 && (
+                <span>Vous n'avez aucune nouvelle notification</span>
+              )}
+              {notSeenCount === 1 && (
+                <span>Vous avez une nouvelle notification</span>
+              )}
+              {notSeenCount > 1 && (
+                <span>Vous avez {notSeenCount} nouvelles notifications</span>
+              )}
+            </Typography>
+          </Box>
 
-            {notSeenCount > 0 && (
-                <Tooltip title=" Mark all as read">
-                <IconButton color="primary" onClick={onMarkNotificationsAsSeen}>
-                    <DoneAll />
-                </IconButton>
-                </Tooltip>
-            )}
-            </Box>
+          {notSeenCount > 0 && (
+            <Tooltip title=" Mark all as read">
+              <IconButton color="primary" onClick={onMarkNotificationsAsSeen}>
+                <DoneAll />
+              </IconButton>
+            </Tooltip>
+          )}
+        </Box>
 
-            <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: 'dashed' }} />
 
-            <Stack sx={{ height: { xs: 340, sm: 'auto' } }}>
-            {notSeenCount > 0 && <List
-                disablePadding
-                subheader={
-                <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                    Notifications non vues
-                </ListSubheader>
-                }
-            >
-                {notifications.filter((n)=> !n?.isSeen).map((notification) => (
-                    <NotificationItem key={notification?.id} notification={notification}  onClick={handleClose}/>
-                ))}
-            </List> }
-
+        <Stack sx={{ height: { xs: 340, sm: 'auto' } }}>
+          {notSeenCount > 0 && (
             <List
-                disablePadding
-                subheader={
-                    <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                        Notifications vues
-                    </ListSubheader>
-                }
+              disablePadding
+              subheader={
+                <ListSubheader
+                  disableSticky
+                  sx={{ py: 1, px: 2.5, typography: 'overline' }}
+                >
+                  Notifications non vues
+                </ListSubheader>
+              }
             >
-                {notifications.filter((n)=> n?.isSeen).map((notification) => (
-                <NotificationItem key={notification?.id} notification={notification} onClick={handleClose}/>
+              {notifications
+                .filter((n) => !n?.isSeen)
+                .map((notification) => (
+                  <NotificationItem
+                    key={notification?.id}
+                    notification={notification}
+                    onClick={handleClose}
+                  />
                 ))}
             </List>
-            </Stack>
+          )}
 
-            <Divider sx={{ borderStyle: 'dashed' }} />
+          <List
+            disablePadding
+            subheader={
+              <ListSubheader
+                disableSticky
+                sx={{ py: 1, px: 2.5, typography: 'overline' }}
+              >
+                Notifications vues
+              </ListSubheader>
+            }
+          >
+            {notifications
+              .filter((n) => n?.isSeen)
+              .map((notification) => (
+                <NotificationItem
+                  key={notification?.id}
+                  notification={notification}
+                  onClick={handleClose}
+                />
+              ))}
+          </List>
+        </Stack>
 
-            <Box sx={{ p: 1 }}>
-            <Button fullWidth disableRipple onClick={loadMoreNotification}>
-                Voir plus
-            </Button>
-            </Box>
-        </Popover>
-        </>
-    );
+        <Divider sx={{ borderStyle: 'dashed' }} />
+
+        <Box sx={{ p: 1 }}>
+          <Button fullWidth disableRipple onClick={loadMoreNotification}>
+            Voir plus
+          </Button>
+        </Box>
+      </Popover>
+    </>
+  );
 }
 
 // ----------------------------------------------------------------------
-
 
 function NotificationItem({ notification, onClick }) {
   const { avatar, title } = renderContent(notification);
 
   return (
-    <Link to={`/online/travaux/interventions/details/${notification?.task?.id}`} className="no_style" onClick={onClick}>
-        <ListItemButton alignItems="flex-start"
+    <Link
+      to={`/online/travaux/interventions/details/${notification?.task?.id}`}
+      className="no_style"
+      onClick={onClick}
+    >
+      <ListItemButton
+        alignItems="flex-start"
         sx={{
-            ...(!notification?.isSeen && {
+          ...(!notification?.isSeen && {
             bgcolor: 'action.selected',
-            }),
+          }),
         }}
-        >
+      >
         <ListItemAvatar>
-            <Avatar sx={{ bgcolor: 'background.neutral' }} src={avatar}></Avatar>
+          <Avatar sx={{ bgcolor: 'background.neutral' }} src={avatar}></Avatar>
         </ListItemAvatar>
         <ListItemText
-            primary={title}
-            secondary={
+          primary={title}
+          secondary={
             <Typography
-                variant="caption"
-                sx={{
+              variant="caption"
+              sx={{
                 mt: 0.5,
                 display: 'flex',
                 alignItems: 'center',
                 color: 'text.disabled',
-                }}
+              }}
             >
-                <AccessTimeOutlined fontSize="small" sx={{width: 15, height: 15, mr: 0.5}} />
-                {`${getFormatDateTime(notification.createdAt)}`}
+              <AccessTimeOutlined
+                fontSize="small"
+                sx={{ width: 15, height: 15, mr: 0.5 }}
+              />
+              {`${getFormatDateTime(notification.createdAt)}`}
             </Typography>
-            }
+          }
         />
-        </ListItemButton>
+      </ListItemButton>
     </Link>
   );
 }
@@ -178,41 +223,65 @@ function NotificationItem({ notification, onClick }) {
 function renderContent(notification) {
   const title = (
     <>
-        <Typography variant="subtitle2">
-            {notification.title}
-        </Typography>
-        <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-            {notification.message}
-        </Typography>
+      <Typography variant="subtitle2">{notification.title}</Typography>
+      <Typography
+        component="span"
+        variant="body2"
+        sx={{ color: 'text.secondary' }}
+      >
+        {notification.message}
+      </Typography>
     </>
   );
 
   if (notification.type === 'order_placed') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/ic_notification_package.svg" />,
+      avatar: (
+        <img
+          alt={notification.title}
+          src="/assets/icons/ic_notification_package.svg"
+        />
+      ),
       title,
     };
   }
   if (notification.type === 'order_shipped') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/ic_notification_shipping.svg" />,
+      avatar: (
+        <img
+          alt={notification.title}
+          src="/assets/icons/ic_notification_shipping.svg"
+        />
+      ),
       title,
     };
   }
   if (notification.type === 'mail') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/ic_notification_mail.svg" />,
+      avatar: (
+        <img
+          alt={notification.title}
+          src="/assets/icons/ic_notification_mail.svg"
+        />
+      ),
       title,
     };
   }
   if (notification.type === 'chat_message') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/ic_notification_chat.svg" />,
+      avatar: (
+        <img
+          alt={notification.title}
+          src="/assets/icons/ic_notification_chat.svg"
+        />
+      ),
       title,
     };
   }
   return {
-    avatar: notification?.sender?.employee?.photo ? notification?.sender?.employee?.photo : null,
+    avatar: notification?.sender?.employee?.photo
+      ? notification?.sender?.employee?.photo
+      : null,
     title,
   };
 }

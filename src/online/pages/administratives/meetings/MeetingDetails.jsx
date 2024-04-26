@@ -2,7 +2,15 @@ import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import {Box, Grid, Paper, ButtonBase, Typography, Divider, Chip,} from '@mui/material';
+import {
+  Box,
+  Grid,
+  Paper,
+  ButtonBase,
+  Typography,
+  Divider,
+  Chip,
+} from '@mui/material';
 
 import { MEETING_RECAP } from '../../../../_shared/graphql/queries/MeetingQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
@@ -22,33 +30,32 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function MeetingDetails() {
   let { idMeeting } = useParams();
-  const [getMeeting, { 
-    loading : loadingMeeting,
-    data: meetingData, 
-    error: meetingError, 
-  }] = useLazyQuery(MEETING_RECAP)
-  React.useEffect(()=>{
-      if(idMeeting){
-          getMeeting(({ variables: { id: idMeeting } }));
-      }
-  }, [idMeeting])
+  const [
+    getMeeting,
+    { loading: loadingMeeting, data: meetingData, error: meetingError },
+  ] = useLazyQuery(MEETING_RECAP);
+  React.useEffect(() => {
+    if (idMeeting) {
+      getMeeting({ variables: { id: idMeeting } });
+    }
+  }, [idMeeting]);
 
-  if(loadingMeeting) return <ProgressService type="form" />
+  if (loadingMeeting) return <ProgressService type="form" />;
   return (
     <>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
-            <MeetingMiniInfos meeting={meetingData?.meeting}/>
+            <MeetingMiniInfos meeting={meetingData?.meeting} />
           </Grid>
           <Grid item xs={5}>
-            <MeetingOtherInfos meeting={meetingData?.meeting}/>
+            <MeetingOtherInfos meeting={meetingData?.meeting} />
           </Grid>
-          <Grid item xs={12} sx={{marginTop: 3, marginBottom: 3}}>
-            <Divider/>
+          <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
+            <Divider />
           </Grid>
           <Grid item xs={6}>
-            <Paper sx={{ padding : 2}} variant="outlined">
+            <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Description
               </Typography>
@@ -58,7 +65,7 @@ export default function MeetingDetails() {
             </Paper>
           </Grid>
           <Grid item xs={6}>
-            <Paper sx={{ padding : 2}} variant="outlined">
+            <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Observation
               </Typography>
@@ -68,7 +75,7 @@ export default function MeetingDetails() {
             </Paper>
           </Grid>
         </Grid>
-        <AddMeetingReportForm idMeeting={idMeeting}/>
+        <AddMeetingReportForm idMeeting={idMeeting} />
       </Box>
     </>
   );
@@ -81,7 +88,7 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-function MeetingMiniInfos({meeting}) {
+function MeetingMiniInfos({ meeting }) {
   return (
     <>
       <Paper
@@ -105,15 +112,19 @@ function MeetingMiniInfos({meeting}) {
                 <Typography gutterBottom variant="subtitle1" component="div">
                   {meeting?.title}
                 </Typography>
-                <Divider sx={{marginTop : 2, marginBottom : 2}}/>
+                <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
                 <Typography variant="body2" color="text.secondary">
-                  <b>Crée le: </b> {`${getFormatDateTime(meeting?.createdAt)}`} <br />
-                  <b>Dernière modification: </b>{`${getFormatDateTime(meeting?.updatedAt)}`}
+                  <b>Crée le: </b> {`${getFormatDateTime(meeting?.createdAt)}`}{' '}
+                  <br />
+                  <b>Dernière modification: </b>
+                  {`${getFormatDateTime(meeting?.updatedAt)}`}
                 </Typography>
-                <Divider sx={{marginTop : 2, marginBottom : 2}}/>
+                <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
                 <Typography variant="body2" color="text.secondary">
-                  <b>Date début prévue: </b> {`${getFormatDateTime(meeting?.startingDateTime)}`} <br />
-                  <b>Date fin prévue: </b> {`${getFormatDateTime(meeting?.endingDateTime)}`}
+                  <b>Date début prévue: </b>{' '}
+                  {`${getFormatDateTime(meeting?.startingDateTime)}`} <br />
+                  <b>Date fin prévue: </b>{' '}
+                  {`${getFormatDateTime(meeting?.endingDateTime)}`}
                 </Typography>
               </Grid>
             </Grid>
@@ -125,7 +136,7 @@ function MeetingMiniInfos({meeting}) {
         sx={{
           p: 2,
           margin: 'auto',
-          marginTop : 2,
+          marginTop: 2,
           flexGrow: 1,
           backgroundColor: (theme) =>
             theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -134,16 +145,21 @@ function MeetingMiniInfos({meeting}) {
         <Typography gutterBottom variant="subtitle3" component="h3">
           Motif
         </Typography>
-          {meeting?.reasons?.map((reason, index) => (
-            <Chip color="info" key={index} label={reason?.name} sx={{ marginRight: 1}}/>
-          ))}
-          <Chip label={meeting?.otherReasons}/>
+        {meeting?.reasons?.map((reason, index) => (
+          <Chip
+            color="info"
+            key={index}
+            label={reason?.name}
+            sx={{ marginRight: 1 }}
+          />
+        ))}
+        <Chip label={meeting?.otherReasons} />
       </Paper>
     </>
   );
 }
 
-function MeetingOtherInfos({meeting}) {
+function MeetingOtherInfos({ meeting }) {
   return (
     <Paper
       variant="outlined"
@@ -162,9 +178,7 @@ function MeetingOtherInfos({meeting}) {
         {meeting?.beneficiaries?.map((beneficiary, index) => (
           <Grid xs={12} sm={12} md={12} key={index}>
             <Item>
-              <BeneficiaryItemCard 
-                                beneficiary={beneficiary?.beneficiary} 
-              />
+              <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
             </Item>
           </Grid>
         ))}
@@ -172,4 +186,3 @@ function MeetingOtherInfos({meeting}) {
     </Paper>
   );
 }
-

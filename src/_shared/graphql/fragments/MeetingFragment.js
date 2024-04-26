@@ -12,7 +12,7 @@ export const MEETING_BASIC_INFOS = gql`
     startingDateTime
     endingDateTime
     description
-    folder{
+    folder {
       id
       number
       name
@@ -23,7 +23,7 @@ export const MEETING_BASIC_INFOS = gql`
 export const BENEFICIARY_MEETING_ITEM_DETAILS = gql`
   fragment BeneficiaryMeetingItemTypeFragment on BeneficiaryMeetingItemType {
     id
-    beneficiary{
+    beneficiary {
       ...BeneficiaryMiniInfosFragment
     }
   }
@@ -33,7 +33,7 @@ export const BENEFICIARY_MEETING_ITEM_DETAILS = gql`
 export const EMPLOYEE_MEETING_ITEM_DETAILS = gql`
   fragment ParticipantMeetingItemTypeFragment on ParticipantMeetingItemType {
     id
-    employee{
+    employee {
       ...EmployeeMiniInfosFragment
     }
   }
@@ -44,20 +44,20 @@ export const MEETING_DETAILS = gql`
   fragment MeetingDetailsFragment on MeetingType {
     ...MeetingBasicInfosFragment
     videoCallLink
-    reasons{
+    reasons {
       id
       name
       description
     }
     otherReasons
     observation
-    participants{
+    participants {
       ...ParticipantMeetingItemTypeFragment
     }
-    beneficiaries{
+    beneficiaries {
       ...BeneficiaryMeetingItemTypeFragment
     }
-    employee{
+    employee {
       ...EmployeeBasicInfosFragment
     }
   }
@@ -71,20 +71,20 @@ export const MEETING_RECAP_DETAILS = gql`
   fragment MeetingRecapDetailsFragment on MeetingType {
     ...MeetingBasicInfosFragment
     videoCallLink
-    reasons{
+    reasons {
       id
       name
       description
     }
     otherReasons
     observation
-    participants{
+    participants {
       ...ParticipantMeetingItemTypeFragment
     }
-    beneficiaries{
+    beneficiaries {
       ...BeneficiaryMeetingItemTypeFragment
     }
-    employee{
+    employee {
       ...EmployeeBasicInfosFragment
     }
   }
@@ -93,4 +93,3 @@ export const MEETING_RECAP_DETAILS = gql`
   ${BENEFICIARY_MEETING_ITEM_DETAILS}
   ${EMPLOYEE_BASIC_INFOS}
 `;
-

@@ -5,7 +5,7 @@ import { FOLDER_MINI_INFOS } from './MediaFragment';
 
 export const MATERIAL_BASIC_INFOS = gql`
   fragment MaterialBasicInfosFragment on MaterialType {
-    id,
+    id
     number
     name
     image
@@ -14,12 +14,12 @@ export const MATERIAL_BASIC_INFOS = gql`
     designation
     quantity
     isActive
-    folder{
+    folder {
       ...FolderMiniInfosFragment
     }
   }
   ${FOLDER_MINI_INFOS}
-`
+`;
 
 export const MATERIAL_DETAILS = gql`
   fragment MaterialDetailsFragment on MaterialType {

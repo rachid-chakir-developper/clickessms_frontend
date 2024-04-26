@@ -5,6 +5,13 @@ import { useParams } from 'react-router-dom';
 export default function AddTask() {
   let { idTask } = useParams();
   return (
-    <AddTaskForm idTask={idTask} title={(idTask && idTask > 0) ? `Modifier l'intervention` : `Ajouter une intervention`}/>
+    <AddTaskForm
+      idTask={idTask}
+      title={
+        idTask && idTask > 0
+          ? `Modifier l'intervention`
+          : `Ajouter une intervention`
+      }
+    />
   );
 }

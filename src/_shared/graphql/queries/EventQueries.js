@@ -1,5 +1,9 @@
 import { gql } from '@apollo/client';
-import { EVENT_BASIC_INFOS, EVENT_DETAILS, EVENT_RECAP_DETAILS } from '../fragments/EventFragment';
+import {
+  EVENT_BASIC_INFOS,
+  EVENT_DETAILS,
+  EVENT_RECAP_DETAILS,
+} from '../fragments/EventFragment';
 
 export const GET_EVENT = gql`
   query GetEvent($id: ID!) {
@@ -11,17 +15,26 @@ export const GET_EVENT = gql`
 `;
 
 export const GET_EVENTS = gql`
-  query GetEvents($eventFilter: EventFilterInput, $offset: Int, $limit: Int, $page: Int){
-    events(eventFilter : $eventFilter, offset : $offset, limit : $limit, page : $page){
+  query GetEvents(
+    $eventFilter: EventFilterInput
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    events(
+      eventFilter: $eventFilter
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
       totalCount
-      nodes{
+      nodes {
         ...EventBasicInfosFragment
       }
     }
   }
   ${EVENT_BASIC_INFOS}
 `;
-
 
 export const EVENT_RECAP = gql`
   query GetEvent($id: ID!) {

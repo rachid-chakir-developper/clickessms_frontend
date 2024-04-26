@@ -14,7 +14,7 @@ export const CLIENT_PHONE_INFOS = gql`
     photo
     isActive
   }
-`
+`;
 
 export const CLIENT_BASIC_INFOS = gql`
   fragment ClientBasicInfosFragment on ClientType {
@@ -28,12 +28,12 @@ export const CLIENT_BASIC_INFOS = gql`
     address
     mobile
     isActive
-    folder{
+    folder {
       ...FolderMiniInfosFragment
     }
   }
   ${FOLDER_MINI_INFOS}
-`
+`;
 export const CLIENT_DETAILS = gql`
   fragment ClientDetailsFragment on ClientType {
     ...ClientBasicInfosFragment

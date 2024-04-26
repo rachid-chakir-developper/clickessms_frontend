@@ -9,15 +9,18 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Skeleton from '@mui/material/Skeleton';
 
-
 function Media({ loading = false }) {
-
   return (
     <Card sx={{ maxWidth: 345, m: 2 }}>
       <CardHeader
         avatar={
           loading ? (
-            <Skeleton animation="wave" variant="circular" width={40} height={40} />
+            <Skeleton
+              animation="wave"
+              variant="circular"
+              width={40}
+              height={40}
+            />
           ) : (
             <Avatar
               alt="Ted talk"
@@ -65,7 +68,11 @@ function Media({ loading = false }) {
       <CardContent>
         {loading ? (
           <React.Fragment>
-            <Skeleton animation="wave" height={10} style={{ marginBottom: 6 }} />
+            <Skeleton
+              animation="wave"
+              height={10}
+              style={{ marginBottom: 6 }}
+            />
             <Skeleton animation="wave" height={10} width="80%" />
           </React.Fragment>
         ) : (

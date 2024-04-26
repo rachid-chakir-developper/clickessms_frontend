@@ -6,24 +6,31 @@ import { Grid, Typography, Avatar, Card, CardContent } from '@mui/material';
 import dayjs from 'dayjs'; // Assurez-vous d'importer dayjs si vous l'utilisez pour la gestion des dates
 
 import { GET_BENEFICIARY } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
-import { getFormatDate, getFormatDateTime } from '../../../../_shared/tools/functions';
+import {
+  getFormatDate,
+  getFormatDateTime,
+} from '../../../../_shared/tools/functions';
 
 export default function BeneficiaryDetails() {
   let { idBeneficiary } = useParams();
-  const [getBeneficiary, { loading : loadingBeneficiary, data: beneficiaryData }] = useLazyQuery(GET_BENEFICIARY)
-React.useEffect(()=>{
-    if(idBeneficiary){
-        getBeneficiary(({ variables: { id: idBeneficiary } }));
+  const [
+    getBeneficiary,
+    { loading: loadingBeneficiary, data: beneficiaryData },
+  ] = useLazyQuery(GET_BENEFICIARY);
+  React.useEffect(() => {
+    if (idBeneficiary) {
+      getBeneficiary({ variables: { id: idBeneficiary } });
     }
-}, [idBeneficiary])
+  }, [idBeneficiary]);
 
   return (
     <Stack>
-        {beneficiaryData?.beneficiary && <BeneficiaryDetailsPage beneficiary={beneficiaryData?.beneficiary} />}
+      {beneficiaryData?.beneficiary && (
+        <BeneficiaryDetailsPage beneficiary={beneficiaryData?.beneficiary} />
+      )}
     </Stack>
   );
 }
-
 
 const BeneficiaryDetailsPage = ({ beneficiary }) => {
   const {
@@ -57,7 +64,7 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
     observation,
     isActive,
     createdAt,
-    updatedAt
+    updatedAt,
   } = beneficiary;
 
   return (
@@ -86,17 +93,18 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
               justifyContent: 'center',
               alignItems: 'center',
               bgcolor: (theme) => alpha(theme.palette.primary.main, 0.5),
-              boxShadow: '0px 0px 30px rgba(0, 0, 0, 0.2) inset'
+              boxShadow: '0px 0px 30px rgba(0, 0, 0, 0.2) inset',
             }}
           >
             <Avatar
-                src={photo}
-                alt={firstName}
-                sx={{
-                  width: 100, height: 100,
-                  boxShadow: '0px 0px 4px rgba(0, 0, 0, 0.5)', // Ajoutez l'ombre extérieure ici
-                  border: '2px solid white', // Ajoutez une bordure blanche autour de l'avatar si nécessaire
-                }}
+              src={photo}
+              alt={firstName}
+              sx={{
+                width: 100,
+                height: 100,
+                boxShadow: '0px 0px 4px rgba(0, 0, 0, 0.5)', // Ajoutez l'ombre extérieure ici
+                border: '2px solid white', // Ajoutez une bordure blanche autour de l'avatar si nécessaire
+              }}
             />
             <Box
               sx={{
@@ -113,43 +121,45 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
               <Typography variant="h5" gutterBottom>
                 {`${firstName} ${lastName}`}
               </Typography>
-              {address && address!=='' && <Typography variant="body2">
-                  {address}
-              </Typography>}
-              {position && position!=='' && <Typography variant="body2">
-                  {position}
-              </Typography>}
+              {address && address !== '' && (
+                <Typography variant="body2">{address}</Typography>
+              )}
+              {position && position !== '' && (
+                <Typography variant="body2">{position}</Typography>
+              )}
               <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-                  {email}
+                {email}
               </Typography>
-              {mobile && mobile!=='' && <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+              {mobile && mobile !== '' && (
+                <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
                   {mobile}
-              </Typography>}
-              {fix && fix!=='' && <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+                </Typography>
+              )}
+              {fix && fix !== '' && (
+                <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
                   {fix}
-              </Typography>}
+                </Typography>
+              )}
             </Box>
           </Box>
         </Paper>
       </Grid>
       {/* Autres informations de le bénéficiaire */}
       <Grid item xs={12} sm={8}>
-        <Paper sx={{ padding : 2}}>
+        <Paper sx={{ padding: 2 }}>
           <Typography variant="h6" gutterBottom>
             Informations supplémentaires
           </Typography>
-          <Paper sx={{ padding : 2}} variant="outlined">
+          <Paper sx={{ padding: 2 }} variant="outlined">
+            <Typography variant="body1">Réference: {number}</Typography>
+            <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
             <Typography variant="body1">
-              Réference: {number}
-            </Typography>
-            <Divider sx={{marginTop : 2, marginBottom : 2}}/>
-            <Typography variant="body1">
-                Ajouté le: {getFormatDateTime(createdAt)}
+              Ajouté le: {getFormatDateTime(createdAt)}
             </Typography>
             <Typography variant="body1">
-                Dernière modification: {getFormatDateTime(updatedAt)}
+              Dernière modification: {getFormatDateTime(updatedAt)}
             </Typography>
-            <Divider sx={{marginTop : 2, marginBottom : 2}}/>
+            <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
             <Typography variant="body1">
               Date de naissance: {getFormatDate(birthDate)}
             </Typography>
@@ -160,11 +170,11 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>
-        <Paper sx={{ padding : 2}}>
+        <Paper sx={{ padding: 2 }}>
           <Typography variant="h6" gutterBottom>
             Description
           </Typography>
-          <Paper sx={{ padding : 2}} variant="outlined">
+          <Paper sx={{ padding: 2 }} variant="outlined">
             <Typography variant="body1">
               {description ? description : "Aucune description pour l'instant"}
             </Typography>
@@ -172,11 +182,11 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>
-        <Paper sx={{ padding : 2}}>
+        <Paper sx={{ padding: 2 }}>
           <Typography variant="h6" gutterBottom>
             Observation
           </Typography>
-          <Paper sx={{ padding : 2}} variant="outlined">
+          <Paper sx={{ padding: 2 }} variant="outlined">
             <Typography variant="body1">
               {observation ? observation : "Aucune observation pour l'instant"}
             </Typography>

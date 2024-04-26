@@ -1,21 +1,30 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Box, Card, CardContent, CardMedia, TextField, Typography, IconButton } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  CardMedia,
+  TextField,
+  Typography,
+  IconButton,
+} from '@mui/material';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 
-export default function  TheFieldField(props) {
+export default function TheFieldField(props) {
   const theme = useTheme();
-  const [uploadedFile, setUploadedFile] = React.useState({ path: null, localUrl : null, file : null })
-  React.useEffect(
-    () => {
-      if(typeof(props?.fileValue) == 'string'){
-        setUploadedFile({ path: props?.fileValue, localUrl : null, file : null });
-      }
-    },
-    [props?.fileValue]
-  );
+  const [uploadedFile, setUploadedFile] = React.useState({
+    path: null,
+    localUrl: null,
+    file: null,
+  });
+  React.useEffect(() => {
+    if (typeof props?.fileValue == 'string') {
+      setUploadedFile({ path: props?.fileValue, localUrl: null, file: null });
+    }
+  }, [props?.fileValue]);
   return (
     <Card sx={{ display: 'flex' }} variant="outlined">
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -27,22 +36,21 @@ export default function  TheFieldField(props) {
             {props?.placeholder}
           </Typography> */}
           <TextField
-                type="file"
-                variant="outlined"
-                size="small"
-                onChange={(e) =>{
-                  let file = e.target.files[0];
-                  if (file) {
-                    let uploaded = {
-                      localUrl : URL.createObjectURL(file),
-                      file : file
-                    }
-                    setUploadedFile(uploaded)
-                    if(props?.onChange) props?.onChange(file, uploaded, e)
-                  }
-                }
-                }
-            />
+            type="file"
+            variant="outlined"
+            size="small"
+            onChange={(e) => {
+              let file = e.target.files[0];
+              if (file) {
+                let uploaded = {
+                  localUrl: URL.createObjectURL(file),
+                  file: file,
+                };
+                setUploadedFile(uploaded);
+                if (props?.onChange) props?.onChange(file, uploaded, e);
+              }
+            }}
+          />
         </CardContent>
         {/* <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
           <IconButton aria-label="previous">

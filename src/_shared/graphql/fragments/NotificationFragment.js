@@ -7,19 +7,19 @@ import { TASK_MINI_BASIC_INFOS } from './TaskFragment';
 export const NOTIFICATION_BASIC_INFOS = gql`
   fragment NotificationBasicInfosFragment on NotificationType {
     id
-    sender{
-        ...UserBasicInfosFragment
-      }
-	recipient{
-        ...UserBasicInfosFragment
-      }
-	notificationType
-	title
-	message
-	isRead
-	isSeen
-	task{
-        ...TaskMiniBasicInfosFragment
+    sender {
+      ...UserBasicInfosFragment
+    }
+    recipient {
+      ...UserBasicInfosFragment
+    }
+    notificationType
+    title
+    message
+    isRead
+    isSeen
+    task {
+      ...TaskMiniBasicInfosFragment
     }
     createdAt
   }

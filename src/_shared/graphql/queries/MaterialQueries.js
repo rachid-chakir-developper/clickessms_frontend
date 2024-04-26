@@ -1,5 +1,8 @@
 import { gql } from '@apollo/client';
-import { MATERIAL_BASIC_INFOS, MATERIAL_DETAILS } from '../fragments/MaterialFragment';
+import {
+  MATERIAL_BASIC_INFOS,
+  MATERIAL_DETAILS,
+} from '../fragments/MaterialFragment';
 
 export const GET_MATERIAL = gql`
   query GetMaterial($id: ID!) {
@@ -11,10 +14,20 @@ export const GET_MATERIAL = gql`
 `;
 
 export const GET_MATERIALS = gql`
-  query GetMaterials($materialFilter: MaterialFilterInput, $offset: Int, $limit: Int, $page: Int){
-    materials(materialFilter: $materialFilter, offset : $offset, limit : $limit, page : $page){
+  query GetMaterials(
+    $materialFilter: MaterialFilterInput
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    materials(
+      materialFilter: $materialFilter
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
       totalCount
-      nodes{
+      nodes {
         ...MaterialBasicInfosFragment
       }
     }

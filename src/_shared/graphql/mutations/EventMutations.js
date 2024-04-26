@@ -2,9 +2,9 @@ import { gql } from '@apollo/client';
 import { EVENT_BASIC_INFOS } from '../fragments/EventFragment';
 
 export const POST_EVENT = gql`
-  mutation CreateEvent($eventData: EventInput!, $image : Upload) {
-    createEvent(eventData: $eventData, image : $image) {
-      event{
+  mutation CreateEvent($eventData: EventInput!, $image: Upload) {
+    createEvent(eventData: $eventData, image: $image) {
+      event {
         ...EventBasicInfosFragment
       }
     }
@@ -13,9 +13,9 @@ export const POST_EVENT = gql`
 `;
 
 export const PUT_EVENT = gql`
-  mutation UpdateEvent($id: ID!, $eventData: EventInput!, $image : Upload) {
-    updateEvent(id: $id, eventData: $eventData, image : $image) {
-      event{
+  mutation UpdateEvent($id: ID!, $eventData: EventInput!, $image: Upload) {
+    updateEvent(id: $id, eventData: $eventData, image: $image) {
+      event {
         ...EventBasicInfosFragment
       }
     }
@@ -25,11 +25,11 @@ export const PUT_EVENT = gql`
 
 export const PUT_EVENT_STATE = gql`
   mutation UpdateEventState($id: ID!) {
-    updateEventState(id: $id){
+    updateEventState(id: $id) {
       done
       success
       message
-      event{
+      event {
         ...EventBasicInfosFragment
       }
     }
@@ -39,7 +39,7 @@ export const PUT_EVENT_STATE = gql`
 
 export const DELETE_EVENT = gql`
   mutation DeleteEvent($id: ID!) {
-    deleteEvent(id: $id){
+    deleteEvent(id: $id) {
       id
       success
       deleted

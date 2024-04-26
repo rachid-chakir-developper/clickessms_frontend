@@ -2,9 +2,15 @@ import { gql } from '@apollo/client';
 import { UDESIRABLE_EVENT_BASIC_INFOS } from '../fragments/UndesirableEventFragment';
 
 export const POST_UDESIRABLE_EVENT = gql`
-  mutation CreateUndesirableEvent($undesirableEventData: UndesirableEventInput!, $image : Upload) {
-    createUndesirableEvent(undesirableEventData: $undesirableEventData, image : $image) {
-      undesirableEvent{
+  mutation CreateUndesirableEvent(
+    $undesirableEventData: UndesirableEventInput!
+    $image: Upload
+  ) {
+    createUndesirableEvent(
+      undesirableEventData: $undesirableEventData
+      image: $image
+    ) {
+      undesirableEvent {
         ...UndesirableEventBasicInfosFragment
       }
     }
@@ -13,9 +19,17 @@ export const POST_UDESIRABLE_EVENT = gql`
 `;
 
 export const PUT_UDESIRABLE_EVENT = gql`
-  mutation UpdateUndesirableEvent($id: ID!, $undesirableEventData: UndesirableEventInput!, $image : Upload) {
-    updateUndesirableEvent(id: $id, undesirableEventData: $undesirableEventData, image : $image) {
-      undesirableEvent{
+  mutation UpdateUndesirableEvent(
+    $id: ID!
+    $undesirableEventData: UndesirableEventInput!
+    $image: Upload
+  ) {
+    updateUndesirableEvent(
+      id: $id
+      undesirableEventData: $undesirableEventData
+      image: $image
+    ) {
+      undesirableEvent {
         ...UndesirableEventBasicInfosFragment
       }
     }
@@ -25,11 +39,11 @@ export const PUT_UDESIRABLE_EVENT = gql`
 
 export const PUT_UDESIRABLE_EVENT_STATE = gql`
   mutation UpdateUndesirableEventState($id: ID!) {
-    updateUndesirableEventState(id: $id){
+    updateUndesirableEventState(id: $id) {
       done
       success
       message
-      undesirableEvent{
+      undesirableEvent {
         ...UndesirableEventBasicInfosFragment
       }
     }
@@ -39,7 +53,7 @@ export const PUT_UDESIRABLE_EVENT_STATE = gql`
 
 export const DELETE_UDESIRABLE_EVENT = gql`
   mutation DeleteUndesirableEvent($id: ID!) {
-    deleteUndesirableEvent(id: $id){
+    deleteUndesirableEvent(id: $id) {
       id
       success
       deleted

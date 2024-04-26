@@ -4,7 +4,7 @@ import { USER_BASIC_INFOS, USER_DETAILS } from '../fragments/UserFragment';
 export const ON_USER_ADDEd = gql`
   subscription onUserAdded {
     onUserAdded {
-      user{
+      user {
         ...UserDetailsFragment
       }
     }
@@ -15,7 +15,7 @@ export const ON_USER_ADDEd = gql`
 export const ON_USER_UPDATED = gql`
   subscription onUserUpdated {
     onUserUpdated {
-      user{
+      user {
         ...UserBasicInfosFragment
       }
     }

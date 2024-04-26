@@ -6,12 +6,10 @@ import { EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
 import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 import { ESTABLISHMENT_SERVICE_MINI_INFOS } from './EstablishmentServiceFragment';
 
-
-
 export const UDESIRABLE_EVENT_ESTABLISHMENT_DETAILS = gql`
   fragment UndesirableEventEstablishmentTypeFragment on UndesirableEventEstablishmentType {
     id
-    establishment{
+    establishment {
       ...EstablishmentMiniInfosFragment
     }
   }
@@ -30,10 +28,10 @@ export const UDESIRABLE_EVENT_BASIC_INFOS = gql`
     description
     isActive
     status
-    establishments{
+    establishments {
       ...UndesirableEventEstablishmentTypeFragment
     }
-    folder{
+    folder {
       id
       number
       name
@@ -45,7 +43,7 @@ export const UDESIRABLE_EVENT_BASIC_INFOS = gql`
 export const UDESIRABLE_EVENT_ESTABLISHMENT_SERVICE_DETAILS = gql`
   fragment UndesirableEventEstablishmentServiceTypeFragment on UndesirableEventEstablishmentServiceType {
     id
-    establishmentService{
+    establishmentService {
       ...EstablishmentServiceMiniInfosFragment
     }
   }
@@ -55,7 +53,7 @@ export const UDESIRABLE_EVENT_ESTABLISHMENT_SERVICE_DETAILS = gql`
 export const UDESIRABLE_EVENT_BENEFICIARY_DETAILS = gql`
   fragment UndesirableEventBeneficiaryTypeFragment on UndesirableEventBeneficiaryType {
     id
-    beneficiary{
+    beneficiary {
       ...BeneficiaryMiniInfosFragment
     }
   }
@@ -65,7 +63,7 @@ export const UDESIRABLE_EVENT_BENEFICIARY_DETAILS = gql`
 export const UDESIRABLE_EVENT_EMPLOYEE_DETAILS = gql`
   fragment UndesirableEventEmployeeTypeFragment on UndesirableEventEmployeeType {
     id
-    employee{
+    employee {
       ...EmployeeBasicInfosFragment
     }
   }
@@ -75,7 +73,7 @@ export const UDESIRABLE_EVENT_EMPLOYEE_DETAILS = gql`
 export const UDESIRABLE_EVENT_PERSON_NOTIFIED_DETAILS = gql`
   fragment UndesirableEventNotifiedPersonTypeFragment on UndesirableEventNotifiedPersonType {
     id
-    employee{
+    employee {
       ...EmployeeBasicInfosFragment
     }
   }
@@ -91,31 +89,31 @@ export const UDESIRABLE_EVENT_DETAILS = gql`
     courseFactsPlace
     circumstanceEventText
     observation
-    establishmentServices{
+    establishmentServices {
       ...UndesirableEventEstablishmentServiceTypeFragment
     }
-    beneficiaries{
+    beneficiaries {
       ...UndesirableEventBeneficiaryTypeFragment
     }
-    employees{
+    employees {
       ...UndesirableEventEmployeeTypeFragment
     }
-    notifiedPersons{
+    notifiedPersons {
       ...UndesirableEventNotifiedPersonTypeFragment
     }
     otherNotifiedPersons
-    employee{
+    employee {
       ...EmployeeBasicInfosFragment
     }
-    normalTypes{
+    normalTypes {
       id
       name
     }
-    seriousTypes{
+    seriousTypes {
       id
       name
     }
-    frequency{
+    frequency {
       id
       name
     }
@@ -137,31 +135,31 @@ export const UDESIRABLE_EVENT_RECAP_DETAILS = gql`
     courseFactsPlace
     circumstanceEventText
     observation
-    establishmentServices{
+    establishmentServices {
       ...UndesirableEventEstablishmentServiceTypeFragment
     }
-    beneficiaries{
+    beneficiaries {
       ...UndesirableEventBeneficiaryTypeFragment
     }
-    employees{
+    employees {
       ...EmployeeBasicInfosFragment
     }
-    notifiedPersons{
+    notifiedPersons {
       ...UndesirableEventNotifiedPersonTypeFragment
     }
     otherNotifiedPersons
-    employee{
+    employee {
       ...EmployeeBasicInfosFragment
     }
-    normalTypes{
+    normalTypes {
       id
       name
     }
-    seriousTypes{
+    seriousTypes {
       id
       name
     }
-    frequency{
+    frequency {
       id
       name
     }
@@ -173,4 +171,3 @@ export const UDESIRABLE_EVENT_RECAP_DETAILS = gql`
   ${UDESIRABLE_EVENT_PERSON_NOTIFIED_DETAILS}
   ${EMPLOYEE_BASIC_INFOS}
 `;
-

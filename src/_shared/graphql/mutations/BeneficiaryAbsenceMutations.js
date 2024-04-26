@@ -2,9 +2,11 @@ import { gql } from '@apollo/client';
 import { BENEFICIARY_ABSENCE_BASIC_INFOS } from '../fragments/BeneficiaryAbsenceFragment';
 
 export const POST_BENEFICIARY_ABSENCE = gql`
-  mutation CreateBeneficiaryAbsence($beneficiaryAbsenceData: BeneficiaryAbsenceInput!) {
+  mutation CreateBeneficiaryAbsence(
+    $beneficiaryAbsenceData: BeneficiaryAbsenceInput!
+  ) {
     createBeneficiaryAbsence(beneficiaryAbsenceData: $beneficiaryAbsenceData) {
-      beneficiaryAbsence{
+      beneficiaryAbsence {
         ...BeneficiaryAbsenceBasicInfosFragment
       }
     }
@@ -13,9 +15,15 @@ export const POST_BENEFICIARY_ABSENCE = gql`
 `;
 
 export const PUT_BENEFICIARY_ABSENCE = gql`
-  mutation UpdateBeneficiaryAbsence($id: ID!, $beneficiaryAbsenceData: BeneficiaryAbsenceInput!) {
-    updateBeneficiaryAbsence(id: $id, beneficiaryAbsenceData: $beneficiaryAbsenceData) {
-      beneficiaryAbsence{
+  mutation UpdateBeneficiaryAbsence(
+    $id: ID!
+    $beneficiaryAbsenceData: BeneficiaryAbsenceInput!
+  ) {
+    updateBeneficiaryAbsence(
+      id: $id
+      beneficiaryAbsenceData: $beneficiaryAbsenceData
+    ) {
+      beneficiaryAbsence {
         ...BeneficiaryAbsenceBasicInfosFragment
       }
     }
@@ -25,11 +33,11 @@ export const PUT_BENEFICIARY_ABSENCE = gql`
 
 export const PUT_BENEFICIARY_ABSENCE_STATE = gql`
   mutation UpdateBeneficiaryAbsenceState($id: ID!) {
-    updateBeneficiaryAbsenceState(id: $id){
+    updateBeneficiaryAbsenceState(id: $id) {
       done
       success
       message
-      beneficiaryAbsence{
+      beneficiaryAbsence {
         ...BeneficiaryAbsenceBasicInfosFragment
       }
     }
@@ -39,7 +47,7 @@ export const PUT_BENEFICIARY_ABSENCE_STATE = gql`
 
 export const DELETE_BENEFICIARY_ABSENCE = gql`
   mutation DeleteBeneficiaryAbsence($id: ID!) {
-    deleteBeneficiaryAbsence(id: $id){
+    deleteBeneficiaryAbsence(id: $id) {
       id
       success
       deleted

@@ -1,11 +1,13 @@
-
 import { gql } from '@apollo/client';
-import { MESSAGE_BASIC_INFOS, MESSAGE_DETAILS } from '../fragments/ChatFragment';
+import {
+  MESSAGE_BASIC_INFOS,
+  MESSAGE_DETAILS,
+} from '../fragments/ChatFragment';
 
 export const ON_MESSAGE_ADDED = gql`
-  subscription onMessageAdded($conversationId: ID!){
-    onMessageAdded(conversationId: $conversationId){
-      message{
+  subscription onMessageAdded($conversationId: ID!) {
+    onMessageAdded(conversationId: $conversationId) {
+      message {
         ...MessageDetailsFragment
       }
     }
@@ -16,7 +18,7 @@ export const ON_MESSAGE_ADDED = gql`
 export const ON_MESSAGE_UPDATED = gql`
   subscription onMessageUpdated($conversationId: ID) {
     onMessageUpdated(conversationId: $conversationId) {
-      message{
+      message {
         ...MessageBasicInfosFragment
       }
     }
@@ -25,7 +27,7 @@ export const ON_MESSAGE_UPDATED = gql`
 `;
 
 export const ON_MESSAGE_DELETED = gql`
-  subscription onMessageDeleted($conversationId: ID){
+  subscription onMessageDeleted($conversationId: ID) {
     onMessageDeleted(conversationId: $conversationId) {
       id
     }

@@ -14,7 +14,7 @@ export const PARTNER_PHONE_INFOS = gql`
     photo
     isActive
   }
-`
+`;
 
 export const PARTNER_BASIC_INFOS = gql`
   fragment PartnerBasicInfosFragment on PartnerType {
@@ -24,12 +24,12 @@ export const PARTNER_BASIC_INFOS = gql`
     photo
     coverImage
     isActive
-    folder{
+    folder {
       ...FolderMiniInfosFragment
     }
   }
   ${FOLDER_MINI_INFOS}
-`
+`;
 
 export const PARTNER_DETAILS = gql`
   fragment PartnerDetailsFragment on PartnerType {

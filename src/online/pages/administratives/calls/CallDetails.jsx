@@ -2,7 +2,14 @@ import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import {Box, Grid, Paper, ButtonBase, Typography, Divider,} from '@mui/material';
+import {
+  Box,
+  Grid,
+  Paper,
+  ButtonBase,
+  Typography,
+  Divider,
+} from '@mui/material';
 
 import { CALL_RECAP } from '../../../../_shared/graphql/queries/CallQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
@@ -21,33 +28,30 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function CallDetails() {
   let { idCall } = useParams();
-  const [getCall, { 
-    loading : loadingCall,
-    data: callData, 
-    error: callError, 
-  }] = useLazyQuery(CALL_RECAP)
-  React.useEffect(()=>{
-      if(idCall){
-          getCall(({ variables: { id: idCall } }));
-      }
-  }, [idCall])
+  const [getCall, { loading: loadingCall, data: callData, error: callError }] =
+    useLazyQuery(CALL_RECAP);
+  React.useEffect(() => {
+    if (idCall) {
+      getCall({ variables: { id: idCall } });
+    }
+  }, [idCall]);
 
-  if(loadingCall) return <ProgressService type="form" />
+  if (loadingCall) return <ProgressService type="form" />;
   return (
     <>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
-            <CallMiniInfos call={callData?.call}/>
+            <CallMiniInfos call={callData?.call} />
           </Grid>
           <Grid item xs={5}>
-            <CallOtherInfos call={callData?.call}/>
+            <CallOtherInfos call={callData?.call} />
           </Grid>
-          <Grid item xs={12} sx={{marginTop: 3, marginBottom: 3}}>
-            <Divider/>
+          <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
+            <Divider />
           </Grid>
           <Grid item xs={6}>
-            <Paper sx={{ padding : 2}} variant="outlined">
+            <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Description
               </Typography>
@@ -57,7 +61,7 @@ export default function CallDetails() {
             </Paper>
           </Grid>
           <Grid item xs={6}>
-            <Paper sx={{ padding : 2}} variant="outlined">
+            <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Observation
               </Typography>
@@ -79,7 +83,7 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-function CallMiniInfos({call}) {
+function CallMiniInfos({ call }) {
   return (
     <Paper
       variant="outlined"
@@ -93,12 +97,13 @@ function CallMiniInfos({call}) {
       }}
     >
       <Grid container spacing={2}>
-        {(call?.image && call?.image != '') &&
-        <Grid item>
-          <ButtonBase sx={{ width: 128, height: 'auto' }}>
-            <Img alt="complex" src={call?.image} />
-          </ButtonBase>
-        </Grid>}
+        {call?.image && call?.image != '' && (
+          <Grid item>
+            <ButtonBase sx={{ width: 128, height: 'auto' }}>
+              <Img alt="complex" src={call?.image} />
+            </ButtonBase>
+          </Grid>
+        )}
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
@@ -108,15 +113,19 @@ function CallMiniInfos({call}) {
               <Typography gutterBottom variant="subtitle1" component="div">
                 {call?.title}
               </Typography>
-              <Divider sx={{marginTop : 2, marginBottom : 2}}/>
+              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b> {`${getFormatDateTime(call?.createdAt)}`} <br />
-                <b>Dernière modification: </b>{`${getFormatDateTime(call?.updatedAt)}`}
+                <b>Crée le: </b> {`${getFormatDateTime(call?.createdAt)}`}{' '}
+                <br />
+                <b>Dernière modification: </b>
+                {`${getFormatDateTime(call?.updatedAt)}`}
               </Typography>
-              <Divider sx={{marginTop : 2, marginBottom : 2}}/>
+              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Date début prévue: </b> {`${getFormatDateTime(call?.startingDateTime)}`} <br />
-                <b>Date fin prévue: </b> {`${getFormatDateTime(call?.endingDateTime)}`}
+                <b>Date début prévue: </b>{' '}
+                {`${getFormatDateTime(call?.startingDateTime)}`} <br />
+                <b>Date fin prévue: </b>{' '}
+                {`${getFormatDateTime(call?.endingDateTime)}`}
               </Typography>
             </Grid>
           </Grid>
@@ -126,7 +135,7 @@ function CallMiniInfos({call}) {
   );
 }
 
-function CallOtherInfos({call}) {
+function CallOtherInfos({ call }) {
   return (
     <Paper
       variant="outlined"
@@ -145,9 +154,7 @@ function CallOtherInfos({call}) {
         {call?.beneficiaries?.map((beneficiary, index) => (
           <Grid xs={12} sm={12} md={12} key={index}>
             <Item>
-              <BeneficiaryItemCard 
-                                beneficiary={beneficiary?.beneficiary} 
-              />
+              <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
             </Item>
           </Grid>
         ))}
@@ -155,4 +162,3 @@ function CallOtherInfos({call}) {
     </Paper>
   );
 }
-

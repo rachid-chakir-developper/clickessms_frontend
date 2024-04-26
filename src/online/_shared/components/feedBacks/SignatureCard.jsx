@@ -27,32 +27,44 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function SignatureCard({signature, author}) {
-
+export default function SignatureCard({ signature, author }) {
   return (
     <Card sx={{ maxWidth: 345 }} variant="outlined">
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} src={author?.employee ? author?.employee?.photo : author?.photo}>
+          <Avatar
+            sx={{ bgcolor: red[500] }}
+            src={author?.employee ? author?.employee?.photo : author?.photo}
+          >
             S
           </Avatar>
         }
-        title={author?.name ? author?.name : `${author?.firstName} ${author?.lastName}`}
+        title={
+          author?.name
+            ? author?.name
+            : `${author?.firstName} ${author?.lastName}`
+        }
         subheader={`signé le ${getFormatDateTime(signature?.updatedAt ? signature?.updatedAt : signature?.createdAt)}`}
       />
       <CardContent>
-        { (signature?.authorName || signature?.authorNumber || signature?.authorEmail) &&
+        {(signature?.authorName ||
+          signature?.authorNumber ||
+          signature?.authorEmail) && (
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            Par : <b>{signature?.authorName} {signature?.authorNumber} {signature?.authorEmail}</b>
+            Par :{' '}
+            <b>
+              {signature?.authorName} {signature?.authorNumber}{' '}
+              {signature?.authorEmail}
+            </b>
           </Typography>
-        }
+        )}
       </CardContent>
       <CardMedia
         component="img"
         height="194"
         image={signature?.base64Encoded}
         alt="Signature"
-        sx={{objectFit : 'contain'}}
+        sx={{ objectFit: 'contain' }}
       />
     </Card>
   );

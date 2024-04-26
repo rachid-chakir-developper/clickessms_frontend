@@ -1,10 +1,13 @@
 import { gql } from '@apollo/client';
-import { NOTIFICATION_BASIC_INFOS, NOTIFICATION_DETAILS } from '../fragments/NotificationFragment';
+import {
+  NOTIFICATION_BASIC_INFOS,
+  NOTIFICATION_DETAILS,
+} from '../fragments/NotificationFragment';
 
 export const ON_NOTIFICATION_ADDED = gql`
   subscription onNotificationAdded {
     onNotificationAdded {
-      notification{
+      notification {
         ...NotificationDetailsFragment
       }
     }
@@ -15,7 +18,7 @@ export const ON_NOTIFICATION_ADDED = gql`
 export const ON_NOTIFICATION_UPDATED = gql`
   subscription onNotificationUpdated {
     onNotificationUpdated {
-      notification{
+      notification {
         ...NotificationBasicInfosFragment
       }
     }

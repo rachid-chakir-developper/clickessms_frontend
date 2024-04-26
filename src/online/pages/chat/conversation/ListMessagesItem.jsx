@@ -1,5 +1,11 @@
 import React from 'react';
-import { ListItem, ListItemAvatar, Avatar, ListItemText, IconButton } from '@mui/material';
+import {
+  ListItem,
+  ListItemAvatar,
+  Avatar,
+  ListItemText,
+  IconButton,
+} from '@mui/material';
 import { Check } from '@mui/icons-material';
 
 const ListMessagesItem = ({ message }) => {
@@ -32,16 +38,20 @@ const ListMessagesItem = ({ message }) => {
           backgroundColor: isSentByMe ? '#DCF8C6' : '#E3F2FD',
           padding: '20px',
           flex: 'initial',
-          borderRadius : '20px 20px'
+          borderRadius: '20px 20px',
         }}
       />
       {isSentByMe && isRead && (
-        <IconButton sx={{ position: 'absolute', bottom: 10, right: 10, color: '#4CAF50' }}>
+        <IconButton
+          sx={{ position: 'absolute', bottom: 10, right: 10, color: '#4CAF50' }}
+        >
           <Check />
         </IconButton>
       )}
       {isSentByMe && !isRead && (
-        <IconButton sx={{ position: 'absolute', bottom: 10, right: 10, color: '#9E9E9E' }}>
+        <IconButton
+          sx={{ position: 'absolute', bottom: 10, right: 10, color: '#9E9E9E' }}
+        >
           <Check />
         </IconButton>
       )}

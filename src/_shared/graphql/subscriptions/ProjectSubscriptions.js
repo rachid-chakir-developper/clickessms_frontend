@@ -1,11 +1,11 @@
-import { gql } from "@apollo/client";
-import { PROJECT_DETAILS } from "../fragments/ProjectFragment";
+import { gql } from '@apollo/client';
+import { PROJECT_DETAILS } from '../fragments/ProjectFragment';
 
 // Exemple de souscription aux nouveaux projets créés
 export const PROJECT_CREATED_SUBSCRIPTION = gql`
   subscription {
     projectCreated {
-        ...ProjectDetailsFragment
+      ...ProjectDetailsFragment
     }
   }
   ${PROJECT_DETAILS}
@@ -15,7 +15,7 @@ export const PROJECT_CREATED_SUBSCRIPTION = gql`
 export const PROJECT_UPDATED_SUBSCRIPTION = gql`
   subscription {
     projectUpdated {
-        ...ProjectDetailsFragment
+      ...ProjectDetailsFragment
     }
   }
   ${PROJECT_DETAILS}

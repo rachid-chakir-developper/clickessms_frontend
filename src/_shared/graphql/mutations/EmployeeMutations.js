@@ -2,9 +2,17 @@ import { gql } from '@apollo/client';
 import { EMPLOYEE_BASIC_INFOS } from '../fragments/EmployeeFragment';
 
 export const POST_EMPLOYEE = gql`
-  mutation CreateEmployee($employeeData: EmployeeInput!, $photo : Upload, $coverImage : Upload) {
-    createEmployee(employeeData: $employeeData, photo : $photo, coverImage : $coverImage) {
-      employee{
+  mutation CreateEmployee(
+    $employeeData: EmployeeInput!
+    $photo: Upload
+    $coverImage: Upload
+  ) {
+    createEmployee(
+      employeeData: $employeeData
+      photo: $photo
+      coverImage: $coverImage
+    ) {
+      employee {
         ...EmployeeBasicInfosFragment
       }
     }
@@ -13,9 +21,19 @@ export const POST_EMPLOYEE = gql`
 `;
 
 export const PUT_EMPLOYEE = gql`
-  mutation UpdateEmployee($id: ID!, $employeeData: EmployeeInput!, $photo : Upload, $coverImage : Upload) {
-    updateEmployee(id: $id, employeeData: $employeeData, photo : $photo, coverImage : $coverImage) {
-      employee{
+  mutation UpdateEmployee(
+    $id: ID!
+    $employeeData: EmployeeInput!
+    $photo: Upload
+    $coverImage: Upload
+  ) {
+    updateEmployee(
+      id: $id
+      employeeData: $employeeData
+      photo: $photo
+      coverImage: $coverImage
+    ) {
+      employee {
         ...EmployeeBasicInfosFragment
       }
     }
@@ -25,11 +43,11 @@ export const PUT_EMPLOYEE = gql`
 
 export const PUT_EMPLOYEE_STATE = gql`
   mutation UpdateEmployeeState($id: ID!) {
-    updateEmployeeState(id: $id){
+    updateEmployeeState(id: $id) {
       done
       success
       message
-      employee{
+      employee {
         ...EmployeeBasicInfosFragment
       }
     }
@@ -39,7 +57,7 @@ export const PUT_EMPLOYEE_STATE = gql`
 
 export const DELETE_EMPLOYEE = gql`
   mutation DeleteEmployee($id: ID!) {
-    deleteEmployee(id: $id){
+    deleteEmployee(id: $id) {
       id
       success
       deleted

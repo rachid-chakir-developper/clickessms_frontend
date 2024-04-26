@@ -20,7 +20,7 @@ export const LETTER_BASIC_INFOS = gql`
 export const LETTER_BENEFICIARY_DETAILS = gql`
   fragment LetterBeneficiaryTypeFragment on LetterBeneficiaryType {
     id
-    beneficiary{
+    beneficiary {
       ...BeneficiaryMiniInfosFragment
     }
   }
@@ -31,10 +31,10 @@ export const LETTER_DETAILS = gql`
   fragment LetterDetailsFragment on LetterType {
     ...LetterBasicInfosFragment
     observation
-    beneficiaries{
+    beneficiaries {
       ...LetterBeneficiaryTypeFragment
     }
-    employee{
+    employee {
       ...EmployeeBasicInfosFragment
     }
   }
@@ -47,10 +47,10 @@ export const LETTER_RECAP_DETAILS = gql`
   fragment LetterRecapDetailsFragment on LetterType {
     ...LetterBasicInfosFragment
     observation
-    beneficiaries{
+    beneficiaries {
       ...LetterBeneficiaryTypeFragment
     }
-    employee{
+    employee {
       ...EmployeeBasicInfosFragment
     }
   }

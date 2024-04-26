@@ -11,7 +11,7 @@ export const COMPANY_BASIC_INFOS = gql`
     coverImage
     isActive
   }
-`
+`;
 
 export const COMPANY_DETAILS = gql`
   fragment CompanyDetailsFragment on CompanyType {

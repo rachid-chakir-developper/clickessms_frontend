@@ -1,5 +1,8 @@
 import { gql } from '@apollo/client';
-import { COMMENT_BASIC_INFOS, COMMENT_DETAILS } from '../fragments/CommentFragment';
+import {
+  COMMENT_BASIC_INFOS,
+  COMMENT_DETAILS,
+} from '../fragments/CommentFragment';
 
 export const GET_COMMENT = gql`
   query GetComment($id: ID!) {
@@ -11,10 +14,15 @@ export const GET_COMMENT = gql`
 `;
 
 export const GET_COMMENTS = gql`
-  query GetComments($taskStepId : ID, $offset: Int, $limit: Int, $page: Int){
-    comments(taskStepId : $taskStepId, offset : $offset, limit : $limit, page : $page){
+  query GetComments($taskStepId: ID, $offset: Int, $limit: Int, $page: Int) {
+    comments(
+      taskStepId: $taskStepId
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
       totalCount
-      nodes{
+      nodes {
         ...CommentBasicInfosFragment
       }
     }
@@ -23,10 +31,20 @@ export const GET_COMMENTS = gql`
 `;
 
 export const GET_TASK_STEP_COMMENTS = gql`
-  query GetTaskStepComments($taskStepId : ID, $offset: Int, $limit: Int, $page: Int){
-    taskStepComments(taskStepId : $taskStepId, offset : $offset, limit : $limit, page : $page){
+  query GetTaskStepComments(
+    $taskStepId: ID
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    taskStepComments(
+      taskStepId: $taskStepId
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
       totalCount
-      nodes{
+      nodes {
         ...CommentBasicInfosFragment
       }
     }

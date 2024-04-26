@@ -17,7 +17,7 @@ export const BENEFICIARY_GROUP_BASIC_INFOS = gql`
 export const BENEFICIARY_GROUP_ITEM_DETAILS = gql`
   fragment BeneficiaryGroupItemTypeFragment on BeneficiaryGroupItemType {
     id
-    beneficiary{
+    beneficiary {
       ...BeneficiaryBasicInfosFragment
     }
   }
@@ -28,7 +28,7 @@ export const BENEFICIARY_GROUP_DETAILS = gql`
   fragment BeneficiaryGroupDetailsFragment on BeneficiaryGroupType {
     ...BeneficiaryGroupBasicInfosFragment
     observation
-    beneficiaries{
+    beneficiaries {
       ...BeneficiaryGroupItemTypeFragment
     }
   }
@@ -40,13 +40,10 @@ export const BENEFICIARY_GROUP_RECAP_DETAILS = gql`
   fragment BeneficiaryGroupRecapDetailsFragment on BeneficiaryGroupType {
     ...BeneficiaryGroupBasicInfosFragment
     observation
-    beneficiaries{
+    beneficiaries {
       ...BeneficiaryGroupItemTypeFragment
     }
   }
   ${BENEFICIARY_GROUP_BASIC_INFOS}
   ${BENEFICIARY_GROUP_ITEM_DETAILS}
 `;
-
-
-

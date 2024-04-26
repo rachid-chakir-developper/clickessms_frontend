@@ -13,32 +13,32 @@ export const ESTABLISHMENT_SERVICE_MINI_INFOS = gql`
     image
     isActive
   }
-`
+`;
 
 export const ESTABLISHMENT_SERVICE_BASIC_INFOS = gql`
   fragment EstablishmentServiceBasicInfosFragment on EstablishmentServiceType {
     ...EstablishmentServiceMiniInfosFragment
-    establishmentServiceParent{
+    establishmentServiceParent {
       ...EstablishmentServiceMiniInfosFragment
     }
-    establishment{
+    establishment {
       ...EstablishmentMiniInfosFragment
     }
-    folder{
+    folder {
       ...FolderMiniInfosFragment
     }
   }
   ${ESTABLISHMENT_SERVICE_MINI_INFOS}
   ${ESTABLISHMENT_MINI_INFOS}
   ${FOLDER_MINI_INFOS}
-`
+`;
 export const ESTABLISHMENT_SERVICE_DETAILS = gql`
   fragment EstablishmentServiceDetailsFragment on EstablishmentServiceType {
     ...EstablishmentServiceBasicInfosFragment
-    establishmentServiceChilds{
+    establishmentServiceChilds {
       ...EstablishmentServiceBasicInfosFragment
     }
-    establishment{
+    establishment {
       ...EstablishmentMiniInfosFragment
     }
     description

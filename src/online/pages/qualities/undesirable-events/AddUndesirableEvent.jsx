@@ -5,6 +5,13 @@ import { useParams } from 'react-router-dom';
 export default function AddUndesirableEvent() {
   let { idUndesirableEvent } = useParams();
   return (
-    <AddUndesirableEventForm idUndesirableEvent={idUndesirableEvent} title={(idUndesirableEvent && idUndesirableEvent > 0) ? `Modifier l'événement indésirable` : `Ajouter un événement indésirable`}/>
+    <AddUndesirableEventForm
+      idUndesirableEvent={idUndesirableEvent}
+      title={
+        idUndesirableEvent && idUndesirableEvent > 0
+          ? `Modifier l'événement indésirable`
+          : `Ajouter un événement indésirable`
+      }
+    />
   );
 }

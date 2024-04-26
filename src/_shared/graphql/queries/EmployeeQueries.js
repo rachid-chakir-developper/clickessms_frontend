@@ -1,5 +1,8 @@
 import { gql } from '@apollo/client';
-import { EMPLOYEE_BASIC_INFOS, EMPLOYEE_DETAILS } from '../fragments/EmployeeFragment';
+import {
+  EMPLOYEE_BASIC_INFOS,
+  EMPLOYEE_DETAILS,
+} from '../fragments/EmployeeFragment';
 
 export const GET_EMPLOYEE = gql`
   query GetEmployee($id: ID!) {
@@ -11,10 +14,20 @@ export const GET_EMPLOYEE = gql`
 `;
 
 export const GET_EMPLOYEES = gql`
-  query GetEmployees($employeeFilter: EmployeeFilterInput, $offset: Int, $limit: Int, $page: Int){
-    employees(employeeFilter : $employeeFilter, offset : $offset, limit : $limit, page : $page){
+  query GetEmployees(
+    $employeeFilter: EmployeeFilterInput
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    employees(
+      employeeFilter: $employeeFilter
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
       totalCount
-      nodes{
+      nodes {
         ...EmployeeBasicInfosFragment
       }
     }

@@ -5,6 +5,13 @@ import { useParams } from 'react-router-dom';
 export default function AddMeeting() {
   let { idMeeting } = useParams();
   return (
-    <AddMeetingForm idMeeting={idMeeting} title={(idMeeting && idMeeting > 0) ? `Modifier la réunion` : `Ajouter une réunion`}/>
+    <AddMeetingForm
+      idMeeting={idMeeting}
+      title={
+        idMeeting && idMeeting > 0
+          ? `Modifier la réunion`
+          : `Ajouter une réunion`
+      }
+    />
   );
 }

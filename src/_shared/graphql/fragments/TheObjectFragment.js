@@ -13,18 +13,16 @@ export const THE_OBJECT_BASIC_INFOS = gql`
     image
     description
     isActive
-    client{
+    client {
       ...ClientBasicInfosFragment
     }
-    partner{
+    partner {
       ...PartnerBasicInfosFragment
     }
   }
   ${CLIENT_BASIC_INFOS}
   ${PARTNER_BASIC_INFOS}
 `;
-
-
 
 export const OBJECT_RECOVERY_BASIC_INFOS = gql`
   fragment ObjectRecoveryBasicInfosFragment on ObjectRecoveryType {
@@ -37,27 +35,27 @@ export const OBJECT_RECOVERY_BASIC_INFOS = gql`
     createdAt
     updatedAt
     observation
-    creator{
+    creator {
       ...UserBasicInfosFragment
     }
-    images{
+    images {
       id
       caption
       image
       createdAt
       updatedAt
-      creator{
+      creator {
         ...UserBasicInfosFragment
       }
     }
-    videos{
+    videos {
       id
       caption
       video
       thumbnail
       createdAt
       updatedAt
-      creator{
+      creator {
         ...UserBasicInfosFragment
       }
     }
@@ -77,7 +75,7 @@ export const THE_OBJECT_RECAP_DETAILS = gql`
   fragment TheObjectRecapDetailsFragment on TheObjectType {
     ...TheObjectBasicInfosFragment
     observation
-    theObjectRecoveries{
+    theObjectRecoveries {
       ...ObjectRecoveryBasicInfosFragment
     }
   }

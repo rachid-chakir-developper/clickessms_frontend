@@ -19,20 +19,30 @@ const MenuProps = {
   },
 };
 
-export default function SelectCheckmarks({ options = [], limitTags, label, placeholder, value, onChange, multiple = true, helperText = null }) {
+export default function SelectCheckmarks({
+  options = [],
+  limitTags,
+  label,
+  placeholder,
+  value,
+  onChange,
+  multiple = true,
+  helperText = null,
+}) {
   const [values, setValues] = React.useState(value || []);
 
   const onAddOption = (option) => {
-    console.log('option', option)
-    let selectedValues = [...values]
-    if(selectedValues.map(sv => sv.id).includes(option.id)) selectedValues = selectedValues.filter(sv => sv.id !== option.id);
-    else selectedValues = [...selectedValues, option]
+    console.log('option', option);
+    let selectedValues = [...values];
+    if (selectedValues.map((sv) => sv.id).includes(option.id))
+      selectedValues = selectedValues.filter((sv) => sv.id !== option.id);
+    else selectedValues = [...selectedValues, option];
     setValues(selectedValues);
     onChange(selectedValues, selectedValues);
   };
-  React.useEffect(()=>{
-    setValues(value)
-  }, [value])
+  React.useEffect(() => {
+    setValues(value);
+  }, [value]);
 
   return (
     <div>
@@ -47,7 +57,14 @@ export default function SelectCheckmarks({ options = [], limitTags, label, place
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {selected.map((option, index) => (
-                <Chip key={index} label={option?.name ? `${option?.name}` : `${option?.firstName} ${option?.lastName}`} />
+                <Chip
+                  key={index}
+                  label={
+                    option?.name
+                      ? `${option?.name}`
+                      : `${option?.firstName} ${option?.lastName}`
+                  }
+                />
               ))}
             </Box>
           )}
@@ -55,10 +72,18 @@ export default function SelectCheckmarks({ options = [], limitTags, label, place
           placeholder={placeholder}
         >
           {options.map((option, index) => (
-            <MenuItem key={index} value={option} onClick={() => onAddOption(option)}>
-              <Checkbox checked={values.map(v => v.id).includes(option.id)} />
+            <MenuItem
+              key={index}
+              value={option}
+              onClick={() => onAddOption(option)}
+            >
+              <Checkbox checked={values.map((v) => v.id).includes(option.id)} />
               <ListItemText
-                primary={option?.name ? `${option?.name}` : `${option?.firstName} ${option?.lastName}`}
+                primary={
+                  option?.name
+                    ? `${option?.name}`
+                    : `${option?.firstName} ${option?.lastName}`
+                }
               />
             </MenuItem>
           ))}

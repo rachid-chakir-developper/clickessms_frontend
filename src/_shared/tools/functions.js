@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { LEVELS, PRIORITIES, STATUS, STEP_TYPES } from "./constants";
+import { LEVELS, PRIORITIES, STATUS, STEP_TYPES } from './constants';
 
 export const getStatusColor = (status) => {
   switch (status) {
@@ -35,28 +35,27 @@ export const getStatusLebelColor = (status) => {
 //     'warning',
 //     'error',
 
-
 export const getStatusLabel = (status) => {
-  return STATUS.ALL.find((s)=> s.value == status)?.label
+  return STATUS.ALL.find((s) => s.value == status)?.label;
 };
 
 export const getLevelLabel = (level) => {
-  return LEVELS.ALL.find((l)=> l.value == level)?.label
+  return LEVELS.ALL.find((l) => l.value == level)?.label;
 };
 
 export const getPriorityLabel = (priority) => {
-  return PRIORITIES.ALL.find((p)=> p.value == priority)?.label
+  return PRIORITIES.ALL.find((p) => p.value == priority)?.label;
 };
 
 export const getStepTypeLabel = (stepType) => {
-  return STEP_TYPES.ALL.find((t)=> t.value == stepType)?.label
+  return STEP_TYPES.ALL.find((t) => t.value == stepType)?.label;
 };
 
 export const getFormatDateTime = (dateTime) => {
   try {
     return moment(dateTime).format('DD/MM/YYYY à HH:mm');
   } catch (error) {
-    return null
+    return null;
   }
 };
 
@@ -64,7 +63,7 @@ export const getFormatDate = (dateTime) => {
   try {
     return moment(dateTime).format('DD/MM/YYYY');
   } catch (error) {
-    return null
+    return null;
   }
 };
 
@@ -72,7 +71,7 @@ export const getFormatTime = (dateTime) => {
   try {
     return moment(dateTime).format('HH:mm');
   } catch (error) {
-    return null
+    return null;
   }
 };
 

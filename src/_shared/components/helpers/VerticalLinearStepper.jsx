@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
-export default function VerticalLinearStepper({children = []}) {
+export default function VerticalLinearStepper({ children = [] }) {
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {
@@ -37,25 +37,25 @@ export default function VerticalLinearStepper({children = []}) {
               step.label
             </StepLabel>
             <StepContent>
-                {child}
-                <Box sx={{ mb: 2 }}>
-                    <div>
-                    <Button
-                        variant="contained"
-                        onClick={handleNext}
-                        sx={{ mt: 1, mr: 1 }}
-                    >
-                        {index === children?.length - 1 ? 'Finish' : 'Continue'}
-                    </Button>
-                    <Button
-                        disabled={index === 0}
-                        onClick={handleBack}
-                        sx={{ mt: 1, mr: 1 }}
-                    >
-                        Back
-                    </Button>
-                    </div>
-                </Box>
+              {child}
+              <Box sx={{ mb: 2 }}>
+                <div>
+                  <Button
+                    variant="contained"
+                    onClick={handleNext}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    {index === children?.length - 1 ? 'Finish' : 'Continue'}
+                  </Button>
+                  <Button
+                    disabled={index === 0}
+                    onClick={handleBack}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    Back
+                  </Button>
+                </div>
+              </Box>
             </StepContent>
           </Step>
         ))}

@@ -11,10 +11,20 @@ export const GET_USER = gql`
 `;
 
 export const GET_USERS = gql`
-  query GetUsers($userFilter: UserFilterInput, $offset: Int, $limit: Int, $page: Int){
-    users(userFilter: $userFilter, offset : $offset, limit : $limit, page : $page){
+  query GetUsers(
+    $userFilter: UserFilterInput
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    users(
+      userFilter: $userFilter
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
       totalCount
-      nodes{
+      nodes {
         ...UserBasicInfosFragment
       }
     }
@@ -22,24 +32,23 @@ export const GET_USERS = gql`
   ${USER_BASIC_INFOS}
 `;
 
-
 export const GET_GROUPS = gql`
-    query {
-      groups{
-        id,
-        name,
-        permissions{
-          id,
-          name
-        }
+  query {
+    groups {
+      id
+      name
+      permissions {
+        id
+        name
       }
-    } 
-`
+    }
+  }
+`;
 export const GET_PERMISSIONS = gql`
-    query {
-      permissions{
-        id,
-        name,
-      }
-    } 
-`
+  query {
+    permissions {
+      id
+      name
+    }
+  }
+`;

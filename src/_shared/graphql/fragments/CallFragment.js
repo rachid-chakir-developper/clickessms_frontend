@@ -1,7 +1,10 @@
 // CallFragment.js
 
 import { gql } from '@apollo/client';
-import { BENEFICIARY_MINI_INFOS, BENEFICIARY_PHONE_INFOS } from './BeneficiaryFragment';
+import {
+  BENEFICIARY_MINI_INFOS,
+  BENEFICIARY_PHONE_INFOS,
+} from './BeneficiaryFragment';
 import { EMPLOYEE_BASIC_INFOS, EMPLOYEE_PHONE_INFOS } from './EmployeeFragment';
 import { CLIENT_PHONE_INFOS } from './ClientFragment';
 import { SUPPLIER_PHONE_INFOS } from './SupplierFragment';
@@ -28,25 +31,25 @@ export const CALLER_DETAILS = gql`
     name
     phone
     callerType
-    employee{
+    employee {
       ...EmployeePhoneInfosFragment
     }
-    client{
+    client {
       ...ClientPhoneInfosFragment
     }
-    supplier{
+    supplier {
       ...SupplierPhoneInfosFragment
     }
-    partner{
+    partner {
       ...PartnerPhoneInfosFragment
     }
-    beneficiary{
+    beneficiary {
       ...BeneficiaryPhoneInfosFragment
     }
-    establishment{
+    establishment {
       ...EstablishmentPhoneInfosFragment
     }
-    phoneNumber{
+    phoneNumber {
       ...PhoneNumberInfosFragment
     }
   }
@@ -62,7 +65,7 @@ export const CALLER_DETAILS = gql`
 export const CALL_BENEFICIARY_DETAILS = gql`
   fragment CallBeneficiaryTypeFragment on CallBeneficiaryType {
     id
-    beneficiary{
+    beneficiary {
       ...BeneficiaryMiniInfosFragment
     }
   }
@@ -73,13 +76,13 @@ export const CALL_DETAILS = gql`
   fragment CallDetailsFragment on CallType {
     ...CallBasicInfosFragment
     observation
-    caller{
+    caller {
       ...CallerDetailsFragment
     }
-    beneficiaries{
+    beneficiaries {
       ...CallBeneficiaryTypeFragment
     }
-    employee{
+    employee {
       ...EmployeeBasicInfosFragment
     }
   }
@@ -93,13 +96,13 @@ export const CALL_RECAP_DETAILS = gql`
   fragment CallRecapDetailsFragment on CallType {
     ...CallBasicInfosFragment
     observation
-    caller{
+    caller {
       ...CallerDetailsFragment
     }
-    beneficiaries{
+    beneficiaries {
       ...CallBeneficiaryTypeFragment
     }
-    employee{
+    employee {
       ...EmployeeBasicInfosFragment
     }
   }

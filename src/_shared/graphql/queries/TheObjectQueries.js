@@ -1,5 +1,9 @@
 import { gql } from '@apollo/client';
-import { THE_OBJECT_BASIC_INFOS, THE_OBJECT_DETAILS, THE_OBJECT_RECAP_DETAILS } from '../fragments/TheObjectFragment';
+import {
+  THE_OBJECT_BASIC_INFOS,
+  THE_OBJECT_DETAILS,
+  THE_OBJECT_RECAP_DETAILS,
+} from '../fragments/TheObjectFragment';
 
 export const GET_THE_OBJECT = gql`
   query GetTheObject($id: ID!) {
@@ -11,17 +15,26 @@ export const GET_THE_OBJECT = gql`
 `;
 
 export const GET_THE_OBJECTS = gql`
-  query GetTheObjects($theObjectFilter: TheObjectFilterInput, $offset: Int, $limit: Int, $page: Int){
-    theObjects(theObjectFilter : $theObjectFilter, offset : $offset, limit : $limit, page : $page){
+  query GetTheObjects(
+    $theObjectFilter: TheObjectFilterInput
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    theObjects(
+      theObjectFilter: $theObjectFilter
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
       totalCount
-      nodes{
+      nodes {
         ...TheObjectBasicInfosFragment
       }
     }
   }
   ${THE_OBJECT_BASIC_INFOS}
 `;
-
 
 export const THE_OBJECT_RECAP = gql`
   query GetTheObject($id: ID!) {
