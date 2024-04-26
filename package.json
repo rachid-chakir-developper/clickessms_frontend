@@ -5,12 +5,12 @@
   "type": "module",
   "scripts": {
     "build": "tsc && vite build",
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0 --port 3000",
     "format": "prettier --write 'src/**/*.{js,jsx,tsx,css}'",
     "format-check": "prettier --check 'src/**/*.{js,jsx,tsx,css}'",
     "lint": "eslint . --ext js,jsx,ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "start": "vite"
+    "start": "vite --host 0.0.0.0 --port 3000"
   },
   "browserslist": {
     "development": [
