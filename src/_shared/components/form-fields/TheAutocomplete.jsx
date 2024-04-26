@@ -7,7 +7,12 @@ const icon = <CheckBoxOutlineBlank fontSize="small" />;
 const checkedIcon = <CheckBox fontSize="small" />;
 
 export default function TheAutocomplete({options = [], limitTags, label, placeholder, value, onChange, multiple=true, helperText=null}) {
- 
+  const getPhoto = (option)=>{
+    if(option?.photo) return option?.photo
+    else if(option?.image) return option?.image
+    else if(option?.logo) return option?.logo
+    else return null
+  }
   return (
     <Autocomplete
       multiple={multiple}
@@ -25,20 +30,19 @@ export default function TheAutocomplete({options = [], limitTags, label, placeho
         multiple ? <li {...props}>
             <Checkbox
               icon={icon}
-              checkedIcon={checkedIcon}
-              style={{ marginRight: 8 }}
+              checkedIcon={checkedIcon}s
               checked={selected}
             />
           <Box component="li" sx={{ '& > *': { mr: 2, flexShrink: 0 } }} {...props}>
               <Avatar alt={option?.name ? `${option?.name}` : `${option?.firstName} ${option?.lastName}`} 
-              src={option?.photo ? option?.photo : option?.image } />
+              src={getPhoto(option)} />
               {option?.name ? `${option?.name}` : `${option?.firstName} ${option?.lastName}`}
           </Box>
         </li> :
         
           <Box component="li" sx={{ '& > *': { mr: 2, flexShrink: 0 } }} {...props}>
               <Avatar alt={option?.name ? `${option?.name}` : `${option?.firstName} ${option?.lastName}`} 
-              src={option?.photo ? option?.photo : option?.image } />
+              src={getPhoto(option)} />
               {option?.name ? `${option?.name}` : `${option?.firstName} ${option?.lastName}`}
           </Box>
 
@@ -48,7 +52,7 @@ export default function TheAutocomplete({options = [], limitTags, label, placeho
           <Chip
             key={index}
             avatar={<Avatar alt={option?.name ? `${option?.name}` : `${option?.firstName} ${option?.lastName}`} 
-            src={option?.photo ? option?.photo : option?.image } />}
+            src={getPhoto(option)} />}
             label={option?.name ? `${option?.name}` : `${option?.firstName} ${option?.lastName}`}
             {...getTagProps({ index })}
           />

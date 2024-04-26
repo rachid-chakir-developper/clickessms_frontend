@@ -22,6 +22,7 @@ import Online from './online/Online';
 import { FeedBacksProvider } from './_shared/context/feedbacks/FeedBacksProvider';
 import { SessionProvider } from './_shared/context/SessionProvider';
 import AuthGuardRoute from './_shared/guards/AuthGuardRoute';
+import { Box } from '@mui/material';
 
 // Configurer Day.js pour utiliser le local français
 // dayjs.locale('fr');
@@ -42,7 +43,7 @@ function App() {
   });
 
   return (
-    <div className="App">
+    <Box>
       <ThemeProvider theme={theme}>
         <ApolloProvider>
           <FeedBacksProvider>
@@ -67,7 +68,7 @@ function App() {
           </FeedBacksProvider>
         </ApolloProvider>
       </ThemeProvider>
-    </div>
+    </Box>
   );
 }
 

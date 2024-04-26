@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Stack, Box,  Typography, Button, Divider, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Stack, Box,  Typography, Button, Divider, FormControl, InputLabel, Select, MenuItem, Stepper, Step, StepLabel, StepContent, Paper } from '@mui/material';
 import dayjs from 'dayjs';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -33,14 +33,15 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function AddUndesirableEventForm({ idUndesirableEvent, title}) {
+    let [searchParams, setSearchParams] = useSearchParams();
     const  { setNotifyAlert,  setConfirmDialog} = useFeedBacks();
     const navigate = useNavigate();
     const validationSchema = yup.object({
-        title: yup .string("Entrez le nom d'événement indésirable").required("Le nom d'événement indésirable est obligatoire")
+        title: yup .string("Entrez le titre d'événement indésirable").required("Le titre d'événement indésirable est obligatoire")
       });
     const formik = useFormik({
         initialValues: {
-            image : undefined,  number : '', title : '', 
+            id: null, image : undefined,  number : '', title : '', 
             startingDateTime : dayjs(new Date()), endingDateTime : dayjs(new Date()), undesirableEventType : UDESIRABLE_EVENT_TYPES.NORMAL,
             normalTypes : [], seriousTypes : [], frequency : null, severity: UDESIRABLE_EVENT_SEVERITY.MEDIUM,
             actionsTakenText : '', courseFactsDateTime: dayjs(new Date()), courseFactsPlace: '', circumstanceEventText: '',
@@ -57,7 +58,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title}) {
             undesirableEventCopy.normalTypes = undesirableEventCopy.normalTypes.map(i => i?.id)
             undesirableEventCopy.seriousTypes = undesirableEventCopy.seriousTypes.map(i => i?.id)
             undesirableEventCopy.employee = undesirableEventCopy.employee ? undesirableEventCopy.employee.id : null
-            if(idUndesirableEvent && idUndesirableEvent != ''){
+            if(undesirableEventCopy.id && undesirableEventCopy.id != ''){
                 onUpdateUndesirableEvent({ 
                     id : undesirableEventCopy.id, 
                     undesirableEventData : undesirableEventCopy,
@@ -116,8 +117,9 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title}) {
                 type: 'success'
             })
             let { __typename, ...undesirableEventCopy } = data.createUndesirableEvent.undesirableEvent;
-        //   formik.setValues(undesirableEventCopy);
-            navigate('/online/qualites/evenements-indesirables/liste');
+            formik.setFieldValue('id', undesirableEventCopy.id)
+            handleNext()
+            // navigate('/online/qualites/evenements-indesirables/liste');
         },
         update(cache, { data: { createUndesirableEvent } }) {
             const newUndesirableEvent = createUndesirableEvent.undesirableEvent;
@@ -151,8 +153,8 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title}) {
                 type: 'success'
             })
             let { __typename, ...undesirableEventCopy } = data.updateUndesirableEvent.undesirableEvent;
-        //   formik.setValues(undesirableEventCopy);
-            navigate('/online/qualites/evenements-indesirables/liste');
+            handleNext()
+            // navigate('/online/qualites/evenements-indesirables/liste');
         },
         update(cache, { data: { updateUndesirableEvent } }) {
             const updatedUndesirableEvent = updateUndesirableEvent.undesirableEvent;
@@ -215,243 +217,288 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title}) {
             getUndesirableEvent(({ variables: { id: idUndesirableEvent } }));
         }
     }, [idUndesirableEvent])
+
+    
+    const [activeStep, setActiveStep] = React.useState(searchParams.get("step") ? Number(searchParams.get("step")) : 0);
+
+    const handleNext = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        if(formik.values.id) setSearchParams({ step: activeStep+1, id: formik.values.id }); else  setSearchParams({ step: activeStep+1 });
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+        if(formik.values.id) setSearchParams({ step: activeStep+1, id: formik.values.id }); else setSearchParams({ step: activeStep+1 });
+    };
+
+    const handleReset = () => {
+        setActiveStep(0);
+    };
+    const onGoToStep = (step = 0) => {
+        if(formik.values.id){
+            setActiveStep(step)
+            setSearchParams({ step, id: formik.values.id });
+        }
+    }
+  
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <Typography component="div" variant="h5">
+            <Typography component="div" variant="h5" sx={{marginBottom: 4}}>
                 {title} {formik.values.number}
             </Typography>
             { loadingUndesirableEvent && <ProgressService type="form" />}
             { !loadingUndesirableEvent &&
                 <form onSubmit={formik.handleSubmit}>
+                    <Stepper activeStep={activeStep} orientation="vertical" nonLinear={idUndesirableEvent ? true : false}>
+                        <Step>
+                            <StepLabel onClick={()=> onGoToStep(0)}
+                            optional={<Typography variant="caption">Première étape</Typography>}
+                            >
+                                Étape 1
+                            </StepLabel>
+                            <StepContent>
+                                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                                    <Grid xs={4} sm={8} md={8}>
+                                        <Item>
+                                            <TheTextField variant="outlined" label="Titre" id="title"
+                                                value={formik.values.title} required
+                                                onChange={(e) => formik.setFieldValue('title', e.target.value)}
+                                                onBlur={formik.handleBlur}
+                                                error={formik.touched.title && Boolean(formik.errors.title)}
+                                                helperText={formik.touched.title && formik.errors.title}
+                                                disabled={loadingPost || loadingPut}
+                                            />
+                                        </Item>
+                                    </Grid>
+                                    <Grid xs={2} sm={4} md={4}>
+                                        <Item>
+                                            <TheDateTimePicker
+                                                label="Date et heure de début"
+                                                value={formik.values.startingDateTime}
+                                                onChange={(date) => formik.setFieldValue('startingDateTime', date)}
+                                                disabled={loadingPost || loadingPut}
+                                            />
+                                        </Item>
+                                        {/* <Item>
+                                            <TheDateTimePicker
+                                                label="Date de fin"
+                                                value={formik.values.endingDateTime}
+                                                onChange={(date) => formik.setFieldValue('endingDateTime', date)}
+                                                disabled={loadingPost || loadingPut}
+                                            />
+                                        </Item> */}
+                                    </Grid>
+                                    <Grid xs={2} sm={4} md={4}>
+                                        <Item>
+                                            <TheAutocomplete options={establishmentsData?.establishments?.nodes} label="Établissements"
+                                                placeholder="Ajouter un établissement"
+                                                limitTags={3}
+                                                value={formik.values.establishments}
+                                                onChange={(e, newValue) => formik.setFieldValue('establishments', newValue)}/>
+                                        </Item>
+                                        <Item>
+                                            <TheAutocomplete options={establishmentServicesData?.establishmentServices?.nodes} label="services"
+                                                placeholder="Ajouter un service"
+                                                limitTags={3}
+                                                value={formik.values.establishmentServices}
+                                                onChange={(e, newValue) => formik.setFieldValue('establishmentServices', newValue)}/>
+                                        </Item>
+                                    </Grid>
+                                    <Grid xs={2} sm={4} md={4}>
+                                        <Item>
+                                            {/* <ImageFileField variant="outlined" label="Image"
+                                                imageValue={formik.values.image}
+                                                onChange={(imageFile) => formik.setFieldValue('image', imageFile)}
+                                                disabled={loadingPost || loadingPut}
+                                                /> */}
+                                            
+                                            <FormControl fullWidth>
+                                                <InputLabel id="demo-simple-select-label">Type de l'événement indésirable</InputLabel>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    label="Type de l'événement indésirable"
+                                                    value={formik.values.undesirableEventType} required
+                                                    onChange={(e) => formik.setFieldValue('undesirableEventType', e.target.value)}
+                                                >
+                                                    {
+                                                        UDESIRABLE_EVENT_TYPES?.ALL?.map((type, index) =>
+                                                        {
+                                                            return <MenuItem key={index} value={type.value}>{type.label}</MenuItem>
+                                                        }
+                                                        )
+                                                    }
+                                                </Select>
+                                            </FormControl>
+                                        </Item>
+                                        {formik.values.undesirableEventType === UDESIRABLE_EVENT_TYPES.NORMAL && <Item>
+                                            <SelectCheckmarks  options={dataData?.undesirableEventNormalTypes} label="Type (EI)"
+                                                placeholder="Ajouter un type (EI)"
+                                                limitTags={3}
+                                                value={formik.values.normalTypes}
+                                                onChange={(e, newValue) => formik.setFieldValue('normalTypes', newValue)}/>
+                                        </Item>}
+                                        {formik.values.undesirableEventType === UDESIRABLE_EVENT_TYPES.SERIOUS && <Item>
+                                            <SelectCheckmarks  options={dataData?.undesirableEventSeriousTypes} label="Type (EIG)"
+                                                placeholder="Ajouter un type (EIG)"
+                                                limitTags={3}
+                                                value={formik.values.seriousTypes}
+                                                onChange={(e, newValue) => formik.setFieldValue('seriousTypes', newValue)}/>
+                                        </Item>}
+                                    </Grid>
+                                    <Grid xs={2} sm={4} md={4} item="true">
+                                        <Item>
+                                            <TheAutocomplete options={employeesData?.employees?.nodes} label="Professionnels"
+                                                placeholder="Ajouter un professionnel"
+                                                limitTags={3}
+                                                value={formik.values.employees}
+                                                onChange={(e, newValue) => formik.setFieldValue('employees', newValue)}/>
+                                        </Item>
+                                        <Item>
+                                            <TheAutocomplete options={beneficiariesData?.beneficiaries?.nodes} label="Bénificiaires"
+                                                placeholder="Ajouter un bénificiaire"
+                                                limitTags={3}
+                                                value={formik.values.beneficiaries}
+                                                onChange={(e, newValue) => formik.setFieldValue('beneficiaries', newValue)}/>
+                                        </Item>
+                                    </Grid>
+                                    <Grid xs={2} sm={4} md={4}>
+                                        <Item>
+                                            <TheAutocomplete options={employeesData?.employees?.nodes} label="Pour quel employé ?"
+                                                placeholder="Choisissez un employé ?"
+                                                multiple={false}
+                                                value={formik.values.employee}
+                                                helperText="Si c'est pour vous. laissez ce champ vide."
+                                                onChange={(e, newValue) => formik.setFieldValue('employee', newValue)}/>
+                                        </Item>
+                                    </Grid>
+                                </Grid>
+                            </StepContent>
+                        </Step>
+                        <Step>
+                            <StepLabel onClick={()=> onGoToStep(1)}
+                            optional={<Typography variant="caption">Deuxième étape</Typography>}
+                            >
+                                Étape 2
+                            </StepLabel>
+                            <StepContent>
+                                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                                    <Grid xs={12} sm={4} md={4}>
+                                        <Item>
+                                            <TheDateTimePicker
+                                                label="Date et heure de déroulement des faits"
+                                                value={formik.values.courseFactsDateTime}
+                                                onChange={(date) => formik.setFieldValue('courseFactsDateTime', date)}
+                                                disabled={loadingPost || loadingPut}
+                                            />
+                                        </Item>
+                                        <Item>
+                                            <TheTextField variant="outlined" label="Lieu de déroulement des faits"
+                                                value={formik.values.courseFactsPlace}
+                                                onChange={(e) => formik.setFieldValue('courseFactsPlace', e.target.value)}
+                                                disabled={loadingPost || loadingPut}
+                                            />
+                                        </Item>
+                                    </Grid>
+                                    <Grid xs={12} sm={8} md={8}>
+                                        <Item>
+                                            <TheTextField variant="outlined" label="Circonstance de l’événement" multiline rows={5}
+                                                value={formik.values.circumstanceEventText}
+                                                onChange={(e) => formik.setFieldValue('circumstanceEventText', e.target.value)}
+                                                disabled={loadingPost || loadingPut}
+                                                />
+                                        </Item>
+                                    </Grid>
+                                </Grid>
+                            </StepContent>
+                        </Step>
+                        <Step>
+                            <StepLabel onClick={()=> onGoToStep(2)}
+                            optional={<Typography variant="caption">Dernière étape </Typography>}
+                            >
+                                Étape 3
+                            </StepLabel>
+                            <StepContent>
+                                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                                    <Grid xs={2} sm={4} md={4}>
+                                        <Item>
+                                            <FormControl fullWidth>
+                                                <InputLabel id="demo-simple-select-label">Fréquence de l’événement</InputLabel>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    label="Fréquence de l’événement"
+                                                    value={formik.values.frequency}
+                                                    onChange={(e) => formik.setFieldValue('frequency', e.target.value)}
+                                                >
+                                                    <MenuItem value={null}>
+                                                        <em>Choisissez une fréquence</em>
+                                                    </MenuItem>
+                                                    {
+                                                        dataData?.frequencies?.map((data, index) =>
+                                                        {
+                                                            return <MenuItem key={index} value={data.id}>{data.name}</MenuItem>
+                                                        }
+                                                        )
+                                                    }
+                                                </Select>
+                                            </FormControl>
+                                        </Item>
+                                    </Grid>
+                                    <Grid xs={2} sm={4} md={4}>
+                                        <Item>                                
+                                            <FormControl fullWidth>
+                                                <InputLabel id="demo-simple-select-label">Gravité de l’événement</InputLabel>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    label="Gravité de l’événement"
+                                                    value={formik.values.severity} required
+                                                    onChange={(e) => formik.setFieldValue('severity', e.target.value)}
+                                                >
+                                                    {
+                                                        UDESIRABLE_EVENT_SEVERITY?.ALL?.map((type, index) =>
+                                                        {
+                                                            return <MenuItem key={index} value={type.value}>{type.label}</MenuItem>
+                                                        }
+                                                        )
+                                                    }
+                                                </Select>
+                                            </FormControl>
+                                        </Item>
+                                    </Grid>
+                                    <Grid xs={2} sm={4} md={4} item="true">
+                                        <Item>
+                                            <TheAutocomplete options={employeesData?.employees?.nodes} label="Personne(s) immédiatement prévenue(s)"
+                                                placeholder="Ajouter une personne"
+                                                limitTags={3}
+                                                value={formik.values.notifiedPersons}
+                                                onChange={(e, newValue) => formik.setFieldValue('notifiedPersons', newValue)}/>
+                                        </Item>
+                                        <Item>
+                                            <TheTextField variant="outlined" label="Autres Personnes"
+                                                value={formik.values.otherNotifiedPersons}
+                                                onChange={(e) => formik.setFieldValue('otherNotifiedPersons', e.target.value)}
+                                                helperText="Si vous ne trouvez pas la personne dans la liste dessus."
+                                                disabled={loadingPost || loadingPut}
+                                            />
+                                        </Item>
+                                    </Grid>
+                                    <Grid xs={12} sm={12} md={12}>
+                                        <Item>
+                                            <TheTextField variant="outlined" label="Mesure(s) prise(s) immédiatement" multiline rows={5}
+                                                value={formik.values.actionsTakenText}
+                                                onChange={(e) => formik.setFieldValue('actionsTakenText', e.target.value)}
+                                                disabled={loadingPost || loadingPut}
+                                                />
+                                        </Item>
+                                    </Grid>
+                                </Grid>
+                            </StepContent>
+                        </Step>
+                    </Stepper>
+                    <Divider variant="middle" />
                     <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                        <Grid xs={2} sm={4} md={4}>
-                            <Item>
-                                <TheTextField variant="outlined" label="Référence"
-                                    value={formik.values.number}
-                                    disabled
-                                />
-                            </Item>
-                        </Grid>
-                        <Grid xs={2} sm={4} md={4}>
-                            <Item>
-                                <TheTextField variant="outlined" label="Titre" id="title"
-                                    value={formik.values.title} required
-                                    onChange={(e) => formik.setFieldValue('title', e.target.value)}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.title && Boolean(formik.errors.title)}
-                                    helperText={formik.touched.title && formik.errors.title}
-                                    disabled={loadingPost || loadingPut}
-                                />
-                            </Item>
-                            <Item>
-                                <TheAutocomplete options={establishmentsData?.establishments?.nodes} label="Établissements"
-                                    placeholder="Ajouter un établissement"
-                                    limitTags={3}
-                                    value={formik.values.establishments}
-                                    onChange={(e, newValue) => formik.setFieldValue('establishments', newValue)}/>
-                            </Item>
-                            <Item>
-                                <TheAutocomplete options={establishmentServicesData?.establishmentServices?.nodes} label="services"
-                                    placeholder="Ajouter un service"
-                                    limitTags={3}
-                                    value={formik.values.establishmentServices}
-                                    onChange={(e, newValue) => formik.setFieldValue('establishmentServices', newValue)}/>
-                            </Item>
-                        </Grid>
-                        <Grid xs={2} sm={4} md={4}>
-                            <Item>
-                                {/* <ImageFileField variant="outlined" label="Image"
-                                    imageValue={formik.values.image}
-                                    onChange={(imageFile) => formik.setFieldValue('image', imageFile)}
-                                    disabled={loadingPost || loadingPut}
-                                    /> */}
-                                
-                                <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Type de l'événement indésirable</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        label="Type de l'événement indésirable"
-                                        value={formik.values.undesirableEventType} required
-                                        onChange={(e) => formik.setFieldValue('undesirableEventType', e.target.value)}
-                                    >
-                                        {
-                                            UDESIRABLE_EVENT_TYPES?.ALL?.map((type, index) =>
-                                            {
-                                                return <MenuItem key={index} value={type.value}>{type.label}</MenuItem>
-                                            }
-                                            )
-                                        }
-                                    </Select>
-                                </FormControl>
-                            </Item>
-                            {formik.values.undesirableEventType === UDESIRABLE_EVENT_TYPES.NORMAL && <Item>
-                                <SelectCheckmarks  options={dataData?.undesirableEventNormalTypes} label="Type (EI)"
-                                    placeholder="Ajouter un type (EI)"
-                                    limitTags={3}
-                                    value={formik.values.normalTypes}
-                                    onChange={(e, newValue) => formik.setFieldValue('normalTypes', newValue)}/>
-                            </Item>}
-                            {formik.values.undesirableEventType === UDESIRABLE_EVENT_TYPES.SERIOUS && <Item>
-                                <SelectCheckmarks  options={dataData?.undesirableEventSeriousTypes} label="Type (EIG)"
-                                    placeholder="Ajouter un type (EIG)"
-                                    limitTags={3}
-                                    value={formik.values.seriousTypes}
-                                    onChange={(e, newValue) => formik.setFieldValue('seriousTypes', newValue)}/>
-                            </Item>}
-                        </Grid>
-                        <Grid xs={2} sm={4} md={4}>
-                            <Item>
-                                <TheDateTimePicker
-                                    label="Date et heure de début"
-                                    value={formik.values.startingDateTime}
-                                    onChange={(date) => formik.setFieldValue('startingDateTime', date)}
-                                    disabled={loadingPost || loadingPut}
-                                />
-                            </Item>
-                            <Item>
-                                <TheDateTimePicker
-                                    label="Date de fin"
-                                    value={formik.values.endingDateTime}
-                                    onChange={(date) => formik.setFieldValue('endingDateTime', date)}
-                                    disabled={loadingPost || loadingPut}
-                                />
-                            </Item>
-                        </Grid>
-                        <Grid xs={2} sm={4} md={4}>
-                            <Item>
-                                <TheAutocomplete options={employeesData?.employees?.nodes} label="Pour quel employé ?"
-                                    placeholder="Choisissez un employé ?"
-                                    multiple={false}
-                                    value={formik.values.employee}
-                                    helperText="Si c'est pour vous. laissez ce champ vide."
-                                    onChange={(e, newValue) => formik.setFieldValue('employee', newValue)}/>
-                            </Item>
-                        </Grid>
-                        <Grid xs={2} sm={4} md={4} item>
-                            <Item>
-                                <TheAutocomplete options={employeesData?.employees?.nodes} label="Professionnels"
-                                    placeholder="Ajouter un professionnel"
-                                    limitTags={3}
-                                    value={formik.values.employees}
-                                    onChange={(e, newValue) => formik.setFieldValue('employees', newValue)}/>
-                            </Item>
-                            <Item>
-                                <TheAutocomplete options={beneficiariesData?.beneficiaries?.nodes} label="Bénificiaires"
-                                    placeholder="Ajouter un bénificiaire"
-                                    limitTags={3}
-                                    value={formik.values.beneficiaries}
-                                    onChange={(e, newValue) => formik.setFieldValue('beneficiaries', newValue)}/>
-                            </Item>
-                        </Grid>
-                        <Grid xs={12} sm={12} md={12}>
-                            <Divider variant="middle" />
-                        </Grid>
-                        <Grid xs={12} sm={4} md={4}>
-                            <Item>
-                                <TheDateTimePicker
-                                    label="Date et heure de déroulement des faits"
-                                    value={formik.values.courseFactsDateTime}
-                                    onChange={(date) => formik.setFieldValue('courseFactsDateTime', date)}
-                                    disabled={loadingPost || loadingPut}
-                                />
-                            </Item>
-                            <Item>
-                                <TheTextField variant="outlined" label="Lieu de déroulement des faits"
-                                    value={formik.values.courseFactsPlace}
-                                    onChange={(e) => formik.setFieldValue('courseFactsPlace', e.target.value)}
-                                    disabled={loadingPost || loadingPut}
-                                />
-                            </Item>
-                        </Grid>
-                        <Grid xs={12} sm={8} md={8}>
-                            <Item>
-                                <TheTextField variant="outlined" label="Circonstance de l’événement" multiline rows={5}
-                                    value={formik.values.circumstanceEventText}
-                                    onChange={(e) => formik.setFieldValue('circumstanceEventText', e.target.value)}
-                                    disabled={loadingPost || loadingPut}
-                                    />
-                            </Item>
-                        </Grid>
-                        <Grid xs={12} sm={12} md={12}>
-                            <Divider variant="middle" />
-                        </Grid>
-                        <Grid xs={2} sm={4} md={4}>
-                            <Item>
-                                <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Fréquence de l’événement</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        label="Fréquence de l’événement"
-                                        value={formik.values.frequency}
-                                        onChange={(e) => formik.setFieldValue('frequency', e.target.value)}
-                                    >
-                                        <MenuItem value="">
-                                            <em>Choisissez une fréquence</em>
-                                        </MenuItem>
-                                        {
-                                            dataData?.frequencies?.map((data, index) =>
-                                            {
-                                                return <MenuItem key={index} value={data.id}>{data.name}</MenuItem>
-                                            }
-                                            )
-                                        }
-                                    </Select>
-                                </FormControl>
-                            </Item>
-                        </Grid>
-                        <Grid xs={2} sm={4} md={4}>
-                            <Item>                                
-                                <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Gravité de l’événement</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        label="Gravité de l’événement"
-                                        value={formik.values.severity} required
-                                        onChange={(e) => formik.setFieldValue('severity', e.target.value)}
-                                    >
-                                        {
-                                            UDESIRABLE_EVENT_SEVERITY?.ALL?.map((type, index) =>
-                                            {
-                                                return <MenuItem key={index} value={type.value}>{type.label}</MenuItem>
-                                            }
-                                            )
-                                        }
-                                    </Select>
-                                </FormControl>
-                            </Item>
-                        </Grid>
-                        <Grid xs={2} sm={4} md={4} item>
-                            <Item>
-                                <TheAutocomplete options={employeesData?.employees?.nodes} label="Personne(s) immédiatement prévenue(s)"
-                                    placeholder="Ajouter une personne"
-                                    limitTags={3}
-                                    value={formik.values.notifiedPersons}
-                                    onChange={(e, newValue) => formik.setFieldValue('notifiedPersons', newValue)}/>
-                            </Item>
-                            <Item>
-                                <TheTextField variant="outlined" label="Autres Personnes"
-                                    value={formik.values.otherNotifiedPersons}
-                                    onChange={(e) => formik.setFieldValue('otherNotifiedPersons', e.target.value)}
-                                    helperText="Si vous ne trouvez pas la personne dans la liste dessus."
-                                    disabled={loadingPost || loadingPut}
-                                />
-                            </Item>
-                        </Grid>
-                        <Grid xs={12} sm={12} md={12}>
-                            <Item>
-                                <TheTextField variant="outlined" label="Mesure(s) prise(s) immédiatement" multiline rows={5}
-                                    value={formik.values.actionsTakenText}
-                                    onChange={(e) => formik.setFieldValue('actionsTakenText', e.target.value)}
-                                    disabled={loadingPost || loadingPut}
-                                    />
-                            </Item>
-                        </Grid>
-                        <Grid xs={12} sm={12} md={12}>
-                            <Divider variant="middle" />
-                        </Grid>
                         <Grid xs={12} sm={12} md={12}>
                             <Item sx={{ justifyContent: 'end', flexDirection : 'row' }}>
                                 <Link to="/online/qualites/evenements-indesirables/liste" className="no_style">

@@ -8,11 +8,12 @@ import {
 } from "react-router-dom";
 
 import UndesirableEvents from "./undesirable-events/UndesirableEvents";
+import { Box } from "@mui/material";
   
 export default function Qualities() {
 
   return (
-    <div className="qualities">
+    <Box>
       <Routes>
             <Route path={`evenements-indesirables/*`} element={<UndesirableEvents />} />
             <Route
@@ -20,6 +21,6 @@ export default function Qualities() {
                 element={<Navigate to={`evenements-indesirables`} replace />}
             />
       </Routes>
-    </div>
+    </Box>
   );
 }

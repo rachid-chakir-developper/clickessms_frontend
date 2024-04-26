@@ -6,7 +6,7 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
-import { Box, Chip } from '@mui/material';
+import { Box, Chip, FormHelperText } from '@mui/material';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -53,7 +53,6 @@ export default function SelectCheckmarks({ options = [], limitTags, label, place
           )}
           MenuProps={MenuProps}
           placeholder={placeholder}
-          helperText={helperText}
         >
           {options.map((option, index) => (
             <MenuItem key={index} value={option} onClick={() => onAddOption(option)}>
@@ -64,6 +63,7 @@ export default function SelectCheckmarks({ options = [], limitTags, label, place
             </MenuItem>
           ))}
         </Select>
+        {helperText && <FormHelperText>{helperText}</FormHelperText>}
       </FormControl>
     </div>
   );
