@@ -8,10 +8,6 @@ import {
   InputAdornment,
   Button,
   Divider,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   IconButton,
 } from '@mui/material';
 import dayjs from 'dayjs';
@@ -23,7 +19,6 @@ import * as yup from 'yup';
 
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
-import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import { GET_TASK } from '../../../../_shared/graphql/queries/TaskQueries';
 import {

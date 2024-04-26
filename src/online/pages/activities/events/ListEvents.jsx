@@ -2,9 +2,8 @@ import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Alert, Button, Stack } from '@mui/material';
-import EventItemCard from './EventItemCard';
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import { Button, Stack } from '@mui/material';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { Add } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
@@ -14,7 +13,6 @@ import {
   PUT_EVENT_STATE,
 } from '../../../../_shared/graphql/mutations/EventMutations';
 import { GET_EVENTS } from '../../../../_shared/graphql/queries/EventQueries';
-import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import EventFilter from './EventFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
 import TableListEvents from './TableListEvents';

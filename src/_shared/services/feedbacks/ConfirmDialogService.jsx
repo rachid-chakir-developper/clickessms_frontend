@@ -2,14 +2,11 @@
 import React from 'react';
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogActions,
   Typography,
-  IconButton,
   Button,
 } from '@mui/material';
-import NotListedLocationIcon from '@mui/icons-material/NotListedLocation';
 
 export default function ConfirmDialogService({
   confirmDialog,

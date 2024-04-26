@@ -10,7 +10,7 @@ import {
   PUT_USER_STATE,
 } from '../../../_shared/graphql/mutations/UserMutations';
 import { GET_USERS } from '../../../_shared/graphql/queries/UserQueries';
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { Add, List } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import DialogAddGroup from './groups/DialogAddGroup';

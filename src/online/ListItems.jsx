@@ -9,23 +9,17 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import StorefrontIcon from '@mui/icons-material/Storefront';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import ConstructionIcon from '@mui/icons-material/Construction';
 import PeopleIcon from '@mui/icons-material/People';
 import PersonIcon from '@mui/icons-material/Person';
 import Divider from '@mui/material/Divider';
-import { CalendarIcon } from '@mui/x-date-pickers';
 
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Collapse } from '@mui/material';
 import {
   Apartment,
-  Block,
   Business,
-  CalendarMonth,
   Category,
-  Diversity3,
   Email,
   Engineering,
   Event,
@@ -36,9 +30,7 @@ import {
   Groups,
   Groups2,
   Groups3,
-  Handshake,
   HomeRepairService,
-  Map,
   Tty,
   Workspaces,
   Note,
@@ -46,7 +38,6 @@ import {
   InterpreterMode,
   Construction,
   Backup,
-  Devices,
   Computer,
   Microsoft,
   Group,

@@ -4,14 +4,7 @@ import CardMedia from '@mui/material/CardMedia';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { Stack, Tooltip } from '@mui/material';
-import {
-  Delete,
-  PauseRounded,
-  PlayArrowRounded,
-  Edit,
-  Article,
-  Folder,
-} from '@mui/icons-material';
+import { Delete, Edit, Article, Folder } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';

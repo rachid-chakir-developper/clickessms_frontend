@@ -2,21 +2,11 @@ import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import {
-  Box,
-  Grid,
-  Paper,
-  ButtonBase,
-  Typography,
-  Divider,
-  Chip,
-} from '@mui/material';
+import { Box, Grid, Paper, Typography, Divider, Chip } from '@mui/material';
 
 import { BENEFICIARY_ABSENCE_RECAP } from '../../../../_shared/graphql/queries/BeneficiaryAbsenceQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import TitlebarImageList from '../../../_shared/components/media/TitlebarImageList';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
-import PersonCard from '../../../_shared/components/persons/PersonCard';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
 
 const Item = styled(Paper)(({ theme }) => ({

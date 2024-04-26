@@ -1,19 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import {
-  Stack,
-  Box,
-  Typography,
-  InputAdornment,
-  Button,
-  Divider,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from '@mui/material';
-import dayjs from 'dayjs';
+import { Stack, Box, Typography, Button, Divider } from '@mui/material';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -22,7 +10,6 @@ import * as yup from 'yup';
 
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
-import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import { GET_COMPANY } from '../../../../_shared/graphql/queries/CompanyQueries';
 import { PUT_COMPANY } from '../../../../_shared/graphql/mutations/CompanyMutations';

@@ -7,9 +7,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import Typography from '@mui/material/Typography';
-import { Divider, Grid, Stack } from '@mui/material';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { Grid, Stack } from '@mui/material';
+import { useMutation } from '@apollo/client';
 
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -20,7 +19,6 @@ import {
 } from '../../../../_shared/graphql/mutations/DataMutations';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
-import TransferList from '../../../../_shared/components/helpers/TransferList';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',

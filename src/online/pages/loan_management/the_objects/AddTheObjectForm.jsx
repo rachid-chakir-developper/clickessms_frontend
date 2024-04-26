@@ -1,15 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import {
-  Stack,
-  Box,
-  Typography,
-  InputAdornment,
-  Button,
-  Divider,
-} from '@mui/material';
-import dayjs from 'dayjs';
+import { Stack, Box, Typography, Button, Divider } from '@mui/material';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -18,7 +10,6 @@ import * as yup from 'yup';
 
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
-import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import { GET_THE_OBJECT } from '../../../../_shared/graphql/queries/TheObjectQueries';
 import {
@@ -26,7 +17,6 @@ import {
   PUT_THE_OBJECT,
 } from '../../../../_shared/graphql/mutations/TheObjectMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',

@@ -1,6 +1,6 @@
 import { Alert, List, Typography } from '@mui/material';
 import ChecklistListItem from './ChecklistItem';
-import { Dangerous, Done, EditRoad } from '@mui/icons-material';
+import { Done } from '@mui/icons-material';
 
 export default function ChecklistsList({
   checklist = [],

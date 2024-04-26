@@ -8,10 +8,7 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { WebSocketLink } from '@apollo/client/link/ws';
-import {
-  getMainDefinition,
-  offsetLimitPagination,
-} from '@apollo/client/utilities';
+import { getMainDefinition } from '@apollo/client/utilities';
 import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 
 const envProd = false;

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
 import { Box, Card, CardContent, CardMedia, TextField } from '@mui/material';
 import MediaModal from '../modals/MediaModal';
 

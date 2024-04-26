@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Grid, IconButton, Stack } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
 import styled from '@emotion/styled';
-import { Close } from '@mui/icons-material';
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
-import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',

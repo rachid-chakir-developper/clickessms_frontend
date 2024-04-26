@@ -1,17 +1,6 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import {
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  TextField,
-  Typography,
-  IconButton,
-} from '@mui/material';
-import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import SkipNextIcon from '@mui/icons-material/SkipNext';
+import { Box, Card, CardContent, TextField } from '@mui/material';
 
 export default function TheFieldField(props) {
   const theme = useTheme();

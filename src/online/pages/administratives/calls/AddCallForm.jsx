@@ -5,7 +5,6 @@ import {
   Stack,
   Box,
   Typography,
-  InputAdornment,
   Button,
   Divider,
   FormControl,
@@ -21,8 +20,6 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
-import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
-import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import { GET_CALL } from '../../../../_shared/graphql/queries/CallQueries';
 import {
@@ -30,7 +27,6 @@ import {
   PUT_CALL,
 } from '../../../../_shared/graphql/mutations/CallMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
 import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';

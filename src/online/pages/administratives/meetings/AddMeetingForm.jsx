@@ -1,14 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import {
-  Stack,
-  Box,
-  Typography,
-  InputAdornment,
-  Button,
-  Divider,
-} from '@mui/material';
+import { Stack, Box, Typography, Button, Divider } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -17,8 +10,6 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
-import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
-import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import { GET_MEETING } from '../../../../_shared/graphql/queries/MeetingQueries';
 import {
@@ -26,7 +17,6 @@ import {
   PUT_MEETING,
 } from '../../../../_shared/graphql/mutations/MeetingMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
 import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';

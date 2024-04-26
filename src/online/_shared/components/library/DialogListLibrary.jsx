@@ -18,7 +18,6 @@ import {
   Delete,
   Edit,
   Folder,
-  InsertDriveFile,
   InsertDriveFileOutlined,
   PlayCircleOutline,
 } from '@mui/icons-material';

@@ -2,8 +2,8 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { Box, Divider, Paper, Stack, alpha } from '@mui/material';
-import { Grid, Typography, Avatar, Card, CardContent } from '@mui/material';
-import dayjs from 'dayjs'; // Assurez-vous d'importer dayjs si vous l'utilisez pour la gestion des dates
+import { Grid, Typography, Avatar } from '@mui/material';
+// Assurez-vous d'importer dayjs si vous l'utilisez pour la gestion des dates
 
 import { GET_EMPLOYEE } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import {

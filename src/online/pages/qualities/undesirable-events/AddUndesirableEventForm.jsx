@@ -15,7 +15,6 @@ import {
   Step,
   StepLabel,
   StepContent,
-  Paper,
 } from '@mui/material';
 import dayjs from 'dayjs';
 

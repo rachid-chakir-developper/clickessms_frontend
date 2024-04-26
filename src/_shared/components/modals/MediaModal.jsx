@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
 import {
   Modal,
-  Backdrop,
   Fade,
-  Button,
   useTheme,
   useMediaQuery,
   Box,
   Stack,
   IconButton,
-  Avatar,
   Typography,
 } from '@mui/material';
 import {
-  ArrowRight,
   Close,
   SkipNextRounded,
   SkipPreviousRounded,

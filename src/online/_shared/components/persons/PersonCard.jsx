@@ -1,16 +1,5 @@
 import * as React from 'react';
-import {
-  Avatar,
-  Box,
-  Card,
-  Stack,
-  Typography,
-  IconButton,
-  Divider,
-  Chip,
-  CardMedia,
-} from '@mui/material';
-import { Edit, InfoRounded, LocationOn } from '@mui/icons-material';
+import { Box, Card, Typography, CardMedia } from '@mui/material';
 
 export default function PersonCard({ person }) {
   return (

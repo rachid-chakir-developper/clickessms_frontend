@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Divider, Box, CircularProgress } from '@mui/material';
+import { List, Box, CircularProgress } from '@mui/material';
 import ListMessagesItem from './ListMessagesItem'; // Assurez-vous d'importer le composant approprié
 import { useLazyQuery } from '@apollo/client';
 import { GET_MESSAGES } from '../../../../_shared/graphql/queries/ChatQueries';

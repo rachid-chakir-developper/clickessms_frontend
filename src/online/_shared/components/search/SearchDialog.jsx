@@ -1,6 +1,6 @@
 // SearchDialog.jsx
 
-import React, { useState } from 'react';
+import React from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { useLazyQuery } from '@apollo/client';

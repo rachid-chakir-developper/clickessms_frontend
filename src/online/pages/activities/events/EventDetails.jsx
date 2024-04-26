@@ -13,9 +13,7 @@ import {
 
 import { EVENT_RECAP } from '../../../../_shared/graphql/queries/EventQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import TitlebarImageList from '../../../_shared/components/media/TitlebarImageList';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
-import PersonCard from '../../../_shared/components/persons/PersonCard';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
 
 const Item = styled(Paper)(({ theme }) => ({

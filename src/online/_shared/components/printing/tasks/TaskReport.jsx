@@ -4,7 +4,6 @@ import { useLazyQuery } from '@apollo/client';
 import { GET_TASK_RECAP } from '../../../../../_shared/graphql/queries/TaskQueries';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDateTime } from '../../../../../_shared/tools/functions';
-import ChecklistsList from '../../feedBacks/ChecklistsList';
 
 export default function TaskReport({ task }) {
   const [getTask, { loading: loadingTask, data: taskData, error: taskError }] =

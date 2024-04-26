@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { useTheme, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { Button, Card, CardMedia, Stack, Typography } from '@mui/material';
-import { InfoRounded } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 const Item = styled(Stack)(({ theme }) => ({

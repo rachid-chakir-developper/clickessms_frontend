@@ -9,26 +9,13 @@ import {
   ButtonBase,
   Typography,
   Divider,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { THE_OBJECT_RECAP } from '../../../../_shared/graphql/queries/TheObjectQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import CommentsList from '../../../_shared/components/feedBacks/CommentsList';
 import TitlebarImageList from '../../../_shared/components/media/TitlebarImageList';
-import {
-  getFormatDateTime,
-  getLevelLabel,
-  getPriorityLabel,
-  getStatusLabel,
-  getStepTypeLabel,
-} from '../../../../_shared/tools/functions';
+import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import PersonCard from '../../../_shared/components/persons/PersonCard';
-import ChecklistsList from '../../../_shared/components/feedBacks/ChecklistsList';
-import SignatureCard from '../../../_shared/components/feedBacks/SignatureCard';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',

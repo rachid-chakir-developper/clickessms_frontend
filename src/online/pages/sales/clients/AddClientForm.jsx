@@ -5,7 +5,6 @@ import {
   Stack,
   Box,
   Typography,
-  InputAdornment,
   Button,
   Divider,
   FormControl,
@@ -13,7 +12,6 @@ import {
   Select,
   MenuItem,
 } from '@mui/material';
-import dayjs from 'dayjs';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -22,7 +20,6 @@ import * as yup from 'yup';
 
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
-import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import { GET_CLIENT } from '../../../../_shared/graphql/queries/ClientQueries';
 import {

@@ -1,10 +1,6 @@
 import React from 'react';
 import { Grid, Paper } from '@mui/material';
-import AppBarChart from './charts/AppBarChart';
-import AppScatterChart from './charts/AppScatterChart';
-import AppLineChart from './charts/AppLineChart';
 import AppPieChart from './charts/AppPieChart';
-import Deposits from './charts/Deposits';
 import Tasks from './charts/Tasks';
 import AppChart from './charts/AppChart';
 import styled from '@emotion/styled';

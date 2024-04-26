@@ -4,7 +4,6 @@ import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import ListSubheader from '@mui/material/ListSubheader';
 import IconButton from '@mui/material/IconButton';
-import InfoIcon from '@mui/icons-material/Info';
 import { Image, PlayArrow } from '@mui/icons-material';
 import { Alert } from '@mui/material';
 import MediaModal from '../../../../_shared/components/modals/MediaModal';

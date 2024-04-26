@@ -21,8 +21,6 @@ import CommentsList from '../../../_shared/components/feedBacks/CommentsList';
 import TitlebarImageList from '../../../_shared/components/media/TitlebarImageList';
 import {
   getFormatDateTime,
-  getLevelLabel,
-  getPriorityLabel,
   getStatusLabel,
   getStepTypeLabel,
 } from '../../../../_shared/tools/functions';

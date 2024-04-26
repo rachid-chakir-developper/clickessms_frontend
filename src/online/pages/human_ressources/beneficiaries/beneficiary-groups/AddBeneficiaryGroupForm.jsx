@@ -1,15 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import {
-  Stack,
-  Box,
-  Typography,
-  InputAdornment,
-  Button,
-  Divider,
-} from '@mui/material';
-import dayjs from 'dayjs';
+import { Stack, Box, Typography, Button, Divider } from '@mui/material';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
@@ -18,7 +10,6 @@ import * as yup from 'yup';
 
 import TheTextField from '../../../../../_shared/components/form-fields/TheTextField';
 import ImageFileField from '../../../../../_shared/components/form-fields/ImageFileField';
-import TheDesktopDatePicker from '../../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
 import { GET_BENEFICIARY_GROUP } from '../../../../../_shared/graphql/queries/BeneficiaryGroupQueries';
 import {
@@ -26,8 +17,6 @@ import {
   PUT_BENEFICIARY_GROUP,
 } from '../../../../../_shared/graphql/mutations/BeneficiaryGroupMutations';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
-import TheSwitch from '../../../../../_shared/components/form-fields/theSwitch';
-import TheDateTimePicker from '../../../../../_shared/components/form-fields/TheDateTimePicker';
 import { GET_BENEFICIARIES } from '../../../../../_shared/graphql/queries/BeneficiaryQueries';
 import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
 

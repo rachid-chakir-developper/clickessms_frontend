@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  GoogleMap,
-  OverlayView,
-  useJsApiLoader,
-  Marker,
-} from '@react-google-maps/api';
+import { GoogleMap, OverlayView, useJsApiLoader } from '@react-google-maps/api';
 import {
   Paper,
   Grid,
