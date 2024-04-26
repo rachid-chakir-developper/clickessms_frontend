@@ -11,13 +11,15 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 
+const { hostname } = window.location;
+
 const envProd = false;
 const uri = envProd
   ? 'https://api.cessms.fr/graphql'
-  : 'http://localhost:8000/graphql';
+  : `http://${hostname}:8000/graphql`;
 const wss = envProd
   ? 'wss://api.cessms.fr/graphql'
-  : 'ws://localhost:8000/graphql';
+  : `ws://${hostname}:8000/graphql`;
 
 let httpLink = createUploadLink({
   uri: uri,
