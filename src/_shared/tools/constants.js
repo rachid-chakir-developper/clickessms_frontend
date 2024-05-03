@@ -46,7 +46,7 @@ export const STATUS = {
   ],
 };
 
-export const UDESIRABLE_EVENT_TYPES = {
+export const UNDESIRABLE_EVENT_TYPES = {
   NORMAL: 'NORMAL',
   SERIOUS: 'SERIOUS',
   ALL: [
@@ -55,7 +55,7 @@ export const UDESIRABLE_EVENT_TYPES = {
   ],
 };
 
-export const UDESIRABLE_EVENT_SEVERITY = {
+export const UNDESIRABLE_EVENT_SEVERITY = {
   LOW: 'LOW',
   MEDIUM: 'MEDIUM',
   SEVERE: 'SEVERE',

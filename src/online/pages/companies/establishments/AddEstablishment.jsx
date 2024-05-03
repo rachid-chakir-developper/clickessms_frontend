@@ -9,8 +9,8 @@ export default function AddEstablishment() {
       idEstablishment={idEstablishment}
       title={
         idEstablishment && idEstablishment > 0
-          ? `Modifier l'établissement`
-          : `Ajouter un établissement`
+          ? `Modifier la structure`
+          : `Ajouter une structure`
       }
     />
   );

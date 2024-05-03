@@ -73,7 +73,7 @@ export default function EstablishmentItemCard({
               title={`L'éstablishment parent: ${establishment?.establishmentParent?.name}`}
             >
               <Link
-                to={`/online/associations/etablissements/details/${establishment?.establishmentParent?.id}`}
+                to={`/online/associations/structures/details/${establishment?.establishmentParent?.id}`}
                 className="no_style"
               >
                 <Avatar
@@ -114,7 +114,7 @@ export default function EstablishmentItemCard({
           )}
           <Tooltip title="Modifier">
             <Link
-              to={`/online/associations/etablissements/modifier/${establishment?.id}`}
+              to={`/online/associations/structures/modifier/${establishment?.id}`}
               className="no_style"
             >
               <IconButton aria-label="edit" size="small">
@@ -136,7 +136,7 @@ export default function EstablishmentItemCard({
           )}
           <Tooltip title="Détails">
             <Link
-              to={`/online/associations/etablissements/details/${establishment?.id}`}
+              to={`/online/associations/structures/details/${establishment?.id}`}
               className="no_style"
             >
               <IconButton aria-label="edit" size="small">

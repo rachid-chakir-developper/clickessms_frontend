@@ -122,60 +122,14 @@ function MainListItems({ open }) {
           </ListItemButton>
         </ListItem>
       </StyledNavLink> */}
-      <ListItem key={'establishment'} disablePadding sx={{ display: 'block' }}>
-        <ListItemButton
-          sx={{
-            minHeight: 48,
-            justifyContent: open ? 'initial' : 'center',
-            px: 2.5,
-          }}
-          onClick={() => handleClickToOpenItem('establishment')}
-        >
-          <ListItemIcon
-            sx={{
-              minWidth: 0,
-              mr: open ? 3 : 'auto',
-              justifyContent: 'center',
-            }}
-          >
-            {' '}
-            <Business />{' '}
-          </ListItemIcon>
-          <ListItemText
-            primary={'Etablissements'}
-            sx={{ opacity: open ? 1 : 0 }}
-          />
-          {openedItems.includes('establishment') ? (
-            <ExpandLess />
-          ) : (
-            <ChevronRight />
-          )}
-        </ListItemButton>
-        <Collapse
-          in={openedItems.includes('establishment')}
-          timeout="auto"
-          unmountOnExit
-        >
-          <List component="div" disablePadding>
-            <StyledNavLink to="/online/associations/etablissements">
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <Apartment />
-                </ListItemIcon>
-                <ListItemText primary="Etablissements" />
-              </ListItemButton>
-            </StyledNavLink>
-            <StyledNavLink to="/online/associations/services">
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <HomeRepairService />
-                </ListItemIcon>
-                <ListItemText primary="Services" />
-              </ListItemButton>
-            </StyledNavLink>
-          </List>
-        </Collapse>
-      </ListItem>
+      <StyledNavLink to="/online/associations/structures">
+        <ListItem key={'carte'} disablePadding sx={{ display: 'block' }}>
+          <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
+            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <Apartment /> </ListItemIcon>
+            <ListItemText primary={'Structures'} sx={{ opacity: open ? 1 : 0 }} />
+          </ListItemButton>
+        </ListItem>
+      </StyledNavLink>
 
       <ListItem key={'qualities'} disablePadding sx={{ display: 'block' }}>
         <ListItemButton

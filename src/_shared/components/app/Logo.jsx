@@ -119,6 +119,17 @@ const Logo = forwardRef(
             }}
           >
             ROBERP
+            
+          <Typography
+            sx={{
+              marginLeft: 0,
+              fontWeight: 600,
+              fontSize: 12,
+              color: color ? color : '',
+            }}
+          >
+            {user?.company?.name}
+          </Typography>
           </Typography>
         </Box>
       </Link>

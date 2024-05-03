@@ -25,10 +25,10 @@ import * as yup from 'yup';
 
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_UDESIRABLE_EVENT } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
+import { GET_UNDESIRABLE_EVENT } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 import {
-  POST_UDESIRABLE_EVENT,
-  PUT_UDESIRABLE_EVENT,
+  POST_UNDESIRABLE_EVENT,
+  PUT_UNDESIRABLE_EVENT,
 } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
@@ -36,13 +36,12 @@ import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/Beneficia
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import {
-  UDESIRABLE_EVENT_SEVERITY,
-  UDESIRABLE_EVENT_TYPES,
+  UNDESIRABLE_EVENT_SEVERITY,
+  UNDESIRABLE_EVENT_TYPES,
 } from '../../../../_shared/tools/constants';
-import { GET_DATAS_UDESIRABLE_EVENT } from '../../../../_shared/graphql/queries/DataQueries';
+import { GET_DATAS_UNDESIRABLE_EVENT } from '../../../../_shared/graphql/queries/DataQueries';
 import SelectCheckmarks from '../../../../_shared/components/form-fields/SelectCheckmarks';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
-import { GET_ESTABLISHMENT_SERVICES } from '../../../../_shared/graphql/queries/EstablishmentServiceQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -53,7 +52,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
-  let [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({
@@ -69,18 +68,17 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
       title: '',
       startingDateTime: dayjs(new Date()),
       endingDateTime: dayjs(new Date()),
-      undesirableEventType: UDESIRABLE_EVENT_TYPES.NORMAL,
+      undesirableEventType: UNDESIRABLE_EVENT_TYPES.NORMAL,
       normalTypes: [],
       seriousTypes: [],
       frequency: null,
-      severity: UDESIRABLE_EVENT_SEVERITY.MEDIUM,
+      severity: UNDESIRABLE_EVENT_SEVERITY.MEDIUM,
       actionsTakenText: '',
       courseFactsDateTime: dayjs(new Date()),
       courseFactsPlace: '',
       circumstanceEventText: '',
       isActive: true,
       establishments: [],
-      establishmentServices: [],
       employees: [],
       beneficiaries: [],
       notifiedPersons: [],
@@ -92,11 +90,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
       let { image, ...undesirableEventCopy } = values;
       undesirableEventCopy.establishments =
         undesirableEventCopy.establishments.map((i) => i?.id);
-      undesirableEventCopy.establishmentServices =
-        undesirableEventCopy.establishmentServices.map((i) => i?.id);
-      undesirableEventCopy.employees = undesirableEventCopy.employees.map(
-        (i) => i?.id,
-      );
+      undesirableEventCopy.employees = undesirableEventCopy.employees.map((i) => i?.id);
       undesirableEventCopy.beneficiaries =
         undesirableEventCopy.beneficiaries.map((i) => i?.id);
       undesirableEventCopy.notifiedPersons =
@@ -137,16 +131,6 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
   });
 
   const {
-    loading: loadingEstablishmentServices,
-    data: establishmentServicesData,
-    error: establishmentServicesError,
-    fetchMore: fetchMoreEstablishmentServices,
-  } = useQuery(GET_ESTABLISHMENT_SERVICES, {
-    fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
-  });
-
-  const {
     loading: loadingBeneficiaries,
     data: beneficiariesData,
     error: beneficiariesError,
@@ -169,10 +153,10 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
     data: dataData,
     error: datsError,
     fetchMore: fetchMoreDatas,
-  } = useQuery(GET_DATAS_UDESIRABLE_EVENT, { fetchPolicy: 'network-only' });
+  } = useQuery(GET_DATAS_UNDESIRABLE_EVENT, { fetchPolicy: 'network-only' });
 
   const [createUndesirableEvent, { loading: loadingPost }] = useMutation(
-    POST_UDESIRABLE_EVENT,
+    POST_UNDESIRABLE_EVENT,
     {
       onCompleted: (data) => {
         console.log(data);
@@ -181,8 +165,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
           message: 'Ajouté avec succès',
           type: 'success',
         });
-        let { __typename, ...undesirableEventCopy } =
-          data.createUndesirableEvent.undesirableEvent;
+        let { __typename, ...undesirableEventCopy } = data.createUndesirableEvent.undesirableEvent;
         formik.setFieldValue('id', undesirableEventCopy.id);
         handleNext();
         // navigate('/online/qualites/evenements-indesirables/liste');
@@ -217,7 +200,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
     },
   );
   const [updateUndesirableEvent, { loading: loadingPut }] = useMutation(
-    PUT_UDESIRABLE_EVENT,
+    PUT_UNDESIRABLE_EVENT,
     {
       onCompleted: (data) => {
         console.log(data);
@@ -226,8 +209,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
           message: 'Modifié avec succès',
           type: 'success',
         });
-        let { __typename, ...undesirableEventCopy } =
-          data.updateUndesirableEvent.undesirableEvent;
+        let { __typename, ...undesirableEventCopy } = data.updateUndesirableEvent.undesirableEvent;
         handleNext();
         // navigate('/online/qualites/evenements-indesirables/liste');
       },
@@ -278,7 +260,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
     });
   };
   const [getUndesirableEvent, { loading: loadingUndesirableEvent }] =
-    useLazyQuery(GET_UDESIRABLE_EVENT, {
+    useLazyQuery(GET_UNDESIRABLE_EVENT, {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
         let { __typename, ...undesirableEventCopy1 } = data.undesirableEvent;
@@ -299,12 +281,6 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
           undesirableEventCopy.establishments
             ? undesirableEventCopy.establishments.map((i) => i?.establishment)
             : [];
-        undesirableEventCopy.establishmentServices =
-          undesirableEventCopy.establishmentServices
-            ? undesirableEventCopy.establishmentServices.map(
-                (i) => i?.establishmentService,
-              )
-            : [];
         undesirableEventCopy.beneficiaries = undesirableEventCopy.beneficiaries
           ? undesirableEventCopy.beneficiaries.map((i) => i?.beneficiary)
           : [];
@@ -324,6 +300,12 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
       getUndesirableEvent({ variables: { id: idUndesirableEvent } });
     }
   }, [idUndesirableEvent]);
+
+  React.useEffect(() => {
+    if (searchParams.get('id') && !idUndesirableEvent) {
+      getUndesirableEvent({ variables: { id: searchParams.get('id') } });
+    }
+  }, []);
 
   const [activeStep, setActiveStep] = React.useState(
     searchParams.get('step') ? Number(searchParams.get('step')) : 0,
@@ -434,33 +416,9 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                         }
                       />
                     </Item>
-                    <Item>
-                      <TheAutocomplete
-                        options={
-                          establishmentServicesData?.establishmentServices
-                            ?.nodes
-                        }
-                        label="services"
-                        placeholder="Ajouter un service"
-                        limitTags={3}
-                        value={formik.values.establishmentServices}
-                        onChange={(e, newValue) =>
-                          formik.setFieldValue(
-                            'establishmentServices',
-                            newValue,
-                          )
-                        }
-                      />
-                    </Item>
                   </Grid>
                   <Grid xs={2} sm={4} md={4}>
                     <Item>
-                      {/* <ImageFileField variant="outlined" label="Image"
-                                                imageValue={formik.values.image}
-                                                onChange={(imageFile) => formik.setFieldValue('image', imageFile)}
-                                                disabled={loadingPost || loadingPut}
-                                                /> */}
-
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
                           Type de l'événement indésirable
@@ -478,7 +436,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                             )
                           }
                         >
-                          {UDESIRABLE_EVENT_TYPES?.ALL?.map((type, index) => {
+                          {UNDESIRABLE_EVENT_TYPES?.ALL?.map((type, index) => {
                             return (
                               <MenuItem key={index} value={type.value}>
                                 {type.label}
@@ -489,7 +447,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                       </FormControl>
                     </Item>
                     {formik.values.undesirableEventType ===
-                      UDESIRABLE_EVENT_TYPES.NORMAL && (
+                      UNDESIRABLE_EVENT_TYPES.NORMAL && (
                       <Item>
                         <SelectCheckmarks
                           options={dataData?.undesirableEventNormalTypes}
@@ -504,7 +462,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                       </Item>
                     )}
                     {formik.values.undesirableEventType ===
-                      UDESIRABLE_EVENT_TYPES.SERIOUS && (
+                      UNDESIRABLE_EVENT_TYPES.SERIOUS && (
                       <Item>
                         <SelectCheckmarks
                           options={dataData?.undesirableEventSeriousTypes}
@@ -685,7 +643,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                             formik.setFieldValue('severity', e.target.value)
                           }
                         >
-                          {UDESIRABLE_EVENT_SEVERITY?.ALL?.map(
+                          {UNDESIRABLE_EVENT_SEVERITY?.ALL?.map(
                             (type, index) => {
                               return (
                                 <MenuItem key={index} value={type.value}>
@@ -749,7 +707,6 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
               </StepContent>
             </Step>
           </Stepper>
-          <Divider variant="middle" />
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}

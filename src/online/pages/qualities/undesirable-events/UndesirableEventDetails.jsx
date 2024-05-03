@@ -11,7 +11,7 @@ import {
   Divider,
 } from '@mui/material';
 
-import { UDESIRABLE_EVENT_RECAP } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
+import { UNDESIRABLE_EVENT_RECAP } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
@@ -33,7 +33,7 @@ export default function UndesirableEventDetails() {
       data: undesirableEventData,
       error: undesirableEventError,
     },
-  ] = useLazyQuery(UDESIRABLE_EVENT_RECAP);
+  ] = useLazyQuery(UNDESIRABLE_EVENT_RECAP);
   React.useEffect(() => {
     if (idUndesirableEvent) {
       getUndesirableEvent({ variables: { id: idUndesirableEvent } });

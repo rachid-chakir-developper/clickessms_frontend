@@ -2,6 +2,7 @@
 
 import { gql } from '@apollo/client';
 import { FOLDER_MINI_INFOS } from './MediaFragment';
+import { EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
 
 export const ESTABLISHMENT_PHONE_INFOS = gql`
   fragment EstablishmentPhoneInfosFragment on EstablishmentType {
@@ -22,6 +23,8 @@ export const ESTABLISHMENT_MINI_INFOS = gql`
     number
     name
     siret
+    finess
+    apeCode
     email
     logo
     coverImage
@@ -32,6 +35,10 @@ export const ESTABLISHMENT_MINI_INFOS = gql`
 export const ESTABLISHMENT_BASIC_INFOS = gql`
   fragment EstablishmentBasicInfosFragment on EstablishmentType {
     ...EstablishmentMiniInfosFragment
+    establishmentCategory {
+      id
+      name
+    }
     establishmentType {
       id
       name
@@ -46,12 +53,24 @@ export const ESTABLISHMENT_BASIC_INFOS = gql`
   ${ESTABLISHMENT_MINI_INFOS}
   ${FOLDER_MINI_INFOS}
 `;
+
+export const ESTABLISHMENT_MANAGER_DETAILS = gql`
+  fragment EstablishmentManagerTypeFragment on EstablishmentManagerType {
+    id
+    employee {
+      ...EmployeeBasicInfosFragment
+    }
+  }
+  ${EMPLOYEE_BASIC_INFOS}
+`;
+
 export const ESTABLISHMENT_DETAILS = gql`
   fragment EstablishmentDetailsFragment on EstablishmentType {
     ...EstablishmentBasicInfosFragment
     establishmentChilds {
       ...EstablishmentBasicInfosFragment
     }
+    openingDate
     latitude
     longitude
     city
@@ -66,6 +85,10 @@ export const ESTABLISHMENT_DETAILS = gql`
     isActive
     description
     observation
+    managers{
+      ...EstablishmentManagerTypeFragment
+    }
   }
   ${ESTABLISHMENT_BASIC_INFOS}
+  ${ESTABLISHMENT_MANAGER_DETAILS}
 `;

@@ -9,8 +9,8 @@ import { Link } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import {
-  DELETE_UDESIRABLE_EVENT,
-  PUT_UDESIRABLE_EVENT_STATE,
+  DELETE_UNDESIRABLE_EVENT,
+  PUT_UNDESIRABLE_EVENT_STATE,
 } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
 import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 import UndesirableEventFilter from './UndesirableEventFilter';
@@ -56,7 +56,7 @@ export default function ListUndesirableEvents() {
   }, [undesirableEventFilter, paginator]);
 
   const [deleteUndesirableEvent, { loading: loadingDelete }] = useMutation(
-    DELETE_UDESIRABLE_EVENT,
+    DELETE_UNDESIRABLE_EVENT,
     {
       onCompleted: (datas) => {
         if (datas.deleteUndesirableEvent.deleted) {
@@ -128,7 +128,7 @@ export default function ListUndesirableEvents() {
   };
 
   const [updateUndesirableEventState, { loading: loadingPutState }] =
-    useMutation(PUT_UDESIRABLE_EVENT_STATE, {
+    useMutation(PUT_UNDESIRABLE_EVENT_STATE, {
       onCompleted: (datas) => {
         if (datas.updateUndesirableEventState.done) {
           setNotifyAlert({

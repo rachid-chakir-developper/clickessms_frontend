@@ -1,16 +1,15 @@
+import { Box } from '@mui/material';
 import Establishments from './establishments/Establishments';
-import EstablishmentServices from './services/EstablishmentServices';
 
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 export default function Companies() {
   return (
-    <div className="associations">
+    <Box>
       <Routes>
-        <Route path={`etablissements/*`} element={<Establishments />} />
-        <Route path={`services/*`} element={<EstablishmentServices />} />
-        <Route path="/" element={<Navigate to={`etablissements`} replace />} />
+        <Route path={`structures/*`} element={<Establishments />} />
+        <Route path="/" element={<Navigate to={`structures`} replace />} />
       </Routes>
-    </div>
+    </Box>
   );
 }

@@ -26,12 +26,23 @@ const Item = styled(Stack)(({ theme }) => ({
 
 const modulesToManage = [
   {
+    title: 'Ressources humaines',
+    datas: [
+      { name: "Genre de l'Homme", description: '', type: 'HumanGender' },
+    ],
+  },
+  {
     title: 'Etablissments',
     datas: [
       {
         name: "Type de l'établissement",
         description: '',
         type: 'EstablishmentType',
+      },
+      {
+        name: "Catégorie de l'établissement",
+        description: '',
+        type: 'EstablishmentCategory',
       },
     ],
   },
@@ -64,6 +75,7 @@ const modulesToManage = [
   {
     title: 'Administratif',
     datas: [
+      { name: 'Type de document d’admission ', description: '', type: 'AdmissionDocumentType' },
       { name: 'Motif de la réunion', description: '', type: 'MeetingReason' },
     ],
   },

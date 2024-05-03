@@ -11,9 +11,13 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent,
 } from '@mui/material';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -31,7 +35,10 @@ import {
 } from '../../../../_shared/graphql/mutations/EstablishmentMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
-import { GET_DATAS_ESTABLISHMENT_EVENT } from '../../../../_shared/graphql/queries/DataQueries';
+import { GET_DATAS_ESTABLISHMENT } from '../../../../_shared/graphql/queries/DataQueries';
+import dayjs from 'dayjs';
+import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
+import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -42,6 +49,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function AddEstablishmentForm({ idEstablishment, title }) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({
@@ -54,6 +62,9 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
       number: '',
       name: '',
       siret: '',
+      finess: '',
+      apeCode: '',
+      openingDate: dayjs(new Date()),
       city: '',
       zipCode: '',
       address: '',
@@ -67,9 +78,11 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
       isActive: true,
       description: '',
       observation: '',
+      establishmentCategory: null,
       establishmentType: null,
       establishmentParent: null,
       establishmentChilds: [],
+      managers: [],
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -80,7 +93,8 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
           ? establishmentCopy.establishmentParent.id
           : null;
       establishmentCopy.establishmentChilds =
-        establishmentCopy.establishmentChilds.map((i) => i.id);
+      establishmentCopy.establishmentChilds.map((i) => i.id);
+      establishmentCopy.managers = establishmentCopy.managers.map((i) => i?.id);
       if (idEstablishment && idEstablishment != '') {
         onUpdateEstablishment({
           id: establishmentCopy.id,
@@ -108,10 +122,10 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
           message: 'Ajouté avec succès',
           type: 'success',
         });
-        let { __typename, ...establishmentCopy } =
-          data.createEstablishment.establishment;
+        let { __typename, ...establishmentCopy } = data.createEstablishment.establishment;
         //   formik.setValues(establishmentCopy);
-        navigate('/online/associations/etablissements/liste');
+        formik.setFieldValue('id', establishmentCopy.id);
+        handleNext();
       },
       update(cache, { data: { createEstablishment } }) {
         const newEstablishment = createEstablishment.establishment;
@@ -152,7 +166,7 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
         let { __typename, ...establishmentCopy } =
           data.updateEstablishment.establishment;
         //   formik.setValues(establishmentCopy);
-        navigate('/online/associations/etablissements/liste');
+        handleNext();
       },
       update(cache, { data: { updateEstablishment } }) {
         const updatedEstablishment = updateEstablishment.establishment;
@@ -206,11 +220,23 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
       onCompleted: (data) => {
         let { __typename, ...establishmentCopy1 } = data.establishment;
         let { folder, ...establishmentCopy } = establishmentCopy1;
+        establishmentCopy.openingDate = dayjs(
+          establishmentCopy.openingDate,
+        );
+
+        establishmentCopy.establishmentCategory =
+          establishmentCopy.establishmentCategory
+            ? Number(establishmentCopy.establishmentCategory.id)
+            : null;
 
         establishmentCopy.establishmentType =
           establishmentCopy.establishmentType
             ? Number(establishmentCopy.establishmentType.id)
             : null;
+        
+        establishmentCopy.managers = establishmentCopy.managers
+        ? establishmentCopy.managers.map((i) => i?.employee)
+        : [];
         formik.setValues(establishmentCopy);
       },
       onError: (err) => console.log(err),
@@ -233,303 +259,509 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
   });
 
   const {
+    loading: loadingEmployees,
+    data: employeesData,
+    error: employeesError,
+    fetchMore: fetchMoreEmployees,
+  } = useQuery(GET_EMPLOYEES, {
+    fetchPolicy: 'network-only',
+    variables: { page: 1, limit: 10 },
+  });
+
+  const {
     loading: loadingDatas,
     data: dataData,
     error: datsError,
     fetchMore: fetchMoreDatas,
-  } = useQuery(GET_DATAS_ESTABLISHMENT_EVENT, { fetchPolicy: 'network-only' });
+  } = useQuery(GET_DATAS_ESTABLISHMENT, { fetchPolicy: 'network-only' });
+
+
+  React.useEffect(() => {
+    if (searchParams.get('id') && !idEstablishment) {
+      getEstablishment({ variables: { id: searchParams.get('id') } });
+    }
+  }, []);
+
+  const [activeStep, setActiveStep] = React.useState(
+    searchParams.get('step') ? Number(searchParams.get('step')) : 0,
+  );
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (formik.values.id)
+      setSearchParams({ step: activeStep + 1, id: formik.values.id });
+    else setSearchParams({ step: activeStep + 1 });
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    if (formik.values.id)
+      setSearchParams({ step: activeStep + 1, id: formik.values.id });
+    else setSearchParams({ step: activeStep + 1 });
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+  const onGoToStep = (step = 0) => {
+    if (formik.values.id) {
+      setActiveStep(step);
+      setSearchParams({ step, id: formik.values.id });
+    }
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <Typography component="div" variant="h5">
+      <Typography component="div" variant="h5"  sx={{ marginBottom: 4 }}>
         {title} {formik.values.number}
       </Typography>
       {loadingEstablishment && <ProgressService type="form" />}
       {!loadingEstablishment && (
         <form onSubmit={formik.handleSubmit}>
+          <Stepper
+            activeStep={activeStep}
+            orientation="vertical"
+            nonLinear={idEstablishment ? true : false}
+          >
+            <Step>
+              <StepLabel
+                onClick={() => onGoToStep(0)}
+                optional={
+                  <Typography variant="caption">Informations générales</Typography>
+                }
+              >
+                Informations générales
+              </StepLabel>
+              <StepContent>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  <Grid xs={2} sm={8} md={8}>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Raison sociale"
+                        id="name"
+                        value={formik.values.name}
+                        required
+                        onChange={(e) => formik.setFieldValue('name', e.target.value)}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.name && Boolean(formik.errors.name)}
+                        helperText={formik.touched.name && formik.errors.name}
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4}>
+                    <Item>
+                      <TheAutocomplete
+                        options={establishmentsData?.establishments?.nodes?.filter(
+                          (e) => e?.id != idEstablishment,
+                        )}
+                        label="Structure parent"
+                        placeholder="Choisissez une structure"
+                        multiple={false}
+                        value={formik.values.establishmentParent}
+                        onChange={(e, newValue) =>
+                          formik.setFieldValue('establishmentParent', newValue)
+                        }
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4}>
+                    <Item>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Catégorie de structure
+                        </InputLabel>
+                        <Select
+                          label="Catégorie de structure"
+                          value={formik.values.establishmentCategory}
+                          onChange={(e) =>
+                            formik.setFieldValue('establishmentCategory', e.target.value)
+                          }
+                        >
+                          <MenuItem value="">
+                            <em>Choisissez une catégorie</em>
+                          </MenuItem>
+                          {dataData?.establishmentCategories?.map((data, index) => {
+                            return (
+                              <MenuItem key={index} value={data.id}>
+                                {data.name}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    </Item>
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4}>
+                    <Item>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Type de structure
+                        </InputLabel>
+                        <Select
+                          label="Type de structure"
+                          value={formik.values.establishmentType}
+                          onChange={(e) =>
+                            formik.setFieldValue('establishmentType', e.target.value)
+                          }
+                        >
+                          <MenuItem value="">
+                            <em>Choisissez un type</em>
+                          </MenuItem>
+                          {dataData?.establishmentTypes?.map((data, index) => {
+                            return (
+                              <MenuItem key={index} value={data.id}>
+                                {data.name}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    </Item>
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4}>
+                    <Item>
+                      <TheAutocomplete
+                        options={establishmentsData?.establishments?.nodes?.filter(
+                          (e) => e?.id != idEstablishment,
+                        )}
+                        label="Structures filles"
+                        placeholder="Choisissez des structures"
+                        limitTags={3}
+                        value={formik.values.establishmentChilds}
+                        onChange={(e, newValue) =>
+                          formik.setFieldValue('establishmentChilds', newValue)
+                        }
+                      />
+                    </Item>
+                  </Grid>
+                </Grid>
+              </StepContent>
+            </Step>
+            <Step>
+              <StepLabel
+                onClick={() => onGoToStep(1)}
+                optional={
+                  <Typography variant="caption">Coordonnées</Typography>
+                }
+              >
+                Coordonnées
+              </StepLabel>
+              <StepContent>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  <Grid xs={2} sm={4} md={4}>
+                    <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
+                      <Grid xs={12} sm={12} md={12}>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Adresse (Ligne 1)"
+                            multiline
+                            rows={2}
+                            value={formik.values.address}
+                            onChange={(e) =>
+                              formik.setFieldValue('address', e.target.value)
+                            }
+                            disabled={loadingPost || loadingPut}
+                          />
+                        </Item>
+                      </Grid>
+                      <Grid xs={12} sm={12} md={12}>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Complément"
+                            value={formik.values.additionalAddress}
+                            onChange={(e) =>
+                              formik.setFieldValue(
+                                'additionalAddress',
+                                e.target.value,
+                              )
+                            }
+                            disabled={loadingPost || loadingPut}
+                          />
+                        </Item>
+                      </Grid>
+                      <Grid xs={5} sm={5} md={5}>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Code postal"
+                            value={formik.values.zipCode}
+                            onChange={(e) =>
+                              formik.setFieldValue('zipCode', e.target.value)
+                            }
+                            disabled={loadingPost || loadingPut}
+                          />
+                        </Item>
+                      </Grid>
+                      <Grid xs={7} sm={7} md={7}>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Ville"
+                            value={formik.values.city}
+                            onChange={(e) =>
+                              formik.setFieldValue('city', e.target.value)
+                            }
+                            disabled={loadingPost || loadingPut}
+                          />
+                        </Item>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4}>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Numéro de téléphone fixe"
+                        value={formik.values.fix}
+                        onChange={(e) => formik.setFieldValue('fix', e.target.value)}
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Numéro de Fax"
+                        value={formik.values.fax}
+                        onChange={(e) => formik.setFieldValue('fax', e.target.value)}
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Numéro de téléphone portable"
+                        value={formik.values.mobile}
+                        onChange={(e) =>
+                          formik.setFieldValue('mobile', e.target.value)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4}>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="E-mail"
+                        value={formik.values.email}
+                        onChange={(e) =>
+                          formik.setFieldValue('email', e.target.value)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Site web"
+                        value={formik.values.webSite}
+                        onChange={(e) =>
+                          formik.setFieldValue('webSite', e.target.value)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Coordonnées supplémentaires"
+                        value={formik.values.otherContacts}
+                        onChange={(e) =>
+                          formik.setFieldValue('otherContacts', e.target.value)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={12} sm={12} md={12}>
+                    <Divider variant="middle" />
+                  </Grid>
+                </Grid>
+              </StepContent>
+            </Step>
+            <Step>
+              <StepLabel
+                onClick={() => onGoToStep(2)}
+                optional={
+                  <Typography variant="caption">Activité</Typography>
+                }
+              >
+                Activité
+              </StepLabel>
+              <StepContent>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  <Grid item="true" xs={12} sm={6} md={4}>
+                    <Item>
+                        <TheDesktopDatePicker
+                            label="Date d’ouverture"
+                            value={formik.values.openingDate}
+                            onChange={(date) =>
+                              formik.setFieldValue('openingDate', date)
+                            }
+                            disabled={loadingPost || loadingPut}
+                        />
+                    </Item>
+                  </Grid>
+                  <Grid xs={12} sm={6} md={4} item="true">
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Nombre de jour d’ouverture théorique"
+                        // value={formik.values.fax}
+                        // onChange={(e) => formik.setFieldValue('fax', e.target.value)}
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={12} sm={6} md={4} item="true">
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Capacité temporaire"
+                        // value={formik.values.fax}
+                        // onChange={(e) => formik.setFieldValue('fax', e.target.value)}
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4} item="true">
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Capacité permanente"
+                        // value={formik.values.fax}
+                        // onChange={(e) => formik.setFieldValue('fax', e.target.value)}
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4} item="true">
+                    <Item>
+                      <TheAutocomplete
+                        options={employeesData?.employees?.nodes}
+                        label="Responsables"
+                        placeholder="Ajouter un responsable"
+                        limitTags={3}
+                        value={formik.values.managers}
+                        onChange={(e, newValue) =>
+                          formik.setFieldValue('managers', newValue)
+                        }
+                      />
+                    </Item>
+                  </Grid>
+                </Grid>
+              </StepContent>
+            </Step>
+            <Step>
+              <StepLabel
+                onClick={() => onGoToStep(3)}
+                optional={
+                  <Typography variant="caption">Autres informations</Typography>
+                }
+              >Autres informations
+              </StepLabel>
+              <StepContent>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  <Grid xs={2} sm={4} md={4}>
+                    <Item>
+                      <ImageFileField
+                        variant="outlined"
+                        label="Logo"
+                        imageValue={formik.values.logo}
+                        onChange={(imageFile) =>
+                          formik.setFieldValue('logo', imageFile)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={12} sm={8} md={8}>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Description"
+                        multiline
+                        rows={3}
+                        value={formik.values.description}
+                        onChange={(e) =>
+                          formik.setFieldValue('description', e.target.value)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4}>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="N°FINESS"
+                        value={formik.values.finess}
+                        onChange={(e) =>
+                          formik.setFieldValue('finess', e.target.value)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4}>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="N°SIRET"
+                        value={formik.values.siret}
+                        onChange={(e) =>
+                          formik.setFieldValue('siret', e.target.value)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4}>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Code APE"
+                        value={formik.values.apeCode}
+                        onChange={(e) =>
+                          formik.setFieldValue('apeCode', e.target.value)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                </Grid>
+              </StepContent>
+            </Step>
+          </Stepper>
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Référence"
-                  value={formik.values.number}
-                  disabled
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Raison sociale"
-                  id="name"
-                  value={formik.values.name}
-                  required
-                  onChange={(e) => formik.setFieldValue('name', e.target.value)}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.name && Boolean(formik.errors.name)}
-                  helperText={formik.touched.name && formik.errors.name}
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="SIRET"
-                  value={formik.values.siret}
-                  onChange={(e) =>
-                    formik.setFieldValue('siret', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <ImageFileField
-                  variant="outlined"
-                  label="Logo"
-                  imageValue={formik.values.logo}
-                  onChange={(imageFile) =>
-                    formik.setFieldValue('logo', imageFile)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
-                    Type d'établissement
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="Type d'établissement"
-                    value={formik.values.establishmentType}
-                    onChange={(e) =>
-                      formik.setFieldValue('establishmentType', e.target.value)
-                    }
-                  >
-                    <MenuItem value="">
-                      <em>Choisissez un type</em>
-                    </MenuItem>
-                    {dataData?.establishmentTypes?.map((data, index) => {
-                      return (
-                        <MenuItem key={index} value={data.id}>
-                          {data.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheAutocomplete
-                  options={establishmentsData?.establishments?.nodes?.filter(
-                    (e) => e?.id != idEstablishment,
-                  )}
-                  label="Etablissement parent"
-                  placeholder="Choisissez un établissement"
-                  multiple={false}
-                  value={formik.values.establishmentParent}
-                  onChange={(e, newValue) =>
-                    formik.setFieldValue('establishmentParent', newValue)
-                  }
-                />
-              </Item>
-              <Item>
-                <TheAutocomplete
-                  options={establishmentsData?.establishments?.nodes?.filter(
-                    (e) => e?.id != idEstablishment,
-                  )}
-                  label="Etablissements fils"
-                  placeholder="Choisissez des établissements"
-                  limitTags={3}
-                  value={formik.values.establishmentChilds}
-                  onChange={(e, newValue) =>
-                    formik.setFieldValue('establishmentChilds', newValue)
-                  }
-                />
-              </Item>
-            </Grid>
-            <Grid xs={12} sm={12} md={12}>
-              <Divider variant="middle" />
-            </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-                <Grid xs={12} sm={12} md={12}>
-                  <Item>
-                    <TheTextField
-                      variant="outlined"
-                      label="Adresse"
-                      multiline
-                      rows={2}
-                      value={formik.values.address}
-                      onChange={(e) =>
-                        formik.setFieldValue('address', e.target.value)
-                      }
-                      disabled={loadingPost || loadingPut}
-                    />
-                  </Item>
-                </Grid>
-                <Grid xs={12} sm={12} md={12}>
-                  <Item>
-                    <TheTextField
-                      variant="outlined"
-                      label="Complément"
-                      value={formik.values.additionalAddress}
-                      onChange={(e) =>
-                        formik.setFieldValue(
-                          'additionalAddress',
-                          e.target.value,
-                        )
-                      }
-                      disabled={loadingPost || loadingPut}
-                    />
-                  </Item>
-                </Grid>
-                <Grid xs={5} sm={5} md={5}>
-                  <Item>
-                    <TheTextField
-                      variant="outlined"
-                      label="Code postal"
-                      value={formik.values.zipCode}
-                      onChange={(e) =>
-                        formik.setFieldValue('zipCode', e.target.value)
-                      }
-                      disabled={loadingPost || loadingPut}
-                    />
-                  </Item>
-                </Grid>
-                <Grid xs={7} sm={7} md={7}>
-                  <Item>
-                    <TheTextField
-                      variant="outlined"
-                      label="Ville"
-                      value={formik.values.city}
-                      onChange={(e) =>
-                        formik.setFieldValue('city', e.target.value)
-                      }
-                      disabled={loadingPost || loadingPut}
-                    />
-                  </Item>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Mobile"
-                  value={formik.values.mobile}
-                  onChange={(e) =>
-                    formik.setFieldValue('mobile', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Fixe"
-                  value={formik.values.fix}
-                  onChange={(e) => formik.setFieldValue('fix', e.target.value)}
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Fax"
-                  value={formik.values.fax}
-                  onChange={(e) => formik.setFieldValue('fax', e.target.value)}
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="E-mail"
-                  value={formik.values.email}
-                  onChange={(e) =>
-                    formik.setFieldValue('email', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Site web"
-                  value={formik.values.webSite}
-                  onChange={(e) =>
-                    formik.setFieldValue('webSite', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Autres contacts"
-                  value={formik.values.otherContacts}
-                  onChange={(e) =>
-                    formik.setFieldValue('otherContacts', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={12} sm={12} md={12}>
-              <Divider variant="middle" />
-            </Grid>
-            <Grid xs={12} sm={6} md={6}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Description"
-                  multiline
-                  rows={4}
-                  value={formik.values.description}
-                  onChange={(e) =>
-                    formik.setFieldValue('description', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={12} sm={6} md={6}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Observation"
-                  multiline
-                  rows={4}
-                  value={formik.values.observation}
-                  onChange={(e) =>
-                    formik.setFieldValue('observation', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid xs={12} sm={12} md={12} item="true">
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
-                  to="/online/associations/etablissements/liste"
+                  to="/online/associations/structures/liste"
                   className="no_style"
                 >
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>

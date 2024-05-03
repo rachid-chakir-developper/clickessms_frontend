@@ -170,11 +170,11 @@ export default function ListEstablishments() {
       <Grid item="true" xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
-            to="/online/associations/etablissements/ajouter"
+            to="/online/associations/structures/ajouter"
             className="no_style"
           >
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter un établissement
+              Ajouter une structure
             </Button>
           </Link>
         </Box>
@@ -196,7 +196,7 @@ export default function ListEstablishments() {
             )}
             {establishmentsData?.establishments?.nodes.length < 1 &&
               !loadingEstablishments && (
-                <Alert severity="warning">Aucun établissement trouvé.</Alert>
+                <Alert severity="warning">Aucune structure trouvé.</Alert>
               )}
             {establishmentsData?.establishments?.nodes?.map(
               (establishment, index) => (

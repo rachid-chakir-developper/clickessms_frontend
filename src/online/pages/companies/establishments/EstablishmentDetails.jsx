@@ -218,7 +218,7 @@ const EstablishmentDetailsPage = ({ establishment }) => {
         <Grid item xs={12} sm={12}>
           <Paper sx={{ padding: 2 }}>
             <Typography variant="h6" gutterBottom>
-              Les établissements fils
+              Les structures fils
             </Typography>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
