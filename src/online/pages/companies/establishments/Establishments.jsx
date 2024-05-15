@@ -2,10 +2,11 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import ListEstablishments from './ListEstablishments';
 import AddEstablishment from './AddEstablishment';
 import EstablishmentDetails from './EstablishmentDetails';
+import { Box } from '@mui/material';
 
 export default function Establishments() {
   return (
-    <div className="online">
+    <Box>
       <Routes>
         <Route path={`liste`} element={<ListEstablishments />} />
         <Route path={`ajouter`} element={<AddEstablishment />} />
@@ -19,6 +20,6 @@ export default function Establishments() {
         />
         <Route path="/" element={<Navigate to={`liste`} replace />} />
       </Routes>
-    </div>
+    </Box>
   );
 }

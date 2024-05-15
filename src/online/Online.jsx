@@ -31,6 +31,7 @@ import Activities from './pages/activities/Activities';
 import Qualities from './pages/qualities/Qualities';
 import Administratives from './pages/administratives/Administratives';
 import Companies from './pages/companies/Companies';
+import Finance from './pages/finance/Finance';
 
 const drawerWidth = 280;
 
@@ -179,6 +180,7 @@ export default function Online() {
           <Route path={`activites/*`} element={<Activities />} />
           <Route path={`qualites/*`} element={<Qualities />} />
           <Route path={`administratif/*`} element={<Administratives />} />
+          <Route path={`finance/*`} element={<Finance />} />
           <Route path={`ressources-humaines/*`} element={<Humans />} />
 
           <Route path={`utilisateurs/*`} element={<Users />} />

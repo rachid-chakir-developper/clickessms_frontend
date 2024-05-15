@@ -465,14 +465,82 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
                         disabled={loadingPost || loadingPut}
                       />
                     </Item>
-                  </Grid>
-                  <Grid xs={2} sm={4} md={4}>
                     <Item>
                       <TheDesktopDatePicker
                         label="Date d'admission"
                         value={formik.values.admissionDate}
                         onChange={(date) => formik.setFieldValue('admissionDate', date)}
                         disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4}>
+                    <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
+                      <Grid xs={12} sm={12} md={12}>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Adresse"
+                            multiline
+                            rows={2}
+                            value={formik.values.address}
+                            onChange={(e) =>
+                              formik.setFieldValue('address', e.target.value)
+                            }
+                            disabled={loadingPost || loadingPut}
+                          />
+                        </Item>
+                      </Grid>
+                      <Grid xs={5} sm={5} md={5}>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Code postal"
+                            value={formik.values.zipCode}
+                            onChange={(e) =>
+                              formik.setFieldValue('zipCode', e.target.value)
+                            }
+                            disabled={loadingPost || loadingPut}
+                          />
+                        </Item>
+                      </Grid>
+                      <Grid xs={7} sm={7} md={7}>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Ville"
+                            value={formik.values.city}
+                            onChange={(e) =>
+                              formik.setFieldValue('city', e.target.value)
+                            }
+                            disabled={loadingPost || loadingPut}
+                          />
+                        </Item>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4}>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Numéro de téléphone portable"
+                        value={formik.values.mobile}
+                        onChange={(e) =>
+                          formik.setFieldValue('mobile', e.target.value)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                    <Item>
+                      <TheAutocomplete
+                        options={establishmentsData?.establishments?.nodes}
+                        label="Département financeur"
+                        multiple={false}
+                        placeholder="Choisissez un département"
+                        // value={formik.values.mobile}
+                        // onChange={(e, newValue) =>
+                        //   formik.setFieldValue('mobile', e.target.newValue)
+                        // }
                       />
                     </Item>
                   </Grid>

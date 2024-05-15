@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
-import { forwardRef } from 'react';
+import { forwardRef, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import { useTheme } from '@mui/material/styles';
-import { Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { useSession } from '../../context/SessionProvider';
 // ----------------------------------------------------------------------
 
@@ -29,6 +29,9 @@ const Logo = forwardRef(
     // );
 
     const { user } = useSession();
+    useEffect(() => {
+      if(user?.company?.name) document.title = `ROBERP | ${user?.company?.name}`; // Modifier le titre de la page
+    }, [user]);
 
     const logo = (
       <Box
@@ -98,7 +101,7 @@ const Logo = forwardRef(
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center',
+            alignItems: 'center'
           }}
         >
           {user?.company?.logo ? (
@@ -110,27 +113,28 @@ const Logo = forwardRef(
           ) : (
             logo
           )}
-          <Typography
-            sx={{
-              marginLeft: 1,
-              fontWeight: 600,
-              fontSize: 18,
-              color: color ? color : '',
-            }}
-          >
-            ROBERP
+          <Stack direction="column"  justifyContent="start" sx={{ paddingLeft: 1}}>
+            <Typography
+              sx={{
+                fontWeight: 600,
+                fontSize: 18,
+                color: color ? color : '',
+              }}
+            >
+              ROBERP
+            </Typography>
+            <Typography
+              sx={{
+                marginLeft: 0,
+                fontWeight: 600,
+                fontSize: 12,
+                color: color ? color : '',
+              }}
+            >
+              {user?.company?.name}
+            </Typography>
             
-          <Typography
-            sx={{
-              marginLeft: 0,
-              fontWeight: 600,
-              fontSize: 12,
-              color: color ? color : '',
-            }}
-          >
-            {user?.company?.name}
-          </Typography>
-          </Typography>
+          </Stack>
         </Box>
       </Link>
     );

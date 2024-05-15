@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import BeneficiaryAbsences from './beneficiary-absences/BeneficiaryAbsences';
 import Events from './events/Events';
 
@@ -5,7 +6,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 
 export default function Activities() {
   return (
-    <div className="activites">
+    <Box>
       <Routes>
         <Route path={`evenements/*`} element={<Events />} />
         <Route
@@ -14,6 +15,6 @@ export default function Activities() {
         />
         <Route path="/" element={<Navigate to={`evenements`} replace />} />
       </Routes>
-    </div>
+    </Box>
   );
 }

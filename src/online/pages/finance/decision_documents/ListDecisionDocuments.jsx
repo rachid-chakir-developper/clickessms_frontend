@@ -3,20 +3,19 @@ import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Alert, Button, Stack } from '@mui/material';
-import EstablishmentItemCard from './EstablishmentItemCard';
-import { useMutation } from '@apollo/client';
+import DecisionDocumentItemCard from './DecisionDocumentItemCard';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { Add } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import {
-  DELETE_ESTABLISHMENT,
-  PUT_ESTABLISHMENT_STATE,
-} from '../../../../_shared/graphql/mutations/EstablishmentMutations';
-import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
+  DELETE_DECISION_DOCUMENT,
+  PUT_DECISION_DOCUMENT_STATE,
+} from '../../../../_shared/graphql/mutations/DecisionDocumentMutations';
+import { GET_DECISION_DOCUMENTS } from '../../../../_shared/graphql/queries/DecisionDocumentQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import EstablishmentFilter from './EstablishmentFilter';
-import { useLazyQuery } from '@apollo/client';
+import DecisionDocumentFilter from './DecisionDocumentFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
 
 const Item = styled(Stack)(({ theme }) => ({
@@ -27,40 +26,35 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function ListEstablishments() {
+export default function ListDecisionDocuments() {
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
-  const [establishmentFilter, setEstablishmentFilter] = React.useState(null);
+  const [decisionDocumentFilter, setDecisionDocumentFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
-    setEstablishmentFilter(newFilter);
+    setDecisionDocumentFilter(newFilter);
   };
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const [
-    getEstablishments,
+    getDecisionDocuments,
     {
-      loading: loadingEstablishments,
-      data: establishmentsData,
-      error: establishmentsError,
-      fetchMore: fetchMoreEstablishments,
+      loading: loadingDecisionDocuments,
+      data: decisionDocumentsData,
+      error: decisionDocumentsError,
+      fetchMore: fetchMoreDecisionDocuments,
     },
-  ] = useLazyQuery(GET_ESTABLISHMENTS, {
-    variables: {
-      establishmentFilter,
-      page: paginator.page,
-      limit: paginator.limit,
-    },
+  ] = useLazyQuery(GET_DECISION_DOCUMENTS, {
+    variables: { decisionDocumentFilter, page: paginator.page, limit: paginator.limit },
   });
 
   React.useEffect(() => {
-    getEstablishments();
-  }, [establishmentFilter, paginator]);
-
-  const [deleteEstablishment, { loading: loadingDelete }] = useMutation(
-    DELETE_ESTABLISHMENT,
+    getDecisionDocuments();
+  }, [decisionDocumentFilter, paginator]);
+  const [deleteDecisionDocument, { loading: loadingDelete }] = useMutation(
+    DELETE_DECISION_DOCUMENT,
     {
       onCompleted: (datas) => {
-        if (datas.deleteEstablishment.deleted) {
+        if (datas.deleteDecisionDocument.deleted) {
           setNotifyAlert({
             isOpen: true,
             message: 'Supprimé avec succès',
@@ -69,32 +63,31 @@ export default function ListEstablishments() {
         } else {
           setNotifyAlert({
             isOpen: true,
-            message: `Non Supprimé ! ${datas.deleteEstablishment.message}.`,
+            message: `Non Supprimé ! ${datas.deleteDecisionDocument.message}.`,
             type: 'error',
           });
         }
       },
-      update(cache, { data: { deleteEstablishment } }) {
-        console.log('Updating cache after deletion:', deleteEstablishment);
+      update(cache, { data: { deleteDecisionDocument } }) {
+        console.log('Updating cache after deletion:', deleteDecisionDocument);
 
-        const deletedEstablishmentId = deleteEstablishment.id;
+        const deletedDecisionDocumentId = deleteDecisionDocument.id;
 
         cache.modify({
           fields: {
-            establishments(
-              existingEstablishments = { totalCount: 0, nodes: [] },
+            decisionDocuments(
+              existingDecisionDocuments = { totalCount: 0, nodes: [] },
               { readField },
             ) {
-              const updatedEstablishments = existingEstablishments.nodes.filter(
-                (establishment) =>
-                  readField('id', establishment) !== deletedEstablishmentId,
+              const updatedDecisionDocuments = existingDecisionDocuments.nodes.filter(
+                (decisionDocument) => readField('id', decisionDocument) !== deletedDecisionDocumentId,
               );
 
-              console.log('Updated establishments:', updatedEstablishments);
+              console.log('Updated decisionDocuments:', updatedDecisionDocuments);
 
               return {
-                totalCount: existingEstablishments.totalCount - 1,
-                nodes: updatedEstablishments,
+                totalCount: existingDecisionDocuments.totalCount - 1,
+                nodes: updatedDecisionDocuments,
               };
             },
           },
@@ -111,23 +104,22 @@ export default function ListEstablishments() {
     },
   );
 
-  const onDeleteEstablishment = (id) => {
+  const onDeleteDecisionDocument = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment supprimer ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        deleteEstablishment({ variables: { id: id } });
+        deleteDecisionDocument({ variables: { id: id } });
       },
     });
   };
-
-  const [updateEstablishmentState, { loading: loadingPutState }] = useMutation(
-    PUT_ESTABLISHMENT_STATE,
+  const [updateDecisionDocumentState, { loading: loadingPutState }] = useMutation(
+    PUT_DECISION_DOCUMENT_STATE,
     {
       onCompleted: (datas) => {
-        if (datas.updateEstablishmentState.done) {
+        if (datas.updateDecisionDocumentState.done) {
           setNotifyAlert({
             isOpen: true,
             message: 'Changée avec succès',
@@ -136,12 +128,12 @@ export default function ListEstablishments() {
         } else {
           setNotifyAlert({
             isOpen: true,
-            message: `Non changée ! ${datas.updateEstablishmentState.message}.`,
+            message: `Non changée ! ${datas.updateDecisionDocumentState.message}.`,
             type: 'error',
           });
         }
       },
-      refetchQueries: [{ query: GET_ESTABLISHMENTS }],
+      refetchQueries: [{ query: GET_DECISION_DOCUMENTS }],
       onError: (err) => {
         console.log(err);
         setNotifyAlert({
@@ -153,34 +145,30 @@ export default function ListEstablishments() {
     },
   );
 
-  const onUpdateEstablishmentState = (id) => {
+  const onUpdateDecisionDocumentState = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment changer ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        updateEstablishmentState({ variables: { id: id } });
+        updateDecisionDocumentState({ variables: { id: id } });
       },
     });
   };
-
   return (
     <Grid container spacing={2}>
       <Grid item="true" xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
-          <Link
-            to="/online/associations/structures/ajouter"
-            className="no_style"
-          >
+          <Link to="/online/finance/decisions/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter une structure
+              Ajouter une décision
             </Button>
           </Link>
         </Box>
       </Grid>
       <Grid item="true" xs={12}>
-        <EstablishmentFilter onFilterChange={handleFilterChange} />
+        <DecisionDocumentFilter onFilterChange={handleFilterChange} />
       </Grid>
       <Grid item="true" xs={12}>
         <Box sx={{ flexGrow: 1 }}>
@@ -189,34 +177,31 @@ export default function ListEstablishments() {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            {loadingEstablishments && (
+            {loadingDecisionDocuments && (
               <Grid key={'pgrs'} item xs={2} sm={4} md={3}>
                 <ProgressService type="mediaCard" />
               </Grid>
             )}
-            {establishmentsData?.establishments?.nodes.length < 1 &&
-              !loadingEstablishments && (
-                <Alert severity="warning">Aucune structure trouvé.</Alert>
-              )}
-            {establishmentsData?.establishments?.nodes?.map(
-              (establishment, index) => (
-                <Grid xs={12} sm={6} md={4} key={index}>
-                  <Item>
-                    <EstablishmentItemCard
-                      establishment={establishment}
-                      onDeleteEstablishment={onDeleteEstablishment}
-                      onUpdateEstablishmentState={onUpdateEstablishmentState}
-                    />
-                  </Item>
-                </Grid>
-              ),
+            {decisionDocumentsData?.decisionDocuments?.nodes?.length < 1 && !loadingDecisionDocuments && (
+              <Alert severity="warning">Aucune décision trouvé.</Alert>
             )}
+            {decisionDocumentsData?.decisionDocuments?.nodes?.map((decisionDocument, index) => (
+              <Grid xs={2} sm={4} md={3} key={index}>
+                <Item>
+                  <DecisionDocumentItemCard
+                    decisionDocument={decisionDocument}
+                    onDeleteDecisionDocument={onDeleteDecisionDocument}
+                    onUpdateDecisionDocumentState={onUpdateDecisionDocumentState}
+                  />
+                </Item>
+              </Grid>
+            ))}
           </Grid>
         </Box>
       </Grid>
       <Grid item="true" xs={12}>
         <PaginationControlled
-          totalItems={establishmentsData?.establishments?.totalCount} // Nombre total d'éléments
+          totalItems={decisionDocumentsData?.decisionDocuments?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
           currentPage={1}
           onChange={(page) => setPaginator({ ...paginator, page })}

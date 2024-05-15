@@ -17,7 +17,11 @@ import Tooltip from '@mui/material/Tooltip';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
-import { getFormatDate } from '../../../../_shared/tools/functions';
+import {
+  getFormatDate,
+  getStatusLabel,
+  getStatusLebelColor,
+} from '../../../../_shared/tools/functions';
 import {
   Article,
   Delete,
@@ -27,6 +31,7 @@ import {
   MoreVert,
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
+import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
@@ -99,13 +104,19 @@ const headCells = [
     id: 'startingDateTime',
     numeric: false,
     disablePadding: false,
-    label: 'Date de début',
+    label: 'Date',
   },
   {
     id: 'beneficiary',
     numeric: false,
     disablePadding: false,
     label: 'Bénéficiaires',
+  },
+  {
+    id: 'reasons',
+    numeric: false,
+    disablePadding: false,
+    label: 'Motifs',
   },
   {
     id: 'employee',
@@ -209,7 +220,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les événements / transmissions
+          Les absences
         </Typography>
       )}
 
@@ -230,22 +241,17 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListEvents({
+export default function TableListBeneficiaryAbsences({
   loading,
   rows,
-  onDeleteEvent,
-  onUpdateEventState,
+  onDeleteBeneficiaryAbsence
 }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  React.useEffect(() => {
-    console.log(loading, rows);
-  }, [loading, rows]);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -336,7 +342,9 @@ export default function TableListEvents({
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
                   <StyledTableCell colSpan="7">
-                    <Alert severity="warning">Aucun événement trouvé.</Alert>
+                    <Alert severity="warning">
+                        Aucune absence trouvé.
+                    </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
               )}
@@ -394,27 +402,44 @@ export default function TableListEvents({
                       {row.title}
                     </StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="left"> 
+                    <StyledTableCell align="left">
                       <Stack direction="row" spacing={1}>
-                          {row?.beneficiaries?.map((beneficiarie, index) => {
+                        {row?.beneficiaries?.map((beneficiarie, index) => {
+                          return (
+                            <Chip
+                              key={index}
+                              avatar={
+                                <Avatar
+                                  alt={beneficiarie?.beneficiary?.firstName}
+                                  src={
+                                    beneficiarie?.beneficiary?.photo
+                                      ? beneficiarie?.beneficiary?.photo
+                                      : '/default-placeholder.jpg'
+                                  }
+                                />
+                              }
+                              label={beneficiarie?.beneficiary?.firstName}
+                              variant="outlined"
+                            />
+                          );
+                        })}
+                      </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                        <Stack direction="row" spacing={1}>
+                            {row?.reasons?.map((absenceReason, index) => {
                             return (
-                              <Chip
-                                key={index}
-                                avatar={
-                                  <Avatar
-                                    alt={beneficiarie?.beneficiary?.firstName}
-                                    src={
-                                      beneficiarie?.beneficiary?.photo
-                                        ? beneficiarie?.beneficiary?.photo
-                                        : '/default-placeholder.jpg'
-                                    }
-                                  />
-                                }
-                                label={beneficiarie?.beneficiary?.firstName}
-                                variant="outlined"
-                              />
+                                <Chip
+                                    key={index}
+                                    label={absenceReason?.name}
+                                    variant="outlined"
+                                />
                             );
-                          })}
+                            })}
+                            {row?.otherReasons && row?.otherReasons !== '' && <Chip
+                                label={row?.otherReasons}
+                                variant="filled"
+                            />}
                         </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left"> 
@@ -453,7 +478,7 @@ export default function TableListEvents({
                         }}
                       >
                         <Link
-                          to={`/online/activites/evenements/details/${row?.id}`}
+                          to={`/online/activites/absences-beneficiaires/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -471,7 +496,7 @@ export default function TableListEvents({
                           Bibliothèque
                         </MenuItem>
                         <Link
-                          to={`/online/activites/evenements/modifier/${row?.id}`}
+                          to={`/online/activites/absences-beneficiaires/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -481,7 +506,7 @@ export default function TableListEvents({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteEvent(row?.id);
+                            onDeleteBeneficiaryAbsence(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

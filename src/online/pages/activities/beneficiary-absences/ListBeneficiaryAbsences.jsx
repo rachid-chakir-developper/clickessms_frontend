@@ -14,6 +14,7 @@ import { GET_BENEFICIARY_ABSENCES } from '../../../../_shared/graphql/queries/Be
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import BeneficiaryAbsenceFilter from './BeneficiaryAbsenceFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
+import TableListBeneficiaryAbsences from './TableListBeneficiaryAbsences';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -142,7 +143,7 @@ export default function ListBeneficiaryAbsences() {
       <Grid item="true" xs={12}>
         <BeneficiaryAbsenceFilter onFilterChange={handleFilterChange} />
       </Grid>
-      <Grid item="true" xs={12}>
+      {/* <Grid item="true" xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -172,6 +173,13 @@ export default function ListBeneficiaryAbsences() {
             )}
           </Grid>
         </Box>
+      </Grid> */}
+      <Grid item="true" xs={12}>
+        <TableListBeneficiaryAbsences
+          loading={loadingBeneficiaryAbsences}
+          rows={beneficiaryAbsencesData?.beneficiaryAbsences?.nodes || []}
+          onDeleteBeneficiaryAbsence={onDeleteBeneficiaryAbsence}
+        />
       </Grid>
       <Grid item="true" xs={12}>
         <PaginationControlled

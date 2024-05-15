@@ -22,7 +22,6 @@ export const GET_DATAS_ESTABLISHMENT = gql`
   ${DATA_BASIC_INFOS}
 `;
 
-
 export const GET_DATAS_BENEFICIARY = gql`
   query {
     humanGenders: datas(typeData: "HumanGender") {

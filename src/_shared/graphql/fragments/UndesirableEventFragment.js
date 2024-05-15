@@ -30,6 +30,9 @@ export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
     establishments {
       ...UndesirableEventEstablishmentTypeFragment
     }
+    employee {
+      ...EmployeeBasicInfosFragment
+    }
     folder {
       id
       number
@@ -37,6 +40,7 @@ export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
     }
   }
   ${UNDESIRABLE_EVENT_ESTABLISHMENT_DETAILS}
+  ${EMPLOYEE_BASIC_INFOS}
 `;
 
 export const UNDESIRABLE_EVENT_BENEFICIARY_DETAILS = gql`
@@ -88,9 +92,6 @@ export const UNDESIRABLE_EVENT_DETAILS = gql`
       ...UndesirableEventNotifiedPersonTypeFragment
     }
     otherNotifiedPersons
-    employee {
-      ...EmployeeBasicInfosFragment
-    }
     normalTypes {
       id
       name
@@ -108,7 +109,6 @@ export const UNDESIRABLE_EVENT_DETAILS = gql`
   ${UNDESIRABLE_EVENT_EMPLOYEE_DETAILS}
   ${UNDESIRABLE_EVENT_PERSON_NOTIFIED_DETAILS}
   ${UNDESIRABLE_EVENT_BENEFICIARY_DETAILS}
-  ${EMPLOYEE_BASIC_INFOS}
 `;
 
 export const UNDESIRABLE_EVENT_RECAP_DETAILS = gql`
@@ -130,9 +130,6 @@ export const UNDESIRABLE_EVENT_RECAP_DETAILS = gql`
       ...UndesirableEventNotifiedPersonTypeFragment
     }
     otherNotifiedPersons
-    employee {
-      ...EmployeeBasicInfosFragment
-    }
     normalTypes {
       id
       name
@@ -150,5 +147,4 @@ export const UNDESIRABLE_EVENT_RECAP_DETAILS = gql`
   ${UNDESIRABLE_EVENT_ESTABLISHMENT_DETAILS}
   ${UNDESIRABLE_EVENT_BENEFICIARY_DETAILS}
   ${UNDESIRABLE_EVENT_PERSON_NOTIFIED_DETAILS}
-  ${EMPLOYEE_BASIC_INFOS}
 `;

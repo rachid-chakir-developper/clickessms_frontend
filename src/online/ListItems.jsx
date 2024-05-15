@@ -44,6 +44,8 @@ import {
   Savings,
   Work,
   PriceChange,
+  VolunteerActivism,
+  Money,
 } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import { useFeedBacks } from '../_shared/context/feedbacks/FeedBacksProvider';
@@ -667,6 +669,14 @@ function MoreItems({ open }) {
               </ListItemIcon>
               <ListItemText primary="Budget" />
             </ListItemButton>
+            <StyledNavLink to="/online/finance/decisions">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <Money />
+                </ListItemIcon>
+                <ListItemText primary="Notifications" />
+              </ListItemButton>
+            </StyledNavLink>
           </List>
         </Collapse>
       </ListItem>

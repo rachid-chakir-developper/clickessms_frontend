@@ -113,6 +113,12 @@ const headCells = [
     label: 'Etablissements',
   },
   {
+    id: 'employee',
+    numeric: false,
+    disablePadding: false,
+    label: 'Déclaré par',
+  },
+  {
     id: 'status',
     numeric: true,
     disablePadding: false,
@@ -419,6 +425,24 @@ export default function TableListUndesirableEvents({
                           );
                         })}
                       </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="left"> 
+                      <Stack direction="row" spacing={1}>
+                        <Chip
+                          avatar={
+                            <Avatar
+                              alt={row?.employee?.firstName}
+                              src={
+                                row?.employee?.photo
+                                  ? row?.employee?.photo
+                                  : '/default-placeholder.jpg'
+                              }
+                            />
+                          }
+                          label={row?.employee?.firstName}
+                          variant="outlined"
+                        />
+                        </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <AppLabel color={getStatusLebelColor(row?.status)}>

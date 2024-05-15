@@ -51,9 +51,9 @@ export default function ListSettings() {
                   fontWeight="medium"
                   sx={{ mb: 1 }}
                 >
-                  Les informations de l'entreprise
+                  Les informations de l'association
                 </Typography>
-                <Link to="/online/parametres/entreprise" className="no_style">
+                <Link to="/online/parametres/association" className="no_style">
                   <Button variant="outlined">Modifier</Button>
                 </Link>
               </Stack>
