@@ -102,7 +102,7 @@ function MainListItems({ open }) {
               <DashboardIcon />{' '}
             </ListItemIcon>
             <ListItemText
-              primary={'Dashboard'}
+              primary={'Tableau de bord'}
               sx={{ opacity: open ? 1 : 0 }}
             />
           </ListItemButton>
@@ -215,6 +215,14 @@ function MainListItems({ open }) {
           unmountOnExit
         >
           <List component="div" disablePadding>
+            <StyledNavLink to="/online/activites/dashboard">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <DashboardIcon />
+                </ListItemIcon>
+                <ListItemText primary="Tableau de bord" />
+              </ListItemButton>
+            </StyledNavLink>
             <StyledNavLink to="/online/ressources-humaines/beneficiaires">
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemIcon>
@@ -383,6 +391,14 @@ function MainListItems({ open }) {
                   <Groups3 />
                 </ListItemIcon>
                 <ListItemText primary="Partenaires" />
+              </ListItemButton>
+            </StyledNavLink>
+            <StyledNavLink to="/online/partenariats/financeurs">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <Groups3 />
+                </ListItemIcon>
+                <ListItemText primary="Financeurs" />
               </ListItemButton>
             </StyledNavLink>
             <StyledNavLink to="/online/achats/fournisseurs">

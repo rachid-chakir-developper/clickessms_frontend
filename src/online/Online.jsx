@@ -32,6 +32,7 @@ import Qualities from './pages/qualities/Qualities';
 import Administratives from './pages/administratives/Administratives';
 import Companies from './pages/companies/Companies';
 import Finance from './pages/finance/Finance';
+import SpeedDialTooltipOpen from '../_shared/components/app/SpeedDialTooltipOpen';
 
 const drawerWidth = 280;
 
@@ -189,6 +190,7 @@ export default function Online() {
           <Route path={`account/*`} element={<Account />} />
         </Routes>
       </Box>
+        <SpeedDialTooltipOpen />
     </Box>
   );
 }

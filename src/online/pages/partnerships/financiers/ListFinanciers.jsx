@@ -3,21 +3,21 @@ import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Alert, Button, Stack } from '@mui/material';
-import DecisionDocumentItemCard from './DecisionDocumentItemCard';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import FinancierItemCard from './FinancierItemCard';
+import { useMutation } from '@apollo/client';
 import { Add } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import {
-  DELETE_DECISION_DOCUMENT,
-  PUT_DECISION_DOCUMENT_STATE,
-} from '../../../../_shared/graphql/mutations/DecisionDocumentMutations';
-import { GET_DECISION_DOCUMENTS } from '../../../../_shared/graphql/queries/DecisionDocumentQueries';
+  DELETE_FINANCIER,
+  PUT_FINANCIER_STATE,
+} from '../../../../_shared/graphql/mutations/FinancierMutations';
+import { GET_FINANCIERS } from '../../../../_shared/graphql/queries/FinancierQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import DecisionDocumentFilter from './DecisionDocumentFilter';
+import FinancierFilter from './FinancierFilter';
+import { useLazyQuery } from '@apollo/client';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
-import TableListDecisionDocuments from './TableListDecisionDocuments';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -27,35 +27,36 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function ListDecisionDocuments() {
+export default function ListFinanciers() {
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
-  const [decisionDocumentFilter, setDecisionDocumentFilter] = React.useState(null);
+  const [financierFilter, setFinancierFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
-    setDecisionDocumentFilter(newFilter);
+    setFinancierFilter(newFilter);
   };
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const [
-    getDecisionDocuments,
+    getFinanciers,
     {
-      loading: loadingDecisionDocuments,
-      data: decisionDocumentsData,
-      error: decisionDocumentsError,
-      fetchMore: fetchMoreDecisionDocuments,
+      loading: loadingFinanciers,
+      data: financiersData,
+      error: financiersError,
+      fetchMore: fetchMoreFinanciers,
     },
-  ] = useLazyQuery(GET_DECISION_DOCUMENTS, {
-    variables: { decisionDocumentFilter, page: paginator.page, limit: paginator.limit },
+  ] = useLazyQuery(GET_FINANCIERS, {
+    variables: { financierFilter, page: paginator.page, limit: paginator.limit },
   });
 
   React.useEffect(() => {
-    getDecisionDocuments();
-  }, [decisionDocumentFilter, paginator]);
-  const [deleteDecisionDocument, { loading: loadingDelete }] = useMutation(
-    DELETE_DECISION_DOCUMENT,
+    getFinanciers();
+  }, [financierFilter, paginator]);
+
+  const [deleteFinancier, { loading: loadingDelete }] = useMutation(
+    DELETE_FINANCIER,
     {
       onCompleted: (datas) => {
-        if (datas.deleteDecisionDocument.deleted) {
+        if (datas.deleteFinancier.deleted) {
           setNotifyAlert({
             isOpen: true,
             message: 'Supprimé avec succès',
@@ -64,31 +65,31 @@ export default function ListDecisionDocuments() {
         } else {
           setNotifyAlert({
             isOpen: true,
-            message: `Non Supprimé ! ${datas.deleteDecisionDocument.message}.`,
+            message: `Non Supprimé ! ${datas.deleteFinancier.message}.`,
             type: 'error',
           });
         }
       },
-      update(cache, { data: { deleteDecisionDocument } }) {
-        console.log('Updating cache after deletion:', deleteDecisionDocument);
+      update(cache, { data: { deleteFinancier } }) {
+        console.log('Updating cache after deletion:', deleteFinancier);
 
-        const deletedDecisionDocumentId = deleteDecisionDocument.id;
+        const deletedFinancierId = deleteFinancier.id;
 
         cache.modify({
           fields: {
-            decisionDocuments(
-              existingDecisionDocuments = { totalCount: 0, nodes: [] },
+            financiers(
+              existingFinanciers = { totalCount: 0, nodes: [] },
               { readField },
             ) {
-              const updatedDecisionDocuments = existingDecisionDocuments.nodes.filter(
-                (decisionDocument) => readField('id', decisionDocument) !== deletedDecisionDocumentId,
+              const updatedFinanciers = existingFinanciers.nodes.filter(
+                (financier) => readField('id', financier) !== deletedFinancierId,
               );
 
-              console.log('Updated decisionDocuments:', updatedDecisionDocuments);
+              console.log('Updated financiers:', updatedFinanciers);
 
               return {
-                totalCount: existingDecisionDocuments.totalCount - 1,
-                nodes: updatedDecisionDocuments,
+                totalCount: existingFinanciers.totalCount - 1,
+                nodes: updatedFinanciers,
               };
             },
           },
@@ -105,22 +106,23 @@ export default function ListDecisionDocuments() {
     },
   );
 
-  const onDeleteDecisionDocument = (id) => {
+  const onDeleteFinancier = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment supprimer ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        deleteDecisionDocument({ variables: { id: id } });
+        deleteFinancier({ variables: { id: id } });
       },
     });
   };
-  const [updateDecisionDocumentState, { loading: loadingPutState }] = useMutation(
-    PUT_DECISION_DOCUMENT_STATE,
+
+  const [updateFinancierState, { loading: loadingPutState }] = useMutation(
+    PUT_FINANCIER_STATE,
     {
       onCompleted: (datas) => {
-        if (datas.updateDecisionDocumentState.done) {
+        if (datas.updateFinancierState.done) {
           setNotifyAlert({
             isOpen: true,
             message: 'Changée avec succès',
@@ -129,12 +131,12 @@ export default function ListDecisionDocuments() {
         } else {
           setNotifyAlert({
             isOpen: true,
-            message: `Non changée ! ${datas.updateDecisionDocumentState.message}.`,
+            message: `Non changée ! ${datas.updateFinancierState.message}.`,
             type: 'error',
           });
         }
       },
-      refetchQueries: [{ query: GET_DECISION_DOCUMENTS }],
+      refetchQueries: [{ query: GET_FINANCIERS }],
       onError: (err) => {
         console.log(err);
         setNotifyAlert({
@@ -146,70 +148,65 @@ export default function ListDecisionDocuments() {
     },
   );
 
-  const onUpdateDecisionDocumentState = (id) => {
+  const onUpdateFinancierState = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment changer ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        updateDecisionDocumentState({ variables: { id: id } });
+        updateFinancierState({ variables: { id: id } });
       },
     });
   };
+
   return (
     <Grid container spacing={2}>
       <Grid item="true" xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
-          <Link to="/online/finance/decisions/ajouter" className="no_style">
+          <Link to="/online/partenariats/financeurs/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter une décision
+              Ajouter un financeur
             </Button>
           </Link>
         </Box>
       </Grid>
       <Grid item="true" xs={12}>
-        <DecisionDocumentFilter onFilterChange={handleFilterChange} />
+        <FinancierFilter onFilterChange={handleFilterChange} />
       </Grid>
-      {/* <Grid item="true" xs={12}>
+      <Grid item="true" xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            {loadingDecisionDocuments && (
+            {loadingFinanciers && (
               <Grid key={'pgrs'} item xs={2} sm={4} md={3}>
                 <ProgressService type="mediaCard" />
               </Grid>
             )}
-            {decisionDocumentsData?.decisionDocuments?.nodes?.length < 1 && !loadingDecisionDocuments && (
-              <Alert severity="warning">Aucune décision trouvé.</Alert>
-            )}
-            {decisionDocumentsData?.decisionDocuments?.nodes?.map((decisionDocument, index) => (
+            {financiersData?.financiers?.nodes.length < 1 &&
+              !loadingFinanciers && (
+                <Alert severity="warning">Aucun financeur trouvé.</Alert>
+              )}
+            {financiersData?.financiers?.nodes?.map((financier, index) => (
               <Grid xs={2} sm={4} md={3} key={index}>
                 <Item>
-                  <DecisionDocumentItemCard
-                    decisionDocument={decisionDocument}
-                    onDeleteDecisionDocument={onDeleteDecisionDocument}
-                    onUpdateDecisionDocumentState={onUpdateDecisionDocumentState}
+                  <FinancierItemCard
+                    financier={financier}
+                    onDeleteFinancier={onDeleteFinancier}
+                    onUpdateFinancierState={onUpdateFinancierState}
                   />
                 </Item>
               </Grid>
             ))}
           </Grid>
         </Box>
-      </Grid> */}
-      <Grid item="true" xs={12}>
-        <TableListDecisionDocuments
-          loading={loadingDecisionDocuments}
-          rows={decisionDocumentsData?.decisionDocuments?.nodes || []}
-          onDeleteDecisionDocument={onDeleteDecisionDocument}
-        />
       </Grid>
       <Grid item="true" xs={12}>
         <PaginationControlled
-          totalItems={decisionDocumentsData?.decisionDocuments?.totalCount} // Nombre total d'éléments
+          totalItems={financiersData?.financiers?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
           currentPage={1}
           onChange={(page) => setPaginator({ ...paginator, page })}

@@ -13,6 +13,7 @@ import {
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { getFormatDate } from '../../../../_shared/tools/functions';
 
 export default function DecisionDocumentItemCard({
   decisionDocument,
@@ -50,16 +51,13 @@ export default function DecisionDocumentItemCard({
           <Typography color="text.primary" fontWeight="medium" fontSize={18}>
             {decisionDocument?.name}
           </Typography>
-          <Typography color="text.primary" fontWeight="regular" fontSize={14}>
-            Matricule : <b>{decisionDocument?.registrationNumber}</b>
-          </Typography>
           <Typography
             component="div"
             variant="caption"
             color="text.secondary"
             fontWeight="regular"
           >
-            {`${decisionDocument?.designation}`}
+            {`${getFormatDate(decisionDocument?.decisionDate)}`}
           </Typography>
         </Stack>
         <Stack direction="row" alignItems="center" spacing={1.5}>

@@ -95,34 +95,22 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'title',
+    id: 'name',
     numeric: false,
     disablePadding: true,
     label: 'Titre',
   },
   {
-    id: 'startingDateTime',
+    id: 'decisionDate',
     numeric: false,
     disablePadding: false,
     label: 'Date',
   },
   {
-    id: 'beneficiary',
+    id: 'receptionDateTime',
     numeric: false,
     disablePadding: false,
-    label: 'Bénéficiaires',
-  },
-  {
-    id: 'reasons',
-    numeric: false,
-    disablePadding: false,
-    label: 'Motifs',
-  },
-  {
-    id: 'employee',
-    numeric: false,
-    disablePadding: false,
-    label: 'Déclaré par',
+    label: 'Date de réception',
   },
   {
     id: 'action',
@@ -220,7 +208,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les absences
+          Les décisions
         </Typography>
       )}
 
@@ -241,10 +229,10 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListBeneficiaryAbsences({
+export default function TableListDecisionDocuments({
   loading,
   rows,
-  onDeleteBeneficiaryAbsence
+  onDeleteDecisionDocument
 }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -343,7 +331,7 @@ export default function TableListBeneficiaryAbsences({
                 <StyledTableRow>
                   <StyledTableCell colSpan="7">
                     <Alert severity="warning">
-                        Aucune absence trouvé.
+                        Aucune décision trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -399,67 +387,10 @@ export default function TableListBeneficiaryAbsences({
                       scope="row"
                       padding="none"
                     >
-                      {row.title}
+                      {row.name}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" spacing={1}>
-                        {row?.beneficiaries?.map((beneficiarie, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={beneficiarie?.beneficiary?.firstName}
-                                  src={
-                                    beneficiarie?.beneficiary?.photo
-                                      ? beneficiarie?.beneficiary?.photo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={beneficiarie?.beneficiary?.firstName}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                        <Stack direction="row" spacing={1}>
-                            {row?.reasons?.map((absenceReason, index) => {
-                            return (
-                                <Chip
-                                    key={index}
-                                    label={absenceReason?.name}
-                                    variant="outlined"
-                                />
-                            );
-                            })}
-                            {row?.otherReasons && row?.otherReasons !== '' && <Chip
-                                label={row?.otherReasons}
-                                variant="filled"
-                            />}
-                        </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left"> 
-                      <Stack direction="row" spacing={1}>
-                        <Chip
-                          avatar={
-                            <Avatar
-                              alt={row?.employee?.firstName}
-                              src={
-                                row?.employee?.photo
-                                  ? row?.employee?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={row?.employee?.firstName}
-                          variant="outlined"
-                        />
-                        </Stack>
-                    </StyledTableCell>
+                    <StyledTableCell align="left">{`${getFormatDate(row?.decisionDate)}`}</StyledTableCell>
+                    <StyledTableCell align="left">{`${getFormatDate(row?.receptionDateTime)}`}</StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -478,7 +409,7 @@ export default function TableListBeneficiaryAbsences({
                         }}
                       >
                         <Link
-                          to={`/online/activites/absences-beneficiaires/details/${row?.id}`}
+                          to={`/online/finance/decisions/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -496,7 +427,7 @@ export default function TableListBeneficiaryAbsences({
                           Bibliothèque
                         </MenuItem>
                         <Link
-                          to={`/online/activites/absences-beneficiaires/modifier/${row?.id}`}
+                          to={`/online/finance/decisions/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -506,7 +437,7 @@ export default function TableListBeneficiaryAbsences({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteBeneficiaryAbsence(row?.id);
+                            onDeleteDecisionDocument(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

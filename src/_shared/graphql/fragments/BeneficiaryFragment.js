@@ -3,6 +3,7 @@
 import { gql } from '@apollo/client';
 import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 import { EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
+import { FINANCIER_BASIC_INFOS } from './FinancierFragment';
 
 export const BENEFICIARY_PHONE_INFOS = gql`
   fragment BeneficiaryPhoneInfosFragment on BeneficiaryType {
@@ -56,9 +57,13 @@ export const BENEFICIARY_ADMISSION_DETAILS = gql`
       id
       name
     }
+    financier{
+      ...FinancierBasicInfosFragment
+    }
     startingDate
     endingDate
   }
+  ${FINANCIER_BASIC_INFOS}
 `;
 
 export const BENEFICIARY_ENTRY_DETAILS = gql`

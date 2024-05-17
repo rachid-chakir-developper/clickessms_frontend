@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { Stack, Tooltip } from '@mui/material';
+import { Avatar, MenuItem, Popover, Stack, Tooltip } from '@mui/material';
 import {
   Delete,
   PauseRounded,
@@ -11,8 +11,10 @@ import {
   Edit,
   Folder,
   AccountBox,
+  MoreVert,
+  Article,
 } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
 export default function BeneficiaryItemCard({
@@ -21,6 +23,15 @@ export default function BeneficiaryItemCard({
   onUpdateBeneficiaryState,
 }) {
   //   const theme = useTheme();
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleOpenMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
     setDialogListLibrary({
@@ -31,98 +42,135 @@ export default function BeneficiaryItemCard({
       },
     });
   };
+  const onGoToDetails = ()=>{
+    navigate(`/online/ressources-humaines/beneficiaires/details/${beneficiary?.id}`);
+  }
   return (
     <Card
       variant="outlined"
-      sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2 }}
+      sx={{ position: 'relative', p: 1}}
     >
-      <Tooltip title={`${beneficiary?.firstName} ${beneficiary?.lastName}`}>
-        <CardMedia
-          component="img"
-          width="100"
-          height="100"
-          alt={`${beneficiary?.firstName} ${beneficiary?.lastName}`}
-          src={
-            beneficiary?.photo ? beneficiary?.photo : '/default-placeholder.jpg'
-          }
-          sx={{ borderRadius: 0.6, height: 100, width: 100 }}
-        />
+      <Tooltip title={beneficiary?.name}>
+        <Stack direction="row"
+        sx={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 2, cursor:'pointer' }}
+        onClick={onGoToDetails}>
+          <CardMedia
+            component="img"
+            width="100"
+            height="100"
+            alt={beneficiary?.name}
+            src={
+              beneficiary?.photo
+                ? beneficiary?.photo
+                : '/default-placeholder.jpg'
+            }
+            sx={{ borderRadius: 0.6, height: 100, width: 100 }}
+          />
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Stack direction="column" spacing={0.2} alignItems="center">
+            <Typography color="text.primary" fontWeight="medium" fontSize={18}>
+              {`${beneficiary?.firstName} ${beneficiary?.lastName}`}
+            </Typography>
+            <Typography
+              component="div"
+              variant="caption"
+              color="text.secondary"
+              fontWeight="regular"
+            >
+              {`${beneficiary?.email}`}
+            </Typography>
+            </Stack>
+          </Stack>
+        </Stack>
       </Tooltip>
-      <Stack direction="column" spacing={2} alignItems="center">
-        <Stack direction="column" spacing={0.2} alignItems="center">
-          <Typography color="text.primary" fontWeight="medium" fontSize={18}>
-            {`${beneficiary?.firstName} ${beneficiary?.lastName}`}
-          </Typography>
-          <Typography
-            component="div"
-            variant="caption"
-            color="text.secondary"
-            fontWeight="regular"
+      <Stack direction="row" alignItems="start" spacing={1.5} sx={{position: 'absolute', top: 0, right: 0, zIndex: 10}}>
+          <IconButton onClick={handleOpenMenu}>
+              <MoreVert />
+          </IconButton>
+          <Popover
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleCloseMenu}
+              anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           >
-            {`${beneficiary?.email}`}
-          </Typography>
-        </Stack>
-        <Stack direction="row" alignItems="center" spacing={1.5}>
-          {onDeleteBeneficiary && (
-            <Tooltip title="Supprimer">
-              <IconButton
-                aria-label="delete"
-                size="small"
-                sx={{ flexGrow: 0 }}
-                onClick={() => onDeleteBeneficiary(beneficiary?.id)}
+              {beneficiary?.beneficiaryParent && (
+              <Tooltip
+                title={`L'éstablishment parent: ${beneficiary?.beneficiaryParent?.name}`}
               >
-                <Delete fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          )}
-          {onUpdateBeneficiaryState && (
-            <Tooltip title={!beneficiary?.isActive ? 'Activer' : 'Désactiver'}>
-              <IconButton
-                aria-label={!beneficiary?.isActive ? 'play' : 'pause'}
-                sx={{ mx: 1 }}
-                onClick={() => onUpdateBeneficiaryState(beneficiary?.id)}
+                <Link
+                  to={`/online/ressources-humaines/beneficiaires/details/${beneficiary?.beneficiaryParent?.id}`}
+                  className="no_style"
+                >
+                  <MenuItem onClick={handleCloseMenu}>
+                    <Avatar
+                      alt={`${beneficiary?.beneficiaryParent?.name}`}
+                      src={beneficiary?.beneficiaryParent?.photo}
+                    />
+                  </MenuItem>
+                </Link>
+              </Tooltip>
+            )}
+            {onDeleteBeneficiary && (
+              <Tooltip title="Supprimer">
+                <MenuItem
+                  onClick={() => {onDeleteBeneficiary(beneficiary?.id); handleCloseMenu()}}
+                >
+                  <Delete fontSize="small" />
+                  Supprimer
+                </MenuItem>
+              </Tooltip>
+            )}
+            {onUpdateBeneficiaryState && (
+              <Tooltip
+                title={!beneficiary?.isActive ? 'Activer' : 'Désactiver'}
               >
-                {!beneficiary?.isActive ? (
-                  <PlayArrowRounded />
-                ) : (
-                  <PauseRounded />
-                )}
-              </IconButton>
-            </Tooltip>
-          )}
-          <Tooltip title="Modifier">
-            <Link
-              to={`/online/ressources-humaines/beneficiaires/modifier/${beneficiary?.id}`}
-              className="no_style"
-            >
-              <IconButton aria-label="edit" size="small">
-                <Edit fontSize="small" />
-              </IconButton>
-            </Link>
-          </Tooltip>
-          {beneficiary?.folder && (
-            <Tooltip title="Pièces jointes">
-              <IconButton
-                aria-label="Attachment"
-                size="small"
-                sx={{ flexGrow: 0 }}
-                onClick={() => onOpenDialogListLibrary(beneficiary?.folder)}
+                <MenuItem
+                  aria-label={!beneficiary?.isActive ? 'play' : 'pause'}
+                  onClick={() => {onUpdateBeneficiaryState(beneficiary?.id); handleCloseMenu()}}
+                >
+                  {!beneficiary?.isActive ? (
+                    <PlayArrowRounded />
+                  ) : (
+                    <PauseRounded />
+                  )}
+                  {!beneficiary?.isActive ? 'Activer' : 'Désactiver'}
+                </MenuItem>
+              </Tooltip>
+            )}
+            <Tooltip title="Modifier">
+              <Link
+                to={`/online/ressources-humaines/beneficiaires/modifier/${beneficiary?.id}`}
+                className="no_style"
               >
-                <Folder fontSize="small" />
-              </IconButton>
+                <MenuItem onClick={handleCloseMenu}>
+                  <Edit fontSize="small" />
+                  Modifier
+                </MenuItem>
+              </Link>
             </Tooltip>
-          )}
-          <Tooltip title="Détails">
-            <Link
-              to={`/online/ressources-humaines/beneficiaires/details/${beneficiary?.id}`}
-              className="no_style"
-            >
-              <IconButton aria-label="edit" size="small">
-                <AccountBox fontSize="small" />
-              </IconButton>
-            </Link>
-          </Tooltip>
-        </Stack>
+            {beneficiary?.folder && (
+              <Tooltip title="Pièces jointes">
+                <MenuItem
+                  onClick={() => {onOpenDialogListLibrary(beneficiary?.folder); handleCloseMenu()}}
+                >
+                  <Folder fontSize="small" />
+                  Pièces jointes
+                </MenuItem>
+              </Tooltip>
+            )}
+            <Tooltip title="Détails">
+              <Link
+                to={`/online/ressources-humaines/beneficiaires/details/${beneficiary?.id}`}
+                className="no_style"
+              >
+                <MenuItem onClick={handleCloseMenu}>
+                  <AccountBox fontSize="small" />
+                  Détails
+                </MenuItem>
+              </Link>
+            </Tooltip>
+          </Popover>
       </Stack>
     </Card>
   );

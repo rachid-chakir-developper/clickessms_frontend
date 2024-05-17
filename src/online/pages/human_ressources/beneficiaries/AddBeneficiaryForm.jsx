@@ -24,6 +24,7 @@ import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/Establis
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
+import { GET_FINANCIERS } from '../../../../_shared/graphql/queries/FinancierQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -86,7 +87,14 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
           items.push(itemCopy);
         });
         beneficiaryCopy.beneficiaryEntries = items;
-        console.log('beneficiaryCopy***************************', beneficiaryCopy)
+        items = [];
+        beneficiaryCopy.beneficiaryAdmissionDocuments.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          itemCopy.financier = itemCopy.financier ? itemCopy.financier.id : null;
+          items.push(itemCopy);
+        });
+        beneficiaryCopy.beneficiaryAdmissionDocuments = items;
+
       if (idBeneficiary && idBeneficiary != '') {
         onUpdateBeneficiary({
           id: beneficiaryCopy.id,
@@ -129,7 +137,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       ...formik.values,
       beneficiaryAdmissionDocuments: [
         ...formik.values.beneficiaryAdmissionDocuments,
-        { document: undefined, admissionDocumentType: null , startingDate: dayjs(new Date()), endingDate: dayjs(new Date())},
+        { document: undefined, admissionDocumentType: null , financier: null, startingDate: dayjs(new Date()), endingDate: dayjs(new Date())},
       ],
     });
   };
@@ -284,6 +292,16 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       onError: (err) => console.log(err),
     },
   );
+
+  const {
+    loading: loadingFinanciers,
+    data: financiersData,
+    error: financiersError,
+    fetchMore: fetchMoreFinanciers,
+  } = useQuery(GET_FINANCIERS, {
+    fetchPolicy: 'network-only',
+    variables: { page: 1, limit: 10 },
+  });
 
   const {
     loading: loadingEstablishments,
@@ -531,18 +549,6 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
                         disabled={loadingPost || loadingPut}
                       />
                     </Item>
-                    <Item>
-                      <TheAutocomplete
-                        options={establishmentsData?.establishments?.nodes}
-                        label="Département financeur"
-                        multiple={false}
-                        placeholder="Choisissez un département"
-                        // value={formik.values.mobile}
-                        // onChange={(e, newValue) =>
-                        //   formik.setFieldValue('mobile', e.target.newValue)
-                        // }
-                      />
-                    </Item>
                   </Grid>
                 </Grid>
               </StepContent>
@@ -570,7 +576,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
                           columns={{ xs: 4, sm: 8, md: 12 }}
                           key={index}
                         >
-                          <Grid xs={12} sm={6} md={3} item="true">
+                          <Grid xs={12} sm={6} md={2.5} item="true">
                             <Item>
                               <TheFileField variant="outlined" label="Document d'admission"
                                 fileValue={item.document}
@@ -579,7 +585,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
                                 />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={3} item="true">
+                          <Grid xs={12} sm={6} md={2.5} item="true">
                             <Item>
                               <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">
@@ -608,7 +614,21 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
                               </FormControl>
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={3} item="true">
+                          <Grid xs={12} sm={6} md={3}>
+                            <Item>
+                              <TheAutocomplete
+                                options={financiersData?.financiers?.nodes}
+                                label="Département financeur"
+                                multiple={false}
+                                placeholder="Choisissez un département"
+                                value={item.financier}
+                                onChange={(e, newValue) =>
+                                  formik.setFieldValue(`beneficiaryAdmissionDocuments.${index}.financier`, newValue)
+                                }
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid xs={12} sm={6} md={2} item="true">
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -621,7 +641,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={3} item="true">
+                          <Grid xs={12} sm={6} md={2} item="true">
                             <Item sx={{position: 'relative'}}>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -657,7 +677,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
                       onClick={addBeneficiaryAdmissionDocument}
                       disabled={loadingPost || loadingPut}
                     >
-                      Ajouter une entrée
+                      Ajouter une admission
                     </Button>
                   </Grid>
                 </Grid>

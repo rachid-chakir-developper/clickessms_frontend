@@ -3,17 +3,19 @@ import BeneficiaryAbsences from './beneficiary-absences/BeneficiaryAbsences';
 import Events from './events/Events';
 
 import { Routes, Route, Navigate } from 'react-router-dom';
+import Dashboard from './dashboard/Dashboard';
 
 export default function Activities() {
   return (
     <Box>
       <Routes>
+        <Route path={`dashboard/*`} element={<Dashboard />} />
         <Route path={`evenements/*`} element={<Events />} />
         <Route
           path={`absences-beneficiaires/*`}
           element={<BeneficiaryAbsences />}
         />
-        <Route path="/" element={<Navigate to={`evenements`} replace />} />
+        <Route path="/" element={<Navigate to={`dashboard`} replace />} />
       </Routes>
     </Box>
   );

@@ -188,7 +188,7 @@ export default function ListEmployeeGroups() {
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
             {loadingEmployeeGroups && (
-              <Grid key={'pgrs'} item xs={2} sm={4} md={3}>
+              <Grid key={'pgrs'} item="true" xs={12} sm={6} md={4}>
                 <ProgressService type="mediaCard" />
               </Grid>
             )}
@@ -200,7 +200,7 @@ export default function ListEmployeeGroups() {
               )}
             {employeeGroupsData?.employeeGroups?.nodes?.map(
               (employeeGroup, index) => (
-                <Grid xs={2} sm={4} md={3} key={index}>
+                <Grid xs={12} sm={6} md={4} key={index}>
                   <Item>
                     <EmployeeGroupItemCard
                       employeeGroup={employeeGroup}

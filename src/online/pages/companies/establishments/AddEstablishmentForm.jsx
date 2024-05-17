@@ -618,39 +618,6 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
                         />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={4} item="true">
-                    <Item>
-                      <TheTextField
-                        variant="outlined"
-                        label="Nombre de jour d’ouverture théorique"
-                        // value={formik.values.fax}
-                        // onChange={(e) => formik.setFieldValue('fax', e.target.value)}
-                        disabled={loadingPost || loadingPut}
-                      />
-                    </Item>
-                  </Grid>
-                  <Grid xs={12} sm={6} md={4} item="true">
-                    <Item>
-                      <TheTextField
-                        variant="outlined"
-                        label="Capacité temporaire"
-                        // value={formik.values.fax}
-                        // onChange={(e) => formik.setFieldValue('fax', e.target.value)}
-                        disabled={loadingPost || loadingPut}
-                      />
-                    </Item>
-                  </Grid>
-                  <Grid xs={2} sm={4} md={4} item="true">
-                    <Item>
-                      <TheTextField
-                        variant="outlined"
-                        label="Capacité permanente"
-                        // value={formik.values.fax}
-                        // onChange={(e) => formik.setFieldValue('fax', e.target.value)}
-                        disabled={loadingPost || loadingPut}
-                      />
-                    </Item>
-                  </Grid>
                   <Grid xs={2} sm={4} md={4} item="true">
                     <Item>
                       <TheAutocomplete

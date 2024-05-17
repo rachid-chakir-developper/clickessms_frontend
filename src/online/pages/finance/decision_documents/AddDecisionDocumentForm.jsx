@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Stack, Box, Typography, Button, Stepper, Step, StepLabel, StepContent, RadioGroup, FormControlLabel, Radio, FormLabel, FormControl, IconButton, InputLabel, Select, MenuItem } from '@mui/material';
+import { Stack, Box, Typography, Button, Stepper, Step, StepLabel, StepContent, RadioGroup, FormControlLabel, Radio, FormLabel, FormControl, IconButton, InputLabel, Select, MenuItem, InputAdornment } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -20,9 +20,9 @@ import {
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { Close } from '@mui/icons-material';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
-import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
+import { GET_FINANCIERS } from '../../../../_shared/graphql/queries/FinancierQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -37,68 +37,47 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({
-    firstName: yup
-      .string('Entrez votre prénom')
-      .required('Le prénom est obligatoire'),
-    lastName: yup.string('Entrez votre nom').required('Le nom est obligatoire'),
+    name: yup
+      .string('Le titre')
+      .required('Le titre est obligatoire'),
   });
   const formik = useFormik({
     initialValues: {
-      photo: undefined,
-      coverImage: undefined,
+      document: undefined,
       number: '',
-      firstName: '',
-      lastName: '',
-      gender: null,
-      birthDate: dayjs(new Date()),
-      admissionDate: dayjs(new Date()),
-      latitude: '',
-      longitude: '',
-      city: '',
-      zipCode: '',
-      address: '',
-      mobile: '',
-      fix: '',
-      fax: '',
-      email: '',
-      webSite: '',
-      otherContacts: '',
-      iban: '',
-      bic: '',
-      bankName: '',
+      name: '',
+      decisionDate: dayjs(new Date()),
+      receptionDateTime: dayjs(new Date()),
       description: '',
       observation: '',
       isActive: true,
-      decisionDocumentEntries: [],
-      decisionDocumentAdmissionDocuments: [],
+      financier: null,
+      decisionDocumentItems: [],
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let { photo, ...decisionDocumentFormCopy } = values;
-      let { coverImage, ...decisionDocumentCopy } = decisionDocumentFormCopy;
-      if (!decisionDocumentCopy?.decisionDocumentEntries) decisionDocumentCopy['decisionDocumentEntries'] = [];
+      let { document, ...decisionDocumentCopy } = values;
+      decisionDocumentCopy.financier = decisionDocumentCopy.financier ? decisionDocumentCopy.financier.id : null;
+      if (!decisionDocumentCopy?.decisionDocumentItems) decisionDocumentCopy['decisionDocumentItems'] = [];
         let items = [];
-        decisionDocumentCopy.decisionDocumentEntries.forEach((item) => {
+        decisionDocumentCopy.decisionDocumentItems.forEach((item) => {
           let { __typename, ...itemCopy } = item;
-          itemCopy.establishments = itemCopy.establishments.map((i) => i?.id);
-          itemCopy.internalReferents = itemCopy.internalReferents.map((i) => i?.id);
+          itemCopy.establishment = itemCopy.establishment ? itemCopy.establishment.id : null;
           items.push(itemCopy);
         });
-        decisionDocumentCopy.decisionDocumentEntries = items;
+        decisionDocumentCopy.decisionDocumentItems = items;
         console.log('decisionDocumentCopy***************************', decisionDocumentCopy)
       if (idDecisionDocument && idDecisionDocument != '') {
         onUpdateDecisionDocument({
           id: decisionDocumentCopy.id,
           decisionDocumentData: decisionDocumentCopy,
-          photo: photo,
-          coverImage: coverImage,
+          document: document,
         });
       } else
         createDecisionDocument({
           variables: {
             decisionDocumentData: decisionDocumentCopy,
-            photo: photo,
-            coverImage: coverImage,
+            document: document,
           },
         });
     },
@@ -106,40 +85,20 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
   const addDecisionDocumentEntry = () => {
     formik.setValues({
       ...formik.values,
-      decisionDocumentEntries: [
-        ...formik.values.decisionDocumentEntries,
-        { establishments: [], internalReferents: [] , entryDate: dayjs(new Date()), releaseDate: dayjs(new Date())},
+      decisionDocumentItems: [
+        ...formik.values.decisionDocumentItems,
+        { establishment: null , startingDateTime: dayjs(new Date()), endingDateTime: dayjs(new Date()), price: 0, endowment: 0, occupancyRate: 100, theoreticalNumberUnitWork: 0},
       ],
     });
   };
 
   const removeDecisionDocumentEntry = (index) => {
-    const updatedDecisionDocumentEntries = [...formik.values.decisionDocumentEntries];
+    const updatedDecisionDocumentEntries = [...formik.values.decisionDocumentItems];
     updatedDecisionDocumentEntries.splice(index, 1);
 
     formik.setValues({
       ...formik.values,
-      decisionDocumentEntries: updatedDecisionDocumentEntries,
-    });
-  };
-
-  const addDecisionDocumentAdmissionDocument = () => {
-    formik.setValues({
-      ...formik.values,
-      decisionDocumentAdmissionDocuments: [
-        ...formik.values.decisionDocumentAdmissionDocuments,
-        { document: undefined, admissionDocumentType: null , startingDate: dayjs(new Date()), endingDate: dayjs(new Date())},
-      ],
-    });
-  };
-
-  const removeDecisionDocumentAdmissionDocument = (index) => {
-    const updatedDecisionDocumentAdmissionDocuments = [...formik.values.decisionDocumentAdmissionDocuments];
-    updatedDecisionDocumentAdmissionDocuments.splice(index, 1);
-
-    formik.setValues({
-      ...formik.values,
-      decisionDocumentAdmissionDocuments: updatedDecisionDocumentAdmissionDocuments,
+      decisionDocumentItems: updatedDecisionDocumentEntries,
     });
   };
 
@@ -251,33 +210,18 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
       onCompleted: (data) => {
         let { __typename, ...decisionDocumentCopy1 } = data.decisionDocument;
         let { folder, ...decisionDocumentCopy } = decisionDocumentCopy1;
-        decisionDocumentCopy.gender = decisionDocumentCopy.gender
-          ? Number(decisionDocumentCopy.gender.id)
-          : null;
-        decisionDocumentCopy.birthDate = dayjs(decisionDocumentCopy.birthDate);
-        decisionDocumentCopy.admissionDate = dayjs(decisionDocumentCopy.admissionDate);
+        decisionDocumentCopy.decisionDate = dayjs(decisionDocumentCopy.decisionDate);
+        decisionDocumentCopy.receptionDateTime = dayjs(decisionDocumentCopy.receptionDateTime);
         
-        if (!decisionDocumentCopy?.decisionDocumentEntries) decisionDocumentCopy['decisionDocumentEntries'] = [];
+        if (!decisionDocumentCopy?.decisionDocumentItems) decisionDocumentCopy['decisionDocumentItems'] = [];
         let items = [];
-        decisionDocumentCopy.decisionDocumentEntries.forEach((item) => {
+        decisionDocumentCopy.decisionDocumentItems.forEach((item) => {
           let { __typename, ...itemCopy } = item;
-          itemCopy.entryDate = dayjs(itemCopy.entryDate)
-          itemCopy.releaseDate = dayjs(itemCopy.releaseDate)
+          itemCopy.startingDateTime = dayjs(itemCopy.startingDateTime)
+          itemCopy.endingDateTime = dayjs(itemCopy.endingDateTime)
           items.push(itemCopy);
         });
-        decisionDocumentCopy.decisionDocumentEntries = items;
-        if (!decisionDocumentCopy?.decisionDocumentAdmissionDocuments) decisionDocumentCopy['decisionDocumentAdmissionDocuments'] = [];
-        items = [];
-        decisionDocumentCopy.decisionDocumentAdmissionDocuments.forEach((item) => {
-          let { __typename, ...itemCopy } = item;
-          itemCopy.startingDate = dayjs(itemCopy.startingDate)
-          itemCopy.endingDate = dayjs(itemCopy.endingDate)
-          itemCopy.admissionDocumentType = itemCopy.admissionDocumentType
-          ? Number(itemCopy.admissionDocumentType.id)
-          : null;
-          items.push(itemCopy);
-        });
-        decisionDocumentCopy.decisionDocumentAdmissionDocuments = items;
+        decisionDocumentCopy.decisionDocumentItems = items;
         formik.setValues(decisionDocumentCopy);
       },
       onError: (err) => console.log(err),
@@ -285,21 +229,21 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
   );
 
   const {
-    loading: loadingEstablishments,
-    data: establishmentsData,
-    error: establishmentsError,
-    fetchMore: fetchMoreEstablishments,
-  } = useQuery(GET_ESTABLISHMENTS, {
+    loading: loadingFinanciers,
+    data: financiersData,
+    error: financiersError,
+    fetchMore: fetchMoreFinanciers,
+  } = useQuery(GET_FINANCIERS, {
     fetchPolicy: 'network-only',
     variables: { page: 1, limit: 10 },
   });
 
   const {
-    loading: loadingEmployees,
-    data: employeesData,
-    error: employeesError,
-    fetchMore: fetchMoreEmployees,
-  } = useQuery(GET_EMPLOYEES, {
+    loading: loadingEstablishments,
+    data: establishmentsData,
+    error: establishmentsError,
+    fetchMore: fetchMoreEstablishments,
+  } = useQuery(GET_ESTABLISHMENTS, {
     fetchPolicy: 'network-only',
     variables: { page: 1, limit: 10 },
   });
@@ -372,6 +316,16 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
+                  
+                  <Grid xs={12} sm={6} md={3} item="true">
+                    <Item>
+                      <TheFileField variant="outlined" label="Document d'admission"
+                        fileValue={formik.values.document}
+                        onChange={(file) => formik.setFieldValue('document', file)}
+                        disabled={loadingPost || loadingPut}
+                        />
+                    </Item>
+                  </Grid>
                   <Grid xs={12} sm={6} md={3}>
                     <Item>
                       <TheTextField
@@ -408,14 +362,14 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                   <Grid xs={12} sm={6} md={3}>
                     <Item>
                       <TheAutocomplete
-                        options={establishmentsData?.establishments?.nodes}
+                        options={financiersData?.financiers?.nodes}
                         label="Département financeur"
                         multiple={false}
                         placeholder="Choisissez un département"
-                        // value={formik.values.mobile}
-                        // onChange={(e, newValue) =>
-                        //   formik.setFieldValue('mobile', e.target.newValue)
-                        // }
+                        value={formik.values.financier}
+                        onChange={(e, newValue) =>
+                          formik.setFieldValue('financier', newValue)
+                        }
                       />
                     </Item>
                   </Grid>
@@ -438,62 +392,110 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
                   <Grid xs={12} sm={12} md={12} item="true">
-                      {formik.values?.decisionDocumentEntries?.map((item, index) => (
+                      {formik.values?.decisionDocumentItems?.map((item, index) => (
                         <Grid
                           container
                           spacing={{ xs: 2, md: 3 }}
                           columns={{ xs: 4, sm: 8, md: 12 }}
                           key={index}
                         >
-                          <Grid xs={12} sm={6} md={3} item="true">
+                          <Grid xs={12} sm={6} md={2} item="true">
                             <Item>
                               <TheAutocomplete
                                 options={establishmentsData?.establishments?.nodes}
                                 label="Établissements / Services"
                                 placeholder="Ajouter un établissement ou service"
-                                limitTags={3}
-                                value={item.establishments}
+                                multiple={false}
+                                value={item.establishment}
                                 onChange={(e, newValue) =>
-                                  formik.setFieldValue(`decisionDocumentEntries.${index}.establishments`, newValue)
+                                  formik.setFieldValue(`decisionDocumentItems.${index}.establishment`, newValue)
                                 }
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={3} item="true">
-                            <Item>
-                              <TheAutocomplete
-                                options={employeesData?.employees?.nodes}
-                                label="Référents internes"
-                                placeholder="Ajouter un référent interne"
-                                limitTags={3}
-                                value={item.internalReferents}
-                                onChange={(e, newValue) =>
-                                  formik.setFieldValue(`decisionDocumentEntries.${index}.internalReferents`, newValue)
-                                }
-                              />
-                            </Item>
-                          </Grid>
-                          <Grid xs={12} sm={6} md={3} item="true">
+                          <Grid xs={12} sm={6} md={2} item="true">
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
-                                label="Date d’entrée"
-                                value={item.entryDate}
+                                label="Date de début"
+                                value={item.startingDateTime}
                                 onChange={(date) =>
-                                  formik.setFieldValue(`decisionDocumentEntries.${index}.entryDate`, date)
+                                  formik.setFieldValue(`decisionDocumentItems.${index}.startingDateTime`, date)
                                 }
                                 disabled={loadingPost || loadingPut}
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={3} item="true">
-                            <Item sx={{position: 'relative'}}>
+                          <Grid xs={12} sm={6} md={2} item="true">
+                            <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
-                                label="Date de sortie"
-                                value={item.releaseDate}
+                                label="Date de fin"
+                                value={item.endingDateTime}
                                 onChange={(date) =>
-                                  formik.setFieldValue(`decisionDocumentEntries.${index}.releaseDate`, date)
+                                  formik.setFieldValue(`decisionDocumentItems.${index}.endingDateTime`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid xs={12} sm={6} md={1.5}>
+                            <Item>
+                              <TheTextField
+                                variant="outlined"
+                                label="Prix"
+                                type="number"
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                }}
+                                value={item.price}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`decisionDocumentItems.${index}.price`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid xs={12} sm={6} md={1.5}>
+                            <Item>
+                              <TheTextField
+                                variant="outlined"
+                                label="Dotation"
+                                type="number"
+                                value={item.endowment}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`decisionDocumentItems.${index}.endowment`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid xs={12} sm={6} md={1.5}>
+                            <Item>
+                              <TheTextField
+                                variant="outlined"
+                                label="Taux d'occupation"
+                                type="number"
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="start">%</InputAdornment>,
+                                }}
+                                value={item.occupancyRate}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`decisionDocumentItems.${index}.occupancyRate`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid xs={12} sm={6} md={1.5}>
+                            <Item sx={{position: 'relative'}}>
+                              <TheTextField
+                                variant="outlined"
+                                label="Jours d'ouverture"
+                                type="number"
+                                value={item.theoreticalNumberUnitWork}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`decisionDocumentItems.${index}.theoreticalNumberUnitWork`, e.target.value)
                                 }
                                 disabled={loadingPost || loadingPut}
                               />
@@ -537,7 +539,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
             <Grid xs={12} sm={12} md={12} item="true">
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
-                  to="/online/ressources-humaines/beneficiaires/liste"
+                  to="/online/finance/decisions/liste"
                   className="no_style"
                 >
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>

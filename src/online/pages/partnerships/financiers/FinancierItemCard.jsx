@@ -12,15 +12,14 @@ import {
   Folder,
   AccountBox,
   MoreVert,
-  Article,
 } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
-export default function EmployeeItemCard({
-  employee,
-  onDeleteEmployee,
-  onUpdateEmployeeState,
+export default function FinancierItemCard({
+  financier,
+  onDeleteFinancier,
+  onUpdateFinancierState,
 }) {
   //   const theme = useTheme();
   const navigate = useNavigate();
@@ -43,14 +42,14 @@ export default function EmployeeItemCard({
     });
   };
   const onGoToDetails = ()=>{
-    navigate(`/online/ressources-humaines/employes/details/${employee?.id}`);
+    navigate(`/online/partenariats/financeurs/details/${financier?.id}`);
   }
   return (
     <Card
       variant="outlined"
-      sx={{ position: 'relative', p: 1}}
+      sx={{ position: 'relative'}}
     >
-      <Tooltip title={employee?.name}>
+      <Tooltip title={financier?.name}>
         <Stack direction="row"
         sx={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 2, cursor:'pointer' }}
         onClick={onGoToDetails}>
@@ -58,27 +57,30 @@ export default function EmployeeItemCard({
             component="img"
             width="100"
             height="100"
-            alt={employee?.name}
+            alt={financier?.name}
             src={
-              employee?.photo
-                ? employee?.photo
+              financier?.logo
+                ? financier?.logo
                 : '/default-placeholder.jpg'
             }
             sx={{ borderRadius: 0.6, height: 100, width: 100 }}
           />
           <Stack direction="row" spacing={2} alignItems="center">
             <Stack direction="column" spacing={0.2} alignItems="center">
-            <Typography color="text.primary" fontWeight="medium" fontSize={18}>
-              {`${employee?.firstName} ${employee?.lastName}`}
-            </Typography>
-            <Typography
-              component="div"
-              variant="caption"
-              color="text.secondary"
-              fontWeight="regular"
-            >
-              {`${employee?.email}`}
-            </Typography>
+              <Typography color="text.primary" fontWeight="medium" fontSize={18}>
+                {financier?.name}
+              </Typography>
+              <Typography color="text.primary" fontWeight="medium" fontSize={14}>
+                {financier?.address}
+              </Typography>
+              <Typography
+                component="div"
+                variant="caption"
+                color="text.secondary"
+                fontWeight="regular"
+              >
+                {`${financier?.zipCode} ${financier?.city}`}
+              </Typography>
             </Stack>
           </Stack>
         </Stack>
@@ -94,53 +96,53 @@ export default function EmployeeItemCard({
               anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
               transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           >
-              {employee?.employeeParent && (
+              {financier?.financierParent && (
               <Tooltip
-                title={`L'éstablishment parent: ${employee?.employeeParent?.name}`}
+                title={`L'éstablishment parent: ${financier?.financierParent?.name}`}
               >
                 <Link
-                  to={`/online/ressources-humaines/employes/details/${employee?.employeeParent?.id}`}
+                  to={`/online/partenariats/financeurs/details/${financier?.financierParent?.id}`}
                   className="no_style"
                 >
                   <MenuItem onClick={handleCloseMenu}>
                     <Avatar
-                      alt={`${employee?.employeeParent?.name}`}
-                      src={employee?.employeeParent?.photo}
+                      alt={`${financier?.financierParent?.name}`}
+                      src={financier?.financierParent?.logo}
                     />
                   </MenuItem>
                 </Link>
               </Tooltip>
             )}
-            {onDeleteEmployee && (
+            {onDeleteFinancier && (
               <Tooltip title="Supprimer">
                 <MenuItem
-                  onClick={() => {onDeleteEmployee(employee?.id); handleCloseMenu()}}
+                  onClick={() => {onDeleteFinancier(financier?.id); handleCloseMenu()}}
                 >
                   <Delete fontSize="small" />
                   Supprimer
                 </MenuItem>
               </Tooltip>
             )}
-            {onUpdateEmployeeState && (
+            {onUpdateFinancierState && (
               <Tooltip
-                title={!employee?.isActive ? 'Activer' : 'Désactiver'}
+                title={!financier?.isActive ? 'Activer' : 'Désactiver'}
               >
                 <MenuItem
-                  aria-label={!employee?.isActive ? 'play' : 'pause'}
-                  onClick={() => {onUpdateEmployeeState(employee?.id); handleCloseMenu()}}
+                  aria-label={!financier?.isActive ? 'play' : 'pause'}
+                  onClick={() => {onUpdateFinancierState(financier?.id); handleCloseMenu()}}
                 >
-                  {!employee?.isActive ? (
+                  {!financier?.isActive ? (
                     <PlayArrowRounded />
                   ) : (
                     <PauseRounded />
                   )}
-                  {!employee?.isActive ? 'Activer' : 'Désactiver'}
+                  {!financier?.isActive ? 'Activer' : 'Désactiver'}
                 </MenuItem>
               </Tooltip>
             )}
             <Tooltip title="Modifier">
               <Link
-                to={`/online/ressources-humaines/employes/modifier/${employee?.id}`}
+                to={`/online/partenariats/financeurs/modifier/${financier?.id}`}
                 className="no_style"
               >
                 <MenuItem onClick={handleCloseMenu}>
@@ -149,10 +151,10 @@ export default function EmployeeItemCard({
                 </MenuItem>
               </Link>
             </Tooltip>
-            {employee?.folder && (
+            {financier?.folder && (
               <Tooltip title="Pièces jointes">
                 <MenuItem
-                  onClick={() => {onOpenDialogListLibrary(employee?.folder); handleCloseMenu()}}
+                  onClick={() => {onOpenDialogListLibrary(financier?.folder); handleCloseMenu()}}
                 >
                   <Folder fontSize="small" />
                   Pièces jointes
@@ -161,7 +163,7 @@ export default function EmployeeItemCard({
             )}
             <Tooltip title="Détails">
               <Link
-                to={`/online/ressources-humaines/employes/details/${employee?.id}`}
+                to={`/online/partenariats/financeurs/details/${financier?.id}`}
                 className="no_style"
               >
                 <MenuItem onClick={handleCloseMenu}>
