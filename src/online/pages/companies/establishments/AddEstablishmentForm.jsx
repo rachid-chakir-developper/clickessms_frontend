@@ -95,7 +95,7 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
       establishmentCopy.establishmentChilds =
       establishmentCopy.establishmentChilds.map((i) => i.id);
       establishmentCopy.managers = establishmentCopy.managers.map((i) => i?.id);
-      if (idEstablishment && idEstablishment != '') {
+      if (establishmentCopy?.id && establishmentCopy?.id != '') {
         onUpdateEstablishment({
           id: establishmentCopy.id,
           establishmentData: establishmentCopy,
@@ -288,8 +288,8 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if (formik.values.id)
-      setSearchParams({ step: activeStep + 1, id: formik.values.id });
+    if(activeStep >= 3) navigate('/online/associations/structures/liste');
+    else if (formik.values.id) setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });
   };
 

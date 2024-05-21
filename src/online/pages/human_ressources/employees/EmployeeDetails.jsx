@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
-import { Box, Divider, Paper, Stack, alpha } from '@mui/material';
+import { Box, Button, Divider, Paper, Stack, alpha } from '@mui/material';
 import { Grid, Typography, Avatar } from '@mui/material';
 // Assurez-vous d'importer dayjs si vous l'utilisez pour la gestion des dates
 
@@ -10,6 +10,7 @@ import {
   getFormatDate,
   getFormatDateTime,
 } from '../../../../_shared/tools/functions';
+import { Edit } from '@mui/icons-material';
 
 export default function EmployeeDetails() {
   let { idEmployee } = useParams();
@@ -23,6 +24,16 @@ export default function EmployeeDetails() {
 
   return (
     <Stack>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+        <Link
+          to={`/online/ressources-humaines/employes/modifier/${employeeData?.employee?.id}`}
+          className="no_style"
+        >
+          <Button variant="outlined" endIcon={<Edit />}>
+            Modifier
+          </Button>
+        </Link>
+      </Box>
       {employeeData?.employee && (
         <EmployeeDetailsPage employee={employeeData?.employee} />
       )}

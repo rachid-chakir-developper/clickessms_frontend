@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
-import { Box, Divider, Paper, Stack, alpha } from '@mui/material';
+import { Box, Button, Divider, Paper, Stack, alpha } from '@mui/material';
 import { Grid, Typography, Avatar } from '@mui/material';
 import { GET_ESTABLISHMENT } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import styled from '@emotion/styled';
 import EstablishmentItemCard from './EstablishmentItemCard';
+import { Edit } from '@mui/icons-material';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -30,6 +31,16 @@ export default function EstablishmentDetails() {
 
   return (
     <Stack>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+        <Link
+          to={`/online/associations/structures/modifier/${establishmentData?.establishment?.id}`}
+          className="no_style"
+        >
+          <Button variant="outlined" endIcon={<Edit />}>
+            Modifier
+          </Button>
+        </Link>
+      </Box>
       {establishmentData?.establishment && (
         <EstablishmentDetailsPage
           establishment={establishmentData?.establishment}

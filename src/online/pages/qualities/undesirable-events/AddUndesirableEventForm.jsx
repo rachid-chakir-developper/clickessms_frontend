@@ -104,7 +104,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
       undesirableEventCopy.employee = undesirableEventCopy.employee
         ? undesirableEventCopy.employee.id
         : null;
-      if (undesirableEventCopy.id && undesirableEventCopy.id != '') {
+      if (undesirableEventCopy?.id && undesirableEventCopy?.id != '') {
         onUpdateUndesirableEvent({
           id: undesirableEventCopy.id,
           undesirableEventData: undesirableEventCopy,
@@ -313,7 +313,8 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if (formik.values.id)
+    if(activeStep >= 2) navigate('/online/qualites/evenements-indesirables/liste');
+    else if (formik.values.id)
       setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });
   };
@@ -407,12 +408,25 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                     <Item>
                       <TheAutocomplete
                         options={establishmentsData?.establishments?.nodes}
-                        label="Établissements"
-                        placeholder="Ajouter un établissement"
+                        label="Établissements / Services"
+                        placeholder="Ajouter un établissement ou un service"
                         limitTags={3}
                         value={formik.values.establishments}
                         onChange={(e, newValue) =>
                           formik.setFieldValue('establishments', newValue)
+                        }
+                      />
+                    </Item>
+                    <Item>
+                      <TheAutocomplete
+                        options={employeesData?.employees?.nodes}
+                        label="Pour quel employé ?"
+                        placeholder="Choisissez un employé ?"
+                        multiple={false}
+                        value={formik.values.employee}
+                        helperText="Si c'est pour vous. laissez ce champ vide."
+                        onChange={(e, newValue) =>
+                          formik.setFieldValue('employee', newValue)
                         }
                       />
                     </Item>
@@ -499,21 +513,6 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                         value={formik.values.beneficiaries}
                         onChange={(e, newValue) =>
                           formik.setFieldValue('beneficiaries', newValue)
-                        }
-                      />
-                    </Item>
-                  </Grid>
-                  <Grid xs={2} sm={4} md={4}>
-                    <Item>
-                      <TheAutocomplete
-                        options={employeesData?.employees?.nodes}
-                        label="Pour quel employé ?"
-                        placeholder="Choisissez un employé ?"
-                        multiple={false}
-                        value={formik.values.employee}
-                        helperText="Si c'est pour vous. laissez ce champ vide."
-                        onChange={(e, newValue) =>
-                          formik.setFieldValue('employee', newValue)
                         }
                       />
                     </Item>

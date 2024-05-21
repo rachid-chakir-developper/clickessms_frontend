@@ -66,8 +66,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
           items.push(itemCopy);
         });
         decisionDocumentCopy.decisionDocumentItems = items;
-        console.log('decisionDocumentCopy***************************', decisionDocumentCopy)
-      if (idDecisionDocument && idDecisionDocument != '') {
+      if (decisionDocumentCopy?.id && decisionDocumentCopy?.id != '') {
         onUpdateDecisionDocument({
           id: decisionDocumentCopy.id,
           decisionDocumentData: decisionDocumentCopy,
@@ -122,12 +121,12 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
 
         cache.modify({
           fields: {
-            beneficiaries(
-              existingBeneficiaries = { totalCount: 0, nodes: [] },
+            decisionDocuments(
+              existingDecisionDocuments = { totalCount: 0, nodes: [] },
             ) {
               return {
-                totalCount: existingBeneficiaries.totalCount + 1,
-                nodes: [newDecisionDocument, ...existingBeneficiaries.nodes],
+                totalCount: existingDecisionDocuments.totalCount + 1,
+                nodes: [newDecisionDocument, ...existingDecisionDocuments.nodes],
               };
             },
           },
@@ -163,11 +162,11 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
 
         cache.modify({
           fields: {
-            beneficiaries(
-              existingBeneficiaries = { totalCount: 0, nodes: [] },
+            decisionDocuments(
+              existingDecisionDocuments = { totalCount: 0, nodes: [] },
               { readField },
             ) {
-              const updatedBeneficiaries = existingBeneficiaries.nodes.map(
+              const updatedDecisionDocuments = existingDecisionDocuments.nodes.map(
                 (decisionDocument) =>
                   readField('id', decisionDocument) === updatedDecisionDocument.id
                     ? updatedDecisionDocument
@@ -175,8 +174,8 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
               );
 
               return {
-                totalCount: existingBeneficiaries.totalCount,
-                nodes: updatedBeneficiaries,
+                totalCount: existingDecisionDocuments.totalCount,
+                nodes: updatedDecisionDocuments,
               };
             },
           },
@@ -267,7 +266,8 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if (formik.values.id)
+    if(activeStep >= 1) navigate('/online/finance/decisions/liste');
+    else if (formik.values.id)
       setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });
   };

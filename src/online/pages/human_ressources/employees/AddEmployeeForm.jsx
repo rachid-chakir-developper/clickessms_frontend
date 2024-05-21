@@ -52,11 +52,11 @@ export default function AddEmployeeForm({ idEmployee, title }) {
       firstName: '',
       lastName: '',
       birthDate: dayjs(new Date()),
-      position: '',
       hiringDate: dayjs(new Date()),
       probationEndDate: dayjs(new Date()),
       workEndDate: dayjs(new Date()),
       startingSalary: 0,
+      position: '',
       latitude: '',
       longitude: '',
       city: '',
@@ -243,17 +243,6 @@ export default function AddEmployeeForm({ idEmployee, title }) {
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
-              <Item>
-                <ImageFileField
-                  variant="outlined"
-                  label="Photo de couverture"
-                  imageValue={formik.values.coverImage}
-                  onChange={(imageFile) =>
-                    formik.setFieldValue('coverImage', imageFile)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
             </Grid>
             <Grid xs={2} sm={4} md={4}>
               <Item>
@@ -294,6 +283,8 @@ export default function AddEmployeeForm({ idEmployee, title }) {
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
+            </Grid>
+            <Grid xs={2} sm={4} md={4}>
               <Item>
                 <TheDesktopDatePicker
                   label="Date de naissance"
@@ -305,55 +296,11 @@ export default function AddEmployeeForm({ idEmployee, title }) {
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Position"
+                  label="Poste occupé"
                   value={formik.values.position}
                   onChange={(e) =>
-                    formik.setFieldValue('Position', e.target.value)
+                    formik.setFieldValue('position', e.target.value)
                   }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Salaire de départ"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="start">€</InputAdornment>
-                    ),
-                  }}
-                  value={formik.values.startingSalary}
-                  onChange={(e) =>
-                    formik.setFieldValue('startingSalary', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-              <Item>
-                <TheDesktopDatePicker
-                  label="Date d'embauche"
-                  value={formik.values.hiringDate}
-                  onChange={(date) => formik.setFieldValue('hiringDate', date)}
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-              <Item>
-                <TheDesktopDatePicker
-                  label="Date de fin de probation"
-                  value={formik.values.probationEndDate}
-                  onChange={(date) =>
-                    formik.setFieldValue('probationEndDate', date)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-              <Item>
-                <TheDesktopDatePicker
-                  label="Date de fin de contrat"
-                  value={formik.values.workEndDate}
-                  onChange={(date) => formik.setFieldValue('workEndDate', date)}
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
@@ -362,19 +309,65 @@ export default function AddEmployeeForm({ idEmployee, title }) {
               <Divider variant="middle" />
             </Grid>
             <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Adresse"
-                  multiline
-                  rows={8}
-                  value={formik.values.address}
-                  onChange={(e) =>
-                    formik.setFieldValue('address', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
+              <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
+                <Grid xs={12} sm={12} md={12}>
+                  <Item>
+                    <TheTextField
+                      variant="outlined"
+                      label="Adresse (Ligne 1)"
+                      multiline
+                      rows={2}
+                      value={formik.values.address}
+                      onChange={(e) =>
+                        formik.setFieldValue('address', e.target.value)
+                      }
+                      disabled={loadingPost || loadingPut}
+                    />
+                  </Item>
+                </Grid>
+                <Grid xs={12} sm={12} md={12}>
+                  <Item>
+                    <TheTextField
+                      variant="outlined"
+                      label="Complément"
+                      value={formik.values.additionalAddress}
+                      onChange={(e) =>
+                        formik.setFieldValue(
+                          'additionalAddress',
+                          e.target.value,
+                        )
+                      }
+                      disabled={loadingPost || loadingPut}
+                    />
+                  </Item>
+                </Grid>
+                <Grid xs={5} sm={5} md={5}>
+                  <Item>
+                    <TheTextField
+                      variant="outlined"
+                      label="Code postal"
+                      value={formik.values.zipCode}
+                      onChange={(e) =>
+                        formik.setFieldValue('zipCode', e.target.value)
+                      }
+                      disabled={loadingPost || loadingPut}
+                    />
+                  </Item>
+                </Grid>
+                <Grid xs={7} sm={7} md={7}>
+                  <Item>
+                    <TheTextField
+                      variant="outlined"
+                      label="Ville"
+                      value={formik.values.city}
+                      onChange={(e) =>
+                        formik.setFieldValue('city', e.target.value)
+                      }
+                      disabled={loadingPost || loadingPut}
+                    />
+                  </Item>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid xs={2} sm={4} md={4}>
               <Item>

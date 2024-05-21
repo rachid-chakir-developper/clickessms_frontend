@@ -15,10 +15,10 @@ const { hostname } = window.location;
 
 const envProd = false;
 const uri = envProd
-  ? 'https://api.cessms.fr/graphql'
+  ? 'https://api.roberp.fr/graphql'
   : `http://${hostname}:8000/graphql`;
 const wss = envProd
-  ? 'wss://api.cessms.fr/graphql'
+  ? 'wss://api.roberp.fr/graphql'
   : `ws://${hostname}:8000/graphql`;
 
 let httpLink = createUploadLink({

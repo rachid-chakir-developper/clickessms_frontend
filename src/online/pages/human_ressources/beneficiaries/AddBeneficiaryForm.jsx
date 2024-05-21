@@ -95,7 +95,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
         });
         beneficiaryCopy.beneficiaryAdmissionDocuments = items;
 
-      if (idBeneficiary && idBeneficiary != '') {
+      if (beneficiaryCopy?.id && beneficiaryCopy?.id != '') {
         onUpdateBeneficiary({
           id: beneficiaryCopy.id,
           beneficiaryData: beneficiaryCopy,
@@ -348,7 +348,8 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if (formik.values.id)
+    if(activeStep >= 3) navigate('/online/ressources-humaines/beneficiaires/liste');
+    else if (formik.values.id)
       setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });
   };

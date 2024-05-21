@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
   Box,
@@ -9,12 +9,14 @@ import {
   ButtonBase,
   Typography,
   Divider,
+  Button,
 } from '@mui/material';
 
 import { EVENT_RECAP } from '../../../../_shared/graphql/queries/EventQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
+import { Edit } from '@mui/icons-material';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -39,6 +41,16 @@ export default function EventDetails() {
   if (loadingEvent) return <ProgressService type="form" />;
   return (
     <>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+        <Link
+          to={`/online/activites/evenements/modifier/${eventData?.event?.id}`}
+          className="no_style"
+        >
+          <Button variant="outlined" endIcon={<Edit />}>
+            Modifier
+          </Button>
+        </Link>
+      </Box>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
