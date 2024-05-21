@@ -55,6 +55,7 @@ export default function SignInSide() {
         console.log(data);
         dispatch({ type: 'LOGIN', payload: data.tokenAuth });
         navigate('/');
+        window.location.reload();
       } else {
         setErrors(data.tokenAuth.errors.nonFieldErrors);
         console.log(errors);

@@ -172,7 +172,7 @@ export default function ListEmployeeGroups() {
             className="no_style"
           >
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter un groupe de'employés
+              Ajouter un groupe d'employés
             </Button>
           </Link>
         </Box>
@@ -195,7 +195,7 @@ export default function ListEmployeeGroups() {
             {employeeGroupsData?.employeeGroups?.nodes?.length < 1 &&
               !loadingEmployeeGroups && (
                 <Alert severity="warning">
-                  Aucun groupe de'employés trouvé.
+                  Aucun groupe d'employés trouvé.
                 </Alert>
               )}
             {employeeGroupsData?.employeeGroups?.nodes?.map(

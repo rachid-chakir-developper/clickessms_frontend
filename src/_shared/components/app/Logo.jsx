@@ -38,7 +38,7 @@ const Logo = forwardRef(
         ref={ref}
         component="div"
         sx={{
-          width: 100,
+          width: 60,
           height: 40,
           display: 'inline-flex',
           ...sx,
@@ -108,7 +108,7 @@ const Logo = forwardRef(
             <img
               src={user?.company?.logo}
               alt={user?.company?.name}
-              width={100}
+              width={60}
             />
           ) : (
             logo

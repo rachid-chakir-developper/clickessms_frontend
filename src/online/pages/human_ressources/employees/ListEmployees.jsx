@@ -167,7 +167,7 @@ export default function ListEmployees() {
             className="no_style"
           >
             <Button
-              variant="contained"
+              variant="outlined"
               disableElevation
               color="inherit"
               sx={{ mr: 2 }}
@@ -181,13 +181,41 @@ export default function ListEmployees() {
             className="no_style"
           >
             <Button
-              variant="contained"
+              variant="outlined"
               disableElevation
               color="inherit"
               sx={{ mr: 2 }}
               endIcon={<Add />}
             >
               Ajouter un groupe
+            </Button>
+          </Link>
+          <Link
+            to="/online/ressources-humaines/employes/contrats"
+            className="no_style"
+          >
+            <Button
+              variant="outlined"
+              disableElevation
+              color="info"
+              sx={{ mr: 2 }}
+              endIcon={<List />}
+            >
+              Liste des contrats
+            </Button>
+          </Link>
+          <Link
+            to="/online/ressources-humaines/employes/contrats/ajouter"
+            className="no_style"
+          >
+            <Button
+              variant="outlined"
+              disableElevation
+              color="info"
+              sx={{ mr: 2 }}
+              endIcon={<Add />}
+            >
+              Ajouter un contrat
             </Button>
           </Link>
           <Link

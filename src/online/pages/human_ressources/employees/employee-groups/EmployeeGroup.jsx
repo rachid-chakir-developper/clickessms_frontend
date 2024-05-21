@@ -2,10 +2,11 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import ListEmployeeGroups from './ListEmployeeGroups';
 import AddEmployeeGroup from './AddEmployeeGroup';
 import EmployeeGroupDetails from './EmployeeGroupDetails';
+import { Box } from '@mui/material';
 
 export default function EmployeeGroups() {
   return (
-    <div className="online">
+    <Box>
       <Routes>
         <Route path={`liste`} element={<ListEmployeeGroups />} />
         <Route path={`ajouter`} element={<AddEmployeeGroup />} />
@@ -19,6 +20,6 @@ export default function EmployeeGroups() {
         />
         <Route path="/" element={<Navigate to={`liste`} replace />} />
       </Routes>
-    </div>
+    </Box>
   );
 }
