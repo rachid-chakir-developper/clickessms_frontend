@@ -94,23 +94,6 @@ export default function EmployeeItemCard({
               anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
               transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           >
-              {employee?.employeeParent && (
-              <Tooltip
-                title={`L'éstablishment parent: ${employee?.employeeParent?.name}`}
-              >
-                <Link
-                  to={`/online/ressources-humaines/employes/details/${employee?.employeeParent?.id}`}
-                  className="no_style"
-                >
-                  <MenuItem onClick={handleCloseMenu}>
-                    <Avatar
-                      alt={`${employee?.employeeParent?.name}`}
-                      src={employee?.employeeParent?.photo}
-                    />
-                  </MenuItem>
-                </Link>
-              </Tooltip>
-            )}
             {onDeleteEmployee && (
               <Tooltip title="Supprimer">
                 <MenuItem

@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { Avatar, MenuItem, Popover, Stack, Tooltip } from '@mui/material';
+import { Avatar, Chip, MenuItem, Popover, Stack, Tooltip } from '@mui/material';
 import {
   Delete,
   PauseRounded,
@@ -15,12 +15,12 @@ import {
   Article,
 } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
-import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
 
-export default function BeneficiaryItemCard({
-  beneficiary,
-  onDeleteBeneficiary,
-  onUpdateBeneficiaryState,
+export default function BankAccountItemCard({
+  bankAccount,
+  onDeleteBankAccount,
+  onUpdateBankAccountState,
 }) {
   //   const theme = useTheme();
   const navigate = useNavigate();
@@ -43,14 +43,14 @@ export default function BeneficiaryItemCard({
     });
   };
   const onGoToDetails = ()=>{
-    navigate(`/online/ressources-humaines/beneficiaires/details/${beneficiary?.id}`);
+    navigate(`/online/finance/tresorerie/comptes-bancaires/details/${bankAccount?.id}`);
   }
   return (
     <Card
       variant="outlined"
       sx={{ position: 'relative', p: 1}}
     >
-      <Tooltip title={beneficiary?.name}>
+      <Tooltip title={bankAccount?.iban}>
         <Stack direction="row"
         sx={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 2, cursor:'pointer' }}
         onClick={onGoToDetails}>
@@ -58,27 +58,43 @@ export default function BeneficiaryItemCard({
             component="img"
             width="100"
             height="100"
-            alt={beneficiary?.name}
+            alt={bankAccount?.iban}
             src={
-              beneficiary?.photo
-                ? beneficiary?.photo
+              bankAccount?.photo
+                ? bankAccount?.photo
                 : '/default-placeholder.jpg'
             }
             sx={{ borderRadius: 0.6, height: 100, width: 100 }}
           />
           <Stack direction="row" spacing={2} alignItems="center">
             <Stack direction="column" spacing={0.2} alignItems="center">
-            <Typography color="text.primary" fontWeight="medium" fontSize={18}>
-              {`${beneficiary?.firstName} ${beneficiary?.lastName}`}
-            </Typography>
-            <Typography
-              component="div"
-              variant="caption"
-              color="text.secondary"
-              fontWeight="regular"
-            >
-              {`${beneficiary?.email}`}
-            </Typography>
+              <Typography color="text.primary" fontWeight="medium" fontSize={18}>
+                {`${bankAccount?.iban}`}
+              </Typography>
+              <Typography
+                component="div"
+                variant="caption"
+                color="text.secondary"
+                fontWeight="regular"
+              >
+                {`${bankAccount?.bic}`}
+              </Typography>
+              <Stack direction="row" spacing={1}>
+                <Chip
+                  avatar={
+                    <Avatar
+                      alt={bankAccount?.establishment?.name}
+                      src={
+                        bankAccount?.establishment?.logo
+                          ? bankAccount?.establishment?.logo
+                          : '/default-placeholder.jpg'
+                      }
+                    />
+                  }
+                  label={bankAccount?.establishment?.name}
+                  variant="outlined"
+                />
+              </Stack>
             </Stack>
           </Stack>
         </Stack>
@@ -94,36 +110,36 @@ export default function BeneficiaryItemCard({
               anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
               transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           >
-            {onDeleteBeneficiary && (
+            {onDeleteBankAccount && (
               <Tooltip title="Supprimer">
                 <MenuItem
-                  onClick={() => {onDeleteBeneficiary(beneficiary?.id); handleCloseMenu()}}
+                  onClick={() => {onDeleteBankAccount(bankAccount?.id); handleCloseMenu()}}
                 >
                   <Delete fontSize="small" />
                   Supprimer
                 </MenuItem>
               </Tooltip>
             )}
-            {onUpdateBeneficiaryState && (
+            {onUpdateBankAccountState && (
               <Tooltip
-                title={!beneficiary?.isActive ? 'Activer' : 'Désactiver'}
+                title={!bankAccount?.isActive ? 'Activer' : 'Désactiver'}
               >
                 <MenuItem
-                  aria-label={!beneficiary?.isActive ? 'play' : 'pause'}
-                  onClick={() => {onUpdateBeneficiaryState(beneficiary?.id); handleCloseMenu()}}
+                  aria-label={!bankAccount?.isActive ? 'play' : 'pause'}
+                  onClick={() => {onUpdateBankAccountState(bankAccount?.id); handleCloseMenu()}}
                 >
-                  {!beneficiary?.isActive ? (
+                  {!bankAccount?.isActive ? (
                     <PlayArrowRounded />
                   ) : (
                     <PauseRounded />
                   )}
-                  {!beneficiary?.isActive ? 'Activer' : 'Désactiver'}
+                  {!bankAccount?.isActive ? 'Activer' : 'Désactiver'}
                 </MenuItem>
               </Tooltip>
             )}
             <Tooltip title="Modifier">
               <Link
-                to={`/online/ressources-humaines/beneficiaires/modifier/${beneficiary?.id}`}
+                to={`/online/finance/tresorerie/comptes-bancaires/modifier/${bankAccount?.id}`}
                 className="no_style"
               >
                 <MenuItem onClick={handleCloseMenu}>
@@ -132,10 +148,10 @@ export default function BeneficiaryItemCard({
                 </MenuItem>
               </Link>
             </Tooltip>
-            {beneficiary?.folder && (
+            {bankAccount?.folder && (
               <Tooltip title="Pièces jointes">
                 <MenuItem
-                  onClick={() => {onOpenDialogListLibrary(beneficiary?.folder); handleCloseMenu()}}
+                  onClick={() => {onOpenDialogListLibrary(bankAccount?.folder); handleCloseMenu()}}
                 >
                   <Folder fontSize="small" />
                   Pièces jointes
@@ -144,7 +160,7 @@ export default function BeneficiaryItemCard({
             )}
             <Tooltip title="Détails">
               <Link
-                to={`/online/ressources-humaines/beneficiaires/details/${beneficiary?.id}`}
+                to={`/online/finance/tresorerie/comptes-bancaires/details/${bankAccount?.id}`}
                 className="no_style"
               >
                 <MenuItem onClick={handleCloseMenu}>

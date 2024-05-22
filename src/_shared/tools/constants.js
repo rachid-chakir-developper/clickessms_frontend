@@ -67,3 +67,14 @@ export const UNDESIRABLE_EVENT_SEVERITY = {
     { value: 'VERY_SERIOUS', label: 'Très grave' },
   ],
 };
+
+export const ACCOUNT_TYPES = {
+  CURRENT: 'CURRENT',
+  SAVINGS: 'SAVINGS',
+  FIXED_TERM: 'FIXED_TERM',
+  ALL: [
+    { value: 'CURRENT', label: 'Courant' },
+    { value: 'SAVINGS', label: 'Placement' },
+    { value: 'FIXED_TERM', label: 'Compte à terme' },
+  ],
+};

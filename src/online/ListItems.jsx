@@ -685,6 +685,14 @@ function MoreItems({ open }) {
               </ListItemIcon>
               <ListItemText primary="Budget" />
             </ListItemButton>
+            <StyledNavLink to="/online/finance/tresorerie/comptes-bancaires">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <Money />
+                </ListItemIcon>
+                <ListItemText primary="Comptes bancaires" />
+              </ListItemButton>
+            </StyledNavLink>
             <StyledNavLink to="/online/finance/decisions">
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemIcon>

@@ -403,7 +403,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                             <Item>
                               <TheAutocomplete
                                 options={establishmentsData?.establishments?.nodes}
-                                label="Établissements / Services"
+                                label="Établissement / Service"
                                 placeholder="Ajouter un établissement ou service"
                                 multiple={false}
                                 value={item.establishment}
