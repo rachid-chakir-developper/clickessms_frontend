@@ -172,7 +172,7 @@ export default function ListEmployeeContracts() {
             className="no_style"
           >
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter un contrat d'employés
+              Ajouter un contrat d'employé
             </Button>
           </Link>
         </Box>

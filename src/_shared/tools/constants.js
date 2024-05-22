@@ -78,3 +78,14 @@ export const ACCOUNT_TYPES = {
     { value: 'FIXED_TERM', label: 'Compte à terme' },
   ],
 };
+
+export const MEASUREMENT_ACTIVITY_UNITS = {
+  DAY: 'DAY',
+  HOUR: 'HOUR',
+  MONTH: 'MONTH',
+  ALL: [
+    { value: 'DAY', label: 'Jour' },
+    { value: 'HOUR', label: 'Heure' },
+    { value: 'MONTH', label: 'Mois' },
+  ],
+};

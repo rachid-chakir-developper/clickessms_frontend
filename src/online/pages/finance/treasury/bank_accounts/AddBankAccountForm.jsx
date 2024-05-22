@@ -49,7 +49,7 @@ export default function AddBankAccountForm({ idBankAccount, title }) {
       bic: '',
       bankName: '',
       openingDate: dayjs(new Date()),
-      closingDate: dayjs(new Date()),
+      closingDate: null,
       description: '',
       observation: '',
       isActive: true,
@@ -222,7 +222,7 @@ export default function AddBankAccountForm({ idBankAccount, title }) {
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Nom"
+                  label="Libellé"
                   value={formik.values.name}
                   onChange={(e) => formik.setFieldValue('name', e.target.value)}
                   disabled={loadingPost || loadingPut}

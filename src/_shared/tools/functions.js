@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { LEVELS, PRIORITIES, STATUS, STEP_TYPES } from './constants';
+import { ACCOUNT_TYPES, LEVELS, MEASUREMENT_ACTIVITY_UNITS, PRIORITIES, STATUS, STEP_TYPES } from './constants';
 
 export const getStatusColor = (status) => {
   switch (status) {
@@ -73,6 +73,14 @@ export const getFormatTime = (dateTime) => {
   } catch (error) {
     return null;
   }
+};
+
+export const getaccountTypeLabel = (type) => {
+  return ACCOUNT_TYPES.ALL.find((t) => t.value == type)?.label;
+};
+
+export const getMeasurementActivityUnitLabel = (unit) => {
+  return MEASUREMENT_ACTIVITY_UNITS.ALL.find((t) => t.value == unit)?.label;
 };
 
 // export const getMarkerIcon = (type) => {

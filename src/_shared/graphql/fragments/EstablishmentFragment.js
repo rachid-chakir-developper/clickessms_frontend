@@ -64,6 +64,15 @@ export const ESTABLISHMENT_MANAGER_DETAILS = gql`
   ${EMPLOYEE_BASIC_INFOS}
 `;
 
+export const ACTIVITY_AUTHORIZATION_DETAILS = gql`
+  fragment ActivityAuthorizationFragment on ActivityAuthorizationType {
+    id
+    startingDateTime
+    endingDateTime
+    capacity
+  }
+`;
+
 export const ESTABLISHMENT_DETAILS = gql`
   fragment EstablishmentDetailsFragment on EstablishmentType {
     ...EstablishmentBasicInfosFragment
@@ -71,6 +80,7 @@ export const ESTABLISHMENT_DETAILS = gql`
       ...EstablishmentBasicInfosFragment
     }
     openingDate
+    measurementActivityUnit
     latitude
     longitude
     city
@@ -88,7 +98,11 @@ export const ESTABLISHMENT_DETAILS = gql`
     managers{
       ...EstablishmentManagerTypeFragment
     }
+    activityAuthorizations{
+      ...ActivityAuthorizationFragment
+    }
   }
   ${ESTABLISHMENT_BASIC_INFOS}
   ${ESTABLISHMENT_MANAGER_DETAILS}
+  ${ACTIVITY_AUTHORIZATION_DETAILS}
 `;

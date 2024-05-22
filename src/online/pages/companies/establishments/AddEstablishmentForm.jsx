@@ -15,6 +15,8 @@ import {
   Step,
   StepLabel,
   StepContent,
+  InputAdornment,
+  IconButton,
 } from '@mui/material';
 
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -39,6 +41,9 @@ import { GET_DATAS_ESTABLISHMENT } from '../../../../_shared/graphql/queries/Dat
 import dayjs from 'dayjs';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
+import { MEASUREMENT_ACTIVITY_UNITS } from '../../../../_shared/tools/constants';
+import { Close } from '@mui/icons-material';
+import { getMeasurementActivityUnitLabel } from '../../../../_shared/tools/functions';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -65,6 +70,7 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
       finess: '',
       apeCode: '',
       openingDate: dayjs(new Date()),
+      measurementActivityUnit: 'DAY',
       city: '',
       zipCode: '',
       address: '',
@@ -83,6 +89,7 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
       establishmentParent: null,
       establishmentChilds: [],
       managers: [],
+      activityAuthorizations : []
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -95,6 +102,13 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
       establishmentCopy.establishmentChilds =
       establishmentCopy.establishmentChilds.map((i) => i.id);
       establishmentCopy.managers = establishmentCopy.managers.map((i) => i?.id);
+      if (!establishmentCopy?.activityAuthorizations) establishmentCopy['activityAuthorizations'] = [];
+      let items = [];
+        establishmentCopy.activityAuthorizations.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          items.push(itemCopy);
+        });
+        establishmentCopy.activityAuthorizations = items;
       if (establishmentCopy?.id && establishmentCopy?.id != '') {
         onUpdateEstablishment({
           id: establishmentCopy.id,
@@ -112,6 +126,28 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
         });
     },
   });
+
+  
+  const addActivityAuthorization= () => {
+    formik.setValues({
+      ...formik.values,
+      activityAuthorizations: [
+        ...formik.values.activityAuthorizations,
+        { startingDateTime: dayjs(new Date()), endingDateTime: dayjs(new Date()), capacity: 0},
+      ],
+    });
+  };
+
+  const removeActivityAuthorization= (index) => {
+    const updatedDecisionDocumentEntries = [...formik.values.activityAuthorizations];
+    updatedDecisionDocumentEntries.splice(index, 1);
+
+    formik.setValues({
+      ...formik.values,
+      activityAuthorizations: updatedDecisionDocumentEntries,
+    });
+  };
+
   const [createEstablishment, { loading: loadingPost }] = useMutation(
     POST_ESTABLISHMENT,
     {
@@ -237,6 +273,17 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
         establishmentCopy.managers = establishmentCopy.managers
         ? establishmentCopy.managers.map((i) => i?.employee)
         : [];
+
+        if (!establishmentCopy?.activityAuthorizations) establishmentCopy['activityAuthorizations'] = [];
+        let items = [];
+        establishmentCopy.activityAuthorizations.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          itemCopy.startingDateTime = dayjs(itemCopy.startingDateTime)
+          itemCopy.endingDateTime = dayjs(itemCopy.endingDateTime)
+          items.push(itemCopy);
+        });
+        establishmentCopy.activityAuthorizations = items;
+
         formik.setValues(establishmentCopy);
       },
       onError: (err) => console.log(err),
@@ -631,6 +678,116 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
                         }
                       />
                     </Item>
+                  </Grid>
+                  <Grid xs={12} sm={6} md={4}>
+                    <Item>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                        Unité de mesure de l'activité
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          label="Unité de mesure de l'activité"
+                          value={formik.values.measurementActivityUnit}
+                          onChange={(e) =>
+                            formik.setFieldValue(
+                              'measurementActivityUnit',
+                              e.target.value,
+                            )
+                          }
+                        >
+                          {MEASUREMENT_ACTIVITY_UNITS?.ALL?.map((type, index) => {
+                            return (
+                              <MenuItem key={index} value={type.value}>
+                                {type.label}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    </Item>
+                  </Grid>
+                  <Grid 
+                    xs={12}
+                    sm={12}
+                    md={12} item="true">
+                      <Typography variant="h6">Les habilitations</Typography>
+                      {formik.values?.activityAuthorizations?.map((item, index) => (
+                        <Grid
+                          container
+                          key={index}
+                          spacing={{ xs: 2, md: 3 }}
+                          columns={{ xs: 4, sm: 8, md: 12 }}
+                        >
+                          <Grid xs={12} sm={6} md={4} item="true">
+                            <Item>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Date de début"
+                                value={item.startingDateTime}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`activityAuthorizations.${index}.startingDateTime`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid xs={12} sm={6} md={4} item="true">
+                            <Item>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Date de fin"
+                                value={item.endingDateTime}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`activityAuthorizations.${index}.endingDateTime`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid xs={12} sm={6} md={4} item="true">
+                            <Item sx={{position: 'relative'}}>
+                              <TheTextField
+                                variant="outlined"
+                                label="Capacité"
+                                type="number"
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="start">{getMeasurementActivityUnitLabel(formik.values?.measurementActivityUnit)}</InputAdornment>,
+                                }}
+                                value={item.capacity}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`activityAuthorizations.${index}.capacity`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                              <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                                onClick={() => removeActivityAuthorization(index)}
+                                edge="end"
+                                color="error"
+                              >
+                                <Close />
+                              </IconButton>
+                            </Item>
+                          </Grid>
+                        </Grid>
+                      ))}
+                  </Grid>
+                  <Grid
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    item="true"
+                    sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                  >
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={addActivityAuthorization}
+                      disabled={loadingPost || loadingPut}
+                    >
+                      Ajouter une habilitation
+                    </Button>
                   </Grid>
                 </Grid>
               </StepContent>

@@ -16,6 +16,7 @@ import {
 } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { getaccountTypeLabel } from '../../../../../_shared/tools/functions';
 
 export default function BankAccountItemCard({
   bankAccount,
@@ -50,7 +51,7 @@ export default function BankAccountItemCard({
       variant="outlined"
       sx={{ position: 'relative', p: 1}}
     >
-      <Tooltip title={bankAccount?.iban}>
+      <Tooltip title={bankAccount?.name}>
         <Stack direction="row"
         sx={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 2, cursor:'pointer' }}
         onClick={onGoToDetails}>
@@ -58,10 +59,10 @@ export default function BankAccountItemCard({
             component="img"
             width="100"
             height="100"
-            alt={bankAccount?.iban}
+            alt={bankAccount?.name}
             src={
-              bankAccount?.photo
-                ? bankAccount?.photo
+              bankAccount?.image
+                ? bankAccount?.image
                 : '/default-placeholder.jpg'
             }
             sx={{ borderRadius: 0.6, height: 100, width: 100 }}
@@ -69,7 +70,7 @@ export default function BankAccountItemCard({
           <Stack direction="row" spacing={2} alignItems="center">
             <Stack direction="column" spacing={0.2} alignItems="center">
               <Typography color="text.primary" fontWeight="medium" fontSize={18}>
-                {`${bankAccount?.iban}`}
+                {`${bankAccount?.name}`}
               </Typography>
               <Typography
                 component="div"
@@ -77,7 +78,7 @@ export default function BankAccountItemCard({
                 color="text.secondary"
                 fontWeight="regular"
               >
-                {`${bankAccount?.bic}`}
+                {`${getaccountTypeLabel(bankAccount?.accountType)}`}
               </Typography>
               <Stack direction="row" spacing={1}>
                 <Chip
