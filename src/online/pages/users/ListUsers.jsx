@@ -214,7 +214,7 @@ export default function ListUsers() {
               columns={{ xs: 4, sm: 8, md: 12 }}
             >
               {loadingUsers && (
-                <Grid key={'pgrs'} item xs={2} sm={4} md={3}>
+                <Grid key={'pgrs'} item xs={12} sm={6} md={4}>
                   <ProgressService type="mediaCard" />
                 </Grid>
               )}
@@ -222,7 +222,7 @@ export default function ListUsers() {
                 <Alert severity="warning">Aucun utilisateur trouvé.</Alert>
               )}
               {usersData?.users?.nodes?.map((user, index) => (
-                <Grid xs={2} sm={4} md={3} key={index}>
+                <Grid xs={12} sm={6} md={4} key={index}>
                   <Item>
                     <UserItemCard
                       user={user}

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Stack, Box, Typography, Button, Divider } from '@mui/material';
+import { Stack, Box, Typography, Button, Divider, Stepper, Step, StepLabel, StepContent, InputAdornment, IconButton } from '@mui/material';
 import dayjs from 'dayjs';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -23,6 +23,9 @@ import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutoc
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import SelectCheckmarks from '../../../../_shared/components/form-fields/SelectCheckmarks';
 import { GET_DATAS_MEETING } from '../../../../_shared/graphql/queries/DataQueries';
+import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
+import { Close } from '@mui/icons-material';
+import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -33,6 +36,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function AddMeetingForm({ idMeeting, title }) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({
@@ -50,20 +54,39 @@ export default function AddMeetingForm({ idMeeting, title }) {
       description: '',
       observation: '',
       participants: [],
+      presentParticipants: [],
       beneficiaries: [],
+      establishments: [],
       employee: null,
-      reasons: [],
+      meetingTypes: [],
       otherReasons: '',
+      meetingDecisions: [],
+      meetingReviewPoints: []
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       let meetingCopy = { ...values };
       meetingCopy.participants = meetingCopy.participants.map((i) => i?.id);
+      meetingCopy.presentParticipants = meetingCopy.presentParticipants.map((i) => i?.id);
       meetingCopy.beneficiaries = meetingCopy.beneficiaries.map((i) => i?.id);
-      meetingCopy.reasons = meetingCopy.reasons.map((i) => i?.id);
-      meetingCopy.employee = meetingCopy.employee
-        ? meetingCopy.employee.id
-        : null;
+      meetingCopy.meetingTypes = meetingCopy.meetingTypes.map((i) => i?.id);
+      meetingCopy.establishments = meetingCopy.establishments.map((i) => i?.id);
+      meetingCopy.employee = meetingCopy.employee ? meetingCopy.employee.id : null;
+      if (!meetingCopy?.meetingDecisions) meetingCopy['meetingDecisions'] = [];
+      let items = [];
+      meetingCopy.meetingDecisions.forEach((item) => {
+        let { __typename, ...itemCopy } = item;
+        itemCopy.employees = itemCopy.employees.map((i) => i?.id);
+        items.push(itemCopy);
+      });
+      meetingCopy.meetingDecisions = items;
+      if (!meetingCopy?.meetingReviewPoints) meetingCopy['meetingReviewPoints'] = [];
+      items = [];
+      meetingCopy.meetingReviewPoints.forEach((item) => {
+        let { __typename, ...itemCopy } = item;
+        items.push(itemCopy);
+      });
+      meetingCopy.meetingReviewPoints = items;
       if (idMeeting && idMeeting != '') {
         onUpdateMeeting({
           id: meetingCopy.id,
@@ -102,6 +125,46 @@ export default function AddMeetingForm({ idMeeting, title }) {
     fetchMore: fetchMoreDatas,
   } = useQuery(GET_DATAS_MEETING, { fetchPolicy: 'network-only' });
 
+  
+  const addMeetingDecision = () => {
+    formik.setValues({
+      ...formik.values,
+      meetingDecisions: [
+        ...formik.values.meetingDecisions,
+        { decision: '', dueDate: null, employees:[]},
+      ],
+    });
+  };
+
+  const removeMeetingDecision = (index) => {
+    const updatedReportItems = [...formik.values.meetingDecisions];
+    updatedReportItems.splice(index, 1);
+
+    formik.setValues({
+      ...formik.values,
+      meetingDecisions: updatedReportItems,
+    });
+  }; 
+  const addMeetingReviewPoint = () => {
+    formik.setValues({
+      ...formik.values,
+      meetingReviewPoints: [
+        ...formik.values.meetingReviewPoints,
+        { pointToReview: ''},
+      ],
+    });
+  };
+
+  const removeMeetingReviewPoint = (index) => {
+    const updatedReportItems = [...formik.values.meetingReviewPoints];
+    updatedReportItems.splice(index, 1);
+
+    formik.setValues({
+      ...formik.values,
+      meetingReviewPoints: updatedReportItems,
+    });
+  };
+
   const [createMeeting, { loading: loadingPost }] = useMutation(POST_MEETING, {
     onCompleted: (data) => {
       console.log(data);
@@ -112,7 +175,8 @@ export default function AddMeetingForm({ idMeeting, title }) {
       });
       let { __typename, ...meetingCopy } = data.createMeeting.meeting;
       //   formik.setValues(meetingCopy);
-      navigate('/online/administratif/reunions/liste');
+        formik.setFieldValue('id', meetingCopy.id);
+        handleNext();
     },
     update(cache, { data: { createMeeting } }) {
       const newMeeting = createMeeting.meeting;
@@ -147,7 +211,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
       });
       let { __typename, ...meetingCopy } = data.updateMeeting.meeting;
       //   formik.setValues(meetingCopy);
-      navigate('/online/administratif/reunions/liste');
+      // handleNext();
     },
     update(cache, { data: { updateMeeting } }) {
       const updatedMeeting = updateMeeting.meeting;
@@ -205,15 +269,83 @@ export default function AddMeetingForm({ idMeeting, title }) {
       meetingCopy.beneficiaries = meetingCopy.beneficiaries
         ? meetingCopy.beneficiaries.map((i) => i?.beneficiary)
         : [];
+        meetingCopy.establishments =
+        meetingCopy.establishments
+          ? meetingCopy.establishments.map((i) => i?.establishment)
+          : [];
+        
+        if (!meetingCopy?.meetingDecisions) meetingCopy['meetingDecisions'] = [];
+        let items = [];
+        meetingCopy.meetingDecisions.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          itemCopy.dueDate = itemCopy.dueDate ? dayjs(itemCopy.dueDate): null;
+          items.push(itemCopy);
+        });
+        meetingCopy.meetingDecisions = items;
+
+        items = [];
+        if (!meetingCopy?.meetingReviewPoints) meetingCopy['meetingReviewPoints'] = [];
+        meetingCopy.meetingReviewPoints.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          items.push(itemCopy);
+        });
+        meetingCopy.meetingReviewPoints = items;
       formik.setValues(meetingCopy);
     },
     onError: (err) => console.log(err),
   });
+
+  const {
+    loading: loadingEstablishments,
+    data: establishmentsData,
+    error: establishmentsError,
+    fetchMore: fetchMoreEstablishments,
+  } = useQuery(GET_ESTABLISHMENTS, {
+    fetchPolicy: 'network-only',
+    variables: { page: 1, limit: 10 },
+  });
+
   React.useEffect(() => {
     if (idMeeting) {
       getMeeting({ variables: { id: idMeeting } });
     }
   }, [idMeeting]);
+
+  
+  React.useEffect(() => {
+    if (searchParams.get('id') && !idMeeting) {
+      getMeeting({ variables: { id: searchParams.get('id') } });
+    }
+  }, []);
+
+  const [activeStep, setActiveStep] = React.useState(
+    searchParams.get('step') ? Number(searchParams.get('step')) : 0,
+  );
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if(activeStep >= 1) navigate('/online/administratif/reunions/liste');
+    else if (formik.values.id)
+      setSearchParams({ step: activeStep + 1, id: formik.values.id });
+    else setSearchParams({ step: activeStep + 1 });
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    if (formik.values.id)
+      setSearchParams({ step: activeStep + 1, id: formik.values.id });
+    else setSearchParams({ step: activeStep + 1 });
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+  const onGoToStep = (step = 0) => {
+    if (formik.values.id) {
+      setActiveStep(step);
+      setSearchParams({ step, id: formik.values.id });
+    }
+  };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
@@ -222,173 +354,296 @@ export default function AddMeetingForm({ idMeeting, title }) {
       {loadingMeeting && <ProgressService type="form" />}
       {!loadingMeeting && (
         <form onSubmit={formik.handleSubmit}>
+          
+          <Stepper
+            activeStep={activeStep}
+            orientation="vertical"
+            nonLinear={idMeeting ? true : false}
+          >
+            <Step>
+              <StepLabel
+                onClick={() => onGoToStep(0)}
+                optional={
+                  <Typography variant="caption">Informations générales</Typography>
+                }
+              >
+                Informations générales
+              </StepLabel>
+              <StepContent>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  <Grid xs={12} sm={6} md={4}>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Libellé"
+                        id="title"
+                        value={formik.values.title}
+                        required
+                        onChange={(e) =>
+                          formik.setFieldValue('title', e.target.value)
+                        }
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.title && Boolean(formik.errors.title)}
+                        helperText={formik.touched.title && formik.errors.title}
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={12} sm={6} md={4}>
+                    <Item>
+                      <TheDateTimePicker
+                        label="Date et heure de début"
+                        value={formik.values.startingDateTime}
+                        onChange={(date) =>
+                          formik.setFieldValue('startingDateTime', date)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={12} sm={6} md={4}>
+                    <Item>
+                      <TheDateTimePicker
+                        label="Date de fin"
+                        value={formik.values.endingDateTime}
+                        onChange={(date) =>
+                          formik.setFieldValue('endingDateTime', date)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={12} sm={6} md={4} item="true">
+                    <Item>
+                      <SelectCheckmarks
+                        options={dataData?.meetingTypes}
+                        label="Type de réunion"
+                        placeholder="Ajouter un type"
+                        limitTags={3}
+                        value={formik.values.meetingTypes}
+                        onChange={(e, newValue) =>
+                          formik.setFieldValue('meetingTypes', newValue)
+                        }
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={12} sm={6} md={4}>
+                    <Item>
+                      <TheAutocomplete
+                        options={establishmentsData?.establishments?.nodes}
+                        label="Structures concernées"
+                        placeholder="Ajouter une tructure"
+                        limitTags={3}
+                        value={formik.values.establishments}
+                        onChange={(e, newValue) =>
+                          formik.setFieldValue('establishments', newValue)
+                        }
+                      />
+                    </Item>
+                    <Item>
+                      <TheAutocomplete
+                        options={beneficiariesData?.beneficiaries?.nodes}
+                        label="Bénificiaires concernés"
+                        placeholder="Ajouter un bénificiaire"
+                        limitTags={3}
+                        value={formik.values.beneficiaries}
+                        onChange={(e, newValue) =>
+                          formik.setFieldValue('beneficiaries', newValue)
+                        }
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid xs={12} sm={6} md={4} item="true">
+                    <Item>
+                      <TheAutocomplete
+                        options={employeesData?.employees?.nodes}
+                        label="Personnes invités"
+                        placeholder="Ajouter une personne"
+                        limitTags={3}
+                        value={formik.values.participants}
+                        onChange={(e, newValue) =>
+                          formik.setFieldValue('participants', newValue)
+                        }
+                      />
+                    </Item>
+                    <Item>
+                      <TheAutocomplete
+                        options={employeesData?.employees?.nodes}
+                        label="Personnes présentes"
+                        placeholder="Ajouter une personne"
+                        limitTags={3}
+                        value={formik.values.presentParticipants}
+                        onChange={(e, newValue) =>
+                          formik.setFieldValue('presentParticipants', newValue)
+                        }
+                      />
+                    </Item>
+                  </Grid>
+                </Grid>
+              </StepContent>
+            </Step>
+            <Step>
+              <StepLabel
+                onClick={() => onGoToStep(1)}
+                optional={
+                  <Typography variant="caption">Compte-rendu</Typography>
+                }
+              >
+                Compte-rendu 
+              </StepLabel>
+              <StepContent>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  <Grid xs={12} sm={12} md={6} item="true"> 
+                    <Typography variant="h6">Les décisions</Typography> 
+                    {formik.values?.meetingDecisions?.map((item, index) => (
+                      <Grid
+                        container
+                        spacing={{ xs: 2, md: 3 }}
+                        columns={{ xs: 4, sm: 8, md: 12 }}
+                        key={index}
+                      >
+                        <Grid xs={12} sm={12} md={12} item="true">
+                          <Item sx={{position: 'relative'}}>
+                            <TheTextField
+                              variant="outlined"
+                              label="Décision"
+                              multiline
+                              rows={2}
+                              value={item.decision}
+                              onChange={(e) =>
+                                formik.setFieldValue(
+                                  `meetingDecisions.${index}.decision`,
+                                  e.target.value,
+                                )
+                              }
+                              disabled={loadingPost || loadingPut}
+                            />
+                            <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                              onClick={() => removeMeetingDecision(index)}
+                              edge="end"
+                              color="error"
+                            >
+                              <Close />
+                            </IconButton>
+                          </Item>
+                        </Grid>
+                        <Grid xs={12} sm={6} md={5} item="true">
+                          <Item>
+                            <TheDesktopDatePicker
+                              label="Échéance"
+                              value={item.dueDate}
+                              onChange={(date) =>
+                                formik.setFieldValue(`meetingDecisions.${index}.dueDate`, date)
+                              }
+                              disabled={loadingPost || loadingPut}
+                            />
+                          </Item>
+                        </Grid>
+                        <Grid xs={12} sm={6} md={7} item="true">
+                          <Item>
+                            <TheAutocomplete
+                              options={employeesData?.employees?.nodes}
+                              label="Personnes concernées"
+                              placeholder="Ajouter une personne"
+                              limitTags={3}
+                              value={item.employees}
+                              onChange={(e, newValue) =>
+                                formik.setFieldValue(`meetingDecisions.${index}.employees`, newValue)
+                              }
+                            />
+                          </Item>
+                      </Grid>
+                      </Grid>
+                    ))}
+                    <Grid
+                      xs={12}
+                      sm={12}
+                      md={12}
+                      item="true"
+                      sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom:4 }}
+                    >
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={addMeetingDecision}
+                        disabled={loadingPost || loadingPut}
+                      >
+                        Ajouter une décision
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  
+                  <Grid xs={12} sm={12} md={6} item="true" sx={{background: '#f9f9f9'}}>
+                    <Typography variant="h6">Les points à revoir</Typography>  
+                    {formik.values?.meetingReviewPoints?.map((item, index) => (
+                      <Grid
+                        container
+                        spacing={{ xs: 2, md: 3 }}
+                        columns={{ xs: 4, sm: 8, md: 12 }}
+                        key={index}
+                      >
+                        <Grid xs={12} sm={12} md={12} item="true">
+                          <Item sx={{position: 'relative'}}>
+                            <TheTextField
+                              variant="outlined"
+                              label="Point à revoir"
+                              multiline
+                              rows={2}
+                              value={item.pointToReview}
+                              onChange={(e) =>
+                                formik.setFieldValue(
+                                  `meetingReviewPoints.${index}.pointToReview`,
+                                  e.target.value,
+                                )
+                              }
+                              disabled={loadingPost || loadingPut}
+                            />
+                            <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                              onClick={() => removeMeetingReviewPoint(index)}
+                              edge="end"
+                              color="error"
+                            >
+                              <Close />
+                            </IconButton>
+                          </Item>
+                        </Grid>
+                      </Grid>
+                    ))}
+                    <Grid
+                      xs={12}
+                      sm={12}
+                      md={12}
+                      item="true"
+                      sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom:4 }}
+                    >
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={addMeetingReviewPoint}
+                        disabled={loadingPost || loadingPut}
+                      >
+                        Ajouter un point à revoir
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </StepContent>
+            </Step>
+          </Stepper>
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Référence"
-                  value={formik.values.number}
-                  disabled
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Objet"
-                  id="title"
-                  value={formik.values.title}
-                  required
-                  onChange={(e) =>
-                    formik.setFieldValue('title', e.target.value)
-                  }
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.title && Boolean(formik.errors.title)}
-                  helperText={formik.touched.title && formik.errors.title}
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Lien de la visio"
-                  value={formik.values.videoCallLink}
-                  onChange={(e) =>
-                    formik.setFieldValue('videoCallLink', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheDateTimePicker
-                  label="Date et heure de début"
-                  value={formik.values.startingDateTime}
-                  onChange={(date) =>
-                    formik.setFieldValue('startingDateTime', date)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-              <Item>
-                <TheDateTimePicker
-                  label="Date de fin"
-                  value={formik.values.endingDateTime}
-                  onChange={(date) =>
-                    formik.setFieldValue('endingDateTime', date)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheAutocomplete
-                  options={employeesData?.employees?.nodes}
-                  label="Pour quel employé ?"
-                  placeholder="Choisissez un employé ?"
-                  multiple={false}
-                  value={formik.values.employee}
-                  helperText="Si c'est pour vous. laissez ce champ vide."
-                  onChange={(e, newValue) =>
-                    formik.setFieldValue('employee', newValue)
-                  }
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4} item>
-              <Item>
-                <TheAutocomplete
-                  options={employeesData?.employees?.nodes}
-                  label="Participants"
-                  placeholder="Ajouter un participant"
-                  limitTags={3}
-                  value={formik.values.participants}
-                  onChange={(e, newValue) =>
-                    formik.setFieldValue('participants', newValue)
-                  }
-                />
-              </Item>
-              <Item>
-                <TheAutocomplete
-                  options={beneficiariesData?.beneficiaries?.nodes}
-                  label="Bénificiaires"
-                  placeholder="Ajouter un bénificiaire"
-                  limitTags={3}
-                  value={formik.values.beneficiaries}
-                  onChange={(e, newValue) =>
-                    formik.setFieldValue('beneficiaries', newValue)
-                  }
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4} item>
-              <Item>
-                <SelectCheckmarks
-                  options={dataData?.meetingReasons}
-                  label="Motifs"
-                  placeholder="Ajouter un motif"
-                  limitTags={3}
-                  value={formik.values.reasons}
-                  onChange={(e, newValue) =>
-                    formik.setFieldValue('reasons', newValue)
-                  }
-                />
-              </Item>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Autres motifs"
-                  value={formik.values.otherReasons}
-                  onChange={(e) =>
-                    formik.setFieldValue('otherReasons', e.target.value)
-                  }
-                  helperText="Si vous ne trouvez pas le motif dans la liste dessus."
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={12} sm={12} md={12}>
-              <Divider variant="middle" />
-            </Grid>
-            <Grid xs={12} sm={6} md={6}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Description"
-                  multiline
-                  rows={4}
-                  value={formik.values.description}
-                  onChange={(e) =>
-                    formik.setFieldValue('description', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={12} sm={6} md={6}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Observation"
-                  multiline
-                  rows={4}
-                  value={formik.values.observation}
-                  onChange={(e) =>
-                    formik.setFieldValue('observation', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid xs={12} sm={12} md={12} item="true">
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
                   to="/online/administratif/reunions/liste"

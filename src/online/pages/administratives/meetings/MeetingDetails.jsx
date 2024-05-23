@@ -8,7 +8,6 @@ import { MEETING_RECAP } from '../../../../_shared/graphql/queries/MeetingQuerie
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
-import AddMeetingReportForm from './AddMeetingReportForm';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -65,7 +64,6 @@ export default function MeetingDetails() {
             </Paper>
           </Grid>
         </Grid>
-        <AddMeetingReportForm idMeeting={idMeeting} />
       </Box>
     </>
   );

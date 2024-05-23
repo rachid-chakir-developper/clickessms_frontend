@@ -11,6 +11,7 @@ import {
   getFormatDateTime,
 } from '../../../../_shared/tools/functions';
 import { Edit } from '@mui/icons-material';
+import BeneficiaryTabs from './beneficiary-tabs/BeneficiaryTabs';
 
 export default function BeneficiaryDetails() {
   let { idBeneficiary } = useParams();
@@ -174,34 +175,12 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
             <Typography variant="body1">
               Date de naissance: {getFormatDate(birthDate)}
             </Typography>
-            <Typography variant="body1">
-              Date d'embauche: {getFormatDate(hiringDate)}
-            </Typography>
           </Paper>
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>
         <Paper sx={{ padding: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Description
-          </Typography>
-          <Paper sx={{ padding: 2 }} variant="outlined">
-            <Typography variant="body1">
-              {description ? description : "Aucune description pour l'instant"}
-            </Typography>
-          </Paper>
-        </Paper>
-      </Grid>
-      <Grid item xs={12} sm={12}>
-        <Paper sx={{ padding: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Observation
-          </Typography>
-          <Paper sx={{ padding: 2 }} variant="outlined">
-            <Typography variant="body1">
-              {observation ? observation : "Aucune observation pour l'instant"}
-            </Typography>
-          </Paper>
+          <BeneficiaryTabs />
         </Paper>
       </Grid>
     </Grid>

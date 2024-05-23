@@ -62,6 +62,9 @@ export const GET_DATAS_UNDESIRABLE_EVENT = gql`
 
 export const GET_DATAS_MEETING = gql`
   query {
+    meetingTypes: datas(typeData: "TypeMeeting") {
+      ...DataBasicInfosFragment
+    }
     meetingReasons: datas(typeData: "MeetingReason") {
       ...DataBasicInfosFragment
     }

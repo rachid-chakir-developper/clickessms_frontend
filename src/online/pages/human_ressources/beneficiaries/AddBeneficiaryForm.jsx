@@ -117,7 +117,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       ...formik.values,
       beneficiaryEntries: [
         ...formik.values.beneficiaryEntries,
-        { establishments: [], internalReferents: [] , entryDate: dayjs(new Date()), releaseDate: dayjs(new Date())},
+        { establishments: [], internalReferents: [] , entryDate: dayjs(new Date()), releaseDate: null},
       ],
     });
   };
@@ -137,7 +137,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       ...formik.values,
       beneficiaryAdmissionDocuments: [
         ...formik.values.beneficiaryAdmissionDocuments,
-        { document: undefined, admissionDocumentType: null , financier: null, startingDate: dayjs(new Date()), endingDate: dayjs(new Date())},
+        { document: undefined, admissionDocumentType: null , financier: null, startingDate: dayjs(new Date()), endingDate: null},
       ],
     });
   };
@@ -263,15 +263,15 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
         beneficiaryCopy.gender = beneficiaryCopy.gender
           ? Number(beneficiaryCopy.gender.id)
           : null;
-        beneficiaryCopy.birthDate = dayjs(beneficiaryCopy.birthDate);
-        beneficiaryCopy.admissionDate = dayjs(beneficiaryCopy.admissionDate);
+        beneficiaryCopy.birthDate = beneficiaryCopy.birthDate ? dayjs(beneficiaryCopy.birthDate) : null;
+        beneficiaryCopy.admissionDate = beneficiaryCopy.admissionDate ? dayjs(beneficiaryCopy.admissionDate) : null;
         
         if (!beneficiaryCopy?.beneficiaryEntries) beneficiaryCopy['beneficiaryEntries'] = [];
         let items = [];
         beneficiaryCopy.beneficiaryEntries.forEach((item) => {
           let { __typename, ...itemCopy } = item;
-          itemCopy.entryDate = dayjs(itemCopy.entryDate)
-          itemCopy.releaseDate = dayjs(itemCopy.releaseDate)
+          itemCopy.entryDate = itemCopy.entryDate ? dayjs(itemCopy.entryDate) : null
+          itemCopy.releaseDate = itemCopy.releaseDate ? dayjs(itemCopy.releaseDate) : null
           items.push(itemCopy);
         });
         beneficiaryCopy.beneficiaryEntries = items;
@@ -279,8 +279,8 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
         items = [];
         beneficiaryCopy.beneficiaryAdmissionDocuments.forEach((item) => {
           let { __typename, ...itemCopy } = item;
-          itemCopy.startingDate = dayjs(itemCopy.startingDate)
-          itemCopy.endingDate = dayjs(itemCopy.endingDate)
+          itemCopy.startingDate = itemCopy.startingDate ? dayjs(itemCopy.startingDate) : null
+          itemCopy.endingDate = itemCopy.endingDate ? dayjs(itemCopy.endingDate) : null
           itemCopy.admissionDocumentType = itemCopy.admissionDocumentType
           ? Number(itemCopy.admissionDocumentType.id)
           : null;

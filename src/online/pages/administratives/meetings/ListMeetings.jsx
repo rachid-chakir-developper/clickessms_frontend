@@ -14,6 +14,7 @@ import { GET_MEETINGS } from '../../../../_shared/graphql/queries/MeetingQueries
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import MeetingFilter from './MeetingFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
+import TableListMeetings from './TableListMeetings';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -131,7 +132,7 @@ export default function ListMeetings() {
       <Grid item="true" xs={12}>
         <MeetingFilter onFilterChange={handleFilterChange} />
       </Grid>
-      <Grid item="true" xs={12}>
+      {/* <Grid item="true" xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -158,6 +159,13 @@ export default function ListMeetings() {
             ))}
           </Grid>
         </Box>
+      </Grid> */}
+      <Grid item="true" xs={12}>
+        <TableListMeetings
+          loading={loadingMeetings}
+          rows={meetingsData?.meetings?.nodes || []}
+          onDeleteMeeting={onDeleteMeeting}
+        />
       </Grid>
       <Grid item="true" xs={12}>
         <PaginationControlled
