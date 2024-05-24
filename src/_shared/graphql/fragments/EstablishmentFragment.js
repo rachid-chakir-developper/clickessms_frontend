@@ -107,3 +107,35 @@ export const ESTABLISHMENT_DETAILS = gql`
   ${ESTABLISHMENT_BASIC_INFOS}
   ${ACTIVITY_AUTHORIZATION_DETAILS}
 `;
+
+export const ESTABLISHMENT_RECAP_DETAILS = gql`
+  fragment EstablishmentReacpDetailsFragment on EstablishmentType {
+    ...EstablishmentBasicInfosFragment
+    establishmentChilds {
+      ...EstablishmentBasicInfosFragment
+    }
+    measurementActivityUnit
+    latitude
+    longitude
+    city
+    zipCode
+    address
+    additionalAddress
+    mobile
+    fix
+    fax
+    webSite
+    otherContacts
+    isActive
+    description
+    observation
+    activityAuthorizations{
+      ...ActivityAuthorizationFragment
+    }
+    createdAt
+    updatedAt
+  }
+  ${ESTABLISHMENT_BASIC_INFOS}
+  ${ACTIVITY_AUTHORIZATION_DETAILS}
+`;
+

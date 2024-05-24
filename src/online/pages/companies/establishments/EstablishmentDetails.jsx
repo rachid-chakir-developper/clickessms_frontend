@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { Box, Button, Divider, Paper, Stack, alpha } from '@mui/material';
 import { Grid, Typography, Avatar } from '@mui/material';
-import { GET_ESTABLISHMENT } from '../../../../_shared/graphql/queries/EstablishmentQueries';
+import { GET_RECAP_ESTABLISHMENT } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import styled from '@emotion/styled';
 import EstablishmentItemCard from './EstablishmentItemCard';
@@ -22,7 +22,7 @@ export default function EstablishmentDetails() {
   const [
     getEstablishment,
     { loading: loadingEstablishment, data: establishmentData },
-  ] = useLazyQuery(GET_ESTABLISHMENT);
+  ] = useLazyQuery(GET_RECAP_ESTABLISHMENT);
   React.useEffect(() => {
     if (idEstablishment) {
       getEstablishment({ variables: { id: idEstablishment } });
@@ -57,7 +57,6 @@ const EstablishmentDetailsPage = ({ establishment }) => {
     number,
     name,
     siret,
-    managerName,
     establishmentType,
     latitude,
     longitude,
@@ -176,9 +175,6 @@ const EstablishmentDetailsPage = ({ establishment }) => {
           </Typography>
           <Paper sx={{ padding: 2 }} variant="outlined">
             <Typography variant="body1">Réference: {number}</Typography>
-            <Typography variant="body1">
-              Nom de responsable: {managerName}
-            </Typography>
             <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
             <Typography variant="body1">
               Ajouté le: {getFormatDateTime(createdAt)}

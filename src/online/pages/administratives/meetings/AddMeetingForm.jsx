@@ -53,6 +53,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
       endingDateTime: dayjs(new Date()),
       description: '',
       observation: '',
+      notes: '',
       participants: [],
       presentParticipants: [],
       beneficiaries: [],
@@ -501,6 +502,22 @@ export default function AddMeetingForm({ idMeeting, title }) {
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
+                  
+                  <Grid xs={12} sm={12} md={12}>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Prise de notes"
+                        multiline
+                        minRows={6}
+                        value={formik.values.notes}
+                        onChange={(e) =>
+                          formik.setFieldValue('notes', e.target.value)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
                   <Grid xs={12} sm={12} md={6} item="true"> 
                     <Typography variant="h6">Les décisions</Typography> 
                     {formik.values?.meetingDecisions?.map((item, index) => (

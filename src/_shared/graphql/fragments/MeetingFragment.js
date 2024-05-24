@@ -97,6 +97,7 @@ export const MEETING_DETAILS = gql`
     }
     otherReasons
     observation
+    notes
     presentParticipants{
       ...EmployeeMiniInfosFragment
     }
@@ -131,6 +132,7 @@ export const MEETING_RECAP_DETAILS = gql`
     }
     otherReasons
     observation
+    notes
     presentParticipants{
       ...EmployeeMiniInfosFragment
     }

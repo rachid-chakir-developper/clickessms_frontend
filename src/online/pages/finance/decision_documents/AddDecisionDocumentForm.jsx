@@ -86,7 +86,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
       ...formik.values,
       decisionDocumentItems: [
         ...formik.values.decisionDocumentItems,
-        { establishment: null , startingDateTime: dayjs(new Date()), endingDateTime: dayjs(new Date()), price: 0, endowment: 0, occupancyRate: 100, theoreticalNumberUnitWork: 0},
+        { establishment: null , startingDateTime: dayjs(new Date()), endingDateTime: null, price: 0, endowment: 0, occupancyRate: 100, theoreticalNumberUnitWork: 0},
       ],
     });
   };
@@ -209,15 +209,15 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
       onCompleted: (data) => {
         let { __typename, ...decisionDocumentCopy1 } = data.decisionDocument;
         let { folder, ...decisionDocumentCopy } = decisionDocumentCopy1;
-        decisionDocumentCopy.decisionDate = dayjs(decisionDocumentCopy.decisionDate);
-        decisionDocumentCopy.receptionDateTime = dayjs(decisionDocumentCopy.receptionDateTime);
+        decisionDocumentCopy.decisionDate = decisionDocumentCopy.decisionDate ? dayjs(decisionDocumentCopy.decisionDate) : null;
+        decisionDocumentCopy.receptionDateTime = decisionDocumentCopy.receptionDateTime ? dayjs(decisionDocumentCopy.receptionDateTime) : null;
         
         if (!decisionDocumentCopy?.decisionDocumentItems) decisionDocumentCopy['decisionDocumentItems'] = [];
         let items = [];
         decisionDocumentCopy.decisionDocumentItems.forEach((item) => {
           let { __typename, ...itemCopy } = item;
-          itemCopy.startingDateTime = dayjs(itemCopy.startingDateTime)
-          itemCopy.endingDateTime = dayjs(itemCopy.endingDateTime)
+          itemCopy.startingDateTime = itemCopy.startingDateTime ? dayjs(itemCopy.startingDateTime) : null;
+          itemCopy.endingDateTime = itemCopy.endingDateTime ? dayjs(itemCopy.endingDateTime) : null;
           items.push(itemCopy);
         });
         decisionDocumentCopy.decisionDocumentItems = items;

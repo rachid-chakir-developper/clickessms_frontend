@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 import {
   ESTABLISHMENT_BASIC_INFOS,
   ESTABLISHMENT_DETAILS,
+  ESTABLISHMENT_RECAP_DETAILS,
 } from '../fragments/EstablishmentFragment';
 
 export const GET_ESTABLISHMENT = gql`
@@ -34,5 +35,15 @@ export const GET_ESTABLISHMENTS = gql`
   }
   ${ESTABLISHMENT_BASIC_INFOS}
 `;
+
+export const GET_RECAP_ESTABLISHMENT = gql`
+  query GetEstablishment($id: ID!) {
+    establishment(id: $id) {
+      ...EstablishmentReacpDetailsFragment
+    }
+  }
+  ${ESTABLISHMENT_RECAP_DETAILS}
+`;
+
 
 // Add more establishment-related queries here
