@@ -1,5 +1,12 @@
 import moment from 'moment';
-import { ACCOUNT_TYPES, LEVELS, MEASUREMENT_ACTIVITY_UNITS, PRIORITIES, STATUS, STEP_TYPES } from './constants';
+import {
+  ACCOUNT_TYPES,
+  LEVELS,
+  MEASUREMENT_ACTIVITY_UNITS,
+  PRIORITIES,
+  STATUS,
+  STEP_TYPES,
+} from './constants';
 
 export const getStatusColor = (status) => {
   switch (status) {
@@ -81,6 +88,18 @@ export const getaccountTypeLabel = (type) => {
 
 export const getMeasurementActivityUnitLabel = (unit) => {
   return MEASUREMENT_ACTIVITY_UNITS.ALL.find((t) => t.value == unit)?.label;
+};
+
+const intlNumFmt = new Intl.NumberFormat('fr-FR', {
+  style: 'currency',
+  currency: 'EUR',
+});
+
+export const formatCurrencyAmount = (amount) => {
+  if (typeof amount === 'string') {
+    amount = Number(amount);
+  }
+  return intlNumFmt.format(amount);
 };
 
 // export const getMarkerIcon = (type) => {

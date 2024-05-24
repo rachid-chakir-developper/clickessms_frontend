@@ -13,7 +13,10 @@ import {
 
 import { BANK_ACCOUNT_RECAP } from '../../../../../_shared/graphql/queries/BankAccountQueries';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
-import { getFormatDateTime } from '../../../../../_shared/tools/functions';
+import {
+  getFormatDateTime,
+  formatCurrencyAmount,
+} from '../../../../../_shared/tools/functions';
 import EmployeeItemCard from '../../../human_ressources/employees/EmployeeItemCard';
 import EstablishmentItemCard from '../../../companies/establishments/EstablishmentItemCard';
 
@@ -47,14 +50,10 @@ export default function BankAccountDetails() {
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
-            <BankAccountMiniInfos
-              bankAccount={bankAccountData?.bankAccount}
-            />
+            <BankAccountMiniInfos bankAccount={bankAccountData?.bankAccount} />
           </Grid>
           <Grid item xs={5}>
-            <BankAccountOtherInfos
-              bankAccount={bankAccountData?.bankAccount}
-            />
+            <BankAccountOtherInfos bankAccount={bankAccountData?.bankAccount} />
           </Grid>
           <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
             <Divider />
@@ -123,6 +122,9 @@ function BankAccountMiniInfos({ bankAccount }) {
                 {bankAccount?.name}
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
+                Solde : {formatCurrencyAmount(bankAccount?.balance)}
+              </Typography>
+              <Typography gutterBottom variant="subtitle1" component="div">
                 IBAN : <b>{bankAccount?.iban}</b>
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
@@ -162,19 +164,20 @@ function BankAccountOtherInfos({ bankAccount }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
-      
       {bankAccount?.establishment && (
-            <>
-              <Typography variant="h6" gutterBottom>
-                Etablissement
-              </Typography>
-              <Paper sx={{ padding: 2 }} variant="outlined">
-                <Item>
-                  <EstablishmentItemCard establishment={bankAccount?.establishment} />
-                </Item>
-              </Paper>
-            </>
-          )}
+        <>
+          <Typography variant="h6" gutterBottom>
+            Etablissement
+          </Typography>
+          <Paper sx={{ padding: 2 }} variant="outlined">
+            <Item>
+              <EstablishmentItemCard
+                establishment={bankAccount?.establishment}
+              />
+            </Item>
+          </Paper>
+        </>
+      )}
     </Paper>
   );
 }

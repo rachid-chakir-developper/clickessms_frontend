@@ -41,12 +41,16 @@ export default function AddBalanceForm({ idBalance, title }) {
       name: '',
       date: dayjs(new Date()),
       amount: 0,
-      bankAccount: null
+      bankAccount: null,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       let { document, ...balanceCopy } = values;
-      balanceCopy.bankAccount = balanceCopy.bankAccount ? balanceCopy.bankAccount.id : null;
+      balanceCopy.bankAccount = balanceCopy.bankAccount
+        ? balanceCopy.bankAccount.id
+        : null;
+      balanceCopy.amount = Number(balanceCopy.amount).toFixed(2);
+      console.log(balanceCopy);
       if (idBalance && idBalance != '') {
         onUpdateBalance({
           id: balanceCopy.id,
@@ -124,9 +128,14 @@ export default function AddBalanceForm({ idBalance, title }) {
 
       cache.modify({
         fields: {
-          balances(existingBalances = { totalCount: 0, nodes: [] }, { readField }) {
+          balances(
+            existingBalances = { totalCount: 0, nodes: [] },
+            { readField },
+          ) {
             const updatedBalances = existingBalances.nodes.map((balance) =>
-              readField('id', balance) === updatedBalance.id ? updatedBalance : balance,
+              readField('id', balance) === updatedBalance.id
+                ? updatedBalance
+                : balance,
             );
 
             return {
@@ -181,18 +190,13 @@ export default function AddBalanceForm({ idBalance, title }) {
       {loadingBalance && <ProgressService type="form" />}
       {!loadingBalance && (
         <form onSubmit={formik.handleSubmit}>
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-          >
+          <Grid container spacing={{ xs: 2, md: 3 }}>
             <Grid xs={12} sm={6} md={4} item="true">
               <Item>
                 <TheDesktopDatePicker
                   label="Date"
                   value={formik.values.date}
-                  onChange={(date) =>
-                    formik.setFieldValue('date', date)
-                  }
+                  onChange={(date) => formik.setFieldValue('date', date)}
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
@@ -218,7 +222,9 @@ export default function AddBalanceForm({ idBalance, title }) {
                   label="Solde"
                   type="number"
                   InputProps={{
-                      endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                    endAdornment: (
+                      <InputAdornment position="start">€</InputAdornment>
+                    ),
                   }}
                   value={formik.values.amount}
                   onChange={(e) =>
@@ -230,11 +236,13 @@ export default function AddBalanceForm({ idBalance, title }) {
             </Grid>
             <Grid xs={12} sm={6} md={4} item="true">
               <Item>
-                <TheFileField variant="outlined" label="Document de solde"
+                <TheFileField
+                  variant="outlined"
+                  label="Document de solde"
                   fileValue={formik.values.document}
                   onChange={(file) => formik.setFieldValue('document', file)}
                   disabled={loadingPost || loadingPut}
-                  />
+                />
               </Item>
             </Grid>
             <Grid xs={12} sm={12} md={12}>

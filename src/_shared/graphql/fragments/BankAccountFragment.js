@@ -16,7 +16,8 @@ export const BANK_ACCOUNT_BASIC_INFOS = gql`
     iban
     bic
     isActive
-    establishment{
+    balance
+    establishment {
       ...EstablishmentMiniInfosFragment
     }
     folder {

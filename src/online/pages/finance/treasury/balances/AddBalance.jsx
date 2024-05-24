@@ -8,9 +8,7 @@ export default function AddBalance() {
     <AddBalanceForm
       idBalance={idBalance}
       title={
-        idBalance && idBalance > 0
-          ? `Modifierle solde`
-          : `Ajouter un solde`
+        idBalance && idBalance > 0 ? `Modifier le solde` : `Ajouter un solde`
       }
     />
   );

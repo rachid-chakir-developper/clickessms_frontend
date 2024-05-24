@@ -17,7 +17,10 @@ import Tooltip from '@mui/material/Tooltip';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
-import { getFormatDate } from '../../../../../_shared/tools/functions';
+import {
+  getFormatDate,
+  formatCurrencyAmount,
+} from '../../../../../_shared/tools/functions';
 import {
   Article,
   Delete,
@@ -386,7 +389,7 @@ export default function TableListBalances({
                       />
                     </StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.date)}`}</StyledTableCell>
-                    <StyledTableCell align="left"> 
+                    <StyledTableCell align="left">
                       <Stack direction="row" spacing={1}>
                         <Chip
                           avatar={
@@ -410,24 +413,26 @@ export default function TableListBalances({
                       scope="row"
                       padding="none"
                     >
-                    <Stack direction="row" spacing={1}>
-                      <Chip
-                        avatar={
-                          <Avatar
-                            alt={row?.bankAccount?.iban}
-                            src={
-                              row?.bankAccount?.image
-                                ? row?.bankAccount?.image
-                                : '/default-placeholder.jpg'
-                            }
-                          />
-                        }
-                        label={row?.bankAccount?.iban}
-                        variant="outlined"
-                      />
-                    </Stack>
+                      <Stack direction="row" spacing={1}>
+                        <Chip
+                          avatar={
+                            <Avatar
+                              alt={row?.bankAccount?.iban}
+                              src={
+                                row?.bankAccount?.image
+                                  ? row?.bankAccount?.image
+                                  : '/default-placeholder.jpg'
+                              }
+                            />
+                          }
+                          label={row?.bankAccount?.iban}
+                          variant="outlined"
+                        />
+                      </Stack>
                     </StyledTableCell>
-                    <StyledTableCell align="left"><b>{row?.amount}€</b></StyledTableCell>
+                    <StyledTableCell align="left">
+                      <b>{row ? formatCurrencyAmount(row.amount) : ''}</b>
+                    </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}

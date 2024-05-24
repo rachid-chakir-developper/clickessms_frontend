@@ -16,7 +16,10 @@ import {
 } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { getaccountTypeLabel } from '../../../../../_shared/tools/functions';
+import {
+  getaccountTypeLabel,
+  formatCurrencyAmount,
+} from '../../../../../_shared/tools/functions';
 
 export default function BankAccountItemCard({
   bankAccount,
@@ -43,18 +46,25 @@ export default function BankAccountItemCard({
       },
     });
   };
-  const onGoToDetails = ()=>{
-    navigate(`/online/finance/tresorerie/comptes-bancaires/details/${bankAccount?.id}`);
-  }
+  const onGoToDetails = () => {
+    navigate(
+      `/online/finance/tresorerie/comptes-bancaires/details/${bankAccount?.id}`,
+    );
+  };
   return (
-    <Card
-      variant="outlined"
-      sx={{ position: 'relative', p: 1}}
-    >
+    <Card variant="outlined" sx={{ position: 'relative', p: 1 }}>
       <Tooltip title={bankAccount?.name}>
-        <Stack direction="row"
-        sx={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 2, cursor:'pointer' }}
-        onClick={onGoToDetails}>
+        <Stack
+          direction="row"
+          sx={{
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            cursor: 'pointer',
+          }}
+          onClick={onGoToDetails}
+        >
           <CardMedia
             component="img"
             width="100"
@@ -69,7 +79,11 @@ export default function BankAccountItemCard({
           />
           <Stack direction="row" spacing={2} alignItems="center">
             <Stack direction="column" spacing={0.2} alignItems="center">
-              <Typography color="text.primary" fontWeight="medium" fontSize={18}>
+              <Typography
+                color="text.primary"
+                fontWeight="medium"
+                fontSize={18}
+              >
                 {`${bankAccount?.name}`}
               </Typography>
               <Typography
@@ -96,81 +110,101 @@ export default function BankAccountItemCard({
                   variant="outlined"
                 />
               </Stack>
+              <Typography
+                component="div"
+                variant="caption"
+                color="text.secondary"
+                fontWeight="regular"
+              >
+                {`${formatCurrencyAmount(bankAccount?.balance)}`}
+              </Typography>
             </Stack>
           </Stack>
         </Stack>
       </Tooltip>
-      <Stack direction="row" alignItems="start" spacing={1.5} sx={{position: 'absolute', top: 0, right: 0, zIndex: 10}}>
-          <IconButton onClick={handleOpenMenu}>
-              <MoreVert />
-          </IconButton>
-          <Popover
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleCloseMenu}
-              anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
-              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          >
-            {onDeleteBankAccount && (
-              <Tooltip title="Supprimer">
-                <MenuItem
-                  onClick={() => {onDeleteBankAccount(bankAccount?.id); handleCloseMenu()}}
-                >
-                  <Delete fontSize="small" />
-                  Supprimer
-                </MenuItem>
-              </Tooltip>
-            )}
-            {onUpdateBankAccountState && (
-              <Tooltip
-                title={!bankAccount?.isActive ? 'Activer' : 'Désactiver'}
+      <Stack
+        direction="row"
+        alignItems="start"
+        spacing={1.5}
+        sx={{ position: 'absolute', top: 0, right: 0, zIndex: 10 }}
+      >
+        <IconButton onClick={handleOpenMenu}>
+          <MoreVert />
+        </IconButton>
+        <Popover
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleCloseMenu}
+          anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          {onDeleteBankAccount && (
+            <Tooltip title="Supprimer">
+              <MenuItem
+                onClick={() => {
+                  onDeleteBankAccount(bankAccount?.id);
+                  handleCloseMenu();
+                }}
               >
-                <MenuItem
-                  aria-label={!bankAccount?.isActive ? 'play' : 'pause'}
-                  onClick={() => {onUpdateBankAccountState(bankAccount?.id); handleCloseMenu()}}
-                >
-                  {!bankAccount?.isActive ? (
-                    <PlayArrowRounded />
-                  ) : (
-                    <PauseRounded />
-                  )}
-                  {!bankAccount?.isActive ? 'Activer' : 'Désactiver'}
-                </MenuItem>
-              </Tooltip>
-            )}
-            <Tooltip title="Modifier">
-              <Link
-                to={`/online/finance/tresorerie/comptes-bancaires/modifier/${bankAccount?.id}`}
-                className="no_style"
-              >
-                <MenuItem onClick={handleCloseMenu}>
-                  <Edit fontSize="small" />
-                  Modifier
-                </MenuItem>
-              </Link>
+                <Delete fontSize="small" />
+                Supprimer
+              </MenuItem>
             </Tooltip>
-            {bankAccount?.folder && (
-              <Tooltip title="Pièces jointes">
-                <MenuItem
-                  onClick={() => {onOpenDialogListLibrary(bankAccount?.folder); handleCloseMenu()}}
-                >
-                  <Folder fontSize="small" />
-                  Pièces jointes
-                </MenuItem>
-              </Tooltip>
-            )}
-            <Tooltip title="Détails">
-              <Link
-                to={`/online/finance/tresorerie/comptes-bancaires/details/${bankAccount?.id}`}
-                className="no_style"
+          )}
+          {onUpdateBankAccountState && (
+            <Tooltip title={!bankAccount?.isActive ? 'Activer' : 'Désactiver'}>
+              <MenuItem
+                aria-label={!bankAccount?.isActive ? 'play' : 'pause'}
+                onClick={() => {
+                  onUpdateBankAccountState(bankAccount?.id);
+                  handleCloseMenu();
+                }}
               >
-                <MenuItem onClick={handleCloseMenu}>
-                  <AccountBox fontSize="small" />
-                  Détails
-                </MenuItem>
-              </Link>
+                {!bankAccount?.isActive ? (
+                  <PlayArrowRounded />
+                ) : (
+                  <PauseRounded />
+                )}
+                {!bankAccount?.isActive ? 'Activer' : 'Désactiver'}
+              </MenuItem>
             </Tooltip>
-          </Popover>
+          )}
+          <Tooltip title="Modifier">
+            <Link
+              to={`/online/finance/tresorerie/comptes-bancaires/modifier/${bankAccount?.id}`}
+              className="no_style"
+            >
+              <MenuItem onClick={handleCloseMenu}>
+                <Edit fontSize="small" />
+                Modifier
+              </MenuItem>
+            </Link>
+          </Tooltip>
+          {bankAccount?.folder && (
+            <Tooltip title="Pièces jointes">
+              <MenuItem
+                onClick={() => {
+                  onOpenDialogListLibrary(bankAccount?.folder);
+                  handleCloseMenu();
+                }}
+              >
+                <Folder fontSize="small" />
+                Pièces jointes
+              </MenuItem>
+            </Tooltip>
+          )}
+          <Tooltip title="Détails">
+            <Link
+              to={`/online/finance/tresorerie/comptes-bancaires/details/${bankAccount?.id}`}
+              className="no_style"
+            >
+              <MenuItem onClick={handleCloseMenu}>
+                <AccountBox fontSize="small" />
+                Détails
+              </MenuItem>
+            </Link>
+          </Tooltip>
+        </Popover>
       </Stack>
     </Card>
   );

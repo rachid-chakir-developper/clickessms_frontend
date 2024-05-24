@@ -13,7 +13,10 @@ import {
 
 import { BALANCE_RECAP } from '../../../../../_shared/graphql/queries/BalanceQueries';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
-import { getFormatDateTime } from '../../../../../_shared/tools/functions';
+import {
+  getFormatDateTime,
+  formatCurrencyAmount,
+} from '../../../../../_shared/tools/functions';
 import EmployeeItemCard from '../../../human_ressources/employees/EmployeeItemCard';
 import EstablishmentItemCard from '../../../companies/establishments/EstablishmentItemCard';
 import BankAccountItemCard from '../bank_accounts/BankAccountItemCard';
@@ -30,11 +33,7 @@ export default function BalanceDetails() {
   let { idBalance } = useParams();
   const [
     getBalance,
-    {
-      loading: loadingBalance,
-      data: balanceData,
-      error: balanceError,
-    },
+    { loading: loadingBalance, data: balanceData, error: balanceError },
   ] = useLazyQuery(BALANCE_RECAP);
   React.useEffect(() => {
     if (idBalance) {
@@ -48,14 +47,10 @@ export default function BalanceDetails() {
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
-            <BalanceMiniInfos
-              balance={balanceData?.balance}
-            />
+            <BalanceMiniInfos balance={balanceData?.balance} />
           </Grid>
           <Grid item xs={5}>
-            <BalanceOtherInfos
-              balance={balanceData?.balance}
-            />
+            <BalanceOtherInfos balance={balanceData?.balance} />
           </Grid>
           <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
             <Divider />
@@ -124,6 +119,9 @@ function BalanceMiniInfos({ balance }) {
                 {balance?.name}
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
+                Montant : {formatCurrencyAmount(balance?.amount)}
+              </Typography>
+              <Typography gutterBottom variant="subtitle1" component="div">
                 IBAN : <b>{balance?.iban}</b>
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
@@ -131,8 +129,8 @@ function BalanceMiniInfos({ balance }) {
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b>{' '}
-                {`${getFormatDateTime(balance?.createdAt)}`} <br />
+                <b>Crée le: </b> {`${getFormatDateTime(balance?.createdAt)}`}{' '}
+                <br />
                 <b>Dernière modification: </b>
                 {`${getFormatDateTime(balance?.updatedAt)}`}
               </Typography>
@@ -163,31 +161,32 @@ function BalanceOtherInfos({ balance }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
-      
       {balance?.bankAccount?.establishment && (
-            <>
-              <Typography variant="h6" gutterBottom>
-                Etablissement
-              </Typography>
-              <Paper sx={{ padding: 2 }} variant="outlined">
-                <Item>
-                  <EstablishmentItemCard establishment={balance?.bankAccount?.establishment} />
-                </Item>
-              </Paper>
-            </>
-          )}
+        <>
+          <Typography variant="h6" gutterBottom>
+            Etablissement
+          </Typography>
+          <Paper sx={{ padding: 2 }} variant="outlined">
+            <Item>
+              <EstablishmentItemCard
+                establishment={balance?.bankAccount?.establishment}
+              />
+            </Item>
+          </Paper>
+        </>
+      )}
       {balance?.bankAccount && (
-            <>
-              <Typography variant="h6" gutterBottom sx={{marginTop: 1}}>
-                Compte bancaire
-              </Typography>
-              <Paper sx={{ padding: 2 }} variant="outlined">
-                <Item>
-                  <BankAccountItemCard bankAccount={balance?.bankAccount} />
-                </Item>
-              </Paper>
-            </>
-          )}
+        <>
+          <Typography variant="h6" gutterBottom sx={{ marginTop: 1 }}>
+            Compte bancaire
+          </Typography>
+          <Paper sx={{ padding: 2 }} variant="outlined">
+            <Item>
+              <BankAccountItemCard bankAccount={balance?.bankAccount} />
+            </Item>
+          </Paper>
+        </>
+      )}
     </Paper>
   );
 }
