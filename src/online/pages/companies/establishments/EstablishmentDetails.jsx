@@ -8,6 +8,7 @@ import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import styled from '@emotion/styled';
 import EstablishmentItemCard from './EstablishmentItemCard';
 import { Edit } from '@mui/icons-material';
+import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -58,6 +59,7 @@ const EstablishmentDetailsPage = ({ establishment }) => {
     name,
     siret,
     establishmentType,
+    establishmentCategory,
     latitude,
     longitude,
     city,
@@ -75,6 +77,7 @@ const EstablishmentDetailsPage = ({ establishment }) => {
     bankName,
     description,
     observation,
+    managers,
     establishmentChilds,
     establishmentParent,
     isActive,
@@ -150,6 +153,11 @@ const EstablishmentDetailsPage = ({ establishment }) => {
                   Type: {establishmentType?.name}
                 </Typography>
               )}
+              {establishmentCategory && establishmentCategory !== '' && (
+                <Typography variant="body2">
+                  Catégorie: {establishmentCategory?.name}
+                </Typography>
+              )}
               <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
                 {email}
               </Typography>
@@ -183,10 +191,29 @@ const EstablishmentDetailsPage = ({ establishment }) => {
               Dernière modification: {getFormatDateTime(updatedAt)}
             </Typography>
           </Paper>
+          
+          {managers?.length > 0 && (
+              <Paper sx={{ padding: 2 }}>
+                <Typography variant="h6" gutterBottom>
+                  Les responsables
+                </Typography>
+                <Paper sx={{ padding: 2 }} variant="outlined">
+                  <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
+                    {managers?.map((manager, index) => (
+                      <Grid xs={12} sm={12} md={6} key={index}>
+                        <Item>
+                          <EmployeeItemCard employee={manager?.employee} />
+                        </Item>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Paper>
+              </Paper>
+          )}
           {establishmentParent && (
             <>
               <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-                Etablissement parent
+                Strucuture mère
               </Typography>
               <Paper sx={{ padding: 2 }} variant="outlined">
                 <Item>
@@ -225,7 +252,7 @@ const EstablishmentDetailsPage = ({ establishment }) => {
         <Grid item xs={12} sm={12}>
           <Paper sx={{ padding: 2 }}>
             <Typography variant="h6" gutterBottom>
-              Les structures fils
+              Les structures filles
             </Typography>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
