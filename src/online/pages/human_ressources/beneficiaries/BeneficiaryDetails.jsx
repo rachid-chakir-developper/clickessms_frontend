@@ -5,7 +5,7 @@ import { Box, Button, Divider, Paper, Stack, alpha } from '@mui/material';
 import { Grid, Typography, Avatar } from '@mui/material';
 // Assurez-vous d'importer dayjs si vous l'utilisez pour la gestion des dates
 
-import { GET_BENEFICIARY } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
+import { GET_BENEFICIARY_RECAP } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
 import {
   getFormatDate,
   getFormatDateTime,
@@ -18,7 +18,7 @@ export default function BeneficiaryDetails() {
   const [
     getBeneficiary,
     { loading: loadingBeneficiary, data: beneficiaryData },
-  ] = useLazyQuery(GET_BENEFICIARY);
+  ] = useLazyQuery(GET_BENEFICIARY_RECAP);
   React.useEffect(() => {
     if (idBeneficiary) {
       getBeneficiary({ variables: { id: idBeneficiary } });
@@ -47,9 +47,11 @@ export default function BeneficiaryDetails() {
 const BeneficiaryDetailsPage = ({ beneficiary }) => {
   const {
     id,
+    gender,
     photo,
     coverImage,
     number,
+    preferredName,
     firstName,
     lastName,
     birthDate,
@@ -130,15 +132,15 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
                 color: (theme) => theme.palette.primary.contrastText,
               }}
             >
+              <Typography variant="body2">{gender?.name}</Typography>
               <Typography variant="h5" gutterBottom>
-                {`${firstName} ${lastName}`}
+                {`${firstName} ${preferredName} ${lastName}`}
               </Typography>
+              <Typography variant="body2" sx={{ fontStyle: 'italic' }}>{getFormatDate(birthDate)}</Typography>
               {address && address !== '' && (
                 <Typography variant="body2">{address}</Typography>
               )}
-              {position && position !== '' && (
-                <Typography variant="body2">{position}</Typography>
-              )}
+              <Typography variant="body2">{zipCode}, {city}</Typography>
               <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
                 {email}
               </Typography>
@@ -180,7 +182,7 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
       </Grid>
       <Grid item xs={12} sm={12}>
         <Paper sx={{ padding: 2 }}>
-          <BeneficiaryTabs />
+          <BeneficiaryTabs beneficiary={beneficiary}/>
         </Paper>
       </Grid>
     </Grid>

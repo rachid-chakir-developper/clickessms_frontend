@@ -44,6 +44,7 @@ import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueri
 import { MEASUREMENT_ACTIVITY_UNITS } from '../../../../_shared/tools/constants';
 import { Close } from '@mui/icons-material';
 import { getMeasurementActivityUnitLabel } from '../../../../_shared/tools/functions';
+import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -133,7 +134,7 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
       ...formik.values,
       activityAuthorizations: [
         ...formik.values.activityAuthorizations,
-        { startingDateTime: dayjs(new Date()), endingDateTime: dayjs(new Date()), capacity: 0},
+        { document: undefined, startingDateTime: dayjs(new Date()), endingDateTime: dayjs(new Date()), capacity: 0},
       ],
     });
   };
@@ -720,7 +721,16 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
                           spacing={{ xs: 2, md: 3 }}
                           columns={{ xs: 4, sm: 8, md: 12 }}
                         >
-                          <Grid xs={12} sm={6} md={4} item="true">
+                          <Grid xs={12} sm={6} md={3} item="true">
+                            <Item>
+                              <TheFileField variant="outlined" label="Document d'admission"
+                                fileValue={item.document}
+                                onChange={(file) => formik.setFieldValue(`activityAuthorizations.${index}.document`, file)}
+                                disabled={loadingPost || loadingPut}
+                                />
+                            </Item>
+                          </Grid>
+                          <Grid xs={12} sm={6} md={3} item="true">
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -733,7 +743,7 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={4} item="true">
+                          <Grid xs={12} sm={6} md={3} item="true">
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -746,15 +756,12 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={4} item="true">
+                          <Grid xs={12} sm={6} md={3} item="true">
                             <Item sx={{position: 'relative'}}>
                               <TheTextField
                                 variant="outlined"
                                 label="Capacité"
                                 type="number"
-                                InputProps={{
-                                    endAdornment: <InputAdornment position="start">{getMeasurementActivityUnitLabel(formik.values?.measurementActivityUnit)}</InputAdornment>,
-                                }}
                                 value={item.capacity}
                                 onChange={(e) =>
                                   formik.setFieldValue(`activityAuthorizations.${index}.capacity`, e.target.value)

@@ -32,28 +32,6 @@ export const ESTABLISHMENT_MINI_INFOS = gql`
   }
 `;
 
-export const ESTABLISHMENT_BASIC_INFOS = gql`
-  fragment EstablishmentBasicInfosFragment on EstablishmentType {
-    ...EstablishmentMiniInfosFragment
-    establishmentCategory {
-      id
-      name
-    }
-    establishmentType {
-      id
-      name
-    }
-    establishmentParent {
-      ...EstablishmentMiniInfosFragment
-    }
-    folder {
-      ...FolderMiniInfosFragment
-    }
-  }
-  ${ESTABLISHMENT_MINI_INFOS}
-  ${FOLDER_MINI_INFOS}
-`;
-
 export const ESTABLISHMENT_MANAGER_DETAILS = gql`
   fragment EstablishmentManagerTypeFragment on EstablishmentManagerType {
     id
@@ -64,9 +42,37 @@ export const ESTABLISHMENT_MANAGER_DETAILS = gql`
   ${EMPLOYEE_BASIC_INFOS}
 `;
 
+export const ESTABLISHMENT_BASIC_INFOS = gql`
+  fragment EstablishmentBasicInfosFragment on EstablishmentType {
+    ...EstablishmentMiniInfosFragment
+    openingDate
+    establishmentCategory {
+      id
+      name
+    }
+    establishmentType {
+      id
+      name
+    }
+    managers{
+      ...EstablishmentManagerTypeFragment
+    }
+    establishmentParent {
+      ...EstablishmentMiniInfosFragment
+    }
+    folder {
+      ...FolderMiniInfosFragment
+    }
+  }
+  ${ESTABLISHMENT_MINI_INFOS}
+  ${FOLDER_MINI_INFOS}
+  ${ESTABLISHMENT_MANAGER_DETAILS}
+`;
+
 export const ACTIVITY_AUTHORIZATION_DETAILS = gql`
   fragment ActivityAuthorizationFragment on ActivityAuthorizationType {
     id
+    document
     startingDateTime
     endingDateTime
     capacity
@@ -79,7 +85,6 @@ export const ESTABLISHMENT_DETAILS = gql`
     establishmentChilds {
       ...EstablishmentBasicInfosFragment
     }
-    openingDate
     measurementActivityUnit
     latitude
     longitude
@@ -95,14 +100,10 @@ export const ESTABLISHMENT_DETAILS = gql`
     isActive
     description
     observation
-    managers{
-      ...EstablishmentManagerTypeFragment
-    }
     activityAuthorizations{
       ...ActivityAuthorizationFragment
     }
   }
   ${ESTABLISHMENT_BASIC_INFOS}
-  ${ESTABLISHMENT_MANAGER_DETAILS}
   ${ACTIVITY_AUTHORIZATION_DETAILS}
 `;

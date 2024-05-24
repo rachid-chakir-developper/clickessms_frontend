@@ -484,14 +484,6 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
                         disabled={loadingPost || loadingPut}
                       />
                     </Item>
-                    <Item>
-                      <TheDesktopDatePicker
-                        label="Date d'admission"
-                        value={formik.values.admissionDate}
-                        onChange={(date) => formik.setFieldValue('admissionDate', date)}
-                        disabled={loadingPost || loadingPut}
-                      />
-                    </Item>
                   </Grid>
                   <Grid xs={2} sm={4} md={4}>
                     <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
@@ -558,10 +550,10 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
               <StepLabel
                 onClick={() => onGoToStep(1)}
                 optional={
-                  <Typography variant="caption">Document(s) d’admission(s)</Typography>
+                  <Typography variant="caption">Les admission(s)</Typography>
                 }
               >
-                Document(s) d’admission(s) 
+                Les admission(s) 
               </StepLabel>
               <StepContent>
                 <Grid
@@ -688,10 +680,10 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
               <StepLabel
                 onClick={() => onGoToStep(2)}
                 optional={
-                  <Typography variant="caption">Déclarer une entrée</Typography>
+                  <Typography variant="caption">Déclarer une entrée / sortie</Typography>
                 }
               >
-                Déclarer une entrée
+                Déclarer une entrée / sortie
               </StepLabel>
               <StepContent>
                 <Grid

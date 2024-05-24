@@ -95,28 +95,40 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'startingDateTime',
+    id: 'name',
     numeric: false,
-    disablePadding: false,
-    label: 'Date',
+    disablePadding: true,
+    label: 'Nom',
   },
   {
-    id: 'beneficiary',
+    id: 'openingDate',
     numeric: false,
     disablePadding: false,
-    label: 'Bénéficiaires',
+    label: "Date d'ouverture",
   },
   {
-    id: 'reasons',
+    id: 'establishmentCategory',
     numeric: false,
     disablePadding: false,
-    label: 'Motifs',
+    label: 'Catégorie',
   },
   {
-    id: 'employee',
+    id: 'establishmentType',
     numeric: false,
     disablePadding: false,
-    label: 'Déclaré par',
+    label: 'Type',
+  },
+  {
+    id: 'establishmentParent',
+    numeric: false,
+    disablePadding: false,
+    label: 'Structure mère',
+  },
+  {
+    id: 'managers',
+    numeric: false,
+    disablePadding: false,
+    label: 'Responsables',
   },
   {
     id: 'action',
@@ -214,7 +226,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les absences
+          Les structures
         </Typography>
       )}
 
@@ -235,10 +247,10 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListBeneficiaryAbsences({
+export default function TableListEstablishments({
   loading,
   rows,
-  onDeleteBeneficiaryAbsence
+  onDeleteEstablishment
 }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -337,7 +349,7 @@ export default function TableListBeneficiaryAbsences({
                 <StyledTableRow>
                   <StyledTableCell colSpan="7">
                     <Alert severity="warning">
-                        Aucune absence trouvé.
+                      Aucune structures trouvée.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -387,64 +399,71 @@ export default function TableListBeneficiaryAbsences({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
+                    <StyledTableCell
+                      component="th"
+                      id={labelId}
+                      scope="row"
+                      padding="none"
+                    >
+                      {row.name}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">{`${getFormatDate(row?.openingDate)}`}</StyledTableCell>
                     <StyledTableCell align="left">
                       <Stack direction="row" spacing={1}>
-                        {row?.beneficiaries?.map((beneficiarie, index) => {
+                          {row?.establishmentCategory && <Chip
+                          label={row?.establishmentCategory?.name}
+                          variant="outlined"
+                        />}
+                      </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <Stack direction="row" spacing={1}>
+                          {row?.establishmentType && <Chip
+                          label={row?.establishmentType?.name}
+                          variant="outlined"
+                        />}
+                      </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                        <Stack direction="row" spacing={1}>
+                            {row?.establishmentParent && <Chip
+                                avatar={
+                                <Avatar
+                                    alt={row?.establishmentParent?.name}
+                                    src={
+                                        row?.establishmentParent?.logo
+                                        ? row?.establishmentParent?.logo
+                                        : '/default-placeholder.jpg'
+                                    }
+                                />
+                                }
+                                label={row?.establishmentParent?.name}
+                                variant="outlined"
+                            />}
+                        </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <Stack direction="row" spacing={1}>
+                        {row?.managers?.map((manager, index) => {
                           return (
                             <Chip
                               key={index}
                               avatar={
                                 <Avatar
-                                  alt={`${beneficiarie?.beneficiary?.firstName} ${beneficiarie?.beneficiary?.lastName}`}
+                                  alt={`${manager?.employee?.firstName} ${manager?.employee?.lastName}`}
                                   src={
-                                    beneficiarie?.beneficiary?.photo
-                                      ? beneficiarie?.beneficiary?.photo
+                                    manager?.employee?.photo
+                                      ? manager?.employee?.photo
                                       : '/default-placeholder.jpg'
                                   }
                                 />
                               }
-                              label={`${beneficiarie?.beneficiary?.firstName} ${beneficiarie?.beneficiary?.lastName}`}
+                              label={`${manager?.employee?.firstName} ${manager?.employee?.lastName}`}
                               variant="outlined"
                             />
                           );
                         })}
                       </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                        <Stack direction="row" spacing={1}>
-                            {row?.reasons?.map((absenceReason, index) => {
-                            return (
-                                <Chip
-                                    key={index}
-                                    label={absenceReason?.name}
-                                    variant="outlined"
-                                />
-                            );
-                            })}
-                            {row?.otherReasons && row?.otherReasons !== '' && <Chip
-                                label={row?.otherReasons}
-                                variant="filled"
-                            />}
-                        </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left"> 
-                      <Stack direction="row" spacing={1}>
-                        <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
-                              src={
-                                row?.employee?.photo
-                                  ? row?.employee?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
-                          variant="outlined"
-                        />
-                        </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
@@ -464,7 +483,7 @@ export default function TableListBeneficiaryAbsences({
                         }}
                       >
                         <Link
-                          to={`/online/activites/absences-beneficiaires/details/${row?.id}`}
+                          to={`/online/associations/structures/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -482,7 +501,7 @@ export default function TableListBeneficiaryAbsences({
                           Bibliothèque
                         </MenuItem>
                         <Link
-                          to={`/online/activites/absences-beneficiaires/modifier/${row?.id}`}
+                          to={`/online/associations/structures/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -492,7 +511,7 @@ export default function TableListBeneficiaryAbsences({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteBeneficiaryAbsence(row?.id);
+                            onDeleteEstablishment(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

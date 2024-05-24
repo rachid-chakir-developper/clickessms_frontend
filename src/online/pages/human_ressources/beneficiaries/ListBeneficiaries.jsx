@@ -168,34 +168,6 @@ export default function ListBeneficiaries() {
       <Grid item="true" xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
-            to="/online/ressources-humaines/beneficiaires/groupes"
-            className="no_style"
-          >
-            <Button
-              variant="contained"
-              disableElevation
-              color="inherit"
-              sx={{ mr: 2 }}
-              endIcon={<List />}
-            >
-              Liste des groupes
-            </Button>
-          </Link>
-          <Link
-            to="/online/ressources-humaines/beneficiaires/groupes/ajouter"
-            className="no_style"
-          >
-            <Button
-              variant="contained"
-              disableElevation
-              color="inherit"
-              sx={{ mr: 2 }}
-              endIcon={<Add />}
-            >
-              Ajouter un groupe
-            </Button>
-          </Link>
-          <Link
             to="/online/ressources-humaines/beneficiaires/ajouter"
             className="no_style"
           >

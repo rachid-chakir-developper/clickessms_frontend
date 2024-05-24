@@ -6,6 +6,9 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import BeneficiaryAdmissionDocuments from './BeneficiaryAdmissionDocuments';
 import BeneficiaryEntries from './BeneficiaryEntries';
+import BeneficiaryAbsences from './BeneficiaryAbsences';
+import BeneficiaryEvents from './BeneficiaryEvents';
+import BeneficiaryUndesirableEvents from './BeneficiaryUndesirableEvents';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -58,6 +61,7 @@ function LinkTab(props) {
   return (
     <Tab
       component="a"
+      sx={{textTransform: 'capitalize'}}
       onClick={(event) => {
         // Routing libraries handle this, you can remove the onClick handle when using them.
         if (samePageLinkNavigation(event)) {
@@ -74,7 +78,7 @@ LinkTab.propTypes = {
   selected: PropTypes.bool,
 };
 
-export default function BeneficiaryTabs() {
+export default function BeneficiaryTabs({beneficiary}) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -96,27 +100,27 @@ export default function BeneficiaryTabs() {
                 aria-label="nav tabs example"
                 role="navigation"
             >
-                <LinkTab label="Document(s) d’admission(s)" href="/drafts" />
-                <LinkTab label="Les entrées / sorties" href="/trash" />
                 <LinkTab label="Abscences" href="/spam" />
                 <LinkTab label="Evénements / Transmissions" href="/spam" />
                 <LinkTab label="Evénements indésirables" href="/spam" />
+                <LinkTab label="Admissions" href="/drafts" />
+                <LinkTab label="Entrées / sorties" href="/trash" />
             </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-            <BeneficiaryAdmissionDocuments />
+          <BeneficiaryAbsences beneficiary={beneficiary} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-            <BeneficiaryEntries />
+          <BeneficiaryEvents beneficiary={beneficiary} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-            Abscences
+          <BeneficiaryUndesirableEvents beneficiary={beneficiary} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={3}>
-            Evénements / Transmissions
+            <BeneficiaryAdmissionDocuments beneficiaryAdmissionDocuments={beneficiary?.beneficiaryAdmissionDocuments} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={4}>
-            Evénements indésirables
+            <BeneficiaryEntries beneficiaryEntries={beneficiary?.beneficiaryEntries} />
         </CustomTabPanel>
     </Box>
   );

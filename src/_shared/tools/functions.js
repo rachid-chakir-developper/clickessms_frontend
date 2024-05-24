@@ -53,7 +53,7 @@ export const getStepTypeLabel = (stepType) => {
 
 export const getFormatDateTime = (dateTime) => {
   try {
-    return moment(dateTime).format('DD/MM/YYYY à HH:mm');
+    return dateTime ? moment(dateTime).format('DD/MM/YYYY à HH:mm') : null;
   } catch (error) {
     return null;
   }
@@ -61,7 +61,7 @@ export const getFormatDateTime = (dateTime) => {
 
 export const getFormatDate = (dateTime) => {
   try {
-    return moment(dateTime).format('DD/MM/YYYY');
+    return dateTime ? moment(dateTime).format('DD/MM/YYYY') : null;
   } catch (error) {
     return null;
   }
@@ -69,7 +69,7 @@ export const getFormatDate = (dateTime) => {
 
 export const getFormatTime = (dateTime) => {
   try {
-    return moment(dateTime).format('HH:mm');
+    return dateTime ? moment(dateTime).format('HH:mm') : null;
   } catch (error) {
     return null;
   }

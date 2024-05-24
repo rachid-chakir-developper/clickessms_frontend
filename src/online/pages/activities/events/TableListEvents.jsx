@@ -90,12 +90,6 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'title',
-    numeric: false,
-    disablePadding: true,
-    label: 'Titre',
-  },
-  {
     id: 'startingDateTime',
     numeric: false,
     disablePadding: false,
@@ -384,14 +378,6 @@ export default function TableListEvents({
                           'aria-labelledby': labelId,
                         }}
                       />
-                    </StyledTableCell>
-                    <StyledTableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                      {row.title}
                     </StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
                     <StyledTableCell align="left"> 

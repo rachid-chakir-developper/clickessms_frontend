@@ -6,90 +6,77 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import TimelineDot from '@mui/lab/TimelineDot';
-import FastfoodIcon from '@mui/icons-material/Fastfood';
-import LaptopMacIcon from '@mui/icons-material/LaptopMac';
-import HotelIcon from '@mui/icons-material/Hotel';
-import RepeatIcon from '@mui/icons-material/Repeat';
-import Typography from '@mui/material/Typography';
+import { getFormatDate } from '../../../../../_shared/tools/functions';
+import { Home } from '@mui/icons-material';
+import { Avatar, Chip, Stack } from '@mui/material';
 
-export default function BeneficiaryEntries() {
+export default function BeneficiaryEntries({beneficiaryEntries}) {
   return (
     <Timeline position="alternate">
-      <TimelineItem>
-        <TimelineOppositeContent
-          sx={{ m: 'auto 0' }}
-          align="right"
-          variant="body2"
-          color="text.secondary"
-        >
-          9:30 am
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineConnector />
-          <TimelineDot>
-            <FastfoodIcon />
-          </TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2 }}>
-          <Typography variant="h6" component="span">
-            Eat
-          </Typography>
-          <Typography>Because you need strength</Typography>
-        </TimelineContent>
-      </TimelineItem>
-      <TimelineItem>
-        <TimelineOppositeContent
-          sx={{ m: 'auto 0' }}
-          variant="body2"
-          color="text.secondary"
-        >
-          10:00 am
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineConnector />
-          <TimelineDot color="primary">
-            <LaptopMacIcon />
-          </TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2 }}>
-          <Typography variant="h6" component="span">
-            Code
-          </Typography>
-          <Typography>Because it&apos;s awesome!</Typography>
-        </TimelineContent>
-      </TimelineItem>
-      <TimelineItem>
-        <TimelineSeparator>
-          <TimelineConnector />
-          <TimelineDot color="primary" variant="outlined">
-            <HotelIcon />
-          </TimelineDot>
-          <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2 }}>
-          <Typography variant="h6" component="span">
-            Sleep
-          </Typography>
-          <Typography>Because you need rest</Typography>
-        </TimelineContent>
-      </TimelineItem>
-      <TimelineItem>
-        <TimelineSeparator>
-          <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
-          <TimelineDot color="secondary">
-            <RepeatIcon />
-          </TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2 }}>
-          <Typography variant="h6" component="span">
-            Repeat
-          </Typography>
-          <Typography>Because this is the life you love!</Typography>
-        </TimelineContent>
-      </TimelineItem>
+      {beneficiaryEntries?.map((beneficiaryEntry, index) => (
+        <TimelineItem>
+          <TimelineOppositeContent
+            sx={{ m: 'auto 0' }}
+            align="right"
+            variant="body2"
+            color="text.secondary"
+          >
+            <b>Date d'entré :</b> {getFormatDate(beneficiaryEntry?.entryDate) + ' '} <br />
+            <b>Date de sortie :</b> {getFormatDate(beneficiaryEntry?.releaseDate) + ' '}
+          </TimelineOppositeContent>
+          <TimelineSeparator>
+            <TimelineConnector />
+            <TimelineDot>
+              <Home />
+            </TimelineDot>
+            <TimelineConnector />
+          </TimelineSeparator>
+          <TimelineContent sx={{ py: '12px', px: 2 }}>
+            <Stack direction="row" justifyContent={index%2 === 0 ?  "start" : "end"} spacing={1} sx={{marginY : 1}}>
+              {beneficiaryEntry?.establishments?.map((establishment, index) => {
+                return (
+                  <Chip
+                    key={index}
+                    avatar={
+                      <Avatar
+                        alt={establishment?.name}
+                        src={
+                          establishment?.logo
+                            ? establishment?.logo
+                            : '/default-placeholder.jpg'
+                        }
+                      />
+                    }
+                    label={establishment?.name}
+                    variant="outlined"
+                  />
+                );
+              })}
+            </Stack>
+            <Stack direction="row" justifyContent={index%2 === 0 ?  "start" : "end"} spacing={1} sx={{marginY : 1}}>
+              {beneficiaryEntry?.internalReferents?.map((employee, index) => {
+                return (
+                  <Chip
+                    key={index}
+                    avatar={
+                      <Avatar
+                        alt={`${employee?.firstName} ${employee?.lastName}`}
+                        src={
+                          employee?.photo
+                            ? employee?.photo
+                            : '/default-placeholder.jpg'
+                        }
+                      />
+                    }
+                    label={`${employee?.firstName} ${employee?.lastName}`}
+                    variant="outlined"
+                  />
+                );
+              })}
+            </Stack>
+          </TimelineContent>
+        </TimelineItem>
+      ))}
     </Timeline>
   );
 }

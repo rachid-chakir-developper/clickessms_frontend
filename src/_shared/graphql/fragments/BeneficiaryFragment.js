@@ -115,3 +115,39 @@ export const BENEFICIARY_DETAILS = gql`
   ${BENEFICIARY_ADMISSION_DETAILS}
   ${BENEFICIARY_ENTRY_DETAILS}
 `;
+export const BENEFICIARY_RECAP_DETAILS = gql`
+  fragment BeneficiaryRecapDetailsFragment on BeneficiaryType {
+    ...BeneficiaryBasicInfosFragment
+    birthDate
+    admissionDate
+    description
+    latitude
+    longitude
+    country
+    city
+    zipCode
+    address
+    mobile
+    fix
+    fax
+    webSite
+    otherContacts
+    iban
+    bic
+    bankName
+    isActive
+    observation
+    beneficiaryAdmissionDocuments{
+      ...BeneficiaryAdmissionDocumentFragment
+    }
+    beneficiaryEntries{
+      ...BeneficiaryEntryFragment
+    }
+    createdAt
+    updatedAt
+  }
+  ${BENEFICIARY_BASIC_INFOS}
+  ${BENEFICIARY_ADMISSION_DETAILS}
+  ${BENEFICIARY_ENTRY_DETAILS}
+`;
+

@@ -18,6 +18,7 @@ import ProgressService from '../../../../_shared/services/feedbacks/ProgressServ
 import EstablishmentFilter from './EstablishmentFilter';
 import { useLazyQuery } from '@apollo/client';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
+import TableListEstablishments from './TableListEstablishments';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -182,7 +183,7 @@ export default function ListEstablishments() {
       <Grid item="true" xs={12}>
         <EstablishmentFilter onFilterChange={handleFilterChange} />
       </Grid>
-      <Grid item="true" xs={12}>
+      {/* <Grid item="true" xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -213,6 +214,14 @@ export default function ListEstablishments() {
             )}
           </Grid>
         </Box>
+      </Grid> */}
+      <Grid item="true" xs={12}>
+        <TableListEstablishments
+          loading={loadingEstablishments}
+          rows={establishmentsData?.establishments?.nodes || []}
+          onDeleteEstablishment={onDeleteEstablishment}
+          onUpdateEstablishmentState={onUpdateEstablishmentState}
+        />
       </Grid>
       <Grid item="true" xs={12}>
         <PaginationControlled
