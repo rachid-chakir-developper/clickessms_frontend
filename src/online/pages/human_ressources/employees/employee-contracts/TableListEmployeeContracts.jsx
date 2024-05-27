@@ -102,13 +102,13 @@ const headCells = [
     label: 'Poste',
   },
   {
-    id: 'startingDateTime',
+    id: 'startingDate',
     numeric: false,
     disablePadding: false,
     label: 'Date de début',
   },
   {
-    id: 'endingDateTime',
+    id: 'endingDate',
     numeric: false,
     disablePadding: false,
     label: 'Date de fin',
@@ -392,7 +392,7 @@ export default function TableListEmployeeContracts({
                       />
                     </StyledTableCell>
                     <StyledTableCell align="left"> 
-                      <Stack direction="row" spacing={1}>
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
                         <Chip
                           avatar={
                             <Avatar
@@ -417,10 +417,10 @@ export default function TableListEmployeeContracts({
                     >
                       {row.position}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.endingDateTime)}`}</StyledTableCell>
+                    <StyledTableCell align="left">{`${getFormatDate(row?.startingDate)}`}</StyledTableCell>
+                    <StyledTableCell align="left">{`${getFormatDate(row?.endingDate)}`}</StyledTableCell>
                     <StyledTableCell align="left"> 
-                      <Stack direction="row" spacing={1}>
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
                         <Chip
                           label={row?.contractType?.name}
                           variant="outlined"

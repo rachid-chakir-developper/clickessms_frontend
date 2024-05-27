@@ -134,7 +134,7 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
       ...formik.values,
       activityAuthorizations: [
         ...formik.values.activityAuthorizations,
-        { document: undefined, startingDateTime: dayjs(new Date()), endingDateTime: dayjs(new Date()), capacity: 0},
+        { document: undefined, startingDateTime: dayjs(new Date()), endingDateTime: dayjs(new Date()), capacity: 0, temporaryCapacity: 0},
       ],
     });
   };
@@ -256,7 +256,9 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
         let { __typename, ...establishmentCopy1 } = data.establishment;
-        let { folder, ...establishmentCopy } = establishmentCopy1;
+        let { currentCapacity, ...establishmentCopy2 } = establishmentCopy1;
+        let { currentTemporaryCapacity, ...establishmentCopy3 } = establishmentCopy2;
+        let { folder, ...establishmentCopy } = establishmentCopy3;
         establishmentCopy.openingDate = dayjs(
           establishmentCopy.openingDate,
         );
@@ -303,7 +305,6 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
     fetchMore: fetchMoreEstablishments,
   } = useQuery(GET_ESTABLISHMENTS, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
 
   const {
@@ -313,7 +314,6 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
     fetchMore: fetchMoreEmployees,
   } = useQuery(GET_EMPLOYEES, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
 
   const {
@@ -361,7 +361,7 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5"  sx={{ marginBottom: 4 }}>
-        {title} {formik.values.number}
+        {title}: {formik?.values?.name}
       </Typography>
       {loadingEstablishment && <ProgressService type="form" />}
       {!loadingEstablishment && (
@@ -760,7 +760,7 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
                             <Item sx={{position: 'relative'}}>
                               <TheTextField
                                 variant="outlined"
-                                label="Capacité"
+                                label="Capacité totale"
                                 type="number"
                                 value={item.capacity}
                                 onChange={(e) =>
@@ -775,6 +775,18 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
                               >
                                 <Close />
                               </IconButton>
+                            </Item>
+                            <Item sx={{position: 'relative'}}>
+                              <TheTextField
+                                variant="outlined"
+                                label="Dont capacité temporaire"
+                                type="number"
+                                value={item.temporaryCapacity}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`activityAuthorizations.${index}.temporaryCapacity`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
                             </Item>
                           </Grid>
                         </Grid>

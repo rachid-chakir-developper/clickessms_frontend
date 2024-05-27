@@ -806,18 +806,22 @@ function MoreItems({ open }) {
           unmountOnExit
         >
           <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }} disabled>
-              <ListItemIcon>
-                <Group />
-              </ListItemIcon>
-              <ListItemText primary="Membres" />
-            </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }} disabled>
-              <ListItemIcon>
-                <Note />
-              </ListItemIcon>
-              <ListItemText primary="CR Réunion" />
-            </ListItemButton>
+            <StyledNavLink to="/online/gouvernance/membres">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <Group />
+                </ListItemIcon>
+                <ListItemText primary="Membres" />
+              </ListItemButton>
+            </StyledNavLink>
+            <StyledNavLink to="/online/gouvernance/reunions">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <Workspaces />
+                </ListItemIcon>
+                <ListItemText primary="Réunions" />
+              </ListItemButton>
+            </StyledNavLink>
           </List>
         </Collapse>
       </ListItem>

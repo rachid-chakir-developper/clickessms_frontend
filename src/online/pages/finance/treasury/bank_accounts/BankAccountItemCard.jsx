@@ -94,7 +94,7 @@ export default function BankAccountItemCard({
               >
                 {`${getaccountTypeLabel(bankAccount?.accountType)}`}
               </Typography>
-              <Stack direction="row" spacing={1}>
+              <Stack direction="row" flexWrap='wrap' spacing={1}>
                 <Chip
                   avatar={
                     <Avatar

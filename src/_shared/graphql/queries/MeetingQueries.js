@@ -40,6 +40,8 @@ export const MEETING_RECAP = gql`
   query GetMeeting($id: ID!) {
     meeting(id: $id) {
       ...MeetingRecapDetailsFragment
+      createdAt
+      updatedAt
     }
   }
   ${MEETING_RECAP_DETAILS}

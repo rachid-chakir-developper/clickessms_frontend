@@ -381,7 +381,7 @@ export default function TableListEvents({
                     </StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
                     <StyledTableCell align="left"> 
-                      <Stack direction="row" spacing={1}>
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
                           {row?.beneficiaries?.map((beneficiarie, index) => {
                             return (
                               <Chip
@@ -404,7 +404,7 @@ export default function TableListEvents({
                         </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left"> 
-                      <Stack direction="row" spacing={1}>
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
                         <Chip
                           avatar={
                             <Avatar

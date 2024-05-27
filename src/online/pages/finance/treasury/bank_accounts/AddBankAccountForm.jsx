@@ -183,7 +183,6 @@ export default function AddBankAccountForm({ idBankAccount, title }) {
     fetchMore: fetchMoreEstablishments,
   } = useQuery(GET_ESTABLISHMENTS, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
 
 

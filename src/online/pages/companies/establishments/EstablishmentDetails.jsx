@@ -4,11 +4,12 @@ import { useLazyQuery } from '@apollo/client';
 import { Box, Button, Divider, Paper, Stack, alpha } from '@mui/material';
 import { Grid, Typography, Avatar } from '@mui/material';
 import { GET_RECAP_ESTABLISHMENT } from '../../../../_shared/graphql/queries/EstablishmentQueries';
-import { getFormatDateTime } from '../../../../_shared/tools/functions';
+import { getFormatDate, getFormatDateTime, getMeasurementActivityUnitLabel } from '../../../../_shared/tools/functions';
 import styled from '@emotion/styled';
 import EstablishmentItemCard from './EstablishmentItemCard';
 import { Edit } from '@mui/icons-material';
 import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard';
+import EstablishmentTabs from './establishments-tabs/EstablishmentTabs';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -58,6 +59,10 @@ const EstablishmentDetailsPage = ({ establishment }) => {
     number,
     name,
     siret,
+    openingDate,
+    currentCapacity,
+    currentTemporaryCapacity,
+    measurementActivityUnit,
     establishmentType,
     establishmentCategory,
     latitude,
@@ -142,6 +147,7 @@ const EstablishmentDetailsPage = ({ establishment }) => {
               <Typography variant="h6" sx={{ fontStyle: 'italic' }}>
                 {siret}
               </Typography>
+              <Typography variant="body2">{`Capacité actuelle: ${currentCapacity} dont temporaire: ${currentTemporaryCapacity}`}</Typography>
               {address && address !== '' && (
                 <Typography variant="body2" sx={{ textAlign: 'center' }}>
                   {address} {additionalAddress} <br />
@@ -171,6 +177,7 @@ const EstablishmentDetailsPage = ({ establishment }) => {
                   {fix}
                 </Typography>
               )}
+              <Typography variant="body2">{`Unité de mesure de l'activité: ${getMeasurementActivityUnitLabel(measurementActivityUnit)}`}</Typography>
             </Box>
           </Box>
         </Paper>
@@ -189,6 +196,10 @@ const EstablishmentDetailsPage = ({ establishment }) => {
             </Typography>
             <Typography variant="body1">
               Dernière modification: {getFormatDateTime(updatedAt)}
+            </Typography>
+            <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+            <Typography variant="body1">
+              Date d'ouverture: {getFormatDate(openingDate)}
             </Typography>
           </Paper>
           
@@ -213,7 +224,7 @@ const EstablishmentDetailsPage = ({ establishment }) => {
           {establishmentParent && (
             <>
               <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-                Strucuture mère
+                Structure mère
               </Typography>
               <Paper sx={{ padding: 2 }} variant="outlined">
                 <Item>
@@ -257,7 +268,7 @@ const EstablishmentDetailsPage = ({ establishment }) => {
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
                 {establishmentChilds?.map((establishment, index) => (
-                  <Grid xs={2} sm={4} md={3} key={index}>
+                  <Grid xs={12} sm={6} md={4} key={index}>
                     <Item>
                       <EstablishmentItemCard establishment={establishment} />
                     </Item>
@@ -268,6 +279,11 @@ const EstablishmentDetailsPage = ({ establishment }) => {
           </Paper>
         </Grid>
       )}
+      <Grid item xs={12} sm={12}>
+        <Paper sx={{ padding: 2 }}>
+          <EstablishmentTabs establishment={establishment}/>
+        </Paper>
+      </Grid>
     </Grid>
   );
 };

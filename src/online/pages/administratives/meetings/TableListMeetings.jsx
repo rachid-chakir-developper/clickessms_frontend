@@ -400,7 +400,7 @@ export default function TableListMeetings({
                       scope="row"
                       padding="none"
                     >
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row" flexWrap='wrap' spacing={1}>
                         {row?.meetingTypes?.map((meetingType, index) => {
                         return (
                             <Chip
@@ -415,7 +415,7 @@ export default function TableListMeetings({
                     <StyledTableCell align="left">{row.title}</StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
                     <StyledTableCell align="left">
-                      <Stack direction="row" spacing={1}>
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
                         {row?.establishments?.map((establishment, index) => {
                           return (
                             <Chip
@@ -438,7 +438,7 @@ export default function TableListMeetings({
                       </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <Stack direction="row" spacing={1}>
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
                         {row?.participants?.map((participant, index) => {
                           return (
                             <Chip

@@ -26,12 +26,12 @@ export default function BeneficiaryAdmissionDocuments({beneficiaryAdmissionDocum
           </TimelineOppositeContent>
           <TimelineSeparator>
             <TimelineConnector />
-              <Tooltip title="Cliquez pour voir le doocument">
+              <Tooltip title={beneficiaryAdmissionDocument?.document ? "Cliquez pour voir le doocument" : "Aucun doocument"}>
                 <TimelineDot>
                     <FileOpen 
                       sx={{cursor: 'pointer'}}
                       onClick={() => {
-                        window.open(beneficiaryAdmissionDocument?.document);
+                        beneficiaryAdmissionDocument?.document ? window.open(beneficiaryAdmissionDocument?.document) : false
                       }}
                     />
                 </TimelineDot>
@@ -39,12 +39,12 @@ export default function BeneficiaryAdmissionDocuments({beneficiaryAdmissionDocum
             <TimelineConnector />
           </TimelineSeparator>
           <TimelineContent sx={{ py: '12px', px: 2 }}>
-            <Button variant="text" size="small" sx={{textTransform: 'capitalize'}}
+            {beneficiaryAdmissionDocument?.document && <Button variant="text" size="small" sx={{textTransform: 'capitalize'}}
               onClick={() => {
                 window.open(beneficiaryAdmissionDocument?.document);
               }}>
               Voir le doocument
-            </Button>
+            </Button>}
             <Stack direction="row" justifyContent={index%2 === 0 ?  "start" : "end"} spacing={1} sx={{marginY : 1}}>
               {beneficiaryAdmissionDocument?.financier && <Chip
                 avatar={

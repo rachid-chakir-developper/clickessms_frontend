@@ -45,6 +45,8 @@ export const ESTABLISHMENT_MANAGER_DETAILS = gql`
 export const ESTABLISHMENT_BASIC_INFOS = gql`
   fragment EstablishmentBasicInfosFragment on EstablishmentType {
     ...EstablishmentMiniInfosFragment
+    currentCapacity
+    currentTemporaryCapacity
     openingDate
     establishmentCategory {
       id
@@ -76,6 +78,7 @@ export const ACTIVITY_AUTHORIZATION_DETAILS = gql`
     startingDateTime
     endingDateTime
     capacity
+    temporaryCapacity
   }
 `;
 

@@ -127,7 +127,6 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
     fetchMore: fetchMoreEstablishments,
   } = useQuery(GET_ESTABLISHMENTS, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
 
   const {
@@ -137,7 +136,6 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
     fetchMore: fetchMoreBeneficiaries,
   } = useQuery(GET_BENEFICIARIES, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
   const {
     loading: loadingEmployees,
@@ -146,7 +144,6 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
     fetchMore: fetchMoreEmployees,
   } = useQuery(GET_EMPLOYEES, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
   const {
     loading: loadingDatas,

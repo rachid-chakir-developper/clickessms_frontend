@@ -130,7 +130,6 @@ export default function AddTaskForm({ idTask, title }) {
     fetchMore: fetchMoreClients,
   } = useQuery(GET_CLIENTS, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
   const {
     loading: loadingEmployees,
@@ -139,7 +138,6 @@ export default function AddTaskForm({ idTask, title }) {
     fetchMore: fetchMoreEmployees,
   } = useQuery(GET_EMPLOYEES, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
   const {
     loading: loadingVehicles,
@@ -148,7 +146,6 @@ export default function AddTaskForm({ idTask, title }) {
     fetchMore: fetchMoreVehicles,
   } = useQuery(GET_VEHICLES, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
   const {
     loading: loadingMaterials,
@@ -157,7 +154,6 @@ export default function AddTaskForm({ idTask, title }) {
     fetchMore: fetchMoreMaterials,
   } = useQuery(GET_MATERIALS, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
   const [createTask, { loading: loadingPost }] = useMutation(POST_TASK, {
     onCompleted: (data) => {

@@ -239,7 +239,7 @@ export default function ListEmployees() {
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
             {loadingEmployees && (
-              <Grid key={'pgrs'} item xs={2} sm={4} md={3}>
+              <Grid key={'pgrs'} item="true" xs={12} sm={6} md={4}>
                 <ProgressService type="mediaCard" />
               </Grid>
             )}
@@ -248,7 +248,7 @@ export default function ListEmployees() {
                 <Alert severity="warning">Aucun employé trouvé.</Alert>
               )}
             {employeesData?.employees?.nodes?.map((employee, index) => (
-              <Grid xs={2} sm={4} md={3} key={index}>
+              <Grid xs={12} sm={6} md={4} key={index}>
                 <Item>
                   <EmployeeItemCard
                     employee={employee}

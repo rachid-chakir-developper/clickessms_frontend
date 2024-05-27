@@ -404,7 +404,7 @@ export default function TableListUndesirableEvents({
                     </StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
                     <StyledTableCell align="left">
-                      <Stack direction="row" spacing={1}>
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
                         {row?.establishments?.map((establishment, index) => {
                           return (
                             <Chip
@@ -427,11 +427,11 @@ export default function TableListUndesirableEvents({
                       </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left"> 
-                      <Stack direction="row" spacing={1}>
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
                         <Chip
                           avatar={
                             <Avatar
-                              alt={row?.employee?.firstName}
+                              alt={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
                               src={
                                 row?.employee?.photo
                                   ? row?.employee?.photo
@@ -439,10 +439,10 @@ export default function TableListUndesirableEvents({
                               }
                             />
                           }
-                          label={row?.employee?.firstName}
+                          label={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
                           variant="outlined"
                         />
-                        </Stack>
+                      </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <AppLabel color={getStatusLebelColor(row?.status)}>

@@ -390,7 +390,7 @@ export default function TableListBalances({
                     </StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.date)}`}</StyledTableCell>
                     <StyledTableCell align="left">
-                      <Stack direction="row" spacing={1}>
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
                         <Chip
                           avatar={
                             <Avatar
@@ -413,7 +413,7 @@ export default function TableListBalances({
                       scope="row"
                       padding="none"
                     >
-                      <Stack direction="row" spacing={1}>
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
                         <Chip
                           avatar={
                             <Avatar

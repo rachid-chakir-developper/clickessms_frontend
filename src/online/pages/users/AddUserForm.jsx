@@ -93,7 +93,6 @@ export default function AddUserForm({ idUser, title }) {
     fetchMore: fetchMoreEmployees,
   } = useQuery(GET_EMPLOYEES, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
 
   const [createUser, { loading: loadingPost }] = useMutation(POST_USER, {

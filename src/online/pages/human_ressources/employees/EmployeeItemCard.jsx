@@ -77,6 +77,14 @@ export default function EmployeeItemCard({
               color="text.secondary"
               fontWeight="regular"
             >
+              {`${employee?.position}`}
+            </Typography>
+            <Typography
+              component="div"
+              variant="caption"
+              color="text.secondary"
+              fontWeight="regular"
+            >
               {`${employee?.email}`}
             </Typography>
             </Stack>

@@ -76,7 +76,6 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
     fetchMore: fetchMoreEmployees,
   } = useQuery(GET_EMPLOYEES, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
 
   const [createEmployeeContract, { loading: loadingPost }] = useMutation(POST_EMPLOYEE_CONTRACT, {

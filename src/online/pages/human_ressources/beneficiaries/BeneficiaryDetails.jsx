@@ -134,13 +134,14 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
             >
               <Typography variant="body2">{gender?.name}</Typography>
               <Typography variant="h5" gutterBottom>
-                {`${firstName} ${preferredName} ${lastName}`}
+                {`${firstName} ${preferredName}`}
               </Typography>
+              <Typography variant="body2">{`Nom de naissance: ${lastName}`}</Typography>
               <Typography variant="body2" sx={{ fontStyle: 'italic' }}>{getFormatDate(birthDate)}</Typography>
               {address && address !== '' && (
                 <Typography variant="body2">{address}</Typography>
               )}
-              <Typography variant="body2">{zipCode}, {city}</Typography>
+              <Typography variant="body2">{zipCode} {city}</Typography>
               <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
                 {email}
               </Typography>

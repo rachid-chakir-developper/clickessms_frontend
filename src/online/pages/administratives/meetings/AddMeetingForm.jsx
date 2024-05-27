@@ -48,6 +48,8 @@ export default function AddMeetingForm({ idMeeting, title }) {
     initialValues: {
       number: '',
       title: '',
+      topic: '',
+      meetingMode: 'SIMPLE',
       videoCallLink: '',
       startingDateTime: dayjs(new Date()),
       endingDateTime: dayjs(new Date()),
@@ -55,7 +57,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
       observation: '',
       notes: '',
       participants: [],
-      presentParticipants: [],
+      absentParticipants: [],
       beneficiaries: [],
       establishments: [],
       employee: null,
@@ -68,7 +70,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
     onSubmit: (values) => {
       let meetingCopy = { ...values };
       meetingCopy.participants = meetingCopy.participants.map((i) => i?.id);
-      meetingCopy.presentParticipants = meetingCopy.presentParticipants.map((i) => i?.id);
+      meetingCopy.absentParticipants = meetingCopy.absentParticipants.map((i) => i?.id);
       meetingCopy.beneficiaries = meetingCopy.beneficiaries.map((i) => i?.id);
       meetingCopy.meetingTypes = meetingCopy.meetingTypes.map((i) => i?.id);
       meetingCopy.establishments = meetingCopy.establishments.map((i) => i?.id);
@@ -108,7 +110,6 @@ export default function AddMeetingForm({ idMeeting, title }) {
     fetchMore: fetchMoreBeneficiaries,
   } = useQuery(GET_BENEFICIARIES, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
   const {
     loading: loadingEmployees,
@@ -117,7 +118,6 @@ export default function AddMeetingForm({ idMeeting, title }) {
     fetchMore: fetchMoreEmployees,
   } = useQuery(GET_EMPLOYEES, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
   const {
     loading: loadingDatas,
@@ -303,7 +303,6 @@ export default function AddMeetingForm({ idMeeting, title }) {
     fetchMore: fetchMoreEstablishments,
   } = useQuery(GET_ESTABLISHMENTS, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
 
   React.useEffect(() => {
@@ -474,12 +473,12 @@ export default function AddMeetingForm({ idMeeting, title }) {
                     <Item>
                       <TheAutocomplete
                         options={employeesData?.employees?.nodes}
-                        label="Personnes présentes"
+                        label="Personnes absentes"
                         placeholder="Ajouter une personne"
                         limitTags={3}
-                        value={formik.values.presentParticipants}
+                        value={formik.values.absentParticipants}
                         onChange={(e, newValue) =>
-                          formik.setFieldValue('presentParticipants', newValue)
+                          formik.setFieldValue('absentParticipants', newValue)
                         }
                       />
                     </Item>

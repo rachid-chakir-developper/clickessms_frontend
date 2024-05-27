@@ -79,7 +79,6 @@ export default function AddEventForm({ idEvent, title }) {
     fetchMore: fetchMoreBeneficiaries,
   } = useQuery(GET_BENEFICIARIES, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
   const {
     loading: loadingEmployees,
@@ -88,7 +87,6 @@ export default function AddEventForm({ idEvent, title }) {
     fetchMore: fetchMoreEmployees,
   } = useQuery(GET_EMPLOYEES, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
 
   const [createEvent, { loading: loadingPost }] = useMutation(POST_EVENT, {

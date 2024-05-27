@@ -88,7 +88,6 @@ export default function AddLetterForm({ idLetter, title }) {
     fetchMore: fetchMoreBeneficiaries,
   } = useQuery(GET_BENEFICIARIES, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
   const {
     loading: loadingEmployees,
@@ -97,7 +96,6 @@ export default function AddLetterForm({ idLetter, title }) {
     fetchMore: fetchMoreEmployees,
   } = useQuery(GET_EMPLOYEES, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
 
   const [createLetter, { loading: loadingPost }] = useMutation(POST_LETTER, {

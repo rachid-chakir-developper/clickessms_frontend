@@ -33,6 +33,7 @@ import Administratives from './pages/administratives/Administratives';
 import Companies from './pages/companies/Companies';
 import Finance from './pages/finance/Finance';
 import SpeedDialTooltipOpen from '../_shared/components/app/SpeedDialTooltipOpen';
+import Governance from './pages/governance/Governance';
 
 const drawerWidth = 280;
 
@@ -183,6 +184,7 @@ export default function Online() {
           <Route path={`administratif/*`} element={<Administratives />} />
           <Route path={`finance/*`} element={<Finance />} />
           <Route path={`ressources-humaines/*`} element={<Humans />} />
+          <Route path={`gouvernance/*`} element={<Governance />} />
 
           <Route path={`utilisateurs/*`} element={<Users />} />
           <Route path={`parametres/*`} element={<Settings />} />

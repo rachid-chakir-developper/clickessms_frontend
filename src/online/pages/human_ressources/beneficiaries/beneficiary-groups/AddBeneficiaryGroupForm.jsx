@@ -73,7 +73,6 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title }) {
     fetchMore: fetchMoreBeneficiaries,
   } = useQuery(GET_BENEFICIARIES, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
 
   const [createBeneficiaryGroup, { loading: loadingPost }] = useMutation(

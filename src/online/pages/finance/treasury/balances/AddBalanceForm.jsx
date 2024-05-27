@@ -73,7 +73,6 @@ export default function AddBalanceForm({ idBalance, title }) {
     fetchMore: fetchMoreBankAccounts,
   } = useQuery(GET_BANK_ACCOUNTS, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
 
   const [createBalance, { loading: loadingPost }] = useMutation(POST_BALANCE, {

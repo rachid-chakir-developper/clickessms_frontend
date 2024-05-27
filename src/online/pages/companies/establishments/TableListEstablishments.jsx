@@ -32,7 +32,7 @@ import {
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 
@@ -101,10 +101,10 @@ const headCells = [
     label: 'Nom',
   },
   {
-    id: 'openingDate',
+    id: 'currentCapacity',
     numeric: false,
     disablePadding: false,
-    label: "Date d'ouverture",
+    label: "Capacité actuelle",
   },
   {
     id: 'establishmentCategory',
@@ -252,6 +252,7 @@ export default function TableListEstablishments({
   rows,
   onDeleteEstablishment
 }) {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -340,14 +341,14 @@ export default function TableListEstablishments({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan="8">
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan="8">
                     <Alert severity="warning">
                       Aucune structures trouvée.
                     </Alert>
@@ -404,12 +405,13 @@ export default function TableListEstablishments({
                       id={labelId}
                       scope="row"
                       padding="none"
+                      onClick={()=> navigate(`/online/associations/structures/details/${row?.id}`)}
                     >
                       {row.name}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.openingDate)}`}</StyledTableCell>
+                    <StyledTableCell align="left">{row?.currentCapacity} {row?.currentTemporaryCapacity ? `dont temporaire: ${row?.currentTemporaryCapacity}` : ''}</StyledTableCell>
                     <StyledTableCell align="left">
-                      <Stack direction="row" spacing={1}>
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
                           {row?.establishmentCategory && <Chip
                           label={row?.establishmentCategory?.name}
                           variant="outlined"
@@ -417,7 +419,7 @@ export default function TableListEstablishments({
                       </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <Stack direction="row" spacing={1}>
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
                           {row?.establishmentType && <Chip
                           label={row?.establishmentType?.name}
                           variant="outlined"
@@ -425,7 +427,7 @@ export default function TableListEstablishments({
                       </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                        <Stack direction="row" spacing={1}>
+                        <Stack direction="row" flexWrap='wrap' spacing={1}>
                             {row?.establishmentParent && <Chip
                                 avatar={
                                 <Avatar
@@ -443,7 +445,7 @@ export default function TableListEstablishments({
                         </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <Stack direction="row" spacing={1}>
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
                         {row?.managers?.map((manager, index) => {
                           return (
                             <Chip

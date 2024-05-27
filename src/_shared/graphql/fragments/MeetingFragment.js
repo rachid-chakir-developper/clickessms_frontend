@@ -30,6 +30,8 @@ export const MEETING_BASIC_INFOS = gql`
     id
     number
     title
+    topic
+    meetingMode
     startingDateTime
     endingDateTime
     description
@@ -98,7 +100,7 @@ export const MEETING_DETAILS = gql`
     otherReasons
     observation
     notes
-    presentParticipants{
+    absentParticipants{
       ...EmployeeMiniInfosFragment
     }
     beneficiaries {
@@ -133,7 +135,7 @@ export const MEETING_RECAP_DETAILS = gql`
     otherReasons
     observation
     notes
-    presentParticipants{
+    absentParticipants{
       ...EmployeeMiniInfosFragment
     }
     beneficiaries {

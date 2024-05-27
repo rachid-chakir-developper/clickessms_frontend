@@ -234,7 +234,6 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
     fetchMore: fetchMoreFinanciers,
   } = useQuery(GET_FINANCIERS, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
 
   const {
@@ -244,7 +243,6 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
     fetchMore: fetchMoreEstablishments,
   } = useQuery(GET_ESTABLISHMENTS, {
     fetchPolicy: 'network-only',
-    variables: { page: 1, limit: 10 },
   });
 
   React.useEffect(() => {
