@@ -76,6 +76,12 @@ export const MEETING_DECISION_DETAILS = gql`
     employees{
       ...EmployeeMiniInfosFragment
     }
+    forVoters{
+      ...EmployeeMiniInfosFragment
+    }
+    againstVoters{
+      ...EmployeeMiniInfosFragment
+    }
   }
   ${EMPLOYEE_MINI_INFOS}
 `;

@@ -124,7 +124,7 @@ export default function ListMeetings() {
             className="no_style"
           >
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter une réunion
+              Ajouter un procès-verbal
             </Button>
           </Link>
         </Box>
@@ -145,7 +145,7 @@ export default function ListMeetings() {
               </Grid>
             )}
             {meetingsData?.meetings?.nodes?.length < 1 && !loadingMeetings && (
-              <Alert severity="warning">Aucune réunion trouvé.</Alert>
+              <Alert severity="warning">Aucun procès-verbal trouvé.</Alert>
             )}
             {meetingsData?.meetings?.nodes?.map((meeting, index) => (
               <Grid xs={2} sm={4} md={3} key={index}>

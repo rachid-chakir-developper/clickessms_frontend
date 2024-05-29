@@ -5,17 +5,18 @@ import { Box, Button, Divider, Paper, Stack, alpha } from '@mui/material';
 import { Grid, Typography, Avatar } from '@mui/material';
 // Assurez-vous d'importer dayjs si vous l'utilisez pour la gestion des dates
 
-import { GET_EMPLOYEE } from '../../../../_shared/graphql/queries/EmployeeQueries';
+import { GET_RECAP_EMPLOYEE } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import {
   getFormatDate,
   getFormatDateTime,
 } from '../../../../_shared/tools/functions';
 import { Edit } from '@mui/icons-material';
+import EmployeeTabs from './employee-tabs/EmployeeTabs';
 
 export default function EmployeeDetails() {
   let { idEmployee } = useParams();
   const [getEmployee, { loading: loadingEmployee, data: employeeData }] =
-    useLazyQuery(GET_EMPLOYEE);
+    useLazyQuery(GET_RECAP_EMPLOYEE);
   React.useEffect(() => {
     if (idEmployee) {
       getEmployee({ variables: { id: idEmployee } });
@@ -210,6 +211,11 @@ const EmployeeDetailsPage = ({ employee }) => {
               {observation ? observation : "Aucune observation pour l'instant"}
             </Typography>
           </Paper>
+        </Paper>
+      </Grid>
+      <Grid item xs={12} sm={12}>
+        <Paper sx={{ padding: 2 }}>
+          <EmployeeTabs employee={employee}/>
         </Paper>
       </Grid>
     </Grid>

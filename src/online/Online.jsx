@@ -34,6 +34,7 @@ import Companies from './pages/companies/Companies';
 import Finance from './pages/finance/Finance';
 import SpeedDialTooltipOpen from '../_shared/components/app/SpeedDialTooltipOpen';
 import Governance from './pages/governance/Governance';
+import Planning from './pages/planning/Planning';
 
 const drawerWidth = 280;
 
@@ -185,14 +186,14 @@ export default function Online() {
           <Route path={`finance/*`} element={<Finance />} />
           <Route path={`ressources-humaines/*`} element={<Humans />} />
           <Route path={`gouvernance/*`} element={<Governance />} />
-
           <Route path={`utilisateurs/*`} element={<Users />} />
           <Route path={`parametres/*`} element={<Settings />} />
           <Route path={`chat/*`} element={<Chat />} />
           <Route path={`account/*`} element={<Account />} />
+          <Route path={`planning/*`} element={<Planning />} />
         </Routes>
       </Box>
-      {/* <SpeedDialTooltipOpen /> */}
+      <SpeedDialTooltipOpen />
     </Box>
   );
 }

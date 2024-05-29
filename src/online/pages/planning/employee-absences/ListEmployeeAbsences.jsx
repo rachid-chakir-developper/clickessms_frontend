@@ -3,18 +3,18 @@ import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Alert, Button, Stack } from '@mui/material';
-import BeneficiaryAbsenceItemCard from './BeneficiaryAbsenceItemCard';
+import EmployeeAbsenceItemCard from './EmployeeAbsenceItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Add } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { DELETE_BENEFICIARY_ABSENCE } from '../../../../_shared/graphql/mutations/BeneficiaryAbsenceMutations';
-import { GET_BENEFICIARY_ABSENCES } from '../../../../_shared/graphql/queries/BeneficiaryAbsenceQueries';
+import { DELETE_EMPLOYEE_ABSENCE } from '../../../../_shared/graphql/mutations/EmployeeAbsenceMutations';
+import { GET_EMPLOYEE_ABSENCES } from '../../../../_shared/graphql/queries/EmployeeAbsenceQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import BeneficiaryAbsenceFilter from './BeneficiaryAbsenceFilter';
+import EmployeeAbsenceFilter from './EmployeeAbsenceFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
-import TableListBeneficiaryAbsences from './TableListBeneficiaryAbsences';
+import TableListEmployeeAbsences from './TableListEmployeeAbsences';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -24,42 +24,42 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function ListBeneficiaryAbsences() {
+export default function ListEmployeeAbsences() {
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
-  const [beneficiaryAbsenceFilter, setBeneficiaryAbsenceFilter] =
+  const [employeeAbsenceFilter, setEmployeeAbsenceFilter] =
     React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
-    setBeneficiaryAbsenceFilter(newFilter);
+    setEmployeeAbsenceFilter(newFilter);
     setPaginator({ ...paginator, page: 1 });
   };
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const [
-    getBeneficiaryAbsences,
+    getEmployeeAbsences,
     {
-      loading: loadingBeneficiaryAbsences,
-      data: beneficiaryAbsencesData,
-      error: beneficiaryAbsencesError,
-      fetchMore: fetchMoreBeneficiaryAbsences,
+      loading: loadingEmployeeAbsences,
+      data: employeeAbsencesData,
+      error: employeeAbsencesError,
+      fetchMore: fetchMoreEmployeeAbsences,
     },
-  ] = useLazyQuery(GET_BENEFICIARY_ABSENCES, {
+  ] = useLazyQuery(GET_EMPLOYEE_ABSENCES, {
     variables: {
-      beneficiaryAbsenceFilter,
+      employeeAbsenceFilter,
       page: paginator.page,
       limit: paginator.limit,
     },
   });
 
   React.useEffect(() => {
-    getBeneficiaryAbsences();
+    getEmployeeAbsences();
   }, [paginator]);
 
-  const [deleteBeneficiaryAbsence, { loading: loadingDelete }] = useMutation(
-    DELETE_BENEFICIARY_ABSENCE,
+  const [deleteEmployeeAbsence, { loading: loadingDelete }] = useMutation(
+    DELETE_EMPLOYEE_ABSENCE,
     {
       onCompleted: (datas) => {
-        if (datas.deleteBeneficiaryAbsence.deleted) {
+        if (datas.deleteEmployeeAbsence.deleted) {
           setNotifyAlert({
             isOpen: true,
             message: 'Supprimé avec succès',
@@ -68,37 +68,37 @@ export default function ListBeneficiaryAbsences() {
         } else {
           setNotifyAlert({
             isOpen: true,
-            message: `Non Supprimé ! ${datas.deleteBeneficiaryAbsence.message}.`,
+            message: `Non Supprimé ! ${datas.deleteEmployeeAbsence.message}.`,
             type: 'error',
           });
         }
       },
-      update(cache, { data: { deleteBeneficiaryAbsence } }) {
-        console.log('Updating cache after deletion:', deleteBeneficiaryAbsence);
+      update(cache, { data: { deleteEmployeeAbsence } }) {
+        console.log('Updating cache after deletion:', deleteEmployeeAbsence);
 
-        const deletedBeneficiaryAbsenceId = deleteBeneficiaryAbsence.id;
+        const deletedEmployeeAbsenceId = deleteEmployeeAbsence.id;
 
         cache.modify({
           fields: {
-            beneficiaryAbsences(
-              existingBeneficiaryAbsences = { totalCount: 0, nodes: [] },
+            employeeAbsences(
+              existingEmployeeAbsences = { totalCount: 0, nodes: [] },
               { readField },
             ) {
-              const updatedBeneficiaryAbsences =
-                existingBeneficiaryAbsences.nodes.filter(
-                  (beneficiaryAbsence) =>
-                    readField('id', beneficiaryAbsence) !==
-                    deletedBeneficiaryAbsenceId,
+              const updatedEmployeeAbsences =
+                existingEmployeeAbsences.nodes.filter(
+                  (employeeAbsence) =>
+                    readField('id', employeeAbsence) !==
+                    deletedEmployeeAbsenceId,
                 );
 
               console.log(
-                'Updated beneficiaryAbsences:',
-                updatedBeneficiaryAbsences,
+                'Updated employeeAbsences:',
+                updatedEmployeeAbsences,
               );
 
               return {
-                totalCount: existingBeneficiaryAbsences.totalCount - 1,
-                nodes: updatedBeneficiaryAbsences,
+                totalCount: existingEmployeeAbsences.totalCount - 1,
+                nodes: updatedEmployeeAbsences,
               };
             },
           },
@@ -115,14 +115,14 @@ export default function ListBeneficiaryAbsences() {
     },
   );
 
-  const onDeleteBeneficiaryAbsence = (id) => {
+  const onDeleteEmployeeAbsence = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment supprimer ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        deleteBeneficiaryAbsence({ variables: { id: id } });
+        deleteEmployeeAbsence({ variables: { id: id } });
       },
     });
   };
@@ -132,7 +132,7 @@ export default function ListBeneficiaryAbsences() {
       <Grid item="true" xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
-            to="/online/activites/absences-beneficiaires/ajouter"
+            to="/online/planning/absences-employes/ajouter"
             className="no_style"
           >
             <Button variant="contained" endIcon={<Add />}>
@@ -142,7 +142,7 @@ export default function ListBeneficiaryAbsences() {
         </Box>
       </Grid>
       <Grid item="true" xs={12}>
-        <BeneficiaryAbsenceFilter onFilterChange={handleFilterChange} />
+        <EmployeeAbsenceFilter onFilterChange={handleFilterChange} />
       </Grid>
       {/* <Grid item="true" xs={12}>
         <Box sx={{ flexGrow: 1 }}>
@@ -151,22 +151,22 @@ export default function ListBeneficiaryAbsences() {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            {loadingBeneficiaryAbsences && (
+            {loadingEmployeeAbsences && (
               <Grid key={'pgrs'} item xs={2} sm={4} md={3}>
                 <ProgressService type="mediaCard" />
               </Grid>
             )}
-            {beneficiaryAbsencesData?.beneficiaryAbsences?.nodes?.length < 1 &&
-              !loadingBeneficiaryAbsences && (
+            {employeeAbsencesData?.employeeAbsences?.nodes?.length < 1 &&
+              !loadingEmployeeAbsences && (
                 <Alert severity="warning">Aucune absence trouvé.</Alert>
               )}
-            {beneficiaryAbsencesData?.beneficiaryAbsences?.nodes?.map(
-              (beneficiaryAbsence, index) => (
+            {employeeAbsencesData?.employeeAbsences?.nodes?.map(
+              (employeeAbsence, index) => (
                 <Grid xs={2} sm={4} md={3} key={index}>
                   <Item>
-                    <BeneficiaryAbsenceItemCard
-                      beneficiaryAbsence={beneficiaryAbsence}
-                      onDeleteBeneficiaryAbsence={onDeleteBeneficiaryAbsence}
+                    <EmployeeAbsenceItemCard
+                      employeeAbsence={employeeAbsence}
+                      onDeleteEmployeeAbsence={onDeleteEmployeeAbsence}
                     />
                   </Item>
                 </Grid>
@@ -176,15 +176,15 @@ export default function ListBeneficiaryAbsences() {
         </Box>
       </Grid> */}
       <Grid item="true" xs={12}>
-        <TableListBeneficiaryAbsences
-          loading={loadingBeneficiaryAbsences}
-          rows={beneficiaryAbsencesData?.beneficiaryAbsences?.nodes || []}
-          onDeleteBeneficiaryAbsence={onDeleteBeneficiaryAbsence}
+        <TableListEmployeeAbsences
+          loading={loadingEmployeeAbsences}
+          rows={employeeAbsencesData?.employeeAbsences?.nodes || []}
+          onDeleteEmployeeAbsence={onDeleteEmployeeAbsence}
         />
       </Grid>
       <Grid item="true" xs={12}>
         <PaginationControlled
-          totalItems={beneficiaryAbsencesData?.beneficiaryAbsences?.totalCount} // Nombre total d'éléments
+          totalItems={employeeAbsencesData?.employeeAbsences?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
           currentPage={paginator.page}
           onChange={(page) => setPaginator({ ...paginator, page })}

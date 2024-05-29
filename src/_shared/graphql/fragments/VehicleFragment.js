@@ -1,8 +1,9 @@
 // VehicleFragment.js
 
 import { gql } from '@apollo/client';
-import { USER_BASIC_INFOS } from './UserFragment';
 import { FOLDER_MINI_INFOS } from './MediaFragment';
+import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
+import { EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
 
 export const VEHICLE_BASIC_INFOS = gql`
   fragment VehicleBasicInfosFragment on VehicleType {
@@ -11,35 +12,53 @@ export const VEHICLE_BASIC_INFOS = gql`
     name
     image
     registrationNumber
-    isInService
-    isOutOfOrder
-    isRented
-    isBought
-    designation
     isActive
-    driver {
-      ...UserBasicInfosFragment
-    }
     folder {
       ...FolderMiniInfosFragment
     }
   }
-  ${USER_BASIC_INFOS}
   ${FOLDER_MINI_INFOS}
 `;
+
+export const VEHICLE_ESTABLISHMENT_DETAILS = gql`
+  fragment VehicleEstablishmentFragment on VehicleEstablishmentType {
+    id
+    startingDate
+    endingDate
+    establishments{
+      ...EstablishmentMiniInfosFragment
+    }
+  }
+  ${ESTABLISHMENT_MINI_INFOS}
+`;
+
+export const VEHICLE_EMPLOYEE_DETAILS = gql`
+  fragment VehicleEmployeeFragment on VehicleEmployeeType {
+    id
+    startingDate
+    endingDate
+    employees{
+      ...EmployeeMiniInfosFragment
+    }
+  }
+  ${EMPLOYEE_MINI_INFOS}
+`;
+
+
 
 export const VEHICLE_DETAILS = gql`
   fragment VehicleDetailsFragment on VehicleType {
     ...VehicleBasicInfosFragment
-    driverName
-    driverNumber
-    buyingPrice
-    rentalPrice
-    advancePaid
-    purchaseDate
-    rentalDate
+    vehicleEstablishments{
+      ...VehicleEstablishmentFragment
+    }
+    vehicleEmployees{
+      ...VehicleEmployeeFragment
+    }
     description
     observation
   }
   ${VEHICLE_BASIC_INFOS}
+  ${VEHICLE_ESTABLISHMENT_DETAILS}
+  ${VEHICLE_EMPLOYEE_DETAILS}
 `;

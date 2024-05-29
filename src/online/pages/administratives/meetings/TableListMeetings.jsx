@@ -116,7 +116,7 @@ const headCells = [
         id: 'establishments',
         numeric: false,
         disablePadding: false,
-        label: 'Etablissements',
+        label: 'Structures',
     },
     {
         id: 'participants',

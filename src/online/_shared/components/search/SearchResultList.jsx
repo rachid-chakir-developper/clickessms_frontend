@@ -27,23 +27,23 @@ const SearchResultList = ({ results, loading, keyword }) => {
             sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
             subheader={
               <ListSubheader sx={{ fontSize: 20, fontWeight: 700 }}>
-                Les interventions
+                Les structures
               </ListSubheader>
             }
           >
             {loading && <ProgressService type="searchResults" />}
-            {!loading && results?.tasks?.totalCount < 1 && (
+            {!loading && results?.establishments?.totalCount < 1 && (
               <small>
-                Aucune intervention trouvée avec{' '}
+                Aucune structure trouvée avec{' '}
                 <b>
                   "<em>{keyword}</em>"
                 </b>
               </small>
             )}
-            {results?.tasks?.nodes?.map((task, index) => (
+            {results?.establishments?.nodes?.map((establishment, index) => (
               <React.Fragment key={index}>
                 <Link
-                  to={`/online/travaux/interventions/details/${task?.id}`}
+                  to={`/online/associations/structures/details/${establishment?.id}`}
                   className="no_style"
                 >
                   <ListItem alignItems="flex-start">
@@ -51,23 +51,30 @@ const SearchResultList = ({ results, loading, keyword }) => {
                       <Avatar
                         alt={`Avatar ${index + 1}`}
                         src={
-                          task?.image ? task?.image : '/default-placeholder.jpg'
+                          establishment?.logo ? establishment?.logo : '/default-placeholder.jpg'
                         }
                       />
                     </ListItemAvatar>
                     <ListItemText
-                      primary={task?.name}
+                      primary={establishment?.name}
                       secondary={
                         <React.Fragment>
-                          <Typography
-                            sx={{ display: 'inline' }}
+                          {establishment?.address && <Typography
+                            sx={{ display: 'block' }}
                             component="span"
                             variant="body2"
                             color="text.primary"
                           >
-                            {task?.address}
-                          </Typography>
-                          {` — ${task?.client?.name}`}
+                            {establishment?.address}
+                          </Typography>}
+                          {establishment?.siret && <Typography
+                            sx={{ display: 'block' }}
+                            component="span"
+                            variant="body2"
+                            color="text.primary"
+                          >
+                            {establishment?.siret}
+                          </Typography>}
                         </React.Fragment>
                       }
                     />
@@ -101,7 +108,7 @@ const SearchResultList = ({ results, loading, keyword }) => {
             {results?.employees?.nodes?.map((employee, index) => (
               <React.Fragment key={index}>
                 <Link
-                  to={`/online/employes/modifier/${employee?.id}`}
+                  to={`/online/ressources-humaines/employes/details/${employee?.id}`}
                   className="no_style"
                 >
                   <ListItem alignItems="flex-start">
@@ -119,15 +126,21 @@ const SearchResultList = ({ results, loading, keyword }) => {
                       primary={`${employee?.firstName} ${employee?.lastName}`}
                       secondary={
                         <React.Fragment>
-                          <Typography
-                            sx={{ display: 'inline' }}
+                          {employee?.email && <Typography
+                            sx={{ display: 'block' }}
                             component="span"
                             variant="body2"
                             color="text.primary"
                           >
+                            {employee?.position}
+                          </Typography>}
+                          {employee?.email && <Typography
+                            sx={{ display: 'block' }}
+                            variant="body2"
+                            color="text.primary"
+                          >
                             {employee?.email}
-                          </Typography>
-                          {` — ${employee?.position}`}
+                          </Typography>}
                         </React.Fragment>
                       }
                     />
@@ -145,23 +158,23 @@ const SearchResultList = ({ results, loading, keyword }) => {
             sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
             subheader={
               <ListSubheader sx={{ fontSize: 20, fontWeight: 700 }}>
-                Les clients
+                Les bénéficiaires
               </ListSubheader>
             }
           >
             {loading && <ProgressService type="searchResults" />}
-            {!loading && results?.clients?.totalCount < 1 && (
+            {!loading && results?.beneficiaries?.totalCount < 1 && (
               <small>
-                Aucun client trouvé avec{' '}
+                Aucun bénéficiaire trouvé avec{' '}
                 <b>
                   "<em>{keyword}</em>"
                 </b>
               </small>
             )}
-            {results?.clients?.nodes?.map((client, index) => (
+            {results?.beneficiaries?.nodes?.map((beneficiary, index) => (
               <React.Fragment key={index}>
                 <Link
-                  to={`/online/ventes/clients/modifier/${client?.id}`}
+                  to={`/online/ressources-humaines/beneficiaires/details/${beneficiary?.id}`}
                   className="no_style"
                 >
                   <ListItem alignItems="flex-start">
@@ -169,25 +182,24 @@ const SearchResultList = ({ results, loading, keyword }) => {
                       <Avatar
                         alt={`Avatar ${index + 1}`}
                         src={
-                          client?.image
-                            ? client?.image
+                          beneficiary?.photo
+                            ? beneficiary?.photo
                             : '/default-placeholder.jpg'
                         }
                       />
                     </ListItemAvatar>
                     <ListItemText
-                      primary={client?.name}
+                      primary={`${beneficiary?.firstName} ${beneficiary?.lastName}`}
                       secondary={
                         <React.Fragment>
-                          <Typography
-                            sx={{ display: 'inline' }}
+                          {beneficiary?.address && <Typography
+                            sx={{ display: 'block' }}
                             component="span"
                             variant="body2"
                             color="text.primary"
                           >
-                            {client?.address}
-                          </Typography>
-                          {` — ${client?.email}`}
+                            {beneficiary?.address}
+                          </Typography>}
                         </React.Fragment>
                       }
                     />
@@ -240,7 +252,7 @@ const SearchResultList = ({ results, loading, keyword }) => {
                       secondary={
                         <React.Fragment>
                           <Typography
-                            sx={{ display: 'inline' }}
+                            sx={{ display: 'block' }}
                             component="span"
                             variant="body2"
                             color="text.primary"

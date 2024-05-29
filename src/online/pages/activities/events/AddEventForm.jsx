@@ -34,11 +34,7 @@ const Item = styled(Stack)(({ theme }) => ({
 export default function AddEventForm({ idEvent, title }) {
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
-  const validationSchema = yup.object({
-    title: yup
-      .string("Entrez le titre d'événement")
-      .required("Le titre d'événement est obligatoire"),
-  });
+  const validationSchema = yup.object({});
   const formik = useFormik({
     initialValues: {
       image: undefined,
@@ -221,15 +217,11 @@ export default function AddEventForm({ idEvent, title }) {
                 <TheTextField
                   variant="outlined"
                   label="Titre"
-                  id="title"
                   value={formik.values.title}
                   required
                   onChange={(e) =>
                     formik.setFieldValue('title', e.target.value)
                   }
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.title && Boolean(formik.errors.title)}
-                  helperText={formik.touched.title && formik.errors.title}
                   disabled={loadingPost || loadingPut}
                 />
               </Item>

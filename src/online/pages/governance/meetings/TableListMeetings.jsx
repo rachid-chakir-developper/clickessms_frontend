@@ -116,7 +116,7 @@ const headCells = [
         id: 'establishments',
         numeric: false,
         disablePadding: false,
-        label: 'Etablissements',
+        label: 'Structures',
     },
     {
         id: 'participants',
@@ -220,7 +220,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les réunions
+          Les procès-verbal
         </Typography>
       )}
 
@@ -344,7 +344,7 @@ export default function TableListMeetings({
                 <StyledTableRow>
                   <StyledTableCell colSpan="7">
                     <Alert severity="warning">
-                      Aucune réunion trouvé.
+                      Aucun procès-verbal trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>

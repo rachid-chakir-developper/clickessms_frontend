@@ -31,6 +31,7 @@ export default function ListEvents() {
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
     setEventFilter(newFilter);
+    setPaginator({ ...paginator, page: 1 });
   };
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
@@ -48,7 +49,7 @@ export default function ListEvents() {
 
   React.useEffect(() => {
     getEvents();
-  }, [eventFilter, paginator]);
+  }, [paginator]);
 
   const [deleteEvent, { loading: loadingDelete }] = useMutation(DELETE_EVENT, {
     onCompleted: (datas) => {
@@ -177,7 +178,7 @@ export default function ListEvents() {
         <PaginationControlled
           totalItems={eventsData?.events?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
-          currentPage={1}
+          currentPage={paginator.page}
           onChange={(page) => setPaginator({ ...paginator, page })}
         />
       </Grid>

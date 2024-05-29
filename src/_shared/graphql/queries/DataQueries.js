@@ -43,6 +43,15 @@ export const GET_DATAS_BENEFICIARY_ABSENCE = gql`
   ${DATA_BASIC_INFOS}
 `;
 
+export const GET_DATAS_EMPLOYEE_ABSENCE = gql`
+  query {
+    absenceReasons: datas(typeData: "AbsenceReason") {
+      ...DataBasicInfosFragment
+    }
+  }
+  ${DATA_BASIC_INFOS}
+`;
+
 export const GET_DATAS_UNDESIRABLE_EVENT = gql`
   query {
     undesirableEventNormalTypes: datas(typeData: "UndesirableEventNormalType") {

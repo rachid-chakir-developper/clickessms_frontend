@@ -348,6 +348,58 @@ function MeetingDecisions({ meeting }) {
                         </Stack>
                       </>
                     )}
+                    {meetingDecision?.forVoters?.length > 0 && (
+                        <>
+                          <Typography variant="p" gutterBottom sx={{fontSize: 12, fontStyle: 'italic'}}>
+                            Personnes qui ont voté pour
+                          </Typography>
+                          <Stack direction="row" flexWrap='wrap' spacing={1}>
+                            {meetingDecision?.forVoters?.map((employee, index) => (
+                              <Chip
+                                key={index}
+                                avatar={
+                                  <Avatar
+                                    alt={`${employee?.firstName} ${employee?.lastName}`}
+                                    src={
+                                      employee?.photo
+                                        ? employee?.photo
+                                        : '/default-placeholder.jpg'
+                                    }
+                                  />
+                                }
+                                label={`${employee?.firstName} ${employee?.lastName}`}
+                                variant="outlined"
+                              />
+                            ))}
+                          </Stack>
+                        </>
+                      )}
+                      {meetingDecision?.againstVoters?.length > 0 && (
+                          <>
+                            <Typography variant="p" gutterBottom sx={{fontSize: 12, fontStyle: 'italic'}}>
+                              Personnes qui ont voté contre
+                            </Typography>
+                            <Stack direction="row" flexWrap='wrap' spacing={1}>
+                              {meetingDecision?.againstVoters?.map((employee, index) => (
+                                <Chip
+                                  key={index}
+                                  avatar={
+                                    <Avatar
+                                      alt={`${employee?.firstName} ${employee?.lastName}`}
+                                      src={
+                                        employee?.photo
+                                          ? employee?.photo
+                                          : '/default-placeholder.jpg'
+                                      }
+                                    />
+                                  }
+                                  label={`${employee?.firstName} ${employee?.lastName}`}
+                                  variant="outlined"
+                                />
+                              ))}
+                            </Stack>
+                          </>
+                        )}
                 </Box>
                 ))}
               </List>

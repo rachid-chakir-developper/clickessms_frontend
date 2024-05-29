@@ -34,6 +34,7 @@ export default function ListEstablishments() {
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
     setEstablishmentFilter(newFilter);
+    setPaginator({ ...paginator, page: 1 });
   };
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
@@ -55,7 +56,7 @@ export default function ListEstablishments() {
 
   React.useEffect(() => {
     getEstablishments();
-  }, [establishmentFilter, paginator]);
+  }, [paginator]);
 
   const [deleteEstablishment, { loading: loadingDelete }] = useMutation(
     DELETE_ESTABLISHMENT,
@@ -227,7 +228,7 @@ export default function ListEstablishments() {
         <PaginationControlled
           totalItems={establishmentsData?.establishments?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
-          currentPage={1}
+          currentPage={paginator.page}
           onChange={(page) => setPaginator({ ...paginator, page })}
         />
       </Grid>

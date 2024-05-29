@@ -11,18 +11,17 @@ import * as yup from 'yup';
 
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_BENEFICIARY_ABSENCE } from '../../../../_shared/graphql/queries/BeneficiaryAbsenceQueries';
+import { GET_EMPLOYEE_ABSENCE } from '../../../../_shared/graphql/queries/EmployeeAbsenceQueries';
 import {
-  POST_BENEFICIARY_ABSENCE,
-  PUT_BENEFICIARY_ABSENCE,
-} from '../../../../_shared/graphql/mutations/BeneficiaryAbsenceMutations';
+  POST_EMPLOYEE_ABSENCE,
+  PUT_EMPLOYEE_ABSENCE,
+} from '../../../../_shared/graphql/mutations/EmployeeAbsenceMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
-import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
-import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
+import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import SelectCheckmarks from '../../../../_shared/components/form-fields/SelectCheckmarks';
-import { GET_DATAS_BENEFICIARY_ABSENCE } from '../../../../_shared/graphql/queries/DataQueries';
+import { GET_DATAS_EMPLOYEE_ABSENCE } from '../../../../_shared/graphql/queries/DataQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -32,8 +31,8 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function AddBeneficiaryAbsenceForm({
-  idBeneficiaryAbsence,
+export default function AddEmployeeAbsenceForm({
+  idEmployeeAbsence,
   title,
 }) {
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
@@ -47,42 +46,34 @@ export default function AddBeneficiaryAbsenceForm({
       endingDateTime: dayjs(new Date()),
       comment: '',
       observation: '',
-      beneficiaries: [],
+      employees: [],
       employee: null,
       reasons: [],
       otherReasons: '',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let beneficiaryAbsenceCopy = { ...values };
-      beneficiaryAbsenceCopy.beneficiaries =
-        beneficiaryAbsenceCopy.beneficiaries.map((i) => i?.id);
-      beneficiaryAbsenceCopy.reasons = beneficiaryAbsenceCopy.reasons.map(
+      let employeeAbsenceCopy = { ...values };
+      employeeAbsenceCopy.employees =
+        employeeAbsenceCopy.employees.map((i) => i?.id);
+      employeeAbsenceCopy.reasons = employeeAbsenceCopy.reasons.map(
         (i) => i?.id,
       );
-      beneficiaryAbsenceCopy.employee = beneficiaryAbsenceCopy.employee
-        ? beneficiaryAbsenceCopy.employee.id
+      employeeAbsenceCopy.employee = employeeAbsenceCopy.employee
+        ? employeeAbsenceCopy.employee.id
         : null;
-      if (idBeneficiaryAbsence && idBeneficiaryAbsence != '') {
-        onUpdateBeneficiaryAbsence({
-          id: beneficiaryAbsenceCopy.id,
-          beneficiaryAbsenceData: beneficiaryAbsenceCopy,
+      if (idEmployeeAbsence && idEmployeeAbsence != '') {
+        onUpdateEmployeeAbsence({
+          id: employeeAbsenceCopy.id,
+          employeeAbsenceData: employeeAbsenceCopy,
         });
       } else
-        createBeneficiaryAbsence({
+        createEmployeeAbsence({
           variables: {
-            beneficiaryAbsenceData: beneficiaryAbsenceCopy,
+            employeeAbsenceData: employeeAbsenceCopy,
           },
         });
     },
-  });
-  const {
-    loading: loadingBeneficiaries,
-    data: beneficiariesData,
-    error: beneficiariesError,
-    fetchMore: fetchMoreBeneficiaries,
-  } = useQuery(GET_BENEFICIARIES, {
-    fetchPolicy: 'network-only',
   });
   const {
     loading: loadingEmployees,
@@ -92,15 +83,16 @@ export default function AddBeneficiaryAbsenceForm({
   } = useQuery(GET_EMPLOYEES, {
     fetchPolicy: 'network-only',
   });
+
   const {
     loading: loadingDatas,
     data: dataData,
     error: datsError,
     fetchMore: fetchMoreDatas,
-  } = useQuery(GET_DATAS_BENEFICIARY_ABSENCE, { fetchPolicy: 'network-only' });
+  } = useQuery(GET_DATAS_EMPLOYEE_ABSENCE, { fetchPolicy: 'network-only' });
 
-  const [createBeneficiaryAbsence, { loading: loadingPost }] = useMutation(
-    POST_BENEFICIARY_ABSENCE,
+  const [createEmployeeAbsence, { loading: loadingPost }] = useMutation(
+    POST_EMPLOYEE_ABSENCE,
     {
       onCompleted: (data) => {
         console.log(data);
@@ -109,25 +101,25 @@ export default function AddBeneficiaryAbsenceForm({
           message: 'Ajouté avec succès',
           type: 'success',
         });
-        let { __typename, ...beneficiaryAbsenceCopy } =
-          data.createBeneficiaryAbsence.beneficiaryAbsence;
-        //   formik.setValues(beneficiaryAbsenceCopy);
-        navigate('/online/activites/absences-beneficiaires/liste');
+        let { __typename, ...employeeAbsenceCopy } =
+          data.createEmployeeAbsence.employeeAbsence;
+        //   formik.setValues(employeeAbsenceCopy);
+        navigate('/online/planning/absences-employes/liste');
       },
-      update(cache, { data: { createBeneficiaryAbsence } }) {
-        const newBeneficiaryAbsence =
-          createBeneficiaryAbsence.beneficiaryAbsence;
+      update(cache, { data: { createEmployeeAbsence } }) {
+        const newEmployeeAbsence =
+          createEmployeeAbsence.employeeAbsence;
 
         cache.modify({
           fields: {
-            beneficiaryAbsences(
-              existingBeneficiaryAbsences = { totalCount: 0, nodes: [] },
+            employeeAbsences(
+              existingEmployeeAbsences = { totalCount: 0, nodes: [] },
             ) {
               return {
-                totalCount: existingBeneficiaryAbsences.totalCount + 1,
+                totalCount: existingEmployeeAbsences.totalCount + 1,
                 nodes: [
-                  newBeneficiaryAbsence,
-                  ...existingBeneficiaryAbsences.nodes,
+                  newEmployeeAbsence,
+                  ...existingEmployeeAbsences.nodes,
                 ],
               };
             },
@@ -144,8 +136,8 @@ export default function AddBeneficiaryAbsenceForm({
       },
     },
   );
-  const [updateBeneficiaryAbsence, { loading: loadingPut }] = useMutation(
-    PUT_BENEFICIARY_ABSENCE,
+  const [updateEmployeeAbsence, { loading: loadingPut }] = useMutation(
+    PUT_EMPLOYEE_ABSENCE,
     {
       onCompleted: (data) => {
         console.log(data);
@@ -154,32 +146,32 @@ export default function AddBeneficiaryAbsenceForm({
           message: 'Modifié avec succès',
           type: 'success',
         });
-        let { __typename, ...beneficiaryAbsenceCopy } =
-          data.updateBeneficiaryAbsence.beneficiaryAbsence;
-        //   formik.setValues(beneficiaryAbsenceCopy);
-        navigate('/online/activites/absences-beneficiaires/liste');
+        let { __typename, ...employeeAbsenceCopy } =
+          data.updateEmployeeAbsence.employeeAbsence;
+        //   formik.setValues(employeeAbsenceCopy);
+        navigate('/online/planning/absences-employes/liste');
       },
-      update(cache, { data: { updateBeneficiaryAbsence } }) {
-        const updatedBeneficiaryAbsence =
-          updateBeneficiaryAbsence.beneficiaryAbsence;
+      update(cache, { data: { updateEmployeeAbsence } }) {
+        const updatedEmployeeAbsence =
+          updateEmployeeAbsence.employeeAbsence;
 
         cache.modify({
           fields: {
-            beneficiaryAbsences(
-              existingBeneficiaryAbsences = { totalCount: 0, nodes: [] },
+            employeeAbsences(
+              existingEmployeeAbsences = { totalCount: 0, nodes: [] },
               { readField },
             ) {
-              const updatedBeneficiaryAbsences =
-                existingBeneficiaryAbsences.nodes.map((beneficiaryAbsence) =>
-                  readField('id', beneficiaryAbsence) ===
-                  updatedBeneficiaryAbsence.id
-                    ? updatedBeneficiaryAbsence
-                    : beneficiaryAbsence,
+              const updatedEmployeeAbsences =
+                existingEmployeeAbsences.nodes.map((employeeAbsence) =>
+                  readField('id', employeeAbsence) ===
+                  updatedEmployeeAbsence.id
+                    ? updatedEmployeeAbsence
+                    : employeeAbsence,
                 );
 
               return {
-                totalCount: existingBeneficiaryAbsences.totalCount,
-                nodes: updatedBeneficiaryAbsences,
+                totalCount: existingEmployeeAbsences.totalCount,
+                nodes: updatedEmployeeAbsences,
               };
             },
           },
@@ -195,57 +187,57 @@ export default function AddBeneficiaryAbsenceForm({
       },
     },
   );
-  const onUpdateBeneficiaryAbsence = (variables) => {
+  const onUpdateEmployeeAbsence = (variables) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment modifier ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        updateBeneficiaryAbsence({ variables });
+        updateEmployeeAbsence({ variables });
       },
     });
   };
-  const [getBeneficiaryAbsence, { loading: loadingBeneficiaryAbsence }] =
-    useLazyQuery(GET_BENEFICIARY_ABSENCE, {
+  const [getEmployeeAbsence, { loading: loadingEmployeeAbsence }] =
+    useLazyQuery(GET_EMPLOYEE_ABSENCE, {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
-        let { __typename, ...beneficiaryAbsenceCopy1 } =
-          data.beneficiaryAbsence;
-        let { folder, ...beneficiaryAbsenceCopy } = beneficiaryAbsenceCopy1;
-        beneficiaryAbsenceCopy.startingDateTime = dayjs(
-          beneficiaryAbsenceCopy.startingDateTime,
+        let { __typename, ...employeeAbsenceCopy1 } =
+          data.employeeAbsence;
+        let { folder, ...employeeAbsenceCopy } = employeeAbsenceCopy1;
+        employeeAbsenceCopy.startingDateTime = dayjs(
+          employeeAbsenceCopy.startingDateTime,
         );
-        beneficiaryAbsenceCopy.endingDateTime = dayjs(
-          beneficiaryAbsenceCopy.endingDateTime,
+        employeeAbsenceCopy.endingDateTime = dayjs(
+          employeeAbsenceCopy.endingDateTime,
         );
-        beneficiaryAbsenceCopy.beneficiaries =
-          beneficiaryAbsenceCopy.beneficiaries
-            ? beneficiaryAbsenceCopy.beneficiaries.map((i) => i?.beneficiary)
+        employeeAbsenceCopy.employees =
+          employeeAbsenceCopy.employees
+            ? employeeAbsenceCopy.employees.map((i) => i?.employee)
             : [];
-        formik.setValues(beneficiaryAbsenceCopy);
+        formik.setValues(employeeAbsenceCopy);
       },
       onError: (err) => console.log(err),
     });
   React.useEffect(() => {
-    if (idBeneficiaryAbsence) {
-      getBeneficiaryAbsence({ variables: { id: idBeneficiaryAbsence } });
+    if (idEmployeeAbsence) {
+      getEmployeeAbsence({ variables: { id: idEmployeeAbsence } });
     }
-  }, [idBeneficiaryAbsence]);
+  }, [idEmployeeAbsence]);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
         {title} {formik.values.number}
       </Typography>
-      {loadingBeneficiaryAbsence && <ProgressService type="form" />}
-      {!loadingBeneficiaryAbsence && (
+      {loadingEmployeeAbsence && <ProgressService type="form" />}
+      {!loadingEmployeeAbsence && (
         <form onSubmit={formik.handleSubmit}>
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid xs={2} sm={4} md={4}>
+            <Grid xs={12} sm={6} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -255,7 +247,7 @@ export default function AddBeneficiaryAbsenceForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4}>
+            <Grid xs={12} sm={6} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -269,7 +261,7 @@ export default function AddBeneficiaryAbsenceForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4}>
+            <Grid xs={12} sm={6} md={4}>
               <Item>
                 <TheDateTimePicker
                   label="Date et heure de début"
@@ -291,36 +283,21 @@ export default function AddBeneficiaryAbsenceForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4}>
+            <Grid xs={12} sm={6} md={8} item="true">
               <Item>
                 <TheAutocomplete
                   options={employeesData?.employees?.nodes}
-                  label="Pour quel employé ?"
-                  placeholder="Choisissez un employé ?"
-                  multiple={false}
-                  value={formik.values.employee}
-                  helperText="Si c'est pour vous. laissez ce champ vide."
-                  onChange={(e, newValue) =>
-                    formik.setFieldValue('employee', newValue)
-                  }
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4} item>
-              <Item>
-                <TheAutocomplete
-                  options={beneficiariesData?.beneficiaries?.nodes}
-                  label="Bénificiaires"
-                  placeholder="Ajouter un bénificiaire"
+                  label="Employés"
+                  placeholder="Ajouter un employé"
                   limitTags={3}
-                  value={formik.values.beneficiaries}
+                  value={formik.values.employees}
                   onChange={(e, newValue) =>
-                    formik.setFieldValue('beneficiaries', newValue)
+                    formik.setFieldValue('employees', newValue)
                   }
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4} item>
+            <Grid xs={12} sm={6} md={4} item="true">
               <Item>
                 <SelectCheckmarks
                   options={dataData?.absenceReasons}
@@ -382,7 +359,7 @@ export default function AddBeneficiaryAbsenceForm({
             <Grid xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
-                  to="/online/activites/absences-beneficiaires/liste"
+                  to="/online/planning/absences-employes/liste"
                   className="no_style"
                 >
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>

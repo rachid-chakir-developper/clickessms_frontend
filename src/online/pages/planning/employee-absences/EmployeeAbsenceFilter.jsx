@@ -17,7 +17,7 @@ import TheTextField from '../../../../_shared/components/form-fields/TheTextFiel
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { CheckBox, CheckBoxOutlineBlank, Close, Search } from '@mui/icons-material';
 import { useQuery } from '@apollo/client';
-import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
+import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 
 const Item = styled(Stack)(({ theme }) => ({
@@ -28,16 +28,16 @@ const Item = styled(Stack)(({ theme }) => ({
     color: theme.palette.text.secondary,
   }));
 
-const BeneficiaryAbsenceFilter = ({ onFilterChange }) => {
+const EmployeeAbsenceFilter = ({ onFilterChange }) => {
   const [filterValues, setFilterValues] = useState({
     startingDateTime: null,
     endingDateTime: null,
     keyword: '',
-    beneficiaries: null,
+    employees: null,
   });
 
 
-  const [selectedBeneficiaries, setFilterSelectedBeneficiaries] = useState([])
+  const [selectedEmployees, setFilterSelectedEmployees] = useState([])
 
   const handleFilterSubmit = () => {
     // Pass the filter values to the parent component for handling the filtering logic
@@ -48,9 +48,9 @@ const BeneficiaryAbsenceFilter = ({ onFilterChange }) => {
     // Pass the filter values to the parent component for handling the filtering logic
     const filterValuesInit = { 
                             startingDateTime: null, endingDateTime: null, keyword: '', 
-                            beneficiaries: null
+                            employees: null
                           }
-    setFilterSelectedBeneficiaries([])
+    setFilterSelectedEmployees([])
     setFilterValues(filterValuesInit)
     onFilterChange(filterValuesInit);
   };
@@ -69,11 +69,11 @@ const BeneficiaryAbsenceFilter = ({ onFilterChange }) => {
   };
 
   const {
-    loading: loadingBeneficiaries,
-    data: beneficiariesData,
-    error: beneficiariesError,
-    fetchMore: fetchMoreBeneficiaries,
-  } = useQuery(GET_BENEFICIARIES, {
+    loading: loadingEmployees,
+    data: employeesData,
+    error: employeesError,
+    fetchMore: fetchMoreEmployees,
+  } = useQuery(GET_EMPLOYEES, {
     fetchPolicy: 'network-only',
   });
 
@@ -120,13 +120,13 @@ const BeneficiaryAbsenceFilter = ({ onFilterChange }) => {
         <Grid item="true" xs={12} sm={6} md={3}>
             <Item>
                 <TheAutocomplete
-                        options={beneficiariesData?.beneficiaries?.nodes}
-                        label="Bénéficiaires"
+                        options={employeesData?.employees?.nodes}
+                        label="Employés"
                         limitTags={3}
-                        value={selectedBeneficiaries}
+                        value={selectedEmployees}
                         onChange={(event, newValue) => {
-                            setFilterSelectedBeneficiaries(newValue)
-                            setFilterValues({ ...filterValues, beneficiaries: newValue.map((v) => v.id) })
+                            setFilterSelectedEmployees(newValue)
+                            setFilterValues({ ...filterValues, employees: newValue.map((v) => v.id) })
                         }}
                       />
             </Item>
@@ -135,4 +135,4 @@ const BeneficiaryAbsenceFilter = ({ onFilterChange }) => {
   );
 };
 
-export default BeneficiaryAbsenceFilter;
+export default EmployeeAbsenceFilter;

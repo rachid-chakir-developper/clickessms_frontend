@@ -41,8 +41,8 @@ export default function AddMeetingForm({ idMeeting, title }) {
   const navigate = useNavigate();
   const validationSchema = yup.object({
     title: yup
-      .string("Entrez l'objet de la réunion")
-      .required("L'objet de la réunion est obligatoire"),
+      .string("Entrez l'objet de le procès-verbal")
+      .required("L'objet de le procès-verbal est obligatoire"),
   });
   const formik = useFormik({
     initialValues: {
@@ -80,6 +80,8 @@ export default function AddMeetingForm({ idMeeting, title }) {
       meetingCopy.meetingDecisions.forEach((item) => {
         let { __typename, ...itemCopy } = item;
         itemCopy.employees = itemCopy.employees.map((i) => i?.id);
+        itemCopy.forVoters = itemCopy.forVoters.map((i) => i?.id);
+        itemCopy.againstVoters = itemCopy.againstVoters.map((i) => i?.id);
         items.push(itemCopy);
       });
       meetingCopy.meetingDecisions = items;
@@ -132,7 +134,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
       ...formik.values,
       meetingDecisions: [
         ...formik.values.meetingDecisions,
-        { decision: '', dueDate: null, employees:[]},
+        { decision: '', dueDate: null, employees:[], forVoters:[], againstVoters:[]},
       ],
     });
   };
@@ -576,7 +578,35 @@ export default function AddMeetingForm({ idMeeting, title }) {
                               }
                             />
                           </Item>
-                      </Grid>
+                        </Grid>
+                        <Grid xs={12} sm={6} md={6} item="true">
+                          <Item>
+                            <TheAutocomplete
+                              options={employeesData?.employees?.nodes}
+                              label="Personnes votent pour"
+                              placeholder="Ajouter une personne"
+                              limitTags={3}
+                              value={item.forVoters}
+                              onChange={(e, newValue) =>
+                                formik.setFieldValue(`meetingDecisions.${index}.forVoters`, newValue)
+                              }
+                            />
+                          </Item>
+                        </Grid>
+                        <Grid xs={12} sm={6} md={6} item="true">
+                          <Item>
+                            <TheAutocomplete
+                              options={employeesData?.employees?.nodes}
+                              label="Personnes votent contre"
+                              placeholder="Ajouter une personne"
+                              limitTags={3}
+                              value={item.againstVoters}
+                              onChange={(e, newValue) =>
+                                formik.setFieldValue(`meetingDecisions.${index}.againstVoters`, newValue)
+                              }
+                            />
+                          </Item>
+                        </Grid>
                       </Grid>
                     ))}
                     <Grid

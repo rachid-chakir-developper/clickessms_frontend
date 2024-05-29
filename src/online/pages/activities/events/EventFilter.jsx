@@ -121,7 +121,7 @@ const EventFilter = ({ onFilterChange }) => {
             <Item>
                 <TheAutocomplete
                         options={beneficiariesData?.beneficiaries?.nodes}
-                        label="Beneficiaires"
+                        label="Bénéficiaires"
                         limitTags={3}
                         value={selectedBeneficiaries}
                         onChange={(event, newValue) => {

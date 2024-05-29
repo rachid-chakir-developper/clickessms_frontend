@@ -168,9 +168,10 @@ export default function AddBankAccountForm({ idBankAccount, title }) {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       let { __typename, ...bankAccountCopy1 } = data.bankAccount;
-      let { folder, ...bankAccountCopy } = bankAccountCopy1;
-      bankAccountCopy.openingDate = dayjs(bankAccountCopy.openingDate);
-      bankAccountCopy.closingDate = dayjs(bankAccountCopy.closingDate);
+      let { folder, ...bankAccountCopy2 } = bankAccountCopy1;
+      let { balance, ...bankAccountCopy } = bankAccountCopy2;
+      bankAccountCopy.openingDate = bankAccountCopy.openingDate ? dayjs(bankAccountCopy.openingDate) : null;
+      bankAccountCopy.closingDate = bankAccountCopy.closingDate ? dayjs(bankAccountCopy.closingDate) : null;
       formik.setValues(bankAccountCopy);
     },
     onError: (err) => console.log(err),

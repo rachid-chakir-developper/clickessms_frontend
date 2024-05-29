@@ -51,10 +51,10 @@ export default function AddEmployeeForm({ idEmployee, title }) {
       number: '',
       firstName: '',
       lastName: '',
-      birthDate: dayjs(new Date()),
-      hiringDate: dayjs(new Date()),
-      probationEndDate: dayjs(new Date()),
-      workEndDate: dayjs(new Date()),
+      birthDate: null,
+      hiringDate: null,
+      probationEndDate: null,
+      workEndDate: null,
       startingSalary: 0,
       position: '',
       latitude: '',
@@ -196,10 +196,10 @@ export default function AddEmployeeForm({ idEmployee, title }) {
       onCompleted: (data) => {
         let { __typename, ...employeeCopy1 } = data.employee;
         let { folder, ...employeeCopy } = employeeCopy1;
-        employeeCopy.birthDate = dayjs(employeeCopy.birthDate);
-        employeeCopy.hiringDate = dayjs(employeeCopy.hiringDate);
-        employeeCopy.probationEndDate = dayjs(employeeCopy.probationEndDate);
-        employeeCopy.workEndDate = dayjs(employeeCopy.workEndDate);
+        employeeCopy.birthDate = employeeCopy.birthDate ? dayjs(employeeCopy.birthDate) : null;
+        employeeCopy.hiringDate = employeeCopy.hiringDate ? dayjs(employeeCopy.hiringDate) : null;
+        employeeCopy.probationEndDate = employeeCopy.probationEndDate ? dayjs(employeeCopy.probationEndDate) : null;
+        employeeCopy.workEndDate = employeeCopy.workEndDate  ? dayjs(employeeCopy.workEndDate) : null;
         formik.setValues(employeeCopy);
       },
       onError: (err) => console.log(err),

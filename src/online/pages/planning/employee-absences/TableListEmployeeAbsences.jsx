@@ -95,34 +95,28 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'title',
-    numeric: false,
-    disablePadding: true,
-    label: 'Titre',
-  },
-  {
     id: 'startingDateTime',
     numeric: false,
     disablePadding: false,
     label: 'Date',
   },
   {
-    id: 'establishments',
+    id: 'employee',
     numeric: false,
     disablePadding: false,
-    label: 'Structures',
+    label: 'Employés',
+  },
+  {
+    id: 'reasons',
+    numeric: false,
+    disablePadding: false,
+    label: 'Motifs',
   },
   {
     id: 'employee',
     numeric: false,
     disablePadding: false,
     label: 'Déclaré par',
-  },
-  {
-    id: 'status',
-    numeric: true,
-    disablePadding: false,
-    label: 'Status',
   },
   {
     id: 'action',
@@ -220,7 +214,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les événements indésirables
+          Les absences
         </Typography>
       )}
 
@@ -241,11 +235,10 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListUndesirableEvents({
+export default function TableListEmployeeAbsences({
   loading,
   rows,
-  onDeleteUndesirableEvent,
-  onUpdateUndesirableEventState,
+  onDeleteEmployeeAbsence
 }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -344,7 +337,7 @@ export default function TableListUndesirableEvents({
                 <StyledTableRow>
                   <StyledTableCell colSpan="7">
                     <Alert severity="warning">
-                      Aucun événement indésirable trouvé.
+                        Aucune absence trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -394,37 +387,46 @@ export default function TableListUndesirableEvents({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                      {row.title}
-                    </StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
                     <StyledTableCell align="left">
                       <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.establishments?.map((establishment, index) => {
+                        {row?.employees?.map((beneficiarie, index) => {
                           return (
                             <Chip
                               key={index}
                               avatar={
                                 <Avatar
-                                  alt={establishment?.establishment?.name}
+                                  alt={`${beneficiarie?.employee?.firstName} ${beneficiarie?.employee?.lastName}`}
                                   src={
-                                    establishment?.establishment?.logo
-                                      ? establishment?.establishment?.logo
+                                    beneficiarie?.employee?.photo
+                                      ? beneficiarie?.employee?.photo
                                       : '/default-placeholder.jpg'
                                   }
                                 />
                               }
-                              label={establishment?.establishment?.name}
+                              label={`${beneficiarie?.employee?.firstName} ${beneficiarie?.employee?.lastName}`}
                               variant="outlined"
                             />
                           );
                         })}
                       </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                        <Stack direction="row" flexWrap='wrap' spacing={1}>
+                            {row?.reasons?.map((absenceReason, index) => {
+                            return (
+                                <Chip
+                                    key={index}
+                                    label={absenceReason?.name}
+                                    variant="outlined"
+                                />
+                            );
+                            })}
+                            {row?.otherReasons && row?.otherReasons !== '' && <Chip
+                                label={row?.otherReasons}
+                                variant="filled"
+                            />}
+                        </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left"> 
                       <Stack direction="row" flexWrap='wrap' spacing={1}>
@@ -442,12 +444,7 @@ export default function TableListUndesirableEvents({
                           label={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
                           variant="outlined"
                         />
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      <AppLabel color={getStatusLebelColor(row?.status)}>
-                        {getStatusLabel(row?.status)}
-                      </AppLabel>
+                        </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
@@ -467,7 +464,7 @@ export default function TableListUndesirableEvents({
                         }}
                       >
                         <Link
-                          to={`/online/qualites/evenements-indesirables/details/${row?.id}`}
+                          to={`/online/planning/absences-employes/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -485,7 +482,7 @@ export default function TableListUndesirableEvents({
                           Bibliothèque
                         </MenuItem>
                         <Link
-                          to={`/online/qualites/evenements-indesirables/modifier/${row?.id}`}
+                          to={`/online/planning/absences-employes/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -495,7 +492,7 @@ export default function TableListUndesirableEvents({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteUndesirableEvent(row?.id);
+                            onDeleteEmployeeAbsence(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

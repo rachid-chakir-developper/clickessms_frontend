@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 import {
   EMPLOYEE_BASIC_INFOS,
   EMPLOYEE_DETAILS,
+  EMPLOYEE_RECAP_DETAILS,
 } from '../fragments/EmployeeFragment';
 
 export const GET_EMPLOYEE = gql`
@@ -33,6 +34,15 @@ export const GET_EMPLOYEES = gql`
     }
   }
   ${EMPLOYEE_BASIC_INFOS}
+`;
+
+export const GET_RECAP_EMPLOYEE = gql`
+  query GetEmployee($id: ID!) {
+    employee(id: $id) {
+      ...EmployeeRecapDetailsFragment
+    }
+  }
+  ${EMPLOYEE_RECAP_DETAILS}
 `;
 
 // Add more employee-related queries here

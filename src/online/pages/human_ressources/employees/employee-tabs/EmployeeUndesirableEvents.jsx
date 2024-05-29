@@ -1,21 +1,14 @@
+
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Button, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { Add } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
-
-import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import {
-  DELETE_UNDESIRABLE_EVENT,
-  PUT_UNDESIRABLE_EVENT_STATE,
-} from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
-import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
-import UndesirableEventFilter from './UndesirableEventFilter';
-import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
-import TableListUndesirableEvents from './TableListUndesirableEvents';
+import { DELETE_UNDESIRABLE_EVENT } from '../../../../../_shared/graphql/mutations/UndesirableEventMutations';
+import { GET_UNDESIRABLE_EVENTS } from '../../../../../_shared/graphql/queries/UndesirableEventQueries';
+import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
+import PaginationControlled from '../../../../../_shared/components/helpers/PaginationControlled';
+import TableListUndesirableEvents from '../../../qualities/undesirable-events/TableListUndesirableEvents';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -25,14 +18,13 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function ListUndesirableEvents() {
+export default function EmployeeUndesirableEvents({employee}) {
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
   const [undesirableEventFilter, setUndesirableEventFilter] =
-    React.useState(null);
+    React.useState({employees: [employee?.id]});
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
     setUndesirableEventFilter(newFilter);
-    setPaginator({ ...paginator, page: 1 });
   };
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
@@ -54,7 +46,7 @@ export default function ListUndesirableEvents() {
 
   React.useEffect(() => {
     getUndesirableEvents();
-  }, [paginator]);
+  }, [undesirableEventFilter, paginator]);
 
   const [deleteUndesirableEvent, { loading: loadingDelete }] = useMutation(
     DELETE_UNDESIRABLE_EVENT,
@@ -128,94 +120,20 @@ export default function ListUndesirableEvents() {
     });
   };
 
-  const [updateUndesirableEventState, { loading: loadingPutState }] =
-    useMutation(PUT_UNDESIRABLE_EVENT_STATE, {
-      onCompleted: (datas) => {
-        if (datas.updateUndesirableEventState.done) {
-          setNotifyAlert({
-            isOpen: true,
-            message: 'Changée avec succès',
-            type: 'success',
-          });
-        } else {
-          setNotifyAlert({
-            isOpen: true,
-            message: `Non changée ! ${datas.updateUndesirableEventState.message}.`,
-            type: 'error',
-          });
-        }
-      },
-      refetchQueries: [{ query: GET_UNDESIRABLE_EVENTS }],
-      onError: (err) => {
-        console.log(err);
-        setNotifyAlert({
-          isOpen: true,
-          message: 'Non changée ! Veuillez réessayer.',
-          type: 'error',
-        });
-      },
-    });
-
-  const onUpdateUndesirableEventState = (id) => {
-    setConfirmDialog({
-      isOpen: true,
-      title: 'ATTENTION',
-      subTitle: 'Voulez vous vraiment changer ?',
-      onConfirm: () => {
-        setConfirmDialog({ isOpen: false });
-        updateUndesirableEventState({ variables: { id: id } });
-      },
-    });
-  };
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
-          <Link
-            to="/online/qualites/evenements-indesirables/ajouter"
-            className="no_style"
-          >
-            <Button variant="contained" endIcon={<Add />}>
-              Ajouter un événement indésirable
-            </Button>
-          </Link>
-        </Box>
-      </Grid>
-      <Grid item="true" xs={12}>
-        <UndesirableEventFilter onFilterChange={handleFilterChange} />
-      </Grid>
-      {/* <Grid item="true" xs={12}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-              {loadingUndesirableEvents && <Grid key={'pgrs'}  item="true" xs={2} sm={4} md={3}><ProgressService type="mediaCard" /></Grid>}
-              {undesirableEventsData?.undesirableEvents?.nodes?.length < 1 && !loadingUndesirableEvents && <Alert severity="warning">Aucun événement indésirable trouvé.</Alert>}
-              {undesirableEventsData?.undesirableEvents?.nodes?.map((undesirableEvent, index) => (
-                <Grid xs={2} sm={4} md={3} key={index}>
-                  <Item>
-                    <UndesirableEventItemCard 
-                                        undesirableEvent={undesirableEvent}
-                                        onDeleteUndesirableEvent={onDeleteUndesirableEvent}
-                                        onUpdateUndesirableEventState={onUpdateUndesirableEventState}
-                    />
-                  </Item>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        </Grid> */}
       <Grid item="true" xs={12}>
         <TableListUndesirableEvents
           loading={loadingUndesirableEvents}
           rows={undesirableEventsData?.undesirableEvents?.nodes || []}
           onDeleteUndesirableEvent={onDeleteUndesirableEvent}
-          onUpdateUndesirableEventState={onUpdateUndesirableEventState}
         />
       </Grid>
       <Grid item="true" xs={12}>
         <PaginationControlled
           totalItems={undesirableEventsData?.undesirableEvents?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
-          currentPage={paginator.page}
+          currentPage={1}
           onChange={(page) => setPaginator({ ...paginator, page })}
         />
       </Grid>

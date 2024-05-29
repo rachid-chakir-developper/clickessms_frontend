@@ -164,7 +164,7 @@ function BalanceOtherInfos({ balance }) {
       {balance?.bankAccount?.establishment && (
         <>
           <Typography variant="h6" gutterBottom>
-            Etablissement
+            Structure
           </Typography>
           <Paper sx={{ padding: 2 }} variant="outlined">
             <Item>

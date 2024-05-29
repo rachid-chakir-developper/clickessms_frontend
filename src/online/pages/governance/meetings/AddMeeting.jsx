@@ -9,8 +9,8 @@ export default function AddMeeting() {
       idMeeting={idMeeting}
       title={
         idMeeting && idMeeting > 0
-          ? `Modifier la réunion`
-          : `Ajouter une réunion`
+          ? `Modifier le procès-verbal`
+          : `Ajouter un procès-verbal`
       }
     />
   );

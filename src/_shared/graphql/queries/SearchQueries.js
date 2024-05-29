@@ -1,20 +1,18 @@
 import { gql } from '@apollo/client';
-import { TASK_BASIC_INFOS } from '../fragments/TaskFragment';
 import {
   EMPLOYEE_BASIC_INFOS,
   EMPLOYEE_PHONE_INFOS,
 } from '../fragments/EmployeeFragment';
 import {
-  CLIENT_BASIC_INFOS,
   CLIENT_PHONE_INFOS,
 } from '../fragments/ClientFragment';
 import {
   SUPPLIER_BASIC_INFOS,
   SUPPLIER_PHONE_INFOS,
 } from '../fragments/SupplierFragment';
-import { BENEFICIARY_PHONE_INFOS } from '../fragments/BeneficiaryFragment';
+import { BENEFICIARY_MINI_INFOS, BENEFICIARY_PHONE_INFOS } from '../fragments/BeneficiaryFragment';
 import { PARTNER_PHONE_INFOS } from '../fragments/PartnerFragment';
-import { ESTABLISHMENT_PHONE_INFOS } from '../fragments/EstablishmentFragment';
+import { ESTABLISHMENT_MINI_INFOS, ESTABLISHMENT_PHONE_INFOS } from '../fragments/EstablishmentFragment';
 import { PHONE_NUMBER_INFOS } from '../fragments/DataFragment';
 
 export const GET_SEARCH = gql`
@@ -31,10 +29,10 @@ export const GET_SEARCH = gql`
       page: $page
     ) {
       results {
-        tasks {
+        establishments {
           totalCount
           nodes {
-            ...TaskBasicInfosFragment
+            ...EstablishmentMiniInfosFragment
           }
         }
         employees {
@@ -43,10 +41,10 @@ export const GET_SEARCH = gql`
             ...EmployeeBasicInfosFragment
           }
         }
-        clients {
+        beneficiaries {
           totalCount
           nodes {
-            ...ClientBasicInfosFragment
+            ...BeneficiaryMiniInfosFragment
           }
         }
         suppliers {
@@ -59,8 +57,8 @@ export const GET_SEARCH = gql`
     }
   }
   ${EMPLOYEE_BASIC_INFOS}
-  ${TASK_BASIC_INFOS}
-  ${CLIENT_BASIC_INFOS}
+  ${ESTABLISHMENT_MINI_INFOS}
+  ${BENEFICIARY_MINI_INFOS}
   ${SUPPLIER_BASIC_INFOS}
 `;
 

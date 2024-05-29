@@ -33,6 +33,7 @@ export const EMPLOYEE_MINI_INFOS = gql`
 export const EMPLOYEE_BASIC_INFOS = gql`
   fragment EmployeeBasicInfosFragment on EmployeeType {
     ...EmployeeMiniInfosFragment
+    birthDate
     folder {
       id
       number
@@ -66,6 +67,36 @@ export const EMPLOYEE_DETAILS = gql`
     bankName
     isActive
     observation
+  }
+  ${EMPLOYEE_BASIC_INFOS}
+`;
+
+export const EMPLOYEE_RECAP_DETAILS = gql`
+  fragment EmployeeRecapDetailsFragment on EmployeeType {
+    ...EmployeeBasicInfosFragment
+    hiringDate
+    probationEndDate
+    workEndDate
+    startingSalary
+    description
+    latitude
+    longitude
+    country
+    city
+    zipCode
+    address
+    mobile
+    fix
+    fax
+    webSite
+    otherContacts
+    iban
+    bic
+    bankName
+    isActive
+    observation
+    createdAt
+    updatedAt
   }
   ${EMPLOYEE_BASIC_INFOS}
 `;

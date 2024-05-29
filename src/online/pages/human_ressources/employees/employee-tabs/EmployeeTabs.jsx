@@ -4,11 +4,8 @@ import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
-import BeneficiaryAdmissionDocuments from './BeneficiaryAdmissionDocuments';
-import BeneficiaryEntries from './BeneficiaryEntries';
-import BeneficiaryAbsences from './BeneficiaryAbsences';
-import BeneficiaryEvents from './BeneficiaryEvents';
-import BeneficiaryUndesirableEvents from './BeneficiaryUndesirableEvents';
+import EmployeeAbsences from './EmployeeAbsences';
+import EmployeeUndesirableEvents from './EmployeeUndesirableEvents';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -78,7 +75,7 @@ LinkTab.propTypes = {
   selected: PropTypes.bool,
 };
 
-export default function BeneficiaryTabs({beneficiary}) {
+export default function EmployeeTabs({employee}) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -101,27 +98,14 @@ export default function BeneficiaryTabs({beneficiary}) {
                 role="navigation"
             >
                 <LinkTab label="Abscences" href="/spam" />
-                <LinkTab label="Evénements / Transmissions" href="/spam" />
                 <LinkTab label="Evénements indésirables" href="/spam" />
-                <LinkTab label="Admissions" href="/drafts" />
-                <LinkTab label="Entrées / sorties" href="/trash" />
-                <LinkTab label="Projets personnalisés (PPA)" href="/trash" />
             </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          <BeneficiaryAbsences beneficiary={beneficiary} />
+          <EmployeeAbsences employee={employee} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          <BeneficiaryEvents beneficiary={beneficiary} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={2}>
-          <BeneficiaryUndesirableEvents beneficiary={beneficiary} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={3}>
-            <BeneficiaryAdmissionDocuments beneficiaryAdmissionDocuments={beneficiary?.beneficiaryAdmissionDocuments} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={4}>
-            <BeneficiaryEntries beneficiaryEntries={beneficiary?.beneficiaryEntries} />
+          <EmployeeUndesirableEvents employee={employee} />
         </CustomTabPanel>
     </Box>
   );
