@@ -89,3 +89,15 @@ export const GET_DATAS_EMPLOYEE = gql`
   }
   ${DATA_BASIC_INFOS}
 `;
+
+export const GET_DATAS_VEHICLE = gql`
+  query {
+    vehicleBrands: datas(typeData: "VehicleBrand") {
+      ...DataBasicInfosFragment
+    }
+    vehicleModels: datas(typeData: "VehicleModel") {
+      ...DataBasicInfosFragment
+    }
+  }
+  ${DATA_BASIC_INFOS}
+`;

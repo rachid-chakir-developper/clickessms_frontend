@@ -81,6 +81,13 @@ const modulesToManage = [
       { name: 'Motif de la réunion', description: '', type: 'MeetingReason' },
     ],
   },
+  {
+    title: 'Services généraux',
+    datas: [
+      { name: 'Les marques des véhicules', description: '', type: 'VehicleBrand' },
+      { name: 'Les models des véhicules', description: '', type: 'VehicleModel' },
+    ],
+  },
 ];
 
 function CustomTabPanel(props) {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Stack, Box, Typography, Button, Divider, Stepper, Step, StepLabel, StepContent, IconButton } from '@mui/material';
+import { Stack, Box, Typography, Button, Divider, Stepper, Step, StepLabel, StepContent, IconButton, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -23,6 +23,8 @@ import { GET_ESTABLISHMENTS } from '../../../_shared/graphql/queries/Establishme
 import { GET_EMPLOYEES } from '../../../_shared/graphql/queries/EmployeeQueries';
 import TheDesktopDatePicker from '../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { Close } from '@mui/icons-material';
+import { GET_DATAS_VEHICLE } from '../../../_shared/graphql/queries/DataQueries';
+import { CRIT_AIR_CHOICES, VEHICLE_STATES } from '../../../_shared/tools/constants';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -50,6 +52,10 @@ export default function AddVehicleForm({ idVehicle, title }) {
       number: '',
       name: '',
       registrationNumber: '',
+      vehicleBrand: null,
+      vehicleModel: null,
+      state: 'GOOD',
+      critAirVignette: null,
       description: '',
       observation: '',
       isActive: true,
@@ -100,7 +106,8 @@ export default function AddVehicleForm({ idVehicle, title }) {
       });
       let { __typename, ...vehicleCopy } = data.createVehicle.vehicle;
       //   formik.setValues(vehicleCopy);
-      navigate('/online/vehicules/liste');
+        formik.setFieldValue('id', vehicleCopy.id);
+        handleNext();
     },
     update(cache, { data: { createVehicle } }) {
       const newVehicle = createVehicle.vehicle;
@@ -135,7 +142,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
       });
       let { __typename, ...vehicleCopy } = data.updateVehicle.vehicle;
       //   formik.setValues(vehicleCopy);
-      navigate('/online/vehicules/liste');
+        handleNext();
     },
     update(cache, { data: { updateVehicle } }) {
       const updatedVehicle = updateVehicle.vehicle;
@@ -185,6 +192,8 @@ export default function AddVehicleForm({ idVehicle, title }) {
     onCompleted: (data) => {
       let { __typename, ...vehicleCopy1 } = data.vehicle;
       let { folder, ...vehicleCopy } = vehicleCopy1;
+      vehicleCopy.vehicleBrand = vehicleCopy.vehicleBrand ? Number(vehicleCopy.vehicleBrand.id) : null;
+      vehicleCopy.vehicleModel = vehicleCopy.vehicleModel ? Number(vehicleCopy.vehicleModel.id) : null;
         
       if (!vehicleCopy?.vehicleEstablishments) vehicleCopy['vehicleEstablishments'] = [];
       let items = [];
@@ -229,6 +238,13 @@ export default function AddVehicleForm({ idVehicle, title }) {
     fetchPolicy: 'network-only',
   });
 
+  const {
+    loading: loadingDatas,
+    data: dataData,
+    error: datsError,
+    fetchMore: fetchMoreDatas,
+  } = useQuery(GET_DATAS_VEHICLE, { fetchPolicy: 'network-only' });
+
   
   const addVehicleEstablishment = () => {
     formik.setValues({
@@ -270,8 +286,6 @@ export default function AddVehicleForm({ idVehicle, title }) {
     });
   };
 
-
-
   React.useEffect(() => {
     if (idVehicle) {
       getVehicle({ variables: { id: idVehicle } });
@@ -291,7 +305,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if(activeStep >= 1) navigate('/online/vehicules/liste');
+    if(activeStep >= 2) navigate('/online/vehicules/liste');
     else if (formik.values.id)
       setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });
@@ -392,6 +406,121 @@ export default function AddVehicleForm({ idVehicle, title }) {
                         }
                         disabled={loadingPost || loadingPut}
                       />
+                    </Item>
+                  </Grid>
+                  <Grid xs={12} sm={6} md={3} item="true">
+                    <Item>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Marque
+                        </InputLabel>
+                        <Select
+                          label="Marque"
+                          value={formik.values.vehicleBrand}
+                          onChange={(e) =>
+                            formik.setFieldValue('vehicleBrand', e.target.value)
+                          }
+                        >
+                          <MenuItem value="">
+                            <em>Choisissez une marque</em>
+                          </MenuItem>
+                          {dataData?.vehicleBrands?.map((data, index) => {
+                            return (
+                              <MenuItem key={index} value={data.id}>
+                                {data.name}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    </Item>
+                  </Grid>
+                  <Grid xs={12} sm={6} md={3} item="true">
+                    <Item>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Model
+                        </InputLabel>
+                        <Select
+                          label="Marque"
+                          value={formik.values.vehicleModel}
+                          onChange={(e) =>
+                            formik.setFieldValue('vehicleModel', e.target.value)
+                          }
+                        >
+                          <MenuItem value="">
+                            <em>Choisissez une model</em>
+                          </MenuItem>
+                          {dataData?.vehicleModels?.map((data, index) => {
+                            return (
+                              <MenuItem key={index} value={data.id}>
+                                {data.name}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    </Item>
+                  </Grid>
+                  <Grid xs={12} sm={6} md={3}>
+                    <Item>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          État 
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          label="État "
+                          value={formik.values.state}
+                          onChange={(e) =>
+                            formik.setFieldValue(
+                              'state',
+                              e.target.value,
+                            )
+                          }
+                        >
+                          {VEHICLE_STATES?.ALL?.map((type, index) => {
+                            return (
+                              <MenuItem key={index} value={type.value}>
+                                {type.label}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    </Item>
+                  </Grid>
+                  <Grid xs={12} sm={6} md={3}>
+                    <Item>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Vignette Crit’Air 
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          label="Vignette Crit’Air "
+                          value={formik.values.critAirVignette}
+                          onChange={(e) =>
+                            formik.setFieldValue(
+                              'critAirVignette',
+                              e.target.value,
+                            )
+                          }
+                        >
+                          <MenuItem value="">
+                            <em>&nbsp;</em>
+                          </MenuItem>
+                          {CRIT_AIR_CHOICES?.ALL?.map((type, index) => {
+                            return (
+                              <MenuItem key={index} value={type.value}>
+                                {type.label}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
                     </Item>
                   </Grid>
                   <Grid xs={12} sm={6} md={6}>

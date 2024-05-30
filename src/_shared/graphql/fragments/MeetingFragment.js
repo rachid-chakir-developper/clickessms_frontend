@@ -156,6 +156,8 @@ export const MEETING_RECAP_DETAILS = gql`
     meetingReviewPoints{
       ...MeetingReviewPointFragment
     }
+    createdAt
+    updatedAt
   }
   ${MEETING_BASIC_INFOS}
   ${BENEFICIARY_MEETING_ITEM_DETAILS}

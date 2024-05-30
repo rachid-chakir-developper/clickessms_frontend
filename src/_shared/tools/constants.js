@@ -89,3 +89,43 @@ export const MEASUREMENT_ACTIVITY_UNITS = {
     { value: 'MONTH', label: 'Mois' },
   ],
 };
+
+export const VEHICLE_STATES = {
+  NEW: 'NEW',
+  GOOD: 'GOOD',
+  BAD: 'BAD',
+  ALL: [
+    { value: 'NEW', label: 'Neuf' },
+    { value: 'GOOD', label: 'Correct' },
+    { value: 'BAD', label: 'Mauvais' },
+  ],
+};
+
+export const CRIT_AIR_CHOICES = {
+  ZERO: 'ZERO',
+  ONE: 'ONE',
+  TWO: 'TWO',
+  THREE: 'THREE',
+  FOUR: 'FOUR',
+  FIVE: 'FIVE',
+  ALL: [
+    { value: 'ZERO', label: '0' },
+    { value: 'ONE', label: '1' },
+    { value: 'TWO', label: '2' },
+    { value: 'THREE', label: '3' },
+    { value: 'FOUR', label: '4' },
+    { value: 'FIVE', label: '5' },
+  ],
+};
+
+
+export const OWNERSHIP_TYPE_CHOICES = {
+  LEASE: 'LEASE',
+  PURCHASE: 'PURCHASE',
+  SALE: 'SALE',
+  ALL: [
+    { value: 'LEASE', label: 'Location' },
+    { value: 'PURCHASE', label: 'Achat' },
+    { value: 'SALE', label: 'Vente' },
+  ],
+};

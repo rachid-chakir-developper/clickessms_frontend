@@ -77,7 +77,10 @@ export default function VehicleItemCard({
                 color="text.secondary"
                 fontWeight="regular"
               >
-                {`${vehicle?.registrationNumber}`}
+                {`${vehicle?.vehicleBrand?.name} ${vehicle?.vehicleModel?.name}`}
+              </Typography>
+              <Typography color="text.primary" fontWeight="regular" fontSize={14}>
+                <b>{vehicle?.registrationNumber}</b>
               </Typography>
             </Stack>
           </Stack>

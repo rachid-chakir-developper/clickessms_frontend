@@ -636,7 +636,7 @@ function  MainListItems({open}) {
                           onClick={() => handleClickToOpenItem('partnerships')}>
             <ListItemIcon sx={{minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center',}}> <Construction/>
             </ListItemIcon>
-            <ListItemText primary={'Service généraux'} sx={{opacity: open ? 1 : 0}}/>
+            <ListItemText primary={'Services généraux'} sx={{opacity: open ? 1 : 0}}/>
             {openedItems.includes('partnerships') ? <ExpandLess/> : <ChevronRight/>}
           </ListItemButton>
           <Collapse in={openedItems.includes('partnerships')} timeout="auto" unmountOnExit>

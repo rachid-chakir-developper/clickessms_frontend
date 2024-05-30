@@ -633,9 +633,6 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={12} md={12}>
-                    <Divider variant="middle" />
-                  </Grid>
                 </Grid>
               </StepContent>
             </Step>

@@ -12,6 +12,14 @@ export const VEHICLE_BASIC_INFOS = gql`
     name
     image
     registrationNumber
+    vehicleBrand{
+      id
+      name
+    }
+    vehicleModel{
+      id
+      name
+    }
     isActive
     folder {
       ...FolderMiniInfosFragment
@@ -49,6 +57,8 @@ export const VEHICLE_EMPLOYEE_DETAILS = gql`
 export const VEHICLE_DETAILS = gql`
   fragment VehicleDetailsFragment on VehicleType {
     ...VehicleBasicInfosFragment
+    state
+    critAirVignette
     vehicleEstablishments{
       ...VehicleEstablishmentFragment
     }

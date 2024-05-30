@@ -155,7 +155,7 @@ export const categories = [
             { to: "/online/administratif/documents_trames", text: "Documents / Trames", icon: <DescriptionIcon/> },
             { to: "/online/administratif/lup", text: "LUP", icon: <FormatListNumberedIcon/> },
             { to: "/online/administratif/sdr", text: "Salle de réunion", icon: <MeetingRoomIcon/> },
-            // service généraux
+            // services généraux
             { to: "/online/travaux/interventions", text: "Interventions", icon: <EngineeringIcon/> },
             { to: "/online/vehicules", text: "Parc automobile", icon: <AirportShuttleIcon/> },
             { to: "/online/partnerships/bâtiment-immobilier", text: "Bâtiment / Immobilier", icon: <HomeWorkIcon/> },
