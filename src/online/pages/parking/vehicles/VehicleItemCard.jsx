@@ -71,14 +71,14 @@ export default function VehicleItemCard({
               <Typography color="text.primary" fontWeight="medium" fontSize={18}>
                 {vehicle?.name}
               </Typography>
-              <Typography
+              {vehicle?.vehicleBrand && <Typography
                 component="div"
                 variant="caption"
                 color="text.secondary"
                 fontWeight="regular"
               >
                 {`${vehicle?.vehicleBrand?.name} ${vehicle?.vehicleModel?.name}`}
-              </Typography>
+              </Typography>}
               <Typography color="text.primary" fontWeight="regular" fontSize={14}>
                 <b>{vehicle?.registrationNumber}</b>
               </Typography>

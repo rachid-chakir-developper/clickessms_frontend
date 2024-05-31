@@ -5,8 +5,9 @@ import { FOLDER_MINI_INFOS } from './MediaFragment';
 import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 import { EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
 
-export const VEHICLE_BASIC_INFOS = gql`
-  fragment VehicleBasicInfosFragment on VehicleType {
+
+export const VEHICLE_MINI_INFOS = gql`
+  fragment VehicleMiniInfosFragment on VehicleType {
     id
     number
     name
@@ -21,11 +22,18 @@ export const VEHICLE_BASIC_INFOS = gql`
       name
     }
     isActive
+  }
+`;
+
+export const VEHICLE_BASIC_INFOS = gql`
+  fragment VehicleBasicInfosFragment on VehicleType {
+    ...VehicleMiniInfosFragment
     folder {
       ...FolderMiniInfosFragment
     }
   }
   ${FOLDER_MINI_INFOS}
+  ${VEHICLE_MINI_INFOS}
 `;
 
 export const VEHICLE_ESTABLISHMENT_DETAILS = gql`

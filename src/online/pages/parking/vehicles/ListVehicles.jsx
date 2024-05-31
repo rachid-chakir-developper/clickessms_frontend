@@ -27,7 +27,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListVehicles() {
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 12 });
   const [vehicleFilter, setVehicleFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
@@ -178,7 +178,7 @@ export default function ListVehicles() {
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
             {loadingVehicles && (
-              <Grid key={'pgrs'} item xs={2} sm={4} md={3}>
+              <Grid key={'pgrs'} item="true" xs={12} sm={6} md={4}>
                 <ProgressService type="mediaCard" />
               </Grid>
             )}
@@ -186,7 +186,7 @@ export default function ListVehicles() {
               <Alert severity="warning">Aucun véhicule trouvé.</Alert>
             )}
             {vehiclesData?.vehicles?.nodes?.map((vehicle, index) => (
-              <Grid xs={2} sm={4} md={3} key={index}>
+              <Grid xs={12} sm={6} md={4} key={index}>
                 <Item>
                   <VehicleItemCard
                     vehicle={vehicle}
