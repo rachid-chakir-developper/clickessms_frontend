@@ -15,7 +15,7 @@ import {
   Article,
 } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
-import { useFeedBacks } from '../../../_shared/context/feedbacks/FeedBacksProvider';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
 export default function VehicleItemCard({
   vehicle,
@@ -43,7 +43,7 @@ export default function VehicleItemCard({
     });
   };
   const onGoToDetails = ()=>{
-    navigate(`/online/vehicules/details/${vehicle?.id}`);
+    navigate(`/online/parc-automobile/vehicules/details/${vehicle?.id}`);
   }
   return (
     <Card
@@ -102,7 +102,7 @@ export default function VehicleItemCard({
                 title={`L'éstablishment parent: ${vehicle?.vehicleParent?.name}`}
               >
                 <Link
-                  to={`/online/vehicules/details/${vehicle?.vehicleParent?.id}`}
+                  to={`/online/parc-automobile/vehicules/details/${vehicle?.vehicleParent?.id}`}
                   className="no_style"
                 >
                   <MenuItem onClick={handleCloseMenu}>
@@ -143,7 +143,7 @@ export default function VehicleItemCard({
             )}
             <Tooltip title="Modifier">
               <Link
-                to={`/online/vehicules/modifier/${vehicle?.id}`}
+                to={`/online/parc-automobile/vehicules/modifier/${vehicle?.id}`}
                 className="no_style"
               >
                 <MenuItem onClick={handleCloseMenu}>
@@ -164,7 +164,7 @@ export default function VehicleItemCard({
             )}
             <Tooltip title="Détails">
               <Link
-                to={`/online/vehicules/details/${vehicle?.id}`}
+                to={`/online/parc-automobile/vehicules/details/${vehicle?.id}`}
                 className="no_style"
               >
                 <MenuItem onClick={handleCloseMenu}>

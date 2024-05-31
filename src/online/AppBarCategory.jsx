@@ -157,7 +157,7 @@ export const categories = [
             { to: "/online/administratif/sdr", text: "Salle de réunion", icon: <MeetingRoomIcon/> },
             // services généraux
             { to: "/online/travaux/interventions", text: "Interventions", icon: <EngineeringIcon/> },
-            { to: "/online/vehicules", text: "Parc automobile", icon: <AirportShuttleIcon/> },
+            { to: "/online/parc-automobile/vehicules", text: "Parc automobile", icon: <AirportShuttleIcon/> },
             { to: "/online/partnerships/bâtiment-immobilier", text: "Bâtiment / Immobilier", icon: <HomeWorkIcon/> },
             { to: "/online/partnerships/bons-commande", text: "Bons de commande", icon: <PostAddIcon/> },
             { to: "/online/recuperations/objets", text: "Suivi des clés", icon: <KeyIcon/> },

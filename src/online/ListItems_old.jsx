@@ -614,7 +614,7 @@ function MoreItems({ open }) {
                 <ListItemText primary="Interventions" />
               </ListItemButton>
             </StyledNavLink>
-            <StyledNavLink to="/online/vehicules">
+            <StyledNavLink to="/online/parc-automobile/vehicules">
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemIcon>
                   <LocalShippingIcon />
@@ -849,7 +849,7 @@ function MoreItems({ open }) {
         </ListItemButton>
       </ListItem>
     </StyledNavLink>
-     <StyledNavLink to="/online/vehicules">
+     <StyledNavLink to="/online/parc-automobile/vehicules">
       <ListItem key={'vehicles'} disablePadding sx={{ display: 'block' }}>
         <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
           <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <LocalShippingIcon /> </ListItemIcon>

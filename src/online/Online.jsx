@@ -14,7 +14,6 @@ import Dashboard from './pages/dashboard/Dashboard';
 import ListItems from './ListItems';
 import Users from './pages/users/Users';
 import Materials from './pages/materials/Materials';
-import Vehicles from './pages/vehicles/Vehicles';
 import Sales from './pages/sales/Sales';
 import Purchases from './pages/purchases/Purchases';
 import Works from './pages/works/Works';
@@ -35,6 +34,7 @@ import Finance from './pages/finance/Finance';
 import SpeedDialTooltipOpen from '../_shared/components/app/SpeedDialTooltipOpen';
 import Governance from './pages/governance/Governance';
 import Planning from './pages/planning/Planning';
+import Parking from './pages/parking/Parking';
 
 const drawerWidth = 280;
 
@@ -173,7 +173,7 @@ export default function Online() {
           <Route path="/" element={<Navigate to={`dashboard`} replace />} />
           <Route path={`carte/*`} element={<Maps />} />
           <Route path={`associations/*`} element={<Companies />} />
-          <Route path={`vehicules/*`} element={<Vehicles />} />
+          <Route path={`parc-automobile/*`} element={<Parking />} />
           <Route path={`materiels/*`} element={<Materials />} />
           <Route path={`travaux/*`} element={<Works />} />
           <Route path={`recuperations/*`} element={<Loans />} />

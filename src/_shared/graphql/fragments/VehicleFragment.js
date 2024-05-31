@@ -53,6 +53,22 @@ export const VEHICLE_EMPLOYEE_DETAILS = gql`
 `;
 
 
+export const VEHICLE_OWNERSHIP_DETAILS = gql`
+  fragment VehicleOwnershipFragment on VehicleOwnershipType {
+    id
+    ownershipType
+    purchaseDate
+    purchasePrice
+    saleDate
+    salePrice
+    rentalStartingDate
+    rentalEndingDate
+    rentalPrice
+    expectedMileage
+  }
+`;
+
+
 
 export const VEHICLE_DETAILS = gql`
   fragment VehicleDetailsFragment on VehicleType {
@@ -65,10 +81,14 @@ export const VEHICLE_DETAILS = gql`
     vehicleEmployees{
       ...VehicleEmployeeFragment
     }
+    vehicleOwnerships{
+      ...VehicleOwnershipFragment
+    }
     description
     observation
   }
   ${VEHICLE_BASIC_INFOS}
   ${VEHICLE_ESTABLISHMENT_DETAILS}
   ${VEHICLE_EMPLOYEE_DETAILS}
+  ${VEHICLE_OWNERSHIP_DETAILS}
 `;

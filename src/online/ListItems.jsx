@@ -100,6 +100,10 @@ import {
   Group,
   Money,
   AccountBalance,
+  CarRepair,
+  CarCrash,
+  DirectionsCarFilled,
+  Garage,
 } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import { useFeedBacks } from '../_shared/context/feedbacks/FeedBacksProvider';
@@ -649,14 +653,53 @@ function  MainListItems({open}) {
                   <ListItemText primary="Interventions"/>
                 </ListItemButton>
               </StyledNavLink>
-              <StyledNavLink to="/online/vehicules">
-                <ListItemButton sx={{pl: 4}}>
-                  <ListItemIcon>
-                    <AirportShuttleIcon/>
-                  </ListItemIcon>
-                  <ListItemText primary="Parc automobile"/>
+              
+              <ListItem key={'parc-automobile'} disablePadding sx={{display: 'block'}}>
+                <ListItemButton sx={{minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5,}}
+                                onClick={() => handleClickToOpenCategory('parc-automobile')}>
+                  <ListItemIcon sx={{paddingLeft: 1.5, minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center',}}>
+                    <AirportShuttleIcon/> </ListItemIcon>
+                  <ListItemText primary={'Parc automobile'} sx={{paddingLeft: 1, opacity: open ? 1 : 0}}/>
+                  {openedCategory.includes('parc-automobile') ? <ExpandLess/> : <ChevronRight/>}
                 </ListItemButton>
-              </StyledNavLink>
+                <Collapse in={openedCategory.includes('parc-automobile')} sx={{backgroundColor: '#EFEFEF'}} timeout="auto"
+                          unmountOnExit>
+                  <List component="div" disablePadding>
+                    <StyledNavLink to="/online/parc-automobile/vehicules">
+                      <ListItemButton sx={{pl: 4}}>
+                        <ListItemIcon>
+                          <DirectionsCarFilled />
+                        </ListItemIcon>
+                        <ListItemText primary="Vehicules"/>
+                      </ListItemButton>
+                    </StyledNavLink>
+                    <StyledNavLink to="/online/parc-automobile/controles-menssuels">
+                      <ListItemButton sx={{ pl: 4 }}>
+                        <ListItemIcon>
+                          <CarCrash />
+                        </ListItemIcon>
+                        <ListItemText primary="Contrôles menssuels" />
+                      </ListItemButton>
+                    </StyledNavLink>
+                    <StyledNavLink to="/online/parc-automobile/controles-techniques">
+                      <ListItemButton sx={{ pl: 4 }}>
+                        <ListItemIcon>
+                          <Garage />
+                        </ListItemIcon>
+                        <ListItemText primary="Contrôles techniques" />
+                      </ListItemButton>
+                    </StyledNavLink>
+                    <StyledNavLink to="/online/parc-automobile/reparations">
+                      <ListItemButton sx={{pl: 4}}>
+                        <ListItemIcon>
+                          <CarRepair/>
+                        </ListItemIcon>
+                        <ListItemText primary="Suivi des réparations"/>
+                      </ListItemButton>
+                    </StyledNavLink>
+                  </List>
+                </Collapse>
+              </ListItem>
               <StyledNavLink to="/online/partnerships/bâtiment-immobilier">
                 <ListItemButton sx={{pl: 4}}>
                   <ListItemIcon>
@@ -1183,7 +1226,7 @@ function SecondaryListItems({open}) {
         </ListItemButton>
       </ListItem>
     </StyledNavLink>
-     <StyledNavLink to="/online/vehicules">
+     <StyledNavLink to="/online/parc-automobile/vehicules">
       <ListItem key={'vehicles'} disablePadding sx={{ display: 'block' }}>
         <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
           <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} > <LocalShippingIcon /> </ListItemIcon>

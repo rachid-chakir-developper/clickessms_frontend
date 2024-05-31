@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Stack, Box, Typography, Button, Divider, Stepper, Step, StepLabel, StepContent, IconButton, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Stack, Box, Typography, Button, Divider, Stepper, Step, StepLabel, StepContent, IconButton, FormControl, InputLabel, Select, MenuItem, InputAdornment } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -9,22 +9,22 @@ import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
-import TheTextField from '../../../_shared/components/form-fields/TheTextField';
-import ImageFileField from '../../../_shared/components/form-fields/ImageFileField';
-import { useFeedBacks } from '../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_VEHICLE } from '../../../_shared/graphql/queries/VehicleQueries';
+import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
+import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { GET_VEHICLE } from '../../../../_shared/graphql/queries/VehicleQueries';
 import {
   POST_VEHICLE,
   PUT_VEHICLE,
-} from '../../../_shared/graphql/mutations/VehicleMutations';
-import ProgressService from '../../../_shared/services/feedbacks/ProgressService';
-import TheAutocomplete from '../../../_shared/components/form-fields/TheAutocomplete';
-import { GET_ESTABLISHMENTS } from '../../../_shared/graphql/queries/EstablishmentQueries';
-import { GET_EMPLOYEES } from '../../../_shared/graphql/queries/EmployeeQueries';
-import TheDesktopDatePicker from '../../../_shared/components/form-fields/TheDesktopDatePicker';
+} from '../../../../_shared/graphql/mutations/VehicleMutations';
+import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
+import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
+import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
+import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { Close } from '@mui/icons-material';
-import { GET_DATAS_VEHICLE } from '../../../_shared/graphql/queries/DataQueries';
-import { CRIT_AIR_CHOICES, VEHICLE_STATES } from '../../../_shared/tools/constants';
+import { GET_DATAS_VEHICLE } from '../../../../_shared/graphql/queries/DataQueries';
+import { CRIT_AIR_CHOICES, OWNERSHIP_TYPE_CHOICES, VEHICLE_STATES } from '../../../../_shared/tools/constants';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -61,6 +61,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
       isActive: true,
       vehicleEstablishments: [],
       vehicleEmployees: [],
+      vehicleOwnerships: [],
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -81,6 +82,13 @@ export default function AddVehicleForm({ idVehicle, title }) {
         items.push(itemCopy);
       });
       vehicleCopy.vehicleEmployees = items;
+      if (!vehicleCopy?.vehicleOwnerships) vehicleCopy['vehicleOwnerships'] = [];
+      items = [];
+      vehicleCopy.vehicleOwnerships.forEach((item) => {
+        let { __typename, ...itemCopy } = item;
+        items.push(itemCopy);
+      });
+      vehicleCopy.vehicleOwnerships = items;
       if (idVehicle && idVehicle != '') {
         onUpdateVehicle({
           id: vehicleCopy.id,
@@ -214,6 +222,18 @@ export default function AddVehicleForm({ idVehicle, title }) {
         items.push(itemCopy);
       });
       vehicleCopy.vehicleEmployees = items;
+        
+      if (!vehicleCopy?.vehicleOwnerships) vehicleCopy['vehicleOwnerships'] = [];
+      items = [];
+      vehicleCopy.vehicleOwnerships.forEach((item) => {
+        let { __typename, ...itemCopy } = item;
+        itemCopy.purchaseDate = itemCopy.purchaseDate ? dayjs(itemCopy.purchaseDate) : null
+        itemCopy.saleDate = itemCopy.saleDate ? dayjs(itemCopy.saleDate) : null
+        itemCopy.rentalStartingDate = itemCopy.rentalStartingDate ? dayjs(itemCopy.rentalStartingDate) : null
+        itemCopy.rentalEndingDate = itemCopy.rentalEndingDate ? dayjs(itemCopy.rentalEndingDate) : null
+        items.push(itemCopy);
+      });
+      vehicleCopy.vehicleOwnerships = items;
       formik.setValues(vehicleCopy);
     },
     onError: (err) => console.log(err),
@@ -286,6 +306,36 @@ export default function AddVehicleForm({ idVehicle, title }) {
     });
   };
 
+  const addVehicleOwnership = () => {
+    formik.setValues({
+      ...formik.values,
+      vehicleOwnerships: [
+        ...formik.values.vehicleOwnerships,
+        { 
+          purchaseDate: dayjs(new Date()),
+          purchasePrice: null,
+          saleDate: dayjs(new Date()),
+          salePrice: null,
+          rentalStartingDate: dayjs(new Date()),
+          rentalEndingDate: null,
+          rentalPrice: null,
+          expectedMileage: null
+        },
+      ],
+    });
+  };
+
+  const removeVehicleOwnership = (index) => {
+    const updatedVehicleOwnerships = [...formik.values.vehicleOwnerships];
+    updatedVehicleOwnerships.splice(index, 1);
+
+    formik.setValues({
+      ...formik.values,
+      vehicleOwnerships: updatedVehicleOwnerships,
+    });
+  };
+
+
   React.useEffect(() => {
     if (idVehicle) {
       getVehicle({ variables: { id: idVehicle } });
@@ -305,7 +355,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if(activeStep >= 2) navigate('/online/vehicules/liste');
+    if(activeStep >= 3) navigate('/online/parc-automobile/vehicules/liste');
     else if (formik.values.id)
       setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });
@@ -740,6 +790,221 @@ export default function AddVehicleForm({ idVehicle, title }) {
                 </Grid>
               </StepContent>
             </Step>
+            <Step>
+              <StepLabel
+                onClick={() => onGoToStep(3)}
+                optional={
+                  <Typography variant="caption">Modalité de propriété</Typography>
+                }
+              >
+                Modalité de propriété
+              </StepLabel>
+              <StepContent>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  <Grid xs={12} sm={12} md={12} item="true">
+                      {formik.values?.vehicleOwnerships?.map((item, index) => (
+                        <Grid
+                          container
+                          spacing={{ xs: 2, md: 3 }}
+                          columns={{ xs: 4, sm: 8, md: 12 }}
+                          key={index}
+                        >
+                          <Grid xs={12} sm={6} md={3}>
+                            <Item>
+                              <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">
+                                  Type 
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-label"
+                                  id="demo-simple-select"
+                                  label="Type "
+                                  value={item.ownershipType}
+                                  onChange={(e) =>
+                                    formik.setFieldValue(
+                                      `vehicleOwnerships.${index}.ownershipType`,
+                                      e.target.value,
+                                    )
+                                  }
+                                >
+                                  {OWNERSHIP_TYPE_CHOICES?.ALL?.map((type, index) => {
+                                    return (
+                                      <MenuItem key={index} value={type.value}>
+                                        {type.label}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                              </FormControl>
+                            </Item>
+                          </Grid>
+                          {item.ownershipType === OWNERSHIP_TYPE_CHOICES.PURCHASE && <><Grid xs={12} sm={6} md={3} item="true">
+                            <Item>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Date d’achat"
+                                value={item.purchaseDate}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`vehicleOwnerships.${index}.purchaseDate`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid xs={12} sm={6} md={3}>
+                            <Item sx={{position: 'relative'}}>
+                              <TheTextField
+                                variant="outlined"
+                                label="Prix d’achat"
+                                type="number"
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                }}
+                                value={item.purchasePrice}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`vehicleOwnerships.${index}.purchasePrice`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                              <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                                onClick={() => removeVehicleOwnership(index)}
+                                edge="end"
+                                color="error"
+                              >
+                                <Close />
+                              </IconButton>
+                            </Item>
+                          </Grid></>}
+                          {item.ownershipType === OWNERSHIP_TYPE_CHOICES.SALE && <><Grid xs={12} sm={6} md={3} item="true">
+                            <Item>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Date de vente"
+                                value={item.saleDate}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`vehicleOwnerships.${index}.saleDate`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid xs={12} sm={6} md={3}>
+                            <Item sx={{position: 'relative'}}>
+                              <TheTextField
+                                variant="outlined"
+                                label="Prix de vente"
+                                type="number"
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                }}
+                                value={item.salePrice}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`vehicleOwnerships.${index}.salePrice`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                              <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                                onClick={() => removeVehicleOwnership(index)}
+                                edge="end"
+                                color="error"
+                              >
+                                <Close />
+                              </IconButton>
+                            </Item>
+                          </Grid></>}
+                          {item.ownershipType === OWNERSHIP_TYPE_CHOICES.LEASE && <><Grid xs={12} sm={6} md={3} item="true">
+                            <Item>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Date de location"
+                                value={item.rentalStartingDate}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`vehicleOwnerships.${index}.rentalStartingDate`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid xs={12} sm={6} md={3} item="true">
+                            <Item>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Date de fin de location"
+                                value={item.rentalEndingDate}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`vehicleOwnerships.${index}.rentalEndingDate`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid xs={12} sm={6} md={3}>
+                            <Item>
+                              <TheTextField
+                                variant="outlined"
+                                label="Prix de location"
+                                type="number"
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                }}
+                                value={item.rentalPrice}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`vehicleOwnerships.${index}.rentalPrice`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid xs={12} sm={6} md={3}>
+                            <Item sx={{position: 'relative'}}>
+                              <TheTextField
+                                variant="outlined"
+                                label="Kilométrage prévisionnel"
+                                type="number"
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="start">Km</InputAdornment>,
+                                }}
+                                value={item.expectedMileage}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`vehicleOwnerships.${index}.expectedMileage`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                                <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                                  onClick={() => removeVehicleOwnership(index)}
+                                  edge="end"
+                                  color="error"
+                                >
+                                  <Close />
+                                </IconButton>
+                            </Item>
+                          </Grid></>}
+                        </Grid>
+                      ))}
+                  </Grid>
+                  <Grid
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    item="true"
+                    sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                  >
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={addVehicleOwnership}
+                      disabled={loadingPost || loadingPut}
+                    >
+                      Ajouter une modalité
+                    </Button>
+                  </Grid>
+                </Grid>
+              </StepContent>
+            </Step>
           </Stepper>
           <Grid
             container
@@ -748,7 +1013,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
           >
             <Grid xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
-                <Link to="/online/vehicules/liste" className="no_style">
+                <Link to="/online/parc-automobile/vehicules/liste" className="no_style">
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>
                     Annuler
                   </Button>
