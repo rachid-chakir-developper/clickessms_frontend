@@ -9,16 +9,16 @@ import { USER_BASIC_INFOS } from './UserFragment';
 export const VEHICLE_INSPECTION_BASIC_INFOS = gql`
   fragment VehicleInspectionBasicInfosFragment on VehicleInspectionType {
     id
-	number
-	vehicle{
-        ...VehicleMiniInfosFragment
-    }
-	inspectionDateTime
-	nextInspectionDate
+    number
+    vehicle{
+          ...VehicleMiniInfosFragment
+      }
+    inspectionDateTime
+    nextInspectionDate
     controllerEmployees{
         ...EmployeeMiniInfosFragment
     }
-    controllerPartner {
+    controllerPartner{
         ...PartnerBasicInfosFragment
     }
   }
@@ -34,6 +34,7 @@ export const VEHICLE_INSPECTION_DETAILS = gql`
 	isRegistrationCardHere
 	isInsuranceCertificateHere
 	isInsuranceAttestationHere
+  isTechnicalControlHere
 	isOilLevelChecked
 	isWindshieldWasherLevelChecked
 	isBrakeFluidLevelChecked

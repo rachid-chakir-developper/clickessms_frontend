@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Stack, Box, Typography, Button, Divider } from '@mui/material';
+import { Stack, Box, Typography, Button, Divider, InputAdornment, FormLabel, RadioGroup, FormControlLabel, Radio, FormControl } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -24,6 +24,8 @@ import SelectCheckmarks from '../../../../_shared/components/form-fields/SelectC
 import { GET_PARTNERS } from '../../../../_shared/graphql/queries/PartnerQueries';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { GET_VEHICLES } from '../../../../_shared/graphql/queries/VehicleQueries';
+import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
+import MultipleImageFileField from '../../../../_shared/components/form-fields/MultipleImageFileField';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -52,6 +54,7 @@ export default function AddVehicleInspectionForm({
       isRegistrationCardHere: null,
       isInsuranceCertificateHere: null,
       isInsuranceAttestationHere: null,
+      isTechnicalControlHere: null,
       isOilLevelChecked: null,
       isWindshieldWasherLevelChecked: null,
       isBrakeFluidLevelChecked: null,
@@ -59,11 +62,13 @@ export default function AddVehicleInspectionForm({
       isTirePressureChecked: null,
       isLightsConditionChecked: null,
       isBodyConditionChecked: null,
+      images: [],
       remarks: '',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let vehicleInspectionCopy = { ...values };
+      let { images, ...vehicleInspectionCopy } = values;
+      images = images?.map((img)=>({id: img?.id, image: img.file || img.path,  caption: img?.caption}))
       vehicleInspectionCopy.controllerEmployees = vehicleInspectionCopy.controllerEmployees.map((i) => i?.id);
       vehicleInspectionCopy.vehicle = vehicleInspectionCopy.vehicle ? vehicleInspectionCopy.vehicle.id : null;
       vehicleInspectionCopy.controllerPartner = vehicleInspectionCopy.controllerPartner ? vehicleInspectionCopy.controllerPartner.id : null;
@@ -71,11 +76,13 @@ export default function AddVehicleInspectionForm({
         onUpdateVehicleInspection({
           id: vehicleInspectionCopy.id,
           vehicleInspectionData: vehicleInspectionCopy,
+          images
         });
       } else
         createVehicleInspection({
           variables: {
             vehicleInspectionData: vehicleInspectionCopy,
+            images
           },
         });
     },
@@ -222,8 +229,7 @@ export default function AddVehicleInspectionForm({
       onCompleted: (data) => {
         let { __typename, ...vehicleInspectionCopy1 } = data.vehicleInspection;
         let { folder, ...vehicleInspectionCopy2 } = vehicleInspectionCopy1;
-        let { images, ...vehicleInspectionCopy3 } = vehicleInspectionCopy2;
-        let { videos, ...vehicleInspectionCopy } = vehicleInspectionCopy3;
+        let { videos, ...vehicleInspectionCopy } = vehicleInspectionCopy2;
         vehicleInspectionCopy.inspectionDateTime = vehicleInspectionCopy.inspectionDateTime ? dayjs(vehicleInspectionCopy.inspectionDateTime) : null;
         vehicleInspectionCopy.nextInspectionDate = vehicleInspectionCopy.nextInspectionDate ? dayjs(vehicleInspectionCopy.nextInspectionDate) : null;
         formik.setValues(vehicleInspectionCopy);
@@ -314,16 +320,224 @@ export default function AddVehicleInspectionForm({
                 />
               </Item>
             </Grid>
+            <Grid xs={12} sm={6} md={4} item="true">
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Nombre de kilomètres"
+                  type="number"
+                  InputProps={{
+                      endAdornment: <InputAdornment position="start">Km</InputAdornment>,
+                  }}
+                  value={formik.values.mileage}
+                  onChange={(e) =>
+                    formik.setFieldValue('mileage', e.target.value)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+            </Grid>
             <Grid xs={12} sm={12} md={12}>
-              <Divider variant="middle" />
+              <Divider variant="middle" sx={{marginY: 5}} />
+            </Grid>
+            <Grid xs={12} sm={6} md={3}>
+              <Item>
+                <FormControl>
+                  <FormLabel id="demo-row-radio-buttons-group-label" sx={{textAlign: 'left'}}>Carte grise présente</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                    value={formik.values.isRegistrationCardHere}
+                    onChange={(e) =>
+                      formik.setFieldValue('isRegistrationCardHere', e.target.value)
+                    }
+                  >
+                    <FormControlLabel value="true" control={<Radio />} label="Oui" />
+                    <FormControlLabel value="false" control={<Radio />} label="Non" />
+                  </RadioGroup>
+                </FormControl>
+              </Item>
+            </Grid>
+            <Grid xs={12} sm={6} md={3}>
+              <Item>
+                <FormControl>
+                  <FormLabel id="demo-row-radio-buttons-group-label" sx={{textAlign: 'left'}}>Certificat d’assurance présent</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                    value={formik.values.isInsuranceCertificateHere}
+                    onChange={(e) =>
+                      formik.setFieldValue('isInsuranceCertificateHere', e.target.value)
+                    }
+                  >
+                    <FormControlLabel value="true" control={<Radio />} label="Oui" />
+                    <FormControlLabel value="false" control={<Radio />} label="Non" />
+                  </RadioGroup>
+                </FormControl>
+              </Item>
+            </Grid>
+            <Grid xs={12} sm={6} md={3}>
+              <Item>
+                <FormControl>
+                  <FormLabel id="demo-row-radio-buttons-group-label" sx={{textAlign: 'left'}}>Attestation d’assurance présente</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                    value={formik.values.isInsuranceAttestationHere}
+                    onChange={(e) =>
+                      formik.setFieldValue('isInsuranceAttestationHere', e.target.value)
+                    }
+                  >
+                    <FormControlLabel value="true" control={<Radio />} label="Oui" />
+                    <FormControlLabel value="false" control={<Radio />} label="Non" />
+                  </RadioGroup>
+                </FormControl>
+              </Item>
+            </Grid>
+            <Grid xs={12} sm={6} md={3}>
+              <Item>
+                <FormControl>
+                  <FormLabel id="demo-row-radio-buttons-group-label" sx={{textAlign: 'left'}}>Contrôle technique présent</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                    value={formik.values.isTechnicalControlHere}
+                    onChange={(e) =>
+                      formik.setFieldValue('isTechnicalControlHere', e.target.value)
+                    }
+                  >
+                    <FormControlLabel value="true" control={<Radio />} label="Oui" />
+                    <FormControlLabel value="false" control={<Radio />} label="Non" />
+                  </RadioGroup>
+                </FormControl>
+              </Item>
+            </Grid>
+            <Grid xs={12} sm={12} md={12}>
+              <Divider variant="middle" sx={{marginY: 5}} />
+            </Grid>
+            <Grid xs={12} sm={12} md={12}>
+              <Typography gutterBottom variant="subtitle3" component="h3">
+                Vérification du véhicule:
+              </Typography>
+            </Grid>
+            <Grid xs={12} sm={6} md={4}>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="Niveau d’huile"
+                  checked={formik.values.isOilLevelChecked}
+                  value={formik.values.isOilLevelChecked}
+                  onChange={(e) =>
+                    formik.setFieldValue('isOilLevelChecked', e.target.checked)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="Niveau de liquide de frein"
+                  checked={formik.values.isBrakeFluidLevelChecked}
+                  value={formik.values.isBrakeFluidLevelChecked}
+                  onChange={(e) =>
+                    formik.setFieldValue('isBrakeFluidLevelChecked', e.target.checked)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="Niveau de liquide de refroidissement"
+                  checked={formik.values.isCoolantLevelChecked}
+                  value={formik.values.isCoolantLevelChecked}
+                  onChange={(e) =>
+                    formik.setFieldValue('isCoolantLevelChecked', e.target.checked)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid xs={12} sm={6} md={4}>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="Niveau de lave-vitre"
+                  checked={formik.values.isWindshieldWasherLevelChecked}
+                  value={formik.values.isWindshieldWasherLevelChecked}
+                  onChange={(e) =>
+                    formik.setFieldValue('isWindshieldWasherLevelChecked', e.target.checked)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="Pression des pneus"
+                  checked={formik.values.isTirePressureChecked}
+                  value={formik.values.isTirePressureChecked}
+                  onChange={(e) =>
+                    formik.setFieldValue('isTirePressureChecked', e.target.checked)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid xs={12} sm={6} md={4}>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="État des feux"
+                  checked={formik.values.isLightsConditionChecked}
+                  value={formik.values.isLightsConditionChecked}
+                  onChange={(e) =>
+                    formik.setFieldValue('isLightsConditionChecked', e.target.checked)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="État de la carrosserie"
+                  checked={formik.values.isBodyConditionChecked}
+                  value={formik.values.isBodyConditionChecked}
+                  onChange={(e) =>
+                    formik.setFieldValue('isBodyConditionChecked', e.target.checked)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid xs={12} sm={12} md={12}>
+              <Divider variant="middle" sx={{marginY: 5}} />
+            </Grid>
+            <Grid xs={12} sm={12} md={12}>
+              <Item>
+                <Typography gutterBottom variant="subtitle3" component="h3">
+                  Galerie d'images:
+                </Typography>
+                <MultipleImageFileField
+                  imageValue={formik.values.images}
+                  onChange={(files) => formik.setFieldValue('images', files)}
+                />
+              </Item>
+            </Grid>
+            <Grid xs={12} sm={12} md={12}>
+              <Divider variant="middle" sx={{marginY: 5}} />
             </Grid>
             <Grid xs={12} sm={12} md={12}>
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Remarques"
+                  label="autres remarques"
                   multiline
-                  rows={4}
+                  rows={8}
                   value={formik.values.remarks}
                   onChange={(e) =>
                     formik.setFieldValue('remarks', e.target.value)

@@ -19,6 +19,7 @@ import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
   getFormatDate,
+  getFormatDateTime,
   getStatusLabel,
   getStatusLebelColor,
 } from '../../../../_shared/tools/functions';
@@ -101,16 +102,22 @@ const headCells = [
     label: 'Vehicule',
   },
   {
-    id: 'employee',
+    id: 'controller',
     numeric: false,
     disablePadding: false,
     label: 'Controlleurs',
   },
   {
-    id: 'startingDateTime',
+    id: 'inspectionDateTime',
     numeric: false,
     disablePadding: false,
-    label: 'Date',
+    label: 'Date et heure du contrôle',
+  },
+  {
+    id: 'nextInspectionDate',
+    numeric: false,
+    disablePadding: false,
+    label: 'Prochaine date du contrôle',
   },
   {
     id: 'action',
@@ -381,65 +388,65 @@ export default function TableListVehicleInspections({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.employees?.map((beneficiarie, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={`${beneficiarie?.employee?.firstName} ${beneficiarie?.employee?.lastName}`}
-                                  src={
-                                    beneficiarie?.employee?.photo
-                                      ? beneficiarie?.employee?.photo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={`${beneficiarie?.employee?.firstName} ${beneficiarie?.employee?.lastName}`}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                        <Stack direction="row" flexWrap='wrap' spacing={1}>
-                            {row?.reasons?.map((absenceReason, index) => {
-                            return (
-                                <Chip
-                                    key={index}
-                                    label={absenceReason?.name}
-                                    variant="outlined"
-                                />
-                            );
-                            })}
-                            {row?.otherReasons && row?.otherReasons !== '' && <Chip
-                                label={row?.otherReasons}
-                                variant="filled"
-                            />}
-                        </Stack>
-                    </StyledTableCell>
                     <StyledTableCell align="left"> 
                       <Stack direction="row" flexWrap='wrap' spacing={1}>
                         <Chip
                           avatar={
                             <Avatar
-                              alt={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
+                              alt={`${row?.vehicle?.name} ${row?.vehicle?.registrationNumber}`}
                               src={
-                                row?.employee?.photo
-                                  ? row?.employee?.photo
+                                row?.vehicle?.image
+                                  ? row?.vehicle?.image
                                   : '/default-placeholder.jpg'
                               }
                             />
                           }
-                          label={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
+                          label={`${row?.vehicle?.name} ${row?.vehicle?.registrationNumber}`}
                           variant="outlined"
                         />
-                        </Stack>
+                      </Stack>
                     </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
+                        {row?.controllerEmployees?.map((employee, index) => {
+                          return (
+                            <Chip
+                              key={index}
+                              avatar={
+                                <Avatar
+                                  alt={`${employee?.firstName} ${employee?.lastName}`}
+                                  src={
+                                    employee?.photo
+                                      ? employee?.photo
+                                      : '/default-placeholder.jpg'
+                                  }
+                                />
+                              }
+                              label={`${employee?.firstName} ${employee?.lastName}`}
+                              variant="outlined"
+                            />
+                          );
+                        })}
+                      </Stack>
+                      {row?.controllerPartner && <Stack direction="row" flexWrap='wrap' spacing={1}>
+                        <Chip
+                          avatar={
+                            <Avatar
+                              alt={`${row?.controllerPartner?.name}`}
+                              src={
+                                row?.controllerPartner?.image
+                                  ? row?.controllerPartner?.image
+                                  : '/default-placeholder.jpg'
+                              }
+                            />
+                          }
+                          label={`${row?.controllerPartner?.name}`}
+                          variant="outlined"
+                        />
+                      </Stack>}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">{`${getFormatDateTime(row?.inspectionDateTime)}`}</StyledTableCell>
+                    <StyledTableCell align="left">{`${getFormatDate(row?.nextInspectionDate)}`}</StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}

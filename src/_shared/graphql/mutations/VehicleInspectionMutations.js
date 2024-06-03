@@ -2,8 +2,8 @@ import { gql } from '@apollo/client';
 import { VEHICLE_INSPECTION_BASIC_INFOS } from '../fragments/VehicleInspectionFragment';
 
 export const POST_VEHICLE_INSPECTION = gql`
-  mutation CreateVehicleInspection($vehicleInspectionData: VehicleInspectionInput!) {
-    createVehicleInspection(vehicleInspectionData: $vehicleInspectionData) {
+  mutation CreateVehicleInspection($vehicleInspectionData: VehicleInspectionInput!, $images : [MediaInput], $videos : [MediaInput]) {
+    createVehicleInspection(vehicleInspectionData: $vehicleInspectionData, images : $images, videos : $videos) {
       vehicleInspection {
         ...VehicleInspectionBasicInfosFragment
       }
@@ -15,9 +15,9 @@ export const POST_VEHICLE_INSPECTION = gql`
 export const PUT_VEHICLE_INSPECTION = gql`
   mutation UpdateVehicleInspection(
     $id: ID!
-    $vehicleInspectionData: VehicleInspectionInput!
+    $vehicleInspectionData: VehicleInspectionInput!, $images : [MediaInput], $videos : [MediaInput]
   ) {
-    updateVehicleInspection(id: $id, vehicleInspectionData: $vehicleInspectionData) {
+    updateVehicleInspection(id: $id, vehicleInspectionData: $vehicleInspectionData, images : $images, videos : $videos) {
       vehicleInspection {
         ...VehicleInspectionBasicInfosFragment
       }
@@ -26,19 +26,6 @@ export const PUT_VEHICLE_INSPECTION = gql`
   ${VEHICLE_INSPECTION_BASIC_INFOS}
 `;
 
-export const PUT_VEHICLE_INSPECTION_STATE = gql`
-  mutation UpdateVehicleInspectionState($id: ID!) {
-    updateVehicleInspectionState(id: $id) {
-      done
-      success
-      message
-      vehicleInspection {
-        ...VehicleInspectionBasicInfosFragment
-      }
-    }
-  }
-  ${VEHICLE_INSPECTION_BASIC_INFOS}
-`;
 
 export const DELETE_VEHICLE_INSPECTION = gql`
   mutation DeleteVehicleInspection($id: ID!) {
