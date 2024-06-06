@@ -14,7 +14,7 @@ export default function EstablishmentActivityAuthorization({activityAuthorizatio
   return (
     <Timeline position="alternate">
       {activityAuthorizations?.map((activityAuthorization, index) => (
-        <TimelineItem>
+        <TimelineItem key={index}>
           <TimelineOppositeContent
             sx={{ m: 'auto 0' }}
             align="right"
@@ -43,7 +43,7 @@ export default function EstablishmentActivityAuthorization({activityAuthorizatio
               onClick={() => {
                 window.open(activityAuthorization?.document);
               }}>
-              Voir le doocument
+              Voir le document
             </Button>}
             <Stack direction="row" justifyContent={index%2 === 0 ?  "start" : "end"} spacing={1} sx={{marginY : 1}}>
               <Chip

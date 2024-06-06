@@ -2,18 +2,22 @@ import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import { Box, Grid, Paper, Typography, Divider, Chip, Button } from '@mui/material';
+import { Box, Grid, Paper, Typography, Divider, Chip, Button, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Stack } from '@mui/material';
 
 import { VEHICLE_INSPECTION_RECAP } from '../../../../_shared/graphql/queries/VehicleInspectionQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import { getFormatDateTime } from '../../../../_shared/tools/functions';
+import { getFormatDate, getFormatDateTime } from '../../../../_shared/tools/functions';
 import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard';
 import { Edit } from '@mui/icons-material';
+import VehicleItemCard from '../vehicles/VehicleItemCard';
+import PartnerItemCard from '../../partnerships/partners/PartnerItemCard';
+import TitlebarImageList from '../../../_shared/components/media/TitlebarImageList';
+import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 
-const Item = styled(Paper)(({ theme }) => ({
+const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
-  padding: theme.spacing(1),
+  padding: theme.spacing(2),
   textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
@@ -49,36 +53,181 @@ export default function VehicleInspectionDetails() {
       </Box>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid item xs={7}>
+          <Grid item xs={12} sm={12} md={4}>
             <VehicleInspectionMiniInfos
               vehicleInspection={vehicleInspectionData?.vehicleInspection}
             />
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={12} sm={12} md={8}>
             <VehicleInspectionOtherInfos
               vehicleInspection={vehicleInspectionData?.vehicleInspection}
             />
           </Grid>
-          <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
+            <Grid item xs={12} sm={12} md={12}>
+              <Divider variant="middle" sx={{marginY: 5}} />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Item>
+                <FormControl>
+                  <FormLabel id="demo-row-radio-buttons-group-label" sx={{textAlign: 'left'}}>Carte grise présente</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                    checked={vehicleInspectionData?.vehicleInspection?.isRegistrationCardHere}
+                    value={vehicleInspectionData?.vehicleInspection?.isRegistrationCardHere}
+                  >
+                    <FormControlLabel value="true" control={<Radio />} label="Oui" />
+                    <FormControlLabel value="false" control={<Radio />} label="Non" />
+                  </RadioGroup>
+                </FormControl>
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Item>
+                <FormControl>
+                  <FormLabel id="demo-row-radio-buttons-group-label" sx={{textAlign: 'left'}}>Certificat d’assurance présent</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                    checked={vehicleInspectionData?.vehicleInspection?.isInsuranceCertificateHere}
+                    value={vehicleInspectionData?.vehicleInspection?.isInsuranceCertificateHere}
+                  >
+                    <FormControlLabel value="true" control={<Radio />} label="Oui" />
+                    <FormControlLabel value="false" control={<Radio />} label="Non" />
+                  </RadioGroup>
+                </FormControl>
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Item>
+                <FormControl>
+                  <FormLabel id="demo-row-radio-buttons-group-label" sx={{textAlign: 'left'}}>Attestation d’assurance présente</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                    checked={vehicleInspectionData?.vehicleInspection?.isInsuranceAttestationHere}
+                    value={vehicleInspectionData?.vehicleInspection?.isInsuranceAttestationHere}
+                  >
+                    <FormControlLabel value="true" control={<Radio />} label="Oui" />
+                    <FormControlLabel value="false" control={<Radio />} label="Non" />
+                  </RadioGroup>
+                </FormControl>
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Item>
+                <FormControl>
+                  <FormLabel id="demo-row-radio-buttons-group-label" sx={{textAlign: 'left'}}>Contrôle technique présent</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-groups"
+                    checked={vehicleInspectionData?.vehicleInspection?.isTechnicalControlHere}
+                    value={vehicleInspectionData?.vehicleInspection?.isTechnicalControlHere}
+                  >
+                    <FormControlLabel value="true" control={<Radio />} label="Oui" />
+                    <FormControlLabel value="false" control={<Radio />} label="Non" />
+                  </RadioGroup>
+                </FormControl>
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+              <Divider variant="middle" sx={{marginY: 5}} />
+            </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+              <Typography gutterBottom variant="subtitle3" component="h3">
+                Vérification du véhicule:
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="Niveau d’huile"
+                  checked={vehicleInspectionData?.vehicleInspection?.isOilLevelChecked}
+                  value={vehicleInspectionData?.vehicleInspection?.isOilLevelChecked}
+                />
+              </Item>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="Niveau de liquide de frein"
+                  checked={vehicleInspectionData?.vehicleInspection?.isBrakeFluidLevelChecked}
+                  value={vehicleInspectionData?.vehicleInspection?.isBrakeFluidLevelChecked}
+                />
+              </Item>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="Niveau de liquide de refroidissement"
+                  checked={vehicleInspectionData?.vehicleInspection?.isCoolantLevelChecked}
+                  value={vehicleInspectionData?.vehicleInspection?.isCoolantLevelChecked}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="Niveau de lave-vitre"
+                  checked={vehicleInspectionData?.vehicleInspection?.isWindshieldWasherLevelChecked}
+                  value={vehicleInspectionData?.vehicleInspection?.isWindshieldWasherLevelChecked}
+                />
+              </Item>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="Pression des pneus"
+                  checked={vehicleInspectionData?.vehicleInspection?.isTirePressureChecked}
+                  value={vehicleInspectionData?.vehicleInspection?.isTirePressureChecked}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="État des feux"
+                  checked={vehicleInspectionData?.vehicleInspection?.isLightsConditionChecked}
+                  value={vehicleInspectionData?.vehicleInspection?.isLightsConditionChecked}
+                />
+              </Item>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="État de la carrosserie"
+                  checked={vehicleInspectionData?.vehicleInspection?.isBodyConditionChecked}
+                  value={vehicleInspectionData?.vehicleInspection?.isBodyConditionChecked}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+              <Divider variant="middle" sx={{marginY: 5}} />
+            </Grid>
+          <Grid item xs={12} sx={{ marginY: 3 }}>
             <Divider />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={12} md={6}>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
-                Commentaire
+                Galerie d'images
               </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {vehicleInspectionData?.vehicleInspection?.comment}
-              </Typography>
+                <TitlebarImageList
+                  images={vehicleInspectionData?.vehicleInspection?.images}
+                  videos={vehicleInspectionData?.vehicleInspection?.videos}
+                />
             </Paper>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={12} md={6}>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
-                Observation
+                Autres remarques
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {vehicleInspectionData?.vehicleInspection?.observation}
+                {vehicleInspectionData?.vehicleInspection?.remarks}
               </Typography>
             </Paper>
           </Grid>
@@ -110,9 +259,9 @@ function VehicleInspectionMiniInfos({ vehicleInspection }) {
         }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={12} sm container>
-            <Grid item xs container direction="column" spacing={2}>
-              <Grid item xs>
+          <Grid item xs={12}>
+            <Grid container direction="column" spacing={2}>
+              <Grid item>
                 <Typography gutterBottom variant="subtitle1" component="div">
                   Réference : <b>{vehicleInspection?.number}</b>
                 </Typography>
@@ -128,40 +277,17 @@ function VehicleInspectionMiniInfos({ vehicleInspection }) {
                 </Typography>
                 <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
                 <Typography variant="body2" color="text.secondary">
-                  <b>Date début prévue: </b>{' '}
-                  {`${getFormatDateTime(vehicleInspection?.startingDateTime)}`}{' '}
-                  <br />
-                  <b>Date fin prévue: </b>{' '}
-                  {`${getFormatDateTime(vehicleInspection?.endingDateTime)}`}
+                  <b>Date et heure de contrôle: </b>
+                  {`${getFormatDateTime(vehicleInspection?.inspectionDateTime)}`}<br />
+                  <b>Date et heure de prochain contrôle: </b>
+                  {`${getFormatDate(vehicleInspection?.nextInspectionDate)}`}<br />
+                  <b>Date et heure de prochain contrôle technique: </b>
+                  {`${getFormatDate(vehicleInspection?.nextTechnicalInspectionDate)}`}
                 </Typography>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
-      </Paper>
-      <Paper
-        variant="outlined"
-        sx={{
-          p: 2,
-          margin: 'auto',
-          marginTop: 2,
-          flexGrow: 1,
-          backgroundColor: (theme) =>
-            theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-        }}
-      >
-        <Typography gutterBottom variant="subtitle3" component="h3">
-          Motif
-        </Typography>
-        {vehicleInspection?.reasons?.map((reason, index) => (
-          <Chip
-            color="info"
-            key={index}
-            label={reason?.name}
-            sx={{ marginRight: 1 }}
-          />
-        ))}
-        <Chip label={vehicleInspection?.otherReasons} />
       </Paper>
     </>
   );
@@ -169,28 +295,54 @@ function VehicleInspectionMiniInfos({ vehicleInspection }) {
 
 function VehicleInspectionOtherInfos({ vehicleInspection }) {
   return (
-    <Paper
-      variant="outlined"
-      sx={{
-        p: 2,
-        margin: 'auto',
-        flexGrow: 1,
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-      }}
-    >
-      <Typography gutterBottom variant="subtitle3" component="h3">
-        Les Employés
-      </Typography>
-      <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-        {vehicleInspection?.employees?.map((employee, index) => (
-          <Grid xs={12} sm={12} md={12} key={index}>
-            <Item>
-              <EmployeeItemCard employee={employee?.employee} />
-            </Item>
-          </Grid>
-        ))}
+    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+      <Grid item xs={12} sm={12} md={6}>
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 2,
+            margin: 'auto',
+            flexGrow: 1,
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+          }}
+        >
+          <Typography gutterBottom variant="subtitle3" component="h3">
+            Le véhicule concerné
+          </Typography>
+          <VehicleItemCard vehicle={vehicleInspection?.vehicle} />
+        </Paper>
       </Grid>
-    </Paper>
+      <Grid item xs={12} sm={12} md={6}>
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 2,
+            margin: 'auto',
+            flexGrow: 1,
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+          }}
+        >
+          <Typography gutterBottom variant="subtitle3" component="h3">
+            Les controlleurs
+          </Typography>
+          <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
+            {vehicleInspection?.controllerEmployees?.map((employee, index) => (
+              <Grid item xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
+                <Item>
+                  <EmployeeItemCard employee={employee} />
+                </Item>
+              </Grid>
+            ))}
+            {vehicleInspection?.controllerPartner && <Grid item xs={12} sm={12} md={12}>
+              <Item>
+                <PartnerItemCard partner={vehicleInspection?.controllerPartner} />
+              </Item>
+            </Grid>}
+          </Grid>
+        </Paper>
+      </Grid>
+    </Grid>
   );
 }

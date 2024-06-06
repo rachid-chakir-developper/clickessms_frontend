@@ -170,7 +170,7 @@ export default function AddBalanceForm({ idBalance, title }) {
     onCompleted: (data) => {
       let { __typename, ...balanceCopy1 } = data.balance;
       let { folder, ...balanceCopy } = balanceCopy1;
-      balanceCopy.date = dayjs(balanceCopy.date);
+      balanceCopy.date = balanceCopy.date ? dayjs(balanceCopy.date) : null;
       formik.setValues(balanceCopy);
     },
     onError: (err) => console.log(err),

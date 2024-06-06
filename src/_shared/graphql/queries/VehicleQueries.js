@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 import {
   VEHICLE_BASIC_INFOS,
   VEHICLE_DETAILS,
+  VEHICLE_RECAP_DETAILS,
 } from '../fragments/VehicleFragment';
 
 export const GET_VEHICLE = gql`
@@ -33,6 +34,15 @@ export const GET_VEHICLES = gql`
     }
   }
   ${VEHICLE_BASIC_INFOS}
+`;
+
+export const GET_RECAP_VEHICLE = gql`
+  query GetVehicle($id: ID!) {
+    vehicle(id: $id) {
+      ...VehicleRecapDetailsFragment
+    }
+  }
+  ${VEHICLE_RECAP_DETAILS}
 `;
 
 // Add more vehicle-related queries here

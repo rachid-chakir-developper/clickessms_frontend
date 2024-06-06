@@ -7,13 +7,13 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import { getFormatDate } from '../../../../../_shared/tools/functions';
-import { Home } from '@mui/icons-material';
-import { Avatar, Chip, Stack } from '@mui/material';
+import { FileDownload, FileOpen, Home, Person } from '@mui/icons-material';
+import { Avatar, Button, Chip, IconButton, Stack, Tooltip } from '@mui/material';
 
-export default function BeneficiaryEntries({beneficiaryEntries}) {
+export default function VehicleEmployees({vehicleEmployees}) {
   return (
     <Timeline position="alternate">
-      {beneficiaryEntries?.map((beneficiaryEntry, index) => (
+      {vehicleEmployees?.map((vehicleEmployee, index) => (
         <TimelineItem key={index}>
           <TimelineOppositeContent
             sx={{ m: 'auto 0' }}
@@ -21,40 +21,19 @@ export default function BeneficiaryEntries({beneficiaryEntries}) {
             variant="body2"
             color="text.secondary"
           >
-            <b>Date d'entré :</b> {getFormatDate(beneficiaryEntry?.entryDate) + ' '} <br />
-            <b>Date de sortie :</b> {getFormatDate(beneficiaryEntry?.releaseDate) + ' '}
+            <b>Date de début :</b> {getFormatDate(vehicleEmployee?.startingDate) + ' '} <br />
+            <b>Date de fin :</b> {getFormatDate(vehicleEmployee?.startingDate) + ' '}
           </TimelineOppositeContent>
           <TimelineSeparator>
             <TimelineConnector />
             <TimelineDot>
-              <Home />
+              <Person />
             </TimelineDot>
             <TimelineConnector />
           </TimelineSeparator>
           <TimelineContent sx={{ py: '12px', px: 2 }}>
             <Stack direction="row" justifyContent={index%2 === 0 ?  "start" : "end"} spacing={1} sx={{marginY : 1}}>
-              {beneficiaryEntry?.establishments?.map((establishment, index) => {
-                return (
-                  <Chip
-                    key={index}
-                    avatar={
-                      <Avatar
-                        alt={establishment?.name}
-                        src={
-                          establishment?.logo
-                            ? establishment?.logo
-                            : '/default-placeholder.jpg'
-                        }
-                      />
-                    }
-                    label={establishment?.name}
-                    variant="outlined"
-                  />
-                );
-              })}
-            </Stack>
-            <Stack direction="row" justifyContent={index%2 === 0 ?  "start" : "end"} spacing={1} sx={{marginY : 1}}>
-              {beneficiaryEntry?.internalReferents?.map((employee, index) => {
+              {vehicleEmployee?.employees?.map((employee, index) => {
                 return (
                   <Chip
                     key={index}

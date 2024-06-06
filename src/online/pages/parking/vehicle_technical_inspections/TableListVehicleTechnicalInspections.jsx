@@ -20,8 +20,6 @@ import styled from '@emotion/styled';
 import {
   getFormatDate,
   getFormatDateTime,
-  getStatusLabel,
-  getStatusLebelColor,
 } from '../../../../_shared/tools/functions';
 import {
   Article,
@@ -32,7 +30,6 @@ import {
   MoreVert,
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
-import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
@@ -102,12 +99,6 @@ const headCells = [
     label: 'Vehicule',
   },
   {
-    id: 'controller',
-    numeric: false,
-    disablePadding: false,
-    label: 'Controlleurs',
-  },
-  {
     id: 'inspectionDateTime',
     numeric: false,
     disablePadding: false,
@@ -117,13 +108,7 @@ const headCells = [
     id: 'nextInspectionDate',
     numeric: false,
     disablePadding: false,
-    label: 'Prochain contrôle',
-  },
-  {
-    id: 'nextTechnicalInspectionDate',
-    numeric: false,
-    disablePadding: false,
-    label: 'Prochain contrôle technique',
+    label: 'Prochaine date du contrôle',
   },
   {
     id: 'action',
@@ -221,7 +206,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les contrôles menssuels
+          Les contrôles techniques
         </Typography>
       )}
 
@@ -242,10 +227,10 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListVehicleInspections({
+export default function TableListVehicleTechnicalInspections({
   loading,
   rows,
-  onDeleteVehicleInspection
+  onDeleteVehicleTechnicalInspection
 }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -344,7 +329,7 @@ export default function TableListVehicleInspections({
                 <StyledTableRow>
                   <StyledTableCell colSpan="7">
                     <Alert severity="warning">
-                        Aucun contrôle menssuel trouvé.
+                        Aucun contrôle technique trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -412,48 +397,8 @@ export default function TableListVehicleInspections({
                         />
                       </Stack>
                     </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.controllerEmployees?.map((employee, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={`${employee?.firstName} ${employee?.lastName}`}
-                                  src={
-                                    employee?.photo
-                                      ? employee?.photo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={`${employee?.firstName} ${employee?.lastName}`}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>
-                      {row?.controllerPartner && <Stack direction="row" flexWrap='wrap' spacing={1} sx={{marginTop: 1}}>
-                        <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.controllerPartner?.name}`}
-                              src={
-                                row?.controllerPartner?.photo
-                                  ? row?.controllerPartner?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.controllerPartner?.name}`}
-                          variant="outlined"
-                        />
-                      </Stack>}
-                    </StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDateTime(row?.inspectionDateTime)}`}</StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.nextInspectionDate)}`}</StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.nextTechnicalInspectionDate)}`}</StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -472,7 +417,7 @@ export default function TableListVehicleInspections({
                         }}
                       >
                         <Link
-                          to={`/online/parc-automobile/controles-menssuels/details/${row?.id}`}
+                          to={`/online/parc-automobile/controles-techniques/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -490,7 +435,7 @@ export default function TableListVehicleInspections({
                           Bibliothèque
                         </MenuItem>
                         <Link
-                          to={`/online/parc-automobile/controles-menssuels/modifier/${row?.id}`}
+                          to={`/online/parc-automobile/controles-techniques/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -500,7 +445,7 @@ export default function TableListVehicleInspections({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteVehicleInspection(row?.id);
+                            onDeleteVehicleTechnicalInspection(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

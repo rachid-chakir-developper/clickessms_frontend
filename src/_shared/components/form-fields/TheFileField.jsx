@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Box, Card, CardContent, TextField, IconButton } from "@mui/material";
+import { Box, Card, CardContent, TextField, IconButton, Typography } from "@mui/material";
 import { Description } from '@mui/icons-material';
 
 export default function  TheFileField(props) {
@@ -18,12 +18,12 @@ export default function  TheFileField(props) {
     <Card sx={{ display: 'flex' }} variant="outlined">
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <CardContent sx={{ flex: '1 0 auto' }}>
-          {/* <Typography component="div" variant="h5">
+        <Typography variant="subtitle1" color="text.secondary" component="div">
             {props?.label}
           </Typography>
           <Typography variant="subtitle1" color="text.secondary" component="div">
             {props?.placeholder}
-          </Typography> */}
+          </Typography>
           <TextField
                 type="file"
                 variant="outlined"

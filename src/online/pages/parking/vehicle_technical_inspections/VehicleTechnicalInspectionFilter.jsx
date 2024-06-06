@@ -28,7 +28,7 @@ const Item = styled(Stack)(({ theme }) => ({
     color: theme.palette.text.secondary,
   }));
 
-const VehicleInspectionFilter = ({ onFilterChange }) => {
+const VehicleTechnicalInspectionFilter = ({ onFilterChange }) => {
   const [filterValues, setFilterValues] = useState({
     startingDateTime: null,
     endingDateTime: null,
@@ -138,4 +138,4 @@ const VehicleInspectionFilter = ({ onFilterChange }) => {
   );
 };
 
-export default VehicleInspectionFilter;
+export default VehicleTechnicalInspectionFilter;

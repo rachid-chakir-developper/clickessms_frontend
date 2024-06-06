@@ -8,102 +8,88 @@ import { Image, PlayArrow } from '@mui/icons-material';
 import { Alert } from '@mui/material';
 import MediaModal from '../../../../_shared/components/modals/MediaModal';
 
-export default function TitlebarImageList({
-  images = [],
-  videos = [],
-  loading = false,
-}) {
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedMediaType, setSelectedMediaType] = React.useState('images');
+export default function TitlebarImageList({images = [], videos = [], loading=false}) {
+    const [modalOpen, setModalOpen] = React.useState(false);
+    const [selectedMediaType, setSelectedMediaType] = React.useState('images');
+    const [currentIndex, setCurrentIndex] = React.useState(0);
 
-  const handleOpenModal = (mediaType) => {
-    setSelectedMediaType(mediaType);
-    setModalOpen(true);
-  };
+    const handleOpenModal = (mediaType, index) => {
+        setCurrentIndex(index);
+        setSelectedMediaType(mediaType)
+        setModalOpen(true);
+    };
 
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
+    const handleCloseModal = () => {
+        setModalOpen(false);
+        setTimeout(() => {
+          setCurrentIndex(0);
+        }, 1000);
+    };
   return (
     <>
-      <ImageList sx={{ width: '100%', height: 450 }}>
-        <ImageListItem key="Subheader" cols={2}>
-          <ListSubheader component="div">
-            Images
-            {images?.length < 1 && !loading && (
-              <Alert severity="warning">
-                La liste est vide pour le moment !
-              </Alert>
-            )}
-          </ListSubheader>
+        <ImageList sx={{ width: '100%', height: 450 }}>
+        <ImageListItem key="Subheader1" cols={2}>
+            <ListSubheader component="div">Images
+                {images?.length < 1 && !loading && <Alert severity="warning">La liste est vide pour le moment !</Alert>}
+            </ListSubheader>
         </ImageListItem>
-        {images.map((image, index) => (
-          <ImageListItem
-            key={`img${index}`}
-            onClick={() => handleOpenModal('images')}
-          >
-            <img
-              srcSet={`${image?.image}?w=248&fit=crop&auto=format&dpr=2 2x`}
-              src={`${image?.image}?w=248&fit=crop&auto=format`}
-              alt={image?.caption}
-              loading="lazy"
-            />
-            <ImageListItemBar
-              title={image?.caption}
-              subtitle={`Par ${image?.creator?.firstName} ${image?.creator?.lastName}`}
-              actionIcon={
-                <IconButton sx={{ color: 'rgba(255, 255, 255, 0.54)' }}>
-                  <Image />
-                </IconButton>
-              }
-            />
-          </ImageListItem>
-        ))}
-        <ImageListItem key="Subheader" cols={2}>
-          <ListSubheader component="div">
-            Videos
-            {videos?.length < 1 && !loading && (
-              <Alert severity="warning">
-                La liste est vide pour le moment !
-              </Alert>
-            )}
-          </ListSubheader>
+            {images.map((image, index) => (
+                <ImageListItem key={`img${index}`} onClick={()=> handleOpenModal('images', index)} sx={{cursor: 'pointer'}}>
+                    <img
+                        srcSet={`${image?.image}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                        src={`${image?.image}?w=248&fit=crop&auto=format`}
+                        alt={image?.caption}
+                        loading="lazy"
+                    />
+                    <ImageListItemBar
+                        title={image?.caption}
+                        subtitle={`Par ${image?.creator?.firstName} ${image?.creator?.lastName}`}
+                        actionIcon={
+                        <IconButton
+                            sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
+                        >
+                            <Image />
+                        </IconButton>
+                        }
+                    />
+                </ImageListItem>
+            ))}
+        <ImageListItem key="Subheader2" cols={2}>
+            <ListSubheader component="div">Videos
+                {videos?.length < 1 && !loading && <Alert severity="warning">La liste est vide pour le moment !</Alert>}
+            </ListSubheader>
         </ImageListItem>
-        {videos.map((video, index) => (
-          <ImageListItem
-            key={`v${index}`}
-            onClick={() => handleOpenModal('videos')}
-          >
-            <img
-              srcSet={`${video?.thumbnail}?w=248&fit=crop&auto=format&dpr=2 2x`}
-              src={`${video?.thumbnail}?w=248&fit=crop&auto=format`}
-              alt={video?.caption}
-              loading="lazy"
-            />
-            {/* <video playsInline muted src={video?.video} poster={video?.thumbnail} controls>
+            {videos.map((video, index) => (
+                <ImageListItem key={`v${index}`} onClick={()=> handleOpenModal('videos', index)}  sx={{cursor: 'pointer'}}>
+                    <img
+                        srcSet={`${video?.thumbnail}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                        src={`${video?.thumbnail}?w=248&fit=crop&auto=format`}
+                        alt={video?.caption}
+                        loading="lazy"
+                    />
+                    {/* <video playsInline muted src={video?.video} poster={video?.thumbnail} controls>
                             <source src={video?.video} type="video/mp4" />
                             <source src={video?.video} type="video/webm" />
                             <source src={video?.video} type="video/ogg" />
                             Votre navigateur ne prend pas en charge la lecture des vidéos. 
                         </video> */}
-            <ImageListItemBar
-              title={video?.caption}
-              subtitle={`Par ${video?.creator?.firstName} ${video?.creator?.lastName}`}
-              actionIcon={
-                <IconButton sx={{ color: 'rgba(255, 255, 255, 0.54)' }}>
-                  <PlayArrow />
-                </IconButton>
-              }
-            />
-          </ImageListItem>
-        ))}
-      </ImageList>
-      <MediaModal
-        open={modalOpen}
-        handleClose={handleCloseModal}
-        images={selectedMediaType == 'images' ? images : []}
-        videos={selectedMediaType == 'videos' ? videos : []}
-      />
+                    <ImageListItemBar
+                        title={video?.caption}
+                        subtitle={`Par ${video?.creator?.firstName} ${video?.creator?.lastName}`}
+                        actionIcon={
+                        <IconButton
+                            sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
+                        >
+                            <PlayArrow />
+                        </IconButton>
+                        }
+                    />
+                </ImageListItem>
+            ))}
+        </ImageList>
+        <MediaModal open={modalOpen} handleClose={handleCloseModal} 
+          currentIndex={currentIndex}
+          images={selectedMediaType ===  'images' ? images : []} videos={selectedMediaType ===  'videos' ? videos : []} />
     </>
   );
 }

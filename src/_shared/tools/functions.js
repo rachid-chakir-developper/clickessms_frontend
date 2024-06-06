@@ -3,9 +3,12 @@ import {
   ACCOUNT_TYPES,
   LEVELS,
   MEASUREMENT_ACTIVITY_UNITS,
+  OWNERSHIP_TYPE_CHOICES,
   PRIORITIES,
+  REPAIR_STATES,
   STATUS,
   STEP_TYPES,
+  TECH_INSPECTION_STATES,
 } from './constants';
 
 export const getStatusColor = (status) => {
@@ -60,7 +63,7 @@ export const getStepTypeLabel = (stepType) => {
 
 export const getFormatDateTime = (dateTime) => {
   try {
-    return dateTime ? moment(dateTime).format('DD/MM/YYYY à HH:mm') : null;
+    return dateTime ? moment(dateTime).format('DD/MM/YYYY à HH:mm') : '';
   } catch (error) {
     return null;
   }
@@ -68,7 +71,7 @@ export const getFormatDateTime = (dateTime) => {
 
 export const getFormatDate = (dateTime) => {
   try {
-    return dateTime ? moment(dateTime).format('DD/MM/YYYY') : null;
+    return dateTime ? moment(dateTime).format('DD/MM/YYYY') : '';
   } catch (error) {
     return null;
   }
@@ -76,7 +79,7 @@ export const getFormatDate = (dateTime) => {
 
 export const getFormatTime = (dateTime) => {
   try {
-    return dateTime ? moment(dateTime).format('HH:mm') : null;
+    return dateTime ? moment(dateTime).format('HH:mm') : '';
   } catch (error) {
     return null;
   }
@@ -88,6 +91,17 @@ export const getaccountTypeLabel = (type) => {
 
 export const getMeasurementActivityUnitLabel = (unit) => {
   return MEASUREMENT_ACTIVITY_UNITS.ALL.find((t) => t.value == unit)?.label;
+};
+
+
+export const getOwnershipTypeLabel = (type) => {
+  return OWNERSHIP_TYPE_CHOICES.ALL.find((t) => t.value == type)?.label;
+};
+export const getTechnicalInspectionLabel = (state) => {
+  return TECH_INSPECTION_STATES.ALL.find((t) => t.value == state)?.label;
+};
+export const getRepairStateLabel = (state) => {
+  return REPAIR_STATES.ALL.find((t) => t.value == state)?.label;
 };
 
 const intlNumFmt = new Intl.NumberFormat('fr-FR', {

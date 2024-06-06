@@ -17,7 +17,7 @@ const ImageCard = ({ image, onDelete, onClick }) => {
       </IconButton>
       <CardMedia
         component="img"
-        sx={{ width: 300, height: 300 }}
+        sx={{ width: 300, height: 300, cursor: 'pointer' }}
         image={image.localUrl || image.path}
         alt="Uploaded Image"
         onClick={onClick}
@@ -39,9 +39,11 @@ export default function MultipleImageFileField(props) {
   };
 
   const handleCloseModal = () => {
-    setCurrentIndex(0);
     setModalOpen(false);
     setSelectedImage(null);
+    setTimeout(() => {
+      setCurrentIndex(0);
+    }, 1000);
   };
 
   const handleImageChange = (e) => {

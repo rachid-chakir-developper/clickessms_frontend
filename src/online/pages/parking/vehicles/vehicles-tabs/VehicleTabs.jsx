@@ -3,44 +3,34 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import BeneficiaryAdmissionDocuments from './BeneficiaryAdmissionDocuments';
-import BeneficiaryEntries from './BeneficiaryEntries';
-import BeneficiaryAbsences from './BeneficiaryAbsences';
-import BeneficiaryEvents from './BeneficiaryEvents';
-import BeneficiaryUndesirableEvents from './BeneficiaryUndesirableEvents';
+import VehicleEstablishments from './VehicleEstablishments';
+import VehicleEmployees from './VehicleEmployees';
+import VehicleOwnerships from './VehicleOwnerships';
+import VehicleInspections from './VehicleInspections';
 import { Stack } from '@mui/material';
+import VehicleTechnicalInspections from './VehicleTechnicalInspections';
+import VehicleRepairs from './VehicleRepairs';
 
 function CustomTabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <Box
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Stack>{children}</Stack>
-        </Box>
-      )}
-    </Box>
-  );
-}
-  CustomTabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-  };
+    const { children, value, index, ...other } = props;
   
-  function a11yProps(index) {
-    return {
-      id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
-    };
+    return (
+      <Box
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{ p: 3 }}>
+            <Stack>{children}</Stack>
+          </Box>
+        )}
+      </Box>
+    );
   }
+  
 
 function samePageLinkNavigation(event) {
   if (
@@ -77,7 +67,7 @@ LinkTab.propTypes = {
   selected: PropTypes.bool,
 };
 
-export default function BeneficiaryTabs({beneficiary}) {
+export default function VehicleTabs({vehicle}) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -99,28 +89,31 @@ export default function BeneficiaryTabs({beneficiary}) {
                 aria-label="nav tabs example"
                 role="navigation"
             >
-                <LinkTab label="Abscences" href="/spam" />
-                <LinkTab label="Evénements / Transmissions" href="/spam" />
-                <LinkTab label="Evénements indésirables" href="/spam" />
-                <LinkTab label="Admissions" href="/drafts" />
-                <LinkTab label="Entrées / sorties" href="/trash" />
-                <LinkTab label="Projets personnalisés (PPA)" href="/trash" />
+                <LinkTab label="Structures" href="/spam" />
+                <LinkTab label="Employés" href="/spam" />
+                <LinkTab label="Modalité de propriété" href="/spam" />
+                <LinkTab label="Contrôles menssuels" href="/spam" />
+                <LinkTab label="Contrôles techniques" href="/spam" />
+                <LinkTab label="Suivi des réparations" href="/spam" />
             </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          <BeneficiaryAbsences beneficiary={beneficiary} />
+            <VehicleEstablishments vehicleEstablishments={vehicle?.vehicleEstablishments} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          <BeneficiaryEvents beneficiary={beneficiary} />
+            <VehicleEmployees vehicleEmployees={vehicle?.vehicleEmployees} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          <BeneficiaryUndesirableEvents beneficiary={beneficiary} />
+            <VehicleOwnerships vehicleOwnerships={vehicle?.vehicleOwnerships} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={3}>
-            <BeneficiaryAdmissionDocuments beneficiaryAdmissionDocuments={beneficiary?.beneficiaryAdmissionDocuments} />
+            <VehicleInspections vehicle={vehicle} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={4}>
-            <BeneficiaryEntries beneficiaryEntries={beneficiary?.beneficiaryEntries} />
+            <VehicleTechnicalInspections vehicle={vehicle} />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={5}>
+            <VehicleRepairs vehicle={vehicle} />
         </CustomTabPanel>
     </Box>
   );

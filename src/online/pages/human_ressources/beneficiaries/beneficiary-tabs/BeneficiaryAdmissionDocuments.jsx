@@ -14,7 +14,7 @@ export default function BeneficiaryAdmissionDocuments({beneficiaryAdmissionDocum
   return (
     <Timeline position="alternate">
       {beneficiaryAdmissionDocuments?.map((beneficiaryAdmissionDocument, index) => (
-        <TimelineItem>
+        <TimelineItem key={index}>
           <TimelineOppositeContent
             sx={{ m: 'auto 0' }}
             align="right"
@@ -43,7 +43,7 @@ export default function BeneficiaryAdmissionDocuments({beneficiaryAdmissionDocum
               onClick={() => {
                 window.open(beneficiaryAdmissionDocument?.document);
               }}>
-              Voir le doocument
+              Voir le document
             </Button>}
             <Stack direction="row" justifyContent={index%2 === 0 ?  "start" : "end"} spacing={1} sx={{marginY : 1}}>
               {beneficiaryAdmissionDocument?.financier && <Chip

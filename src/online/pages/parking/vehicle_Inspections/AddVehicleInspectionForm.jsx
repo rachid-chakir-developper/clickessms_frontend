@@ -48,6 +48,7 @@ export default function AddVehicleInspectionForm({
       vehicle: null,
       inspectionDateTime: dayjs(new Date()),
       nextInspectionDate: null,
+      nextTechnicalInspectionDate: null,
       controllerEmployees: [],
       controllerPartner: null,
       mileage: null,
@@ -232,6 +233,7 @@ export default function AddVehicleInspectionForm({
         let { videos, ...vehicleInspectionCopy } = vehicleInspectionCopy2;
         vehicleInspectionCopy.inspectionDateTime = vehicleInspectionCopy.inspectionDateTime ? dayjs(vehicleInspectionCopy.inspectionDateTime) : null;
         vehicleInspectionCopy.nextInspectionDate = vehicleInspectionCopy.nextInspectionDate ? dayjs(vehicleInspectionCopy.nextInspectionDate) : null;
+        vehicleInspectionCopy.nextTechnicalInspectionDate = vehicleInspectionCopy.nextTechnicalInspectionDate ? dayjs(vehicleInspectionCopy.nextTechnicalInspectionDate) : null;
         formik.setValues(vehicleInspectionCopy);
       },
       onError: (err) => console.log(err),
@@ -332,6 +334,18 @@ export default function AddVehicleInspectionForm({
                   value={formik.values.mileage}
                   onChange={(e) =>
                     formik.setFieldValue('mileage', e.target.value)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid xs={12} sm={6} md={4}>
+              <Item>
+                <TheDesktopDatePicker
+                  label="Date du prochain contrôle technique"
+                  value={formik.values.nextTechnicalInspectionDate}
+                  onChange={(date) =>
+                    formik.setFieldValue('nextTechnicalInspectionDate', date)
                   }
                   disabled={loadingPost || loadingPut}
                 />
@@ -535,7 +549,7 @@ export default function AddVehicleInspectionForm({
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="autres remarques"
+                  label="Autres remarques"
                   multiline
                   rows={8}
                   value={formik.values.remarks}

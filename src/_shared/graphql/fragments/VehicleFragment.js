@@ -100,3 +100,28 @@ export const VEHICLE_DETAILS = gql`
   ${VEHICLE_EMPLOYEE_DETAILS}
   ${VEHICLE_OWNERSHIP_DETAILS}
 `;
+
+export const VEHICLE_RECAP_DETAILS = gql`
+  fragment VehicleRecapDetailsFragment on VehicleType {
+    ...VehicleBasicInfosFragment
+    state
+    critAirVignette
+    vehicleEstablishments{
+      ...VehicleEstablishmentFragment
+    }
+    vehicleEmployees{
+      ...VehicleEmployeeFragment
+    }
+    vehicleOwnerships{
+      ...VehicleOwnershipFragment
+    }
+    description
+    observation
+    createdAt,
+    updatedAt,
+  }
+  ${VEHICLE_BASIC_INFOS}
+  ${VEHICLE_ESTABLISHMENT_DETAILS}
+  ${VEHICLE_EMPLOYEE_DETAILS}
+  ${VEHICLE_OWNERSHIP_DETAILS}
+`;

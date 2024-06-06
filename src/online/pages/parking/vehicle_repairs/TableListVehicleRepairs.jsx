@@ -117,13 +117,7 @@ const headCells = [
     id: 'nextInspectionDate',
     numeric: false,
     disablePadding: false,
-    label: 'Prochain contrôle',
-  },
-  {
-    id: 'nextTechnicalInspectionDate',
-    numeric: false,
-    disablePadding: false,
-    label: 'Prochain contrôle technique',
+    label: 'Prochaine date du contrôle',
   },
   {
     id: 'action',
@@ -221,7 +215,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les contrôles menssuels
+          Les réparations
         </Typography>
       )}
 
@@ -242,10 +236,10 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListVehicleInspections({
+export default function TableListVehicleRepairs({
   loading,
   rows,
-  onDeleteVehicleInspection
+  onDeleteVehicleRepair
 }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -344,7 +338,7 @@ export default function TableListVehicleInspections({
                 <StyledTableRow>
                   <StyledTableCell colSpan="7">
                     <Alert severity="warning">
-                        Aucun contrôle menssuel trouvé.
+                        Aucune réparation trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -434,26 +428,25 @@ export default function TableListVehicleInspections({
                           );
                         })}
                       </Stack>
-                      {row?.controllerPartner && <Stack direction="row" flexWrap='wrap' spacing={1} sx={{marginTop: 1}}>
+                      {row?.garagePartner && <Stack direction="row" flexWrap='wrap' spacing={1}>
                         <Chip
                           avatar={
                             <Avatar
-                              alt={`${row?.controllerPartner?.name}`}
+                              alt={`${row?.garagePartner?.name}`}
                               src={
-                                row?.controllerPartner?.photo
-                                  ? row?.controllerPartner?.photo
+                                row?.garagePartner?.photo
+                                  ? row?.garagePartner?.photo
                                   : '/default-placeholder.jpg'
                               }
                             />
                           }
-                          label={`${row?.controllerPartner?.name}`}
+                          label={`${row?.garagePartner?.name}`}
                           variant="outlined"
                         />
                       </Stack>}
                     </StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDateTime(row?.inspectionDateTime)}`}</StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.nextInspectionDate)}`}</StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.nextTechnicalInspectionDate)}`}</StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -472,7 +465,7 @@ export default function TableListVehicleInspections({
                         }}
                       >
                         <Link
-                          to={`/online/parc-automobile/controles-menssuels/details/${row?.id}`}
+                          to={`/online/parc-automobile/reparations/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -490,7 +483,7 @@ export default function TableListVehicleInspections({
                           Bibliothèque
                         </MenuItem>
                         <Link
-                          to={`/online/parc-automobile/controles-menssuels/modifier/${row?.id}`}
+                          to={`/online/parc-automobile/reparations/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -500,7 +493,7 @@ export default function TableListVehicleInspections({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteVehicleInspection(row?.id);
+                            onDeleteVehicleRepair(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

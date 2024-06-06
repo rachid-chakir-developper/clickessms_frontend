@@ -15,6 +15,7 @@ export const VEHICLE_INSPECTION_BASIC_INFOS = gql`
       }
     inspectionDateTime
     nextInspectionDate
+    nextTechnicalInspectionDate
     controllerEmployees{
         ...EmployeeMiniInfosFragment
     }
@@ -72,40 +73,41 @@ export const VEHICLE_INSPECTION_DETAILS = gql`
 export const VEHICLE_INSPECTION_RECAP_DETAILS = gql`
   fragment VehicleInspectionRecapDetailsFragment on VehicleInspectionType {
     ...VehicleInspectionBasicInfosFragment
-	mileage
-	isRegistrationCardHere
-	isInsuranceCertificateHere
-	isInsuranceAttestationHere
-	isOilLevelChecked
-	isWindshieldWasherLevelChecked
-	isBrakeFluidLevelChecked
-	isCoolantLevelChecked
-	isTirePressureChecked
-	isLightsConditionChecked
-	isBodyConditionChecked
-    remarks
-    images {
-      id
-      caption
-      image
-      createdAt
-      updatedAt
-      creator {
-        ...UserBasicInfosFragment
+    mileage
+    isRegistrationCardHere
+    isInsuranceCertificateHere
+    isInsuranceAttestationHere
+    isTechnicalControlHere
+    isOilLevelChecked
+    isWindshieldWasherLevelChecked
+    isBrakeFluidLevelChecked
+    isCoolantLevelChecked
+    isTirePressureChecked
+    isLightsConditionChecked
+    isBodyConditionChecked
+      remarks
+      images {
+        id
+        caption
+        image
+        createdAt
+        updatedAt
+        creator {
+          ...UserBasicInfosFragment
+        }
+      }
+      videos {
+        id
+        caption
+        video
+        thumbnail
+        createdAt
+        updatedAt
+        creator {
+          ...UserBasicInfosFragment
+        }
       }
     }
-    videos {
-      id
-      caption
-      video
-      thumbnail
-      createdAt
-      updatedAt
-      creator {
-        ...UserBasicInfosFragment
-      }
-    }
-  }
   ${VEHICLE_INSPECTION_BASIC_INFOS}
   ${USER_BASIC_INFOS}
 `;

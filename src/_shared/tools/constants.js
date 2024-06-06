@@ -129,3 +129,33 @@ export const OWNERSHIP_TYPE_CHOICES = {
     { value: 'SALE', label: 'Vente' },
   ],
 };
+
+
+export const TECH_INSPECTION_STATES = {
+  FAVORABLE: 'FAVORABLE',
+  NOT_FAVORABLE: 'NOT_FAVORABLE',
+  ALL: [
+    { value: 'FAVORABLE', label: 'Favorable' },
+    { value: 'NOT_FAVORABLE', label: 'Non favorable' },
+  ],
+};
+
+export const INSPECTION_FAILURE_TYPES = {
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+  CRITICAL: 'CRITICAL',
+  ALL: [
+    { value: 'MINOR', label: 'Défaillance critique' },
+    { value: 'MAJOR', label: 'Défaillance majeur' },
+    { value: 'CRITICAL', label: 'Défaillance mineur' },
+  ],
+};
+
+export const REPAIR_STATES = {
+  COMPLETED: 'COMPLETED',
+  TO_DO: 'TO_DO',
+  ALL: [
+    { value: 'COMPLETED', label: 'Términée' },
+    { value: 'TO_DO', label: 'À faire' },
+  ],
+};
