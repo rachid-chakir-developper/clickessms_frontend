@@ -4,7 +4,7 @@ import { useLazyQuery } from '@apollo/client';
 import { Box, Button, Divider, Paper, Stack, alpha } from '@mui/material';
 import { Grid, Typography, Avatar } from '@mui/material';
 import { GET_RECAP_VEHICLE } from '../../../../_shared/graphql/queries/VehicleQueries';
-import { getFormatDateTime } from '../../../../_shared/tools/functions';
+import { getCritAirVignetteLabel, getFormatDateTime, getVehicleStateLabel } from '../../../../_shared/tools/functions';
 import styled from '@emotion/styled';
 import { Edit } from '@mui/icons-material';
 import VehicleTabs from './vehicles-tabs/VehicleTabs';
@@ -132,6 +132,12 @@ const VehicleDetailsPage = ({ vehicle }) => {
               <Typography variant="h6" sx={{ fontStyle: 'italic' }}>
                 {vehicle?.registrationNumber}
               </Typography>
+              {vehicle?.state && <Typography variant="body2">
+              État : <b>{getVehicleStateLabel(vehicle?.state)}</b>
+              </Typography>}
+              {vehicle?.critAirVignette && <Typography variant="body2">
+              Vignette Crit’Air : <b>{getCritAirVignetteLabel(vehicle?.critAirVignette)}</b>
+              </Typography>}
             </Box>
           </Box>
         </Paper>
@@ -154,7 +160,7 @@ const VehicleDetailsPage = ({ vehicle }) => {
           </Paper>
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={12}>
+      <Grid item xs={12} sm={6}>
         <Paper sx={{ padding: 2 }}>
           <Typography variant="h6" gutterBottom>
             Description
@@ -166,7 +172,7 @@ const VehicleDetailsPage = ({ vehicle }) => {
           </Paper>
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={12}>
+      <Grid item xs={12} sm={6}>
         <Paper sx={{ padding: 2 }}>
           <Typography variant="h6" gutterBottom>
             Observation

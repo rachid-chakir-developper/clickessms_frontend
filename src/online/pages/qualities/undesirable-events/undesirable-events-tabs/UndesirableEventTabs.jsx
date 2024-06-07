@@ -3,13 +3,8 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import VehicleEstablishments from './VehicleEstablishments';
-import VehicleEmployees from './VehicleEmployees';
-import VehicleOwnerships from './VehicleOwnerships';
-import VehicleInspections from './VehicleInspections';
 import { Stack } from '@mui/material';
-import VehicleTechnicalInspections from './VehicleTechnicalInspections';
-import VehicleRepairs from './VehicleRepairs';
+import UndesirableEventReviews from './UndesirableEventReviews';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -67,7 +62,7 @@ LinkTab.propTypes = {
   selected: PropTypes.bool,
 };
 
-export default function VehicleTabs({vehicle}) {
+export default function UndesirableEventTabs({undesirableEvent}) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -89,31 +84,11 @@ export default function VehicleTabs({vehicle}) {
                 aria-label="nav tabs example"
                 role="navigation"
             >
-                <LinkTab label="Structures" href="/spam" />
-                <LinkTab label="Employés" href="/spam" />
-                <LinkTab label="Modalité de propriété" href="/spam" />
-                <LinkTab label="Contrôles mensuels" href="/spam" />
-                <LinkTab label="Contrôles techniques" href="/spam" />
-                <LinkTab label="Suivi des réparations" href="/spam" />
+                <LinkTab label="Analyse" href="/spam" />
             </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-            <VehicleEstablishments vehicleEstablishments={vehicle?.vehicleEstablishments} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
-            <VehicleEmployees vehicleEmployees={vehicle?.vehicleEmployees} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={2}>
-            <VehicleOwnerships vehicleOwnerships={vehicle?.vehicleOwnerships} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={3}>
-            <VehicleInspections vehicle={vehicle} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={4}>
-            <VehicleTechnicalInspections vehicle={vehicle} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={5}>
-            <VehicleRepairs vehicle={vehicle} />
+            <UndesirableEventReviews undesirableEvent={undesirableEvent} />
         </CustomTabPanel>
     </Box>
   );

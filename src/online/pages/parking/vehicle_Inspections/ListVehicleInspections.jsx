@@ -132,7 +132,7 @@ export default function ListVehicleInspections() {
       <Grid item="true" xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
-            to="/online/parc-automobile/controles-menssuels/ajouter"
+            to="/online/parc-automobile/controles-mensuels/ajouter"
             className="no_style"
           >
             <Button variant="contained" endIcon={<Add />}>

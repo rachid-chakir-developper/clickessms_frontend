@@ -221,7 +221,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les contrôles menssuels
+          Les contrôles mensuels
         </Typography>
       )}
 
@@ -472,7 +472,7 @@ export default function TableListVehicleInspections({
                         }}
                       >
                         <Link
-                          to={`/online/parc-automobile/controles-menssuels/details/${row?.id}`}
+                          to={`/online/parc-automobile/controles-mensuels/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -490,7 +490,7 @@ export default function TableListVehicleInspections({
                           Bibliothèque
                         </MenuItem>
                         <Link
-                          to={`/online/parc-automobile/controles-menssuels/modifier/${row?.id}`}
+                          to={`/online/parc-automobile/controles-mensuels/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>

@@ -2,6 +2,7 @@
 
 import { gql } from '@apollo/client';
 import { EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
+import { PARTNER_MINI_INFOS } from './PartnerFragment';
 
 export const USER_BASIC_INFOS = gql`
   fragment UserBasicInfosFragment on UserType {
@@ -18,8 +19,12 @@ export const USER_BASIC_INFOS = gql`
     employee {
       ...EmployeeMiniInfosFragment
     }
+    partner {
+      ...PartnerMiniInfosFragment
+    }
   }
   ${EMPLOYEE_MINI_INFOS}
+  ${PARTNER_MINI_INFOS}
 `;
 
 // export const USER_DETAILS2 = gql`

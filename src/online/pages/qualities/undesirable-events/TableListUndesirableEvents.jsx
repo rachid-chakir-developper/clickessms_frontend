@@ -31,10 +31,10 @@ import {
   MoreVert,
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
-import AppLabel from '../../../../_shared/components/app/label/AppLabel';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import CustomizedStatusLabelMenu from '../../../../_shared/components/app/menu/CustomizedStatusLabelMenu';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -247,6 +247,7 @@ export default function TableListUndesirableEvents({
   onDeleteUndesirableEvent,
   onUpdateUndesirableEventState,
 }) {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -399,6 +400,7 @@ export default function TableListUndesirableEvents({
                       id={labelId}
                       scope="row"
                       padding="none"
+                      onClick={()=> navigate(`/online/qualites/evenements-indesirables/details/${row?.id}`)}
                     >
                       {row.title}
                     </StyledTableCell>
@@ -445,9 +447,7 @@ export default function TableListUndesirableEvents({
                       </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="right">
-                      <AppLabel color={getStatusLebelColor(row?.status)}>
-                        {getStatusLabel(row?.status)}
-                      </AppLabel>
+                      <CustomizedStatusLabelMenu status={row?.status} />
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton

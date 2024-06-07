@@ -10,7 +10,7 @@ export default function Parking() {
     <Box>
       <Routes>
         <Route path={`vehicules/*`} element={<Vehicles />} />
-        <Route path={`controles-menssuels/*`} element={<VehicleInspections />} />
+        <Route path={`controles-mensuels/*`} element={<VehicleInspections />} />
         <Route path={`controles-techniques/*`} element={<VehicleTechnicalInspections />} />
         <Route path={`reparations/*`} element={<VehicleRepairs />} />
         <Route path="/" element={<Navigate to={`vehicules`} replace />} />

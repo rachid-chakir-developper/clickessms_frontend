@@ -17,6 +17,7 @@ import ProgressService from '../../../../_shared/services/feedbacks/ProgressServ
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
 import { Edit } from '@mui/icons-material';
+import UndesirableEventTabs from './undesirable-events-tabs/UndesirableEventTabs';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -90,6 +91,11 @@ export default function UndesirableEventDetails() {
               </Typography>
             </Paper>
           </Grid>
+          <Grid item xs={12} sm={12}>
+            <Paper sx={{ padding: 2 }}>
+              <UndesirableEventTabs undesirableEvent={undesirableEventData?.undesirableEvent}/>
+            </Paper>
+          </Grid>
         </Grid>
       </Box>
     </>
@@ -142,10 +148,10 @@ function UndesirableEventMiniInfos({ undesirableEvent }) {
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Date début prévue: </b>{' '}
+                <b>Date début : </b>{' '}
                 {`${getFormatDateTime(undesirableEvent?.startingDateTime)}`}{' '}
                 <br />
-                <b>Date fin prévue: </b>{' '}
+                <b>Date fin: </b>{' '}
                 {`${getFormatDateTime(undesirableEvent?.endingDateTime)}`}
               </Typography>
             </Grid>

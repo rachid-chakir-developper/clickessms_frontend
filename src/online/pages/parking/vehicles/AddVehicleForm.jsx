@@ -521,7 +521,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                         <Select
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
-                          label="État "
+                          label="État"
                           value={formik.values.state}
                           onChange={(e) =>
                             formik.setFieldValue(
@@ -550,7 +550,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                         <Select
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
-                          label="Vignette Crit’Air "
+                          label="Vignette Crit’Air"
                           value={formik.values.critAirVignette}
                           onChange={(e) =>
                             formik.setFieldValue(

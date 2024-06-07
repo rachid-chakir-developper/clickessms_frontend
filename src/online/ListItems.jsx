@@ -192,7 +192,7 @@ function  MainListItems({open}) {
             <ListItemButton sx={{minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5,}}>
               <ListItemIcon sx={{minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center',}}> <DashboardIcon/>
               </ListItemIcon>
-              <ListItemText primary={'Dashboard'} sx={{opacity: open ? 1 : 0}}/>
+              <ListItemText primary={'Tableau de bord'} sx={{opacity: open ? 1 : 0}}/>
             </ListItemButton>
           </ListItem>
         </StyledNavLink>
@@ -673,12 +673,12 @@ function  MainListItems({open}) {
                         <ListItemText primary="Vehicules"/>
                       </ListItemButton>
                     </StyledNavLink>
-                    <StyledNavLink to="/online/parc-automobile/controles-menssuels">
+                    <StyledNavLink to="/online/parc-automobile/controles-mensuels">
                       <ListItemButton sx={{ pl: 4 }}>
                         <ListItemIcon>
                           <CarCrash />
                         </ListItemIcon>
-                        <ListItemText primary="Contrôles menssuels" />
+                        <ListItemText primary="Contrôles mensuels" />
                       </ListItemButton>
                     </StyledNavLink>
                     <StyledNavLink to="/online/parc-automobile/controles-techniques">

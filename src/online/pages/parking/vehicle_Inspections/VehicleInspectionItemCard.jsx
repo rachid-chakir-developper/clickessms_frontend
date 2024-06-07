@@ -70,7 +70,7 @@ export default function VehicleInspectionItemCard({
           </Tooltip>
           <Tooltip title="Modifier">
             <Link
-              to={`/online/parc-automobile/controles-menssuels/modifier/${vehicleInspection?.id}`}
+              to={`/online/parc-automobile/controles-mensuels/modifier/${vehicleInspection?.id}`}
               className="no_style"
             >
               <IconButton aria-label="edit" size="small">
@@ -94,7 +94,7 @@ export default function VehicleInspectionItemCard({
           )}
           <Tooltip title="Détails">
             <Link
-              to={`/online/parc-automobile/controles-menssuels/details/${vehicleInspection?.id}`}
+              to={`/online/parc-automobile/controles-mensuels/details/${vehicleInspection?.id}`}
               className="no_style"
             >
               <IconButton aria-label="edit" size="small">

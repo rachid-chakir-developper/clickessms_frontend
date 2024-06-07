@@ -24,6 +24,7 @@ import ProgressService from '../../../_shared/services/feedbacks/ProgressService
 import TransferList from '../../../_shared/components/helpers/TransferList';
 import { GET_EMPLOYEES } from '../../../_shared/graphql/queries/EmployeeQueries';
 import TheAutocomplete from '../../../_shared/components/form-fields/TheAutocomplete';
+import { GET_PARTNERS } from '../../../_shared/graphql/queries/PartnerQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -54,6 +55,7 @@ export default function AddUserForm({ idUser, title }) {
       firstName: '',
       lastName: '',
       employee: null,
+      partner: null,
       email: '',
       username: '',
       description: '',
@@ -64,6 +66,7 @@ export default function AddUserForm({ idUser, title }) {
       let { photo, ...userFormCopy } = values;
       let { coverImage, ...userCopy } = userFormCopy;
       userCopy.employee = userCopy.employee?.id;
+      userCopy.partner = userCopy.partner?.id;
       if (idUser && idUser != '') {
         onUpdateUser({
           id: userCopy.id,
@@ -92,6 +95,14 @@ export default function AddUserForm({ idUser, title }) {
     error: employeesError,
     fetchMore: fetchMoreEmployees,
   } = useQuery(GET_EMPLOYEES, {
+    fetchPolicy: 'network-only',
+  });
+  const {
+    loading: loadingPartners,
+    data: partnersData,
+    error: partnersError,
+    fetchMore: fetchMorePartners,
+  } = useQuery(GET_PARTNERS, {
     fetchPolicy: 'network-only',
   });
 
@@ -335,6 +346,19 @@ export default function AddUserForm({ idUser, title }) {
                   error={formik.touched.email && Boolean(formik.errors.email)}
                   helperText={formik.touched.email && formik.errors.email}
                   disabled={loadingPost || loadingPut}
+                />
+              </Item>
+              <Item>
+                <TheAutocomplete
+                  options={partnersData?.partners?.nodes}
+                  label="Partenaire"
+                  placeholder="Choisissez un partenaire"
+                  limitTags={2}
+                  multiple={false}
+                  value={formik.values.partner}
+                  onChange={(e, newValue) => {
+                    formik.setFieldValue('partner', newValue);
+                  }}
                 />
               </Item>
             </Grid>

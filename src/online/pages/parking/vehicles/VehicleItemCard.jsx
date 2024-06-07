@@ -60,8 +60,8 @@ export default function VehicleItemCard({
             height="100"
             alt={vehicle?.name}
             src={
-              vehicle?.logo
-                ? vehicle?.logo
+              vehicle?.image
+                ? vehicle?.image
                 : '/default-placeholder.jpg'
             }
             sx={{ borderRadius: 0.6, height: 100, width: 100 }}
@@ -108,7 +108,7 @@ export default function VehicleItemCard({
                   <MenuItem onClick={handleCloseMenu}>
                     <Avatar
                       alt={`${vehicle?.vehicleParent?.name}`}
-                      src={vehicle?.vehicleParent?.logo}
+                      src={vehicle?.vehicleParent?.image}
                     />
                   </MenuItem>
                 </Link>

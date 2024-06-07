@@ -1,7 +1,6 @@
 // PartnerFragment.js
 
 import { gql } from '@apollo/client';
-import { FOLDER_MINI_INFOS } from './MediaFragment';
 
 export const PARTNER_PHONE_INFOS = gql`
   fragment PartnerPhoneInfosFragment on PartnerType {
@@ -16,19 +15,26 @@ export const PARTNER_PHONE_INFOS = gql`
   }
 `;
 
-export const PARTNER_BASIC_INFOS = gql`
-  fragment PartnerBasicInfosFragment on PartnerType {
+export const PARTNER_MINI_INFOS = gql`
+  fragment PartnerMiniInfosFragment on PartnerType {
     id
     name
     email
     photo
     coverImage
     isActive
+  }
+`;
+
+export const PARTNER_BASIC_INFOS = gql`
+  fragment PartnerBasicInfosFragment on PartnerType {
+    ...PartnerMiniInfosFragment
     folder {
-      ...FolderMiniInfosFragment
+      id
+      name
     }
   }
-  ${FOLDER_MINI_INFOS}
+  ${PARTNER_MINI_INFOS}
 `;
 
 export const PARTNER_DETAILS = gql`

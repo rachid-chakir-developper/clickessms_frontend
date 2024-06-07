@@ -130,7 +130,7 @@ export default function AddVehicleInspectionForm({
         let { __typename, ...vehicleInspectionCopy } =
           data.createVehicleInspection.vehicleInspection;
         //   formik.setValues(vehicleInspectionCopy);
-        navigate('/online/parc-automobile/controles-menssuels/liste');
+        navigate('/online/parc-automobile/controles-mensuels/liste');
       },
       update(cache, { data: { createVehicleInspection } }) {
         const newVehicleInspection =
@@ -175,7 +175,7 @@ export default function AddVehicleInspectionForm({
         let { __typename, ...vehicleInspectionCopy } =
           data.updateVehicleInspection.vehicleInspection;
         //   formik.setValues(vehicleInspectionCopy);
-        navigate('/online/parc-automobile/controles-menssuels/liste');
+        navigate('/online/parc-automobile/controles-mensuels/liste');
       },
       update(cache, { data: { updateVehicleInspection } }) {
         const updatedVehicleInspection =
@@ -563,7 +563,7 @@ export default function AddVehicleInspectionForm({
             <Grid xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
-                  to="/online/parc-automobile/controles-menssuels/liste"
+                  to="/online/parc-automobile/controles-mensuels/liste"
                   className="no_style"
                 >
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>

@@ -64,6 +64,21 @@ export default function UserItemCard({
               </Link>
             </Tooltip>
           )}
+          {user?.partner && (
+            <Tooltip
+              title={`Le partenaire: ${user?.partner?.name}`}
+            >
+              <Link
+                to={`/online/partenariats/partenaires/${user?.partner?.id}`}
+                className="no_style"
+              >
+                <Avatar
+                  alt={`${user?.partner?.name}`}
+                  src={user?.partner?.photo}
+                />
+              </Link>
+            </Tooltip>
+          )}
           <Tooltip title="Supprimer">
             <IconButton
               aria-label="delete"

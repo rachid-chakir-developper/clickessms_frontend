@@ -7,7 +7,7 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import { getFormatDate, getOwnershipTypeLabel } from '../../../../../_shared/tools/functions';
-import { FileDownload, FileOpen, Home } from '@mui/icons-material';
+import { DriveEta, FileDownload, FileOpen, Home } from '@mui/icons-material';
 import { Avatar, Button, Chip, IconButton, Stack, Tooltip } from '@mui/material';
 import { OWNERSHIP_TYPE_CHOICES } from '../../../../../_shared/tools/constants';
 
@@ -41,7 +41,7 @@ export default function VehicleOwnerships({vehicleOwnerships}) {
           <TimelineSeparator>
             <TimelineConnector />
             <TimelineDot>
-              <Home />
+              <DriveEta />
             </TimelineDot>
             <TimelineConnector />
           </TimelineSeparator>

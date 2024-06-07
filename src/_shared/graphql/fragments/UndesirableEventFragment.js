@@ -1,14 +1,14 @@
 // UndesirableEventFragment.js
 
-import { gql } from '@apollo/client';
-import { BENEFICIARY_MINI_INFOS } from './BeneficiaryFragment';
-import { EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
-import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
+import{ gql } from '@apollo/client';
+import{ BENEFICIARY_MINI_INFOS } from './BeneficiaryFragment';
+import{ EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
+import{ ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 
 export const UNDESIRABLE_EVENT_ESTABLISHMENT_DETAILS = gql`
-  fragment UndesirableEventEstablishmentTypeFragment on UndesirableEventEstablishmentType {
+  fragment UndesirableEventEstablishmentTypeFragment on UndesirableEventEstablishmentType{
     id
-    establishment {
+    establishment{
       ...EstablishmentMiniInfosFragment
     }
   }
@@ -16,7 +16,7 @@ export const UNDESIRABLE_EVENT_ESTABLISHMENT_DETAILS = gql`
 `;
 
 export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
-  fragment UndesirableEventBasicInfosFragment on UndesirableEventType {
+  fragment UndesirableEventBasicInfosFragment on UndesirableEventType{
     id
     number
     title
@@ -27,13 +27,13 @@ export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
     description
     isActive
     status
-    establishments {
+    establishments{
       ...UndesirableEventEstablishmentTypeFragment
     }
-    employee {
+    employee{
       ...EmployeeBasicInfosFragment
     }
-    folder {
+    folder{
       id
       number
       name
@@ -44,9 +44,9 @@ export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
 `;
 
 export const UNDESIRABLE_EVENT_BENEFICIARY_DETAILS = gql`
-  fragment UndesirableEventBeneficiaryTypeFragment on UndesirableEventBeneficiaryType {
+  fragment UndesirableEventBeneficiaryTypeFragment on UndesirableEventBeneficiaryType{
     id
-    beneficiary {
+    beneficiary{
       ...BeneficiaryMiniInfosFragment
     }
   }
@@ -54,9 +54,9 @@ export const UNDESIRABLE_EVENT_BENEFICIARY_DETAILS = gql`
 `;
 
 export const UNDESIRABLE_EVENT_EMPLOYEE_DETAILS = gql`
-  fragment UndesirableEventEmployeeTypeFragment on UndesirableEventEmployeeType {
+  fragment UndesirableEventEmployeeTypeFragment on UndesirableEventEmployeeType{
     id
-    employee {
+    employee{
       ...EmployeeBasicInfosFragment
     }
   }
@@ -64,9 +64,9 @@ export const UNDESIRABLE_EVENT_EMPLOYEE_DETAILS = gql`
 `;
 
 export const UNDESIRABLE_EVENT_PERSON_NOTIFIED_DETAILS = gql`
-  fragment UndesirableEventNotifiedPersonTypeFragment on UndesirableEventNotifiedPersonType {
+  fragment UndesirableEventNotifiedPersonTypeFragment on UndesirableEventNotifiedPersonType{
     id
-    employee {
+    employee{
       ...EmployeeBasicInfosFragment
     }
   }
@@ -74,7 +74,7 @@ export const UNDESIRABLE_EVENT_PERSON_NOTIFIED_DETAILS = gql`
 `;
 
 export const UNDESIRABLE_EVENT_DETAILS = gql`
-  fragment UndesirableEventDetailsFragment on UndesirableEventType {
+  fragment UndesirableEventDetailsFragment on UndesirableEventType{
     ...UndesirableEventBasicInfosFragment
     severity
     actionsTakenText
@@ -82,25 +82,25 @@ export const UNDESIRABLE_EVENT_DETAILS = gql`
     courseFactsPlace
     circumstanceEventText
     observation
-    beneficiaries {
+    beneficiaries{
       ...UndesirableEventBeneficiaryTypeFragment
     }
-    employees {
+    employees{
       ...UndesirableEventEmployeeTypeFragment
     }
-    notifiedPersons {
+    notifiedPersons{
       ...UndesirableEventNotifiedPersonTypeFragment
     }
     otherNotifiedPersons
-    normalTypes {
+    normalTypes{
       id
       name
     }
-    seriousTypes {
+    seriousTypes{
       id
       name
     }
-    frequency {
+    frequency{
       id
       name
     }
@@ -112,7 +112,7 @@ export const UNDESIRABLE_EVENT_DETAILS = gql`
 `;
 
 export const UNDESIRABLE_EVENT_RECAP_DETAILS = gql`
-  fragment UndesirableEventRecapDetailsFragment on UndesirableEventType {
+  fragment UndesirableEventRecapDetailsFragment on UndesirableEventType{
     ...UndesirableEventBasicInfosFragment
     severity
     actionsTakenText
@@ -120,31 +120,39 @@ export const UNDESIRABLE_EVENT_RECAP_DETAILS = gql`
     courseFactsPlace
     circumstanceEventText
     observation
-    beneficiaries {
+    beneficiaries{
       ...UndesirableEventBeneficiaryTypeFragment
     }
-    employees {
-      ...EmployeeBasicInfosFragment
+    employees{
+      ...UndesirableEventEmployeeTypeFragment
     }
-    notifiedPersons {
+    notifiedPersons{
       ...UndesirableEventNotifiedPersonTypeFragment
     }
     otherNotifiedPersons
-    normalTypes {
+    normalTypes{
       id
       name
     }
-    seriousTypes {
+    seriousTypes{
       id
       name
     }
-    frequency {
+    frequency{
       id
       name
     }
+    reviews{
+      id
+      actions{
+        id
+      }
+    }
+    createdAt
+    updatedAt
   }
   ${UNDESIRABLE_EVENT_BASIC_INFOS}
-  ${UNDESIRABLE_EVENT_ESTABLISHMENT_DETAILS}
-  ${UNDESIRABLE_EVENT_BENEFICIARY_DETAILS}
+  ${UNDESIRABLE_EVENT_EMPLOYEE_DETAILS}
   ${UNDESIRABLE_EVENT_PERSON_NOTIFIED_DETAILS}
+  ${UNDESIRABLE_EVENT_BENEFICIARY_DETAILS}
 `;

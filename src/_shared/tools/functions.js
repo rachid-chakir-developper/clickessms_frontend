@@ -1,6 +1,7 @@
 import moment from 'moment';
 import {
   ACCOUNT_TYPES,
+  CRIT_AIR_CHOICES,
   LEVELS,
   MEASUREMENT_ACTIVITY_UNITS,
   OWNERSHIP_TYPE_CHOICES,
@@ -9,6 +10,7 @@ import {
   STATUS,
   STEP_TYPES,
   TECH_INSPECTION_STATES,
+  VEHICLE_STATES,
 } from './constants';
 
 export const getStatusColor = (status) => {
@@ -93,6 +95,14 @@ export const getMeasurementActivityUnitLabel = (unit) => {
   return MEASUREMENT_ACTIVITY_UNITS.ALL.find((t) => t.value == unit)?.label;
 };
 
+
+export const getVehicleStateLabel = (state) => {
+  return VEHICLE_STATES.ALL.find((t) => t.value == state)?.label;
+};
+
+export const getCritAirVignetteLabel = (crit) => {
+  return CRIT_AIR_CHOICES.ALL.find((t) => t.value == crit)?.label;
+};
 
 export const getOwnershipTypeLabel = (type) => {
   return OWNERSHIP_TYPE_CHOICES.ALL.find((t) => t.value == type)?.label;
