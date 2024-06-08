@@ -162,7 +162,7 @@ export default function Online() {
         </DrawerHeader>
         <Divider />
         <AccountCard open={open} />
-        <ListItems open={open} />
+        <ListItems />
       </Drawer>
       <Box
         component="main"
