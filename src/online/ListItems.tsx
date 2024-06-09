@@ -4,20 +4,30 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import Stack from '@mui/material/Stack';
+import SearchIcon from '@mui/icons-material/Search';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Category, Module, Page, modules } from './navigation';
+import { modules } from './navigation';
 import Divider from '@mui/material/Divider';
-import { Collapse } from '@mui/material';
+import Collapse from '@mui/material/Collapse';
+import InputBase from '@mui/material/InputBase';
 import { useFeedBacks } from '../_shared/context/feedbacks/FeedBacksProvider';
 import { LOGOUT_USER } from '../_shared/graphql/mutations/AuthMutations';
 import { useMutation } from '@apollo/client';
 import { useSessionDispatch } from '../_shared/context/SessionProvider';
 import { useState } from 'react';
+import {
+  HighlightableCategory,
+  HighlightableModule,
+  HighlightablePage,
+  filterModules,
+} from './navigationSearch';
 
 const StyledNavLink = styled(NavLink)(({ theme }) => ({
   display: 'block',
@@ -40,6 +50,7 @@ interface EntryProps {
   open?: boolean;
   disabled?: boolean;
   indented?: boolean;
+  highlighted?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   children?: React.ReactNode;
 }
@@ -54,7 +65,16 @@ function Entry(props: EntryProps) {
       <ListItemIcon sx={{ pl: props.indented ? 1.5 : 0 }}>
         {props.icon}
       </ListItemIcon>
-      <ListItemText primary={props.name} />
+      <ListItemText
+        primary={props.name}
+        primaryTypographyProps={
+          props.highlighted
+            ? {
+                fontWeight: 'bold',
+              }
+            : {}
+        }
+      />
       {props.expandable && (props.open ? <ExpandLess /> : <ChevronRight />)}
     </ListItemButton>
   );
@@ -83,19 +103,20 @@ function Entry(props: EntryProps) {
   return item;
 }
 
-function PageNavEntry(props: Page) {
+function PageNavEntry(props: HighlightablePage) {
   return (
     <Entry
       icon={props.icon}
       name={props.name}
       path={props.path}
       disabled={props.disabled}
+      highlighted={props.highlighted}
       indented
     />
   );
 }
 
-interface CategoryNavEntryProps extends Category {
+interface CategoryNavEntryProps extends HighlightableCategory {
   open?: boolean;
   onToggleExpand: (key: string, open: boolean) => void;
 }
@@ -105,6 +126,7 @@ function CategoryNavEntry(props: CategoryNavEntryProps) {
     <Entry
       icon={props.icon}
       name={props.name}
+      highlighted={props.highlighted}
       indented
       onClick={() => {
         props.onToggleExpand(props.id, Boolean(props.open));
@@ -121,6 +143,7 @@ function CategoryNavEntry(props: CategoryNavEntryProps) {
             path={page.path}
             icon={page.icon}
             disabled={page.disabled}
+            highlighted={page.highlighted}
           />
         ))}
       </List>
@@ -128,7 +151,7 @@ function CategoryNavEntry(props: CategoryNavEntryProps) {
   );
 }
 
-interface ModuleNavEntryProps extends Module {
+interface ModuleNavEntryProps extends HighlightableModule {
   open?: boolean;
   onToggleExpand: (key: string, open: boolean) => void;
 }
@@ -148,6 +171,7 @@ function ModuleNavEntry(props: ModuleNavEntryProps) {
     <Entry
       icon={props.icon}
       name={props.name}
+      highlighted={props.highlighted}
       onClick={() => {
         props.onToggleExpand(props.id, Boolean(props.open));
       }}
@@ -164,6 +188,7 @@ function ModuleNavEntry(props: ModuleNavEntryProps) {
                 name={entry.name}
                 icon={entry.icon}
                 pages={entry.pages}
+                highlighted={entry.highlighted}
                 onToggleExpand={onToggleExpand}
                 open={openedCategory === entry.id}
               />
@@ -177,6 +202,7 @@ function ModuleNavEntry(props: ModuleNavEntryProps) {
               name={entry.name}
               icon={entry.icon}
               disabled={entry.disabled}
+              highlighted={entry.highlighted}
             />
           );
         })}
@@ -185,7 +211,7 @@ function ModuleNavEntry(props: ModuleNavEntryProps) {
   );
 }
 
-export function MainListItems() {
+export function MainListItems({ searchTerm }: { searchTerm: string }) {
   const [openedModule, setOpenedModule] = useState('');
 
   function onToggleExpand(key: string) {
@@ -196,24 +222,71 @@ export function MainListItems() {
     }
   }
 
+  const filteredModules: HighlightableModule[] = searchTerm
+    ? filterModules(modules, searchTerm)
+    : modules;
+
   return (
-    <div>
-      {modules.map((module) => (
+    <List>
+      {filteredModules.map((module) => (
         <ModuleNavEntry
           key={module.id}
           id={module.id}
           entries={module.entries}
           name={module.name}
           icon={module.icon}
+          highlighted={module.highlighted}
           onToggleExpand={onToggleExpand}
           open={openedModule === module.id}
         />
       ))}
-    </div>
+    </List>
   );
 }
 
-function SecondaryListItems() {
+function SearchEntry({ searchTerm, onSearch }) {
+  function handleChange(event) {
+    onSearch(event.target.value);
+  }
+
+  return (
+    <ListItem disablePadding sx={{ display: 'block' }}>
+      <Stack sx={{ px: 2.5, py: 1 }} direction="row" alignItems="center">
+        <ListItemIcon>
+          <SearchIcon />
+        </ListItemIcon>
+        <InputBase
+          placeholder="Rechercher..."
+          inputProps={{ 'aria-label': 'search' }}
+          value={searchTerm}
+          onChange={handleChange}
+        />
+      </Stack>
+    </ListItem>
+  );
+}
+
+function HeaderListItems({
+  searchTerm,
+  onSearch,
+}: {
+  searchTerm: string;
+  onSearch(term: string): void;
+}) {
+  return (
+    <List>
+      <SearchEntry searchTerm={searchTerm} onSearch={onSearch} />
+      <Entry
+        path="/online/dashboard"
+        key="dashboard"
+        name="Tableau de bord"
+        icon={<DashboardIcon />}
+      />
+    </List>
+  );
+}
+
+function FooterListItems() {
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const dispatch = useSessionDispatch();
@@ -253,7 +326,7 @@ function SecondaryListItems() {
     });
   };
   return (
-    <>
+    <List>
       <Entry
         path="/online/utilisateurs"
         key="users"
@@ -272,20 +345,19 @@ function SecondaryListItems() {
         icon={<PowerSettingsNewIcon />}
         onClick={onLogoutUser}
       />
-    </>
+    </List>
   );
 }
 
 export default function ListItems() {
+  const [searchTerm, setSearchTerm] = useState('');
   return (
     <>
-      <List>
-        <MainListItems />
-      </List>
+      <HeaderListItems searchTerm={searchTerm} onSearch={setSearchTerm} />
       <Divider />
-      <List>
-        <SecondaryListItems />
-      </List>
+      <MainListItems searchTerm={searchTerm} />
+      <Divider />
+      <FooterListItems />
     </>
   );
 }
