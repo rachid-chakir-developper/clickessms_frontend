@@ -11,7 +11,7 @@ import AppBarHeader from './AppBarHeader';
 
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './pages/dashboard/Dashboard';
-import ListItems from './ListItems';
+import NavMenu from './navigation/NavMenu';
 import Users from './pages/users/Users';
 import Materials from './pages/materials/Materials';
 import Sales from './pages/sales/Sales';
@@ -31,7 +31,6 @@ import Qualities from './pages/qualities/Qualities';
 import Administratives from './pages/administratives/Administratives';
 import Companies from './pages/companies/Companies';
 import Finance from './pages/finance/Finance';
-import SpeedDialTooltipOpen from '../_shared/components/app/SpeedDialTooltipOpen';
 import Governance from './pages/governance/Governance';
 import Planning from './pages/planning/Planning';
 import Parking from './pages/parking/Parking';
@@ -162,7 +161,7 @@ export default function Online() {
         </DrawerHeader>
         <Divider />
         <AccountCard open={open} />
-        <ListItems open={open} />
+        <NavMenu />
       </Drawer>
       <Box
         component="main"
