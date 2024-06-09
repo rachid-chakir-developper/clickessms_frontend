@@ -1,5 +1,12 @@
-import { Category, Module, Page } from './navigation';
+import { Submodule, Module, Page } from './modules';
 
+/**
+ * Given a search term, filter the modules to only keep what is relevant in
+ * the search. Entries that match the search, whether they are modules,
+ * submodules or pages, are marked as highlighted.
+ * When a module or submodule matches, all its sub-entries are kept, but are
+ * not highlighted (unless they themselves are a match).
+ */
 export function filterModules(
   modules: Module[],
   term: string,
@@ -10,7 +17,7 @@ export function filterModules(
       module = { ...module, highlighted: true };
     }
     const filteredEntries = filterMap(module.entries, (_entry) => {
-      let entry: HighlightableCategory | HighlightablePage = _entry;
+      let entry: HighlightableSubmodule | HighlightablePage = _entry;
       if (doesStringMatchTerm(entry.name, term)) {
         entry = { ...entry, highlighted: true };
       }
@@ -38,6 +45,10 @@ function doesStringMatchTerm(str: string, term: string): boolean {
   return normalizeString(str).includes(normalizeString(term));
 }
 
+/**
+ * Normalizes a string to allow for a lenient comparison. Useful for search.
+ * It ignores accents as well as leading and trailing white space.
+ */
 function normalizeString(str: string): string {
   return removeAccents(str.toString().trim().toLowerCase());
 }
@@ -46,8 +57,12 @@ function removeAccents(str: string): string {
   return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
-function filterMap<T>(array: T[], fn: (item: T) => T | undefined): T[] {
-  const result: T[] = [];
+/**
+ * Combination for a map and a filter. If the function returns undefined, the
+ * result is ignored.
+ */
+function filterMap<I, O>(array: I[], fn: (item: I) => O | undefined): O[] {
+  const result: O[] = [];
   for (const item of array) {
     const mapped = fn(item);
     if (mapped !== undefined) {
@@ -58,11 +73,11 @@ function filterMap<T>(array: T[], fn: (item: T) => T | undefined): T[] {
 }
 
 export interface HighlightableModule extends Module {
-  entries: (HighlightableCategory | HighlightablePage)[];
+  entries: (HighlightableSubmodule | HighlightablePage)[];
   highlighted?: boolean;
 }
 
-export interface HighlightableCategory extends Category {
+export interface HighlightableSubmodule extends Submodule {
   pages: HighlightablePage[];
   highlighted?: boolean;
 }

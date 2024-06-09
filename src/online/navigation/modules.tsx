@@ -687,10 +687,10 @@ export interface Module {
   id: string;
   name: string;
   icon: ReactElement;
-  entries: (Category | Page)[];
+  entries: (Submodule | Page)[];
 }
 
-export interface Category {
+export interface Submodule {
   id: string;
   name: string;
   icon: ReactElement;

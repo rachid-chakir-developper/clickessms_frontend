@@ -1,111 +1,41 @@
-import { styled } from '@mui/material/styles';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Stack from '@mui/material/Stack';
-import SearchIcon from '@mui/icons-material/Search';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ChevronRight from '@mui/icons-material/ChevronRight';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { modules } from './navigation';
+import { useNavigate } from 'react-router-dom';
+import { modules } from './modules';
 import Divider from '@mui/material/Divider';
-import Collapse from '@mui/material/Collapse';
-import InputBase from '@mui/material/InputBase';
-import { useFeedBacks } from '../_shared/context/feedbacks/FeedBacksProvider';
-import { LOGOUT_USER } from '../_shared/graphql/mutations/AuthMutations';
+import { useFeedBacks } from '../../_shared/context/feedbacks/FeedBacksProvider';
+import { LOGOUT_USER } from '../../_shared/graphql/mutations/AuthMutations';
 import { useMutation } from '@apollo/client';
-import { useSessionDispatch } from '../_shared/context/SessionProvider';
+import { useSessionDispatch } from '../../_shared/context/SessionProvider';
 import { useState } from 'react';
 import {
-  HighlightableCategory,
+  HighlightableSubmodule,
   HighlightableModule,
   HighlightablePage,
   filterModules,
-} from './navigationSearch';
+} from './search';
+import NavEntry from './NavEntry';
+import SearchEntry from './SearchEntry';
 
-const StyledNavLink = styled(NavLink)(({ theme }) => ({
-  display: 'block',
-  textDecoration: 'none',
-  color: 'inherit',
-  '&.active': {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    '.MuiListItemIcon-root': {
-      color: theme.palette.primary.contrastText,
-    },
-  },
-}));
-
-interface EntryProps {
-  icon: React.ReactNode;
-  name: string;
-  path?: string;
-  expandable?: boolean;
-  open?: boolean;
-  disabled?: boolean;
-  indented?: boolean;
-  highlighted?: boolean;
-  onClick?: React.MouseEventHandler<HTMLDivElement>;
-  children?: React.ReactNode;
-}
-
-function Entry(props: EntryProps) {
-  const button = (
-    <ListItemButton
-      sx={{ px: 2.5 }}
-      disabled={props.disabled}
-      onClick={props.onClick}
-    >
-      <ListItemIcon sx={{ pl: props.indented ? 1.5 : 0 }}>
-        {props.icon}
-      </ListItemIcon>
-      <ListItemText
-        primary={props.name}
-        primaryTypographyProps={
-          props.highlighted
-            ? {
-                fontWeight: 'bold',
-              }
-            : {}
-        }
-      />
-      {props.expandable && (props.open ? <ExpandLess /> : <ChevronRight />)}
-    </ListItemButton>
+export default function NavMenu() {
+  const [searchTerm, setSearchTerm] = useState('');
+  return (
+    <>
+      <NavMenuHeader searchTerm={searchTerm} onSearch={setSearchTerm} />
+      <Divider />
+      <NavMenuMain searchTerm={searchTerm} />
+      <Divider />
+      <NavMenuFooter />
+    </>
   );
-
-  const maybeLink =
-    !props.disabled && props.path ? (
-      <StyledNavLink to={props.path}>{button}</StyledNavLink>
-    ) : (
-      button
-    );
-
-  const children = props.expandable ? (
-    <Collapse in={props.open} timeout="auto" unmountOnExit>
-      {props.children}
-    </Collapse>
-  ) : (
-    props.children
-  );
-
-  const item = (
-    <ListItem disablePadding sx={{ display: 'block' }}>
-      {maybeLink}
-      {children}
-    </ListItem>
-  );
-  return item;
 }
 
 function PageNavEntry(props: HighlightablePage) {
   return (
-    <Entry
+    <NavEntry
       icon={props.icon}
       name={props.name}
       path={props.path}
@@ -116,23 +46,23 @@ function PageNavEntry(props: HighlightablePage) {
   );
 }
 
-interface CategoryNavEntryProps extends HighlightableCategory {
-  open?: boolean;
-  onToggleExpand: (key: string, open: boolean) => void;
+interface SubmoduleNavEntryProps extends HighlightableSubmodule {
+  expanded?: boolean;
+  onToggleExpand: (key: string, expanded: boolean) => void;
 }
 
-function CategoryNavEntry(props: CategoryNavEntryProps) {
+function SubmoduleNavEntry(props: SubmoduleNavEntryProps) {
   return (
-    <Entry
+    <NavEntry
       icon={props.icon}
       name={props.name}
       highlighted={props.highlighted}
       indented
       onClick={() => {
-        props.onToggleExpand(props.id, Boolean(props.open));
+        props.onToggleExpand(props.id, Boolean(props.expanded));
       }}
       expandable
-      open={props.open}
+      expanded={props.expanded}
     >
       <List disablePadding sx={{ backgroundColor: '#EFEFEF' }}>
         {props.pages.map((page) => (
@@ -147,42 +77,42 @@ function CategoryNavEntry(props: CategoryNavEntryProps) {
           />
         ))}
       </List>
-    </Entry>
+    </NavEntry>
   );
 }
 
 interface ModuleNavEntryProps extends HighlightableModule {
-  open?: boolean;
-  onToggleExpand: (key: string, open: boolean) => void;
+  expanded?: boolean;
+  onToggleExpand: (key: string, expanded: boolean) => void;
 }
 
 function ModuleNavEntry(props: ModuleNavEntryProps) {
-  const [openedCategory, setOpenedCategory] = useState('');
+  const [openedSubmodule, setOpenedSubmodule] = useState('');
 
   function onToggleExpand(key: string) {
-    if (key === openedCategory) {
-      setOpenedCategory('');
+    if (key === openedSubmodule) {
+      setOpenedSubmodule('');
     } else {
-      setOpenedCategory(key);
+      setOpenedSubmodule(key);
     }
   }
 
   return (
-    <Entry
+    <NavEntry
       icon={props.icon}
       name={props.name}
       highlighted={props.highlighted}
       onClick={() => {
-        props.onToggleExpand(props.id, Boolean(props.open));
+        props.onToggleExpand(props.id, Boolean(props.expanded));
       }}
       expandable
-      open={props.open}
+      expanded={props.expanded}
     >
       <List disablePadding>
         {props.entries.map((entry) => {
           if ('pages' in entry) {
             return (
-              <CategoryNavEntry
+              <SubmoduleNavEntry
                 key={entry.id}
                 id={entry.id}
                 name={entry.name}
@@ -190,7 +120,7 @@ function ModuleNavEntry(props: ModuleNavEntryProps) {
                 pages={entry.pages}
                 highlighted={entry.highlighted}
                 onToggleExpand={onToggleExpand}
-                open={openedCategory === entry.id}
+                expanded={openedSubmodule === entry.id}
               />
             );
           }
@@ -207,11 +137,11 @@ function ModuleNavEntry(props: ModuleNavEntryProps) {
           );
         })}
       </List>
-    </Entry>
+    </NavEntry>
   );
 }
 
-export function MainListItems({ searchTerm }: { searchTerm: string }) {
+function NavMenuMain({ searchTerm }: { searchTerm: string }) {
   const [openedModule, setOpenedModule] = useState('');
 
   function onToggleExpand(key: string) {
@@ -237,36 +167,14 @@ export function MainListItems({ searchTerm }: { searchTerm: string }) {
           icon={module.icon}
           highlighted={module.highlighted}
           onToggleExpand={onToggleExpand}
-          open={openedModule === module.id}
+          expanded={openedModule === module.id}
         />
       ))}
     </List>
   );
 }
 
-function SearchEntry({ searchTerm, onSearch }) {
-  function handleChange(event) {
-    onSearch(event.target.value);
-  }
-
-  return (
-    <ListItem disablePadding sx={{ display: 'block' }}>
-      <Stack sx={{ px: 2.5, py: 1 }} direction="row" alignItems="center">
-        <ListItemIcon>
-          <SearchIcon />
-        </ListItemIcon>
-        <InputBase
-          placeholder="Rechercher..."
-          inputProps={{ 'aria-label': 'search' }}
-          value={searchTerm}
-          onChange={handleChange}
-        />
-      </Stack>
-    </ListItem>
-  );
-}
-
-function HeaderListItems({
+function NavMenuHeader({
   searchTerm,
   onSearch,
 }: {
@@ -276,7 +184,7 @@ function HeaderListItems({
   return (
     <List>
       <SearchEntry searchTerm={searchTerm} onSearch={onSearch} />
-      <Entry
+      <NavEntry
         path="/online/dashboard"
         key="dashboard"
         name="Tableau de bord"
@@ -286,7 +194,7 @@ function HeaderListItems({
   );
 }
 
-function FooterListItems() {
+function NavMenuFooter() {
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const dispatch = useSessionDispatch();
@@ -327,37 +235,24 @@ function FooterListItems() {
   };
   return (
     <List>
-      <Entry
+      <NavEntry
         path="/online/utilisateurs"
         key="users"
         name="Utilisateurs"
         icon={<PersonIcon />}
       />
-      <Entry
+      <NavEntry
         path="/online/parametres"
         key="settings"
         name="Paramètres"
         icon={<SettingsIcon />}
       />
-      <Entry
+      <NavEntry
         key="logout"
         name="Se déconnecter"
         icon={<PowerSettingsNewIcon />}
         onClick={onLogoutUser}
       />
     </List>
-  );
-}
-
-export default function ListItems() {
-  const [searchTerm, setSearchTerm] = useState('');
-  return (
-    <>
-      <HeaderListItems searchTerm={searchTerm} onSearch={setSearchTerm} />
-      <Divider />
-      <MainListItems searchTerm={searchTerm} />
-      <Divider />
-      <FooterListItems />
-    </>
   );
 }
