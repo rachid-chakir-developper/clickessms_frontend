@@ -34,7 +34,7 @@ import Finance from './pages/finance/Finance';
 import Governance from './pages/governance/Governance';
 import Planning from './pages/planning/Planning';
 import Parking from './pages/parking/Parking';
-import ChatbotButton from './ChatBotButton';
+import ChatbotButton from './_shared/components/robert_ia/ChatBotButton';
 
 const drawerWidth = 280;
 
@@ -165,7 +165,7 @@ export default function Online() {
       </Drawer>
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, width: '100%', height: '100%' }}
+        sx={{ flexGrow: 1, p: 3, width: '100%', height: '100%', paddingBottom:20}}
       >
         <DrawerHeader />
         <Routes>

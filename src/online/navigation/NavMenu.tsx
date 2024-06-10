@@ -252,6 +252,7 @@ function NavMenuFooter() {
         name="Se déconnecter"
         icon={<PowerSettingsNewIcon />}
         onClick={onLogoutUser}
+        disabled={loadingLogout}
       />
     </List>
   );

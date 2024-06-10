@@ -38,7 +38,7 @@ function App() {
   });
 
   return (
-    <Box>
+    <Box sx={{ flexGrow: 1, p: 3, width: '100%', minHeight: '100vh'}}>
       <ThemeProvider theme={theme}>
         <ApolloProvider>
           <FeedBacksProvider>

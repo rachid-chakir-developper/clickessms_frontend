@@ -15,10 +15,9 @@ import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import robertIA_seul from '../robertIA_seul.png';
 import {useMutation} from "@apollo/client";
-import {USER_QUESTION} from "../_shared/graphql/mutations/RobertIaMutation";
-import {useSession} from "../_shared/context/SessionProvider";
+import {useSession} from "../../../../_shared/context/SessionProvider";
+import { USER_QUESTION } from '../../../../_shared/graphql/mutations/RobertIaMutation';
 
 const ChatWindow = ({ open, onClose, }) => {
     const [question, setQuestion] = useState('');
@@ -27,7 +26,7 @@ const ChatWindow = ({ open, onClose, }) => {
     const messagesEndRef = useRef(null);
     const [isBlocked, setIsBlocked] = useState(false);
     const { user } = useSession();
-    const [tokens, setTokens] = useState();
+    const [numberOpenaiTokens, SetNumberOpenaiTokens] = useState();
     const [disclaimerAccepted, setDisclaimerAccepted] = useState(() => {
         return sessionStorage.getItem('disclaimerAccepted') === 'true';
     });
@@ -35,7 +34,7 @@ const ChatWindow = ({ open, onClose, }) => {
     const [userQuestion, { loading, error }] = useMutation(USER_QUESTION, {
         onCompleted: (data) => {
             const newAnswer = data.userQuestion.answer;
-            setTokens(data.userQuestion?.tokens ? data.userQuestion?.tokens : tokens);
+            SetNumberOpenaiTokens(data.userQuestion?.numberCurrentOpenaiTokens ? data.userQuestion?.numberCurrentOpenaiTokens : numberOpenaiTokens);
             setMessages((prevMessages) => [...prevMessages, { sender: 'user', text: question }, { sender: 'bot', text: newAnswer }]);
             setQuestion('');
         },
@@ -53,7 +52,7 @@ const ChatWindow = ({ open, onClose, }) => {
         event.preventDefault();
         if (isBlocked) return;
 
-        if (tokens > 0) {
+        if (numberOpenaiTokens > 0) {
             setIsBlocked(true);
             try {
                 userQuestion({ variables: { question } });
@@ -71,7 +70,7 @@ const ChatWindow = ({ open, onClose, }) => {
     };
 
     useEffect(() => {
-        setTokens(user?.tokens);
+        SetNumberOpenaiTokens(user?.numberCurrentOpenaiTokens);
     }, [user]);
 
 
@@ -114,7 +113,7 @@ const ChatWindow = ({ open, onClose, }) => {
                 </Tooltip>
                 <Tooltip title="Nombre d'utilisations restante avant d'être temporairement bloqué">
                     <Typography variant="body2" sx={{ mr: 2 }}>
-                        Tokens restants : {tokens}
+                        Tokens restants : {numberOpenaiTokens}
                     </Typography>
                 </Tooltip>
                 <Box>
@@ -162,7 +161,7 @@ const ChatWindow = ({ open, onClose, }) => {
                             textAlign: message.sender === 'user' ? 'right' : 'left',
                         }}>
                             {message.sender === 'bot' && (
-                                <Avatar sx={{ mr: 1, mt: 1, }} src={robertIA_seul} />
+                                <Avatar sx={{ mr: 1, mt: 1, }} src="/robertIA_seul.png" />
                             )}
                             <ListItemText sx={{
                                 flex: 'initial',
@@ -178,12 +177,12 @@ const ChatWindow = ({ open, onClose, }) => {
             </Box>
             <Box component="form" onSubmit={handleSubmit} sx={{ p: 2, borderTop: '1px solid #ccc', display: 'flex', alignItems: 'center', position: 'relative' }}>
                 <TextField
-                    label={tokens > 0 ? "Entrer votre question" : "Vous n'avez plus de token disponible"}
+                    label={numberOpenaiTokens > 0 ? "Entrer votre question" : "Vous n'avez plus de token disponible"}
                     variant="outlined"
                     fullWidth
                     value={question}
                     onChange={(e) => setQuestion(e.target.value)}
-                    disabled={tokens <= 0 || !disclaimerAccepted}
+                    disabled={numberOpenaiTokens <= 0 || !disclaimerAccepted}
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">

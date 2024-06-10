@@ -6,7 +6,7 @@ export const GET_CURRENT_USER = gql`
   query {
     currentUser {
       ...UserDetailsFragment
-      tokens
+      numberCurrentOpenaiTokens
       company {
         ...CompanyBasicInfosFragment
       }
