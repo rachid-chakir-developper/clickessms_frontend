@@ -120,7 +120,7 @@ export const modules: Module[] = [
       {
         id: 'task-plan',
         name: 'Plan d’action',
-        path: '/online/qualities/plan-d’action',
+        path: '/online/qualites/plan-action',
         icon: <MapIcon />,
       },
       {

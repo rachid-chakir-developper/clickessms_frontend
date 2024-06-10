@@ -1,11 +1,12 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { Box } from '@mui/material';
 import ListEmployeeAbsences from './ListEmployeeAbsences';
 import AddEmployeeAbsence from './AddEmployeeAbsence';
 import EmployeeAbsenceDetails from './EmployeeAbsenceDetails';
 
 export default function EmployeeAbsences() {
   return (
-    <div className="online">
+    <Box>
       <Routes>
         <Route path={`liste`} element={<ListEmployeeAbsences />} />
         <Route path={`ajouter`} element={<AddEmployeeAbsence />} />
@@ -19,6 +20,6 @@ export default function EmployeeAbsences() {
         />
         <Route path="/" element={<Navigate to={`liste`} replace />} />
       </Routes>
-    </div>
+    </Box>
   );
 }

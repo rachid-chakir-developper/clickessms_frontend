@@ -422,7 +422,7 @@ export default function AddVehicleRepairForm({
                           onChange={(e) =>
                             formik.setFieldValue('state', e.target.value)
                           }
-                          disabled={loadingPost || loadingPut}REPAIR_STATES
+                          disabled={loadingPost || loadingPut}
                         >
                           {REPAIR_STATES?.ALL?.map((type, index) => {
                             return (
