@@ -30,7 +30,7 @@ import {
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
+import { Alert, Avatar, Button, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
@@ -126,7 +126,7 @@ const headCells = [
     label: 'Status',
   },
   {
-      id: 'statusPourcent',
+      id: 'completionPercentage',
       numeric: false,
       disablePadding: false,
       label: 'Avancement',
@@ -252,7 +252,7 @@ export default function TableListUndesirableEvents({
   loading,
   rows,
   onDeleteUndesirableEvent,
-  onUpdateUndesirableEventState,
+  onCreateUndesirableEventObjective,
 }) {
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
@@ -343,14 +343,14 @@ export default function TableListUndesirableEvents({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan="8">
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan="8">
                     <Alert severity="warning">
                       Aucun événement indésirable trouvé.
                     </Alert>
@@ -457,7 +457,13 @@ export default function TableListUndesirableEvents({
                       <CustomizedStatusLabelMenu status={row?.status} />
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <CircularProgressWithLabel value={row?.completionPercentage}/>
+                      {row?.actionPlanObjective ? <CircularProgressWithLabel value={row?.completionPercentage}/> :
+                      <Button variant="text" size="small" endIcon={<Done />} 
+                        onClick={() => {
+                          onCreateUndesirableEventObjective(row?.id);
+                        }}>
+                        Analyser
+                      </Button>}
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
@@ -493,6 +499,15 @@ export default function TableListUndesirableEvents({
                         >
                           <Folder sx={{ mr: 2 }} />
                           Bibliothèque
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            onCreateUndesirableEventObjective(row?.id);
+                            handleCloseMenu();
+                          }}
+                        >
+                          <Done sx={{ mr: 2 }} />
+                          Analyser
                         </MenuItem>
                         <Link
                           to={`/online/qualites/evenements-indesirables/modifier/${row?.id}`}

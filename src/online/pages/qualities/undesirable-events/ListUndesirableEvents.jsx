@@ -5,11 +5,12 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Button, Stack } from '@mui/material';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Add } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import {
   DELETE_UNDESIRABLE_EVENT,
+  POST_UNDESIRABLE_EVENT_OBJECTIVE,
   PUT_UNDESIRABLE_EVENT_STATE,
 } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
 import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
@@ -26,6 +27,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListUndesirableEvents() {
+  const navigate = useNavigate();
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
   const [undesirableEventFilter, setUndesirableEventFilter] =
     React.useState(null);
@@ -128,19 +130,16 @@ export default function ListUndesirableEvents() {
     });
   };
 
-  const [updateUndesirableEventState, { loading: loadingPutState }] =
-    useMutation(PUT_UNDESIRABLE_EVENT_STATE, {
+  const [createUndesirableEventObjective, { loading: loadingPostObjective }] =
+    useMutation(POST_UNDESIRABLE_EVENT_OBJECTIVE, {
       onCompleted: (datas) => {
-        if (datas.updateUndesirableEventState.done) {
-          setNotifyAlert({
-            isOpen: true,
-            message: 'Changée avec succès',
-            type: 'success',
-          });
+        if (datas.createUndesirableEventObjective.done) {
+          let actionPlanObjective = datas.createUndesirableEventObjective?.undesirableEvent?.actionPlanObjective
+          navigate(`/online/qualites/plan-action/objectifs/modifier/${actionPlanObjective?.id}`);
         } else {
           setNotifyAlert({
             isOpen: true,
-            message: `Non changée ! ${datas.updateUndesirableEventState.message}.`,
+            message: `Non analysé ! ${datas.createUndesirableEventObjective.message}.`,
             type: 'error',
           });
         }
@@ -156,14 +155,14 @@ export default function ListUndesirableEvents() {
       },
     });
 
-  const onUpdateUndesirableEventState = (id) => {
+  const onCreateUndesirableEventObjective = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
-      subTitle: 'Voulez vous vraiment changer ?',
+      subTitle: 'Voulez vous vraiment analyser ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        updateUndesirableEventState({ variables: { id: id } });
+        createUndesirableEventObjective({ variables: { id: id } });
       },
     });
   };
@@ -195,7 +194,7 @@ export default function ListUndesirableEvents() {
                     <UndesirableEventItemCard 
                                         undesirableEvent={undesirableEvent}
                                         onDeleteUndesirableEvent={onDeleteUndesirableEvent}
-                                        onUpdateUndesirableEventState={onUpdateUndesirableEventState}
+                                        onCreateUndesirableEventObjective={onCreateUndesirableEventObjective}
                     />
                   </Item>
                 </Grid>
@@ -208,7 +207,7 @@ export default function ListUndesirableEvents() {
           loading={loadingUndesirableEvents}
           rows={undesirableEventsData?.undesirableEvents?.nodes || []}
           onDeleteUndesirableEvent={onDeleteUndesirableEvent}
-          onUpdateUndesirableEventState={onUpdateUndesirableEventState}
+          onCreateUndesirableEventObjective={onCreateUndesirableEventObjective}
         />
       </Grid>
       <Grid item="true" xs={12}>

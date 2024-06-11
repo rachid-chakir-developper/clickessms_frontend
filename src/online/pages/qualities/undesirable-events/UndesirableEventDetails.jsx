@@ -48,7 +48,7 @@ export default function UndesirableEventDetails() {
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1}}>
         <Link
-          to={`/online/qualites/evenements-indesirables/modifier/${undesirableEventData?.undesirableEvent?.id}`}
+          to={`/online/qualites/plan-action/objectifs/evenements-indesirable/${undesirableEventData?.undesirableEvent?.id}`}
           className="no_style"
         >
           <Button variant="contained" endIcon={<Done />}

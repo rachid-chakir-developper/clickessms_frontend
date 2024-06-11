@@ -33,7 +33,7 @@ import {
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import AppLabel from '../../../../../_shared/components/app/label/AppLabel';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import CircularProgressWithLabel from '../../../../../_shared/components/feedbacks/CircularProgressWithLabel';
@@ -109,6 +109,12 @@ const headCells = [
         label: 'Structures',
     },
     {
+        id: 'source',
+        numeric: false,
+        disablePadding: false,
+        label: 'Source',
+    },
+    {
         id: 'priority',
         numeric: false,
         disablePadding: false,
@@ -121,7 +127,7 @@ const headCells = [
         label: 'Status',
     },
     {
-        id: 'statusPourcent',
+        id: 'completionPercentage',
         numeric: false,
         disablePadding: false,
         label: 'Avancement',
@@ -249,6 +255,7 @@ export default function TableListActionPlanObjectives({
   onDeleteActionPlanObjective,
   onUpdateActionPlanObjectiveState,
 }) {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -429,9 +436,19 @@ export default function TableListActionPlanObjectives({
                     </StyledTableCell>
                     <StyledTableCell align="left">
                       <Stack direction="row" flexWrap='wrap' spacing={1}>
+                        {row?.undesirableEvent && <Chip
+                          label={`EI: ${row?.undesirableEvent?.title}`}
+                          variant="filled"
+                          clickable
+                          onClick={()=> navigate(`/online/qualites/evenements-indesirables/details/${row?.undesirableEvent?.id}`)}
+                        />}
+                      </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
                         <Chip
                           label={getPriorityLabel(row?.priority)}
-                          variant="outlined"
+                          variant="filled"
                         />
                       </Stack>
                     </StyledTableCell>

@@ -3,11 +3,10 @@
 import{ gql } from '@apollo/client';
 import{ EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
 import{ ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
+import { UNDESIRABLE_EVENT_MINI_INFOS } from './UndesirableEventFragment';
 
-
-
-export const ACTION_PLAN_OBJECTIVE_BASIC_INFOS = gql`
-  fragment ActionPlanObjectiveBasicInfosFragment on ActionPlanObjectiveType{
+export const ACTION_PLAN_OBJECTIVE_MINI_INFOS = gql`
+  fragment ActionPlanObjectiveMiniInfosFragment on ActionPlanObjectiveType{
     id
     number
     title
@@ -15,8 +14,18 @@ export const ACTION_PLAN_OBJECTIVE_BASIC_INFOS = gql`
     status
     completionPercentage
     isActive
+  }
+`;
+
+export const ACTION_PLAN_OBJECTIVE_BASIC_INFOS = gql`
+  fragment ActionPlanObjectiveBasicInfosFragment on ActionPlanObjectiveType{
+    ...ActionPlanObjectiveMiniInfosFragment
     establishments{
       ...EstablishmentMiniInfosFragment
+    }
+    undesirableEvent {
+      id
+      title
     }
     folder{
       id
@@ -24,6 +33,7 @@ export const ACTION_PLAN_OBJECTIVE_BASIC_INFOS = gql`
       name
     }
   }
+  ${ACTION_PLAN_OBJECTIVE_MINI_INFOS}
   ${ESTABLISHMENT_MINI_INFOS}
 `;
 

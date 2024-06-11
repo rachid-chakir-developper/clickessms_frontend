@@ -4,6 +4,7 @@ import{ gql } from '@apollo/client';
 import{ BENEFICIARY_MINI_INFOS } from './BeneficiaryFragment';
 import{ EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
 import{ ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
+import { ACTION_PLAN_OBJECTIVE_MINI_INFOS } from './ActionPlanObjectiveFragment';
 
 export const UNDESIRABLE_EVENT_ESTABLISHMENT_DETAILS = gql`
   fragment UndesirableEventEstablishmentTypeFragment on UndesirableEventEstablishmentType{
@@ -14,9 +15,8 @@ export const UNDESIRABLE_EVENT_ESTABLISHMENT_DETAILS = gql`
   }
   ${ESTABLISHMENT_MINI_INFOS}
 `;
-
-export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
-  fragment UndesirableEventBasicInfosFragment on UndesirableEventType{
+export const UNDESIRABLE_EVENT_MINI_INFOS = gql`
+  fragment UndesirableEventBasicMiniFragment on UndesirableEventType{
     id
     number
     title
@@ -28,11 +28,20 @@ export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
     isActive
     status
     completionPercentage
+  }
+`;
+
+export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
+  fragment UndesirableEventBasicInfosFragment on UndesirableEventType{
+    ...UndesirableEventBasicMiniFragment
     establishments{
       ...UndesirableEventEstablishmentTypeFragment
     }
     employee{
       ...EmployeeBasicInfosFragment
+    } 
+    actionPlanObjective {
+      ...ActionPlanObjectiveMiniInfosFragment
     }
     folder{
       id
@@ -40,8 +49,10 @@ export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
       name
     }
   }
+  ${UNDESIRABLE_EVENT_MINI_INFOS}
   ${UNDESIRABLE_EVENT_ESTABLISHMENT_DETAILS}
   ${EMPLOYEE_BASIC_INFOS}
+  ${ACTION_PLAN_OBJECTIVE_MINI_INFOS}
 `;
 
 export const UNDESIRABLE_EVENT_BENEFICIARY_DETAILS = gql`
