@@ -14,7 +14,7 @@ const actions = [
 
 export default function SpeedDialTooltipOpen() {
   return (
-    <Box sx={{ position: 'fixed', bottom: 16, right: 36, background: 'yellow' }}>
+    <Box sx={{ position: 'fixed', bottom: 16, right: 40, zIndex: 10 }}>
       <SpeedDial
        sx={{ width: 0 }}
         ariaLabel="SpeedDial openIcon example"

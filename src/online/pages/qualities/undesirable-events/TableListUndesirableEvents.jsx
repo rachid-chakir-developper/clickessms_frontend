@@ -35,6 +35,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import CustomizedStatusLabelMenu from '../../../../_shared/components/app/menu/CustomizedStatusLabelMenu';
+import CircularProgressWithLabel from '../../../../_shared/components/feedbacks/CircularProgressWithLabel';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -120,9 +121,15 @@ const headCells = [
   },
   {
     id: 'status',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Status',
+  },
+  {
+      id: 'statusPourcent',
+      numeric: false,
+      disablePadding: false,
+      label: 'Avancement',
   },
   {
     id: 'action',
@@ -446,8 +453,11 @@ export default function TableListUndesirableEvents({
                         />
                       </Stack>
                     </StyledTableCell>
-                    <StyledTableCell align="right">
+                    <StyledTableCell align="left">
                       <CustomizedStatusLabelMenu status={row?.status} />
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <CircularProgressWithLabel value={row?.completionPercentage}/>
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton

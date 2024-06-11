@@ -23,7 +23,7 @@ import { GET_EMPLOYEES } from '../../../../../_shared/graphql/queries/EmployeeQu
 import { GET_ESTABLISHMENTS } from '../../../../../_shared/graphql/queries/EstablishmentQueries';
 import { Close } from '@mui/icons-material';
 import TheDesktopDatePicker from '../../../../../_shared/components/form-fields/TheDesktopDatePicker';
-import { PRIORITIES } from '../../../../../_shared/tools/constants';
+import { ACTION_STATUS, PRIORITIES } from '../../../../../_shared/tools/constants';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -84,7 +84,7 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
       ...formik.values,
       actions: [
         ...formik.values.actions,
-        { action: '', dueDate: null, employees:[]},
+        { action: '', dueDate: null, employees:[], status: ACTION_STATUS.TO_DO},
       ],
     });
   };
@@ -193,8 +193,7 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
   const [getActionPlanObjective, { loading: loadingActionPlanObjective }] = useLazyQuery(GET_ACTION_PLAN_OBJECTIVE, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, ...actionPlanObjectiveCopy1 } = data.actionPlanObjective;
-      let { folder, ...actionPlanObjectiveCopy } = actionPlanObjectiveCopy1;
+      let { __typename, folder, completionPercentage, ...actionPlanObjectiveCopy } = data.actionPlanObjective;
         if (!actionPlanObjectiveCopy?.actions) actionPlanObjectiveCopy['actions'] = [];
         let items = [];
         actionPlanObjectiveCopy.actions.forEach((item) => {
@@ -386,9 +385,9 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
                     {formik.values?.actions?.map((item, index) => (
                       <Grid
                         container
-                        spacing={{ xs: 2, md: 3 }}
                         columns={{ xs: 4, sm: 8, md: 12 }}
                         key={index}
+                        sx={{background: index%2 === 0 ?  "#f2f2f2" : "#f9f9f9", padding: 3}}
                       >
                         <Grid xs={12} sm={12} md={12} item="true">
                           <Item sx={{position: 'relative'}}>
@@ -415,7 +414,7 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
                             </IconButton>
                           </Item>
                         </Grid>
-                        <Grid xs={12} sm={6} md={5} item="true">
+                        <Grid xs={12} sm={6} md={4} item="true">
                           <Item>
                             <TheDesktopDatePicker
                               label="Échéance"
@@ -427,7 +426,7 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
                             />
                           </Item>
                         </Grid>
-                        <Grid xs={12} sm={6} md={7} item="true">
+                        <Grid xs={12} sm={6} md={5} item="true">
                           <Item>
                             <TheAutocomplete
                               options={employeesData?.employees?.nodes}
@@ -440,7 +439,27 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
                               }
                             />
                           </Item>
-                      </Grid>
+                        </Grid>
+                        <Grid xs={12} sm={6} md={3}>
+                          <Item>
+                            <FormControl fullWidth>
+                                <InputLabel>Status</InputLabel>
+                                <Select
+                                    value={item.status}
+                                    onChange={(e) => formik.setFieldValue(`actions.${index}.status`, e.target.value)}
+                                    disabled={loadingPost || loadingPut}
+                                >
+                                {ACTION_STATUS?.ALL?.map((type, index) => {
+                                  return (
+                                    <MenuItem key={index} value={type.value}>
+                                      {type.label}
+                                    </MenuItem>
+                                  );
+                                })}
+                                </Select>
+                            </FormControl>
+                          </Item>
+                        </Grid>
                       </Grid>
                     ))}
                     <Grid
@@ -448,7 +467,7 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
                       sm={12}
                       md={12}
                       item="true"
-                      sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom:4 }}
+                      sx={{ display: 'flex', justifyContent: 'flex-end', marginY:4 }}
                     >
                       <Button
                         variant="outlined"

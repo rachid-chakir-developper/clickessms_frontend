@@ -12,6 +12,8 @@ export const ACTION_PLAN_OBJECTIVE_BASIC_INFOS = gql`
     number
     title
     priority
+    status
+    completionPercentage
     isActive
     establishments{
       ...EstablishmentMiniInfosFragment
@@ -32,6 +34,7 @@ export const ACTION_PLAN_OBJECTIVE_DECISION_DETAILS = gql`
     id
     action
     dueDate
+    status
     employees{
       ...EmployeeMiniInfosFragment
     }

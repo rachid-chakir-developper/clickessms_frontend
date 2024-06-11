@@ -16,7 +16,7 @@ import { UNDESIRABLE_EVENT_RECAP } from '../../../../_shared/graphql/queries/Und
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
-import { Edit } from '@mui/icons-material';
+import { Done, Edit } from '@mui/icons-material';
 import UndesirableEventTabs from './undesirable-events-tabs/UndesirableEventTabs';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -46,7 +46,16 @@ export default function UndesirableEventDetails() {
   if (loadingUndesirableEvent) return <ProgressService type="form" />;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1}}>
+        <Link
+          to={`/online/qualites/evenements-indesirables/modifier/${undesirableEventData?.undesirableEvent?.id}`}
+          className="no_style"
+        >
+          <Button variant="contained" endIcon={<Done />}
+          sx={{mx: 2}}>
+            Analyser
+          </Button>
+        </Link>
         <Link
           to={`/online/qualites/evenements-indesirables/modifier/${undesirableEventData?.undesirableEvent?.id}`}
           className="no_style"
@@ -154,6 +163,19 @@ function UndesirableEventMiniInfos({ undesirableEvent }) {
                 <b>Date fin: </b>{' '}
                 {`${getFormatDateTime(undesirableEvent?.endingDateTime)}`}
               </Typography>
+              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+              <Typography variant="body2" color="text.secondary">
+                <b>Type d'événement: </b>{' '}
+                {`${undesirableEvent?.undesirableEventType}`}{' '}
+                <br />
+                <b>Sévérité: </b>{' '}
+                {`${undesirableEvent?.severity}`}
+              </Typography>
+              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+              <Typography variant="body2" color="text.secondary">
+                <b>Pourcentage de complétion: </b>{' '}
+                {`${undesirableEvent?.completionPercentage}%`}
+              </Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -186,6 +208,22 @@ function UndesirableEventOtherInfos({ undesirableEvent }) {
           </Grid>
         ))}
       </Grid>
+      <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+      <Typography gutterBottom variant="subtitle3" component="h3">
+        Informations Supplémentaires
+      </Typography>
+      <Typography variant="body2" color="text.secondary">
+        <b>Fréquence: </b>{undesirableEvent?.frequency}<br />
+        <b>Actions prises: </b>{undesirableEvent?.actionsTakenText}<br />
+        <b>Date des faits: </b>{getFormatDateTime(undesirableEvent?.courseFactsDateTime)}<br />
+        <b>Lieu des faits: </b>{undesirableEvent?.courseFactsPlace}<br />
+        <b>Circumstances de l'événement: </b>{undesirableEvent?.circumstanceEventText}<br />
+        <b>Personnes notifiées: </b>{undesirableEvent?.notifiedPersons?.map(person => person.name).join(', ')}<br />
+        <b>Autres personnes notifiées: </b>{undesirableEvent?.otherNotifiedPersons}<br />
+        <b>Établissements: </b>{undesirableEvent?.establishments?.map(establishment => establishment.name).join(', ')}<br />
+        <b>Employés: </b>{undesirableEvent?.employees?.map(employee => employee.name).join(', ')}<br />
+        <b>Employé en charge: </b>{undesirableEvent?.employee?.name}
+      </Typography>
     </Paper>
   );
 }

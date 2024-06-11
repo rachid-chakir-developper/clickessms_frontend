@@ -36,6 +36,7 @@ import AppLabel from '../../../../../_shared/components/app/label/AppLabel';
 import { Link } from 'react-router-dom';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
+import CircularProgressWithLabel from '../../../../../_shared/components/feedbacks/CircularProgressWithLabel';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -112,6 +113,18 @@ const headCells = [
         numeric: false,
         disablePadding: false,
         label: 'Priorité',
+    },
+    {
+        id: 'status',
+        numeric: false,
+        disablePadding: false,
+        label: 'Status',
+    },
+    {
+        id: 'statusPourcent',
+        numeric: false,
+        disablePadding: false,
+        label: 'Avancement',
     },
     {
         id: 'action',
@@ -421,6 +434,17 @@ export default function TableListActionPlanObjectives({
                           variant="outlined"
                         />
                       </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
+                        <Chip
+                          label={getStatusLabel(row?.status)}
+                          variant="outlined"
+                        />
+                      </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <CircularProgressWithLabel value={row?.completionPercentage}/>
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton

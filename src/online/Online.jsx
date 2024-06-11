@@ -35,6 +35,7 @@ import Governance from './pages/governance/Governance';
 import Planning from './pages/planning/Planning';
 import Parking from './pages/parking/Parking';
 import ChatbotButton from './_shared/components/robert_ia/ChatBotButton';
+import SpeedDialTooltipOpen from '../_shared/components/app/SpeedDialTooltipOpen';
 
 const drawerWidth = 280;
 
@@ -193,7 +194,7 @@ export default function Online() {
           <Route path={`planning/*`} element={<Planning />} />
         </Routes>
       </Box>
-      {/* <SpeedDialTooltipOpen /> */}
+      <SpeedDialTooltipOpen />
       <ChatbotButton />
     </Box>
   );

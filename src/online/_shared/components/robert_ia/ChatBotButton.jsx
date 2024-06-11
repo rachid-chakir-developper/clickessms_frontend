@@ -28,21 +28,22 @@ const ChatbotButton = () => {
                     elevation={3}
                     sx={{
                         position: 'fixed',
-                        bottom: 80,
-                        right: 16,
+                        bottom: 20,
+                        right: 120,
                         p: .5,
+                        paddingRight: 3,
                         display: 'flex',
                         alignItems: 'center',
                         maxWidth: 500,
-                        borderRadius: '20px',
+                        borderRadius: '20px 0 0 20px',
 
                     }}
                 >
                     <Typography variant="body2" sx={{fontSize: '15px', fontWeight: 'bold',}}>
-                        Bonjour ! Je suis Robert IA, votre assistant de tout les jours.
                         <IconButton onClick={handleBubbleClose}>
                             <CloseIcon />
                         </IconButton>
+                        Bonjour ! Je suis Robert IA, votre assistant de tout les jours.
                     </Typography>
                 </Paper>
             )}
@@ -50,7 +51,7 @@ const ChatbotButton = () => {
                 color="primary"
                 aria-label="chat"
                 onClick={handleOpen}
-                sx={{ position: 'fixed', bottom: 16, right: 16 }}
+                sx={{ position: 'fixed', bottom: 16, right: 80 }}
             >
                 <SmartToyIcon sx={{ width: '120px' }} />
             </Fab>

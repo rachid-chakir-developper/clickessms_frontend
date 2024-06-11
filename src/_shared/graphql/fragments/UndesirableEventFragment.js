@@ -27,6 +27,7 @@ export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
     description
     isActive
     status
+    completionPercentage
     establishments{
       ...UndesirableEventEstablishmentTypeFragment
     }
@@ -141,12 +142,6 @@ export const UNDESIRABLE_EVENT_RECAP_DETAILS = gql`
     frequency{
       id
       name
-    }
-    reviews{
-      id
-      actions{
-        id
-      }
     }
     createdAt
     updatedAt

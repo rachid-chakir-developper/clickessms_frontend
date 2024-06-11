@@ -33,16 +33,36 @@ export const PRIORITIES = {
     { value: 'HIGH', label: 'Haute' },
   ],
 };
+
 export const STATUS = {
-  NEW: 'NEW',
-  STARTED: 'STARTED',
-  PENDING: 'PENDING',
-  FINISHED: 'FINISHED',
+  NEW : "NEW",
+  ACCEPTED : "ACCEPTED",
+  REFUSED : "REFUSED",
+  IN_PROGRESS : "IN_PROGRESS",
+  COMPLETED : "COMPLETED",
+  ON_HOLD : "ON_HOLD",
+  CANCELED : "CANCELED",
+  ARCHIVED : "ARCHIVED",
   ALL: [
-    { value: 'NEW', label: 'À faire' },
-    { value: 'STARTED', label: 'En cours' },
-    { value: 'PENDING', label: 'En attente' },
-    { value: 'FINISHED', label: 'Terminée' },
+    { value: "NEW", label: "Nouveau"},
+    { value: "ACCEPTED", label: "Accepté"},
+    { value: "REFUSED", label: "Refusé"},
+    { value: "IN_PROGRESS", label: "En cours"},
+    { value: "COMPLETED", label: "Terminée"},
+    { value: "ON_HOLD", label: "En attente"},
+    { value: "CANCELED", label: "Annulée"},
+    { value: "ARCHIVED", label: "Archivée"}
+  ],
+};
+
+export const ACTION_STATUS = {
+  TO_DO : "TO_DO",
+  IN_PROGRESS : "IN_PROGRESS",
+  DONE : "DONE",
+  ALL: [
+    { value: "TO_DO", label: "À traiter"},
+    { value: "IN_PROGRESS", label: "En cours"},
+    { value: "DONE", label: "Traité"},
   ],
 };
 

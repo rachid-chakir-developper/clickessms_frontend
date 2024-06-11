@@ -1,6 +1,7 @@
 import moment from 'moment';
 import {
   ACCOUNT_TYPES,
+  ACTION_STATUS,
   CRIT_AIR_CHOICES,
   LEVELS,
   MEASUREMENT_ACTIVITY_UNITS,
@@ -50,6 +51,11 @@ export const getStatusLebelColor = (status) => {
 export const getStatusLabel = (status) => {
   return STATUS.ALL.find((s) => s.value == status)?.label;
 };
+
+export const getActionStatusLabel = (status) => {
+  return ACTION_STATUS.ALL.find((s) => s.value == status)?.label;
+};
+
 
 export const getLevelLabel = (level) => {
   return LEVELS.ALL.find((l) => l.value == level)?.label;
