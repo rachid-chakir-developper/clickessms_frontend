@@ -24,6 +24,8 @@ import { GET_ESTABLISHMENTS } from '../../../../../_shared/graphql/queries/Estab
 import { Close } from '@mui/icons-material';
 import TheDesktopDatePicker from '../../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { ACTION_STATUS, PRIORITIES } from '../../../../../_shared/tools/constants';
+import { GET_ACTION_PLAN_ACTIONS } from '../../../../../_shared/graphql/queries/ActionPlanActionQueries';
+import { GET_UNDESIRABLE_EVENTS } from '../../../../../_shared/graphql/queries/UndesirableEventQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -112,6 +114,7 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
         formik.setFieldValue('id', actionPlanObjectiveCopy.id);
         handleNext();
     },
+    refetchQueries: [{ query: GET_ACTION_PLAN_ACTIONS }],
     update(cache, { data: { createActionPlanObjective } }) {
       const newActionPlanObjective = createActionPlanObjective.actionPlanObjective;
 
@@ -147,6 +150,7 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
       //   formik.setValues(actionPlanObjectiveCopy);
       handleNext();
     },
+    refetchQueries: [{ query: GET_UNDESIRABLE_EVENTS }, { query: GET_ACTION_PLAN_ACTIONS }],
     update(cache, { data: { updateActionPlanObjective } }) {
       const updatedActionPlanObjective = updateActionPlanObjective.actionPlanObjective;
 
@@ -193,7 +197,7 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
   const [getActionPlanObjective, { loading: loadingActionPlanObjective }] = useLazyQuery(GET_ACTION_PLAN_OBJECTIVE, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, folder, completionPercentage, ...actionPlanObjectiveCopy } = data.actionPlanObjective;
+      let { __typename, folder, completionPercentage, undesirableEvent, ...actionPlanObjectiveCopy } = data.actionPlanObjective;
         if (!actionPlanObjectiveCopy?.actions) actionPlanObjectiveCopy['actions'] = [];
         let items = [];
         actionPlanObjectiveCopy.actions.forEach((item) => {
@@ -443,7 +447,7 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
                         <Grid xs={12} sm={6} md={3}>
                           <Item>
                             <FormControl fullWidth>
-                                <InputLabel>Status</InputLabel>
+                                <InputLabel>Statut</InputLabel>
                                 <Select
                                     value={item.status}
                                     onChange={(e) => formik.setFieldValue(`actions.${index}.status`, e.target.value)}

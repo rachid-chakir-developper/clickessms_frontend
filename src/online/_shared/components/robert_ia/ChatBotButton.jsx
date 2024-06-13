@@ -43,7 +43,7 @@ const ChatbotButton = () => {
                         <IconButton onClick={handleBubbleClose}>
                             <CloseIcon />
                         </IconButton>
-                        Bonjour ! Je suis Robert IA, votre assistant de tout les jours.
+                        ROBERP IA, votre assistant.
                     </Typography>
                 </Paper>
             )}

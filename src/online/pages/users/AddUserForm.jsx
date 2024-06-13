@@ -56,6 +56,8 @@ export default function AddUserForm({ idUser, title }) {
       lastName: '',
       employee: null,
       partner: null,
+      financier: null,
+      supplier: null,
       email: '',
       username: '',
       description: '',
@@ -67,6 +69,8 @@ export default function AddUserForm({ idUser, title }) {
       let { coverImage, ...userCopy } = userFormCopy;
       userCopy.employee = userCopy.employee?.id;
       userCopy.partner = userCopy.partner?.id;
+      userCopy.financier = userCopy.financier?.id;
+      userCopy.supplier = userCopy.supplier?.id;
       if (idUser && idUser != '') {
         onUpdateUser({
           id: userCopy.id,

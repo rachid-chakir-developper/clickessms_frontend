@@ -4,7 +4,7 @@ import Chip from '@mui/material/Chip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { ArrowDropDown, CheckCircleOutline, Done, Face, HourglassEmpty, Pending, TaskAlt } from '@mui/icons-material';
-import { Box, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 
 // Custom styled menu component
 const StyledMenu = styled((props) => (
@@ -50,39 +50,54 @@ const StyledMenu = styled((props) => (
 
 // Options with icons for each status
 const STATUS = [
-    { value: 'NEW', label: 'En cours de traitement', icon: <Pending /> },
-    { value: 'PENDING', label: 'En attente', icon: <HourglassEmpty /> },
-    { value: 'VALIDATED', label: 'Validé', icon: <CheckCircleOutline /> },
-    { value: 'COMPLETED', label: 'Traité', icon: <TaskAlt /> },
+    { value: 'NEW', label: 'En cours de traitement', icon: <Pending />, color: 'default'},
+    { value: 'PENDING', label: 'En attente', icon: <HourglassEmpty />, color: 'warning'},
+    { value: 'VALIDATED', label: 'Validé', icon: <CheckCircleOutline />, color: 'info'},
+    { value: 'COMPLETED', label: 'Traité', icon: <TaskAlt />, color: 'success'},
   ];
 
-export default function CustomizedStatusLabelMenu({status}) {
+  // Options with icons for each status
+const ACTION_STATUS = [
+  { value: "TO_DO", label: "À traiter", icon: <HourglassEmpty />, color: 'default'},
+  { value: "IN_PROGRESS", label: "En cours", icon: <Pending />, color: 'info'},
+  { value: "DONE", label: "Traité", icon: <TaskAlt />, color: 'success'},
+];
+
+export default function CustomizedStatusLabelMenu({status, type=null, loading=false, onChange}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [options, setOptions] = React.useState(STATUS);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+  const handleClose = (option) => {
     setAnchorEl(null);
+    if(option && option?.value) onChange(option?.value)
   };
   const handleDelete = (event) => {
     handleClick(event)
   };
   const getStatusLabel = (status) => {
-    return STATUS?.find((s) => s.value == status)?.label;
+    return options?.find((s) => s.value == status)?.label;
   };
   const getStatusIcon = (status) => {
-    return STATUS?.find((s) => s.value == status)?.icon;
+    return options?.find((s) => s.value == status)?.icon;
   };
-  
+  const getStatusColor = (status) => {
+    return options?.find((s) => s.value == status)?.color;
+  };
+  React.useEffect(()=>{
+    setOptions(type === 'action' ? ACTION_STATUS : STATUS)
+  }, [type])
   return (
     <Box>
       <Chip
-        icon={getStatusIcon(status)}
+        icon={loading ? <CircularProgress size={20} /> : getStatusIcon(status)}
         label={getStatusLabel(status)}
         onClick={handleClick}
         onDelete={handleDelete}
         deleteIcon={<ArrowDropDown />}
+        color={getStatusColor(status)}
       />
       <StyledMenu
         id="demo-customized-menu"
@@ -93,7 +108,7 @@ export default function CustomizedStatusLabelMenu({status}) {
         open={open}
         onClose={handleClose}
       >
-        {STATUS.map((option, index) => (
+        {options.map((option, index) => (
           <MenuItem
             key={index}
             onClick={() => handleClose(option)}

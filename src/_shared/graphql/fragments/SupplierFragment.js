@@ -1,7 +1,6 @@
 // SupplierFragment.js
 
 import { gql } from '@apollo/client';
-import { FOLDER_MINI_INFOS } from './MediaFragment';
 
 export const SUPPLIER_PHONE_INFOS = gql`
   fragment SupplierPhoneInfosFragment on SupplierType {
@@ -16,8 +15,8 @@ export const SUPPLIER_PHONE_INFOS = gql`
   }
 `;
 
-export const SUPPLIER_BASIC_INFOS = gql`
-  fragment SupplierBasicInfosFragment on SupplierType {
+export const SUPPLIER_MINI_INFOS = gql`
+  fragment SupplierMiniInfosFragment on SupplierType {
     id
     number
     externalNumber
@@ -26,11 +25,18 @@ export const SUPPLIER_BASIC_INFOS = gql`
     photo
     coverImage
     isActive
+  }
+`;
+
+export const SUPPLIER_BASIC_INFOS = gql`
+  fragment SupplierBasicInfosFragment on SupplierType {
+    ...SupplierMiniInfosFragment
     folder {
-      ...FolderMiniInfosFragment
+      id
+      name
     }
   }
-  ${FOLDER_MINI_INFOS}
+  ${SUPPLIER_MINI_INFOS}
 `;
 export const SUPPLIER_DETAILS = gql`
   fragment SupplierDetailsFragment on SupplierType {

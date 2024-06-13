@@ -3,7 +3,7 @@
 import{ gql } from '@apollo/client';
 import{ EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
 import{ ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
-import { UNDESIRABLE_EVENT_MINI_INFOS } from './UndesirableEventFragment';
+import { ACTION_PLAN_ACTION_DETAILS } from './ActionPlanActionFragment';
 
 export const ACTION_PLAN_OBJECTIVE_MINI_INFOS = gql`
   fragment ActionPlanObjectiveMiniInfosFragment on ActionPlanObjectiveType{
@@ -38,20 +38,6 @@ export const ACTION_PLAN_OBJECTIVE_BASIC_INFOS = gql`
 `;
 
 
-
-export const ACTION_PLAN_OBJECTIVE_DECISION_DETAILS = gql`
-  fragment ActionPlanObjectiveActionFragment on ActionPlanObjectiveActionType{
-    id
-    action
-    dueDate
-    status
-    employees{
-      ...EmployeeMiniInfosFragment
-    }
-  }
-  ${EMPLOYEE_MINI_INFOS}
-`;
-
 export const ACTION_PLAN_OBJECTIVE_DETAILS = gql`
   fragment ActionPlanObjectiveDetailsFragment on ActionPlanObjectiveType{
     ...ActionPlanObjectiveBasicInfosFragment
@@ -60,12 +46,12 @@ export const ACTION_PLAN_OBJECTIVE_DETAILS = gql`
       ...EmployeeMiniInfosFragment
     }
     actions{
-      ...ActionPlanObjectiveActionFragment
+      ...ActionPlanActionDetailsFragment
     }
   }
   ${ACTION_PLAN_OBJECTIVE_BASIC_INFOS}
   ${EMPLOYEE_MINI_INFOS}
-  ${ACTION_PLAN_OBJECTIVE_DECISION_DETAILS}
+  ${ACTION_PLAN_ACTION_DETAILS}
 `;
 
 export const ACTION_PLAN_OBJECTIVE_RECAP_DETAILS = gql`
@@ -76,12 +62,12 @@ export const ACTION_PLAN_OBJECTIVE_RECAP_DETAILS = gql`
       ...EmployeeMiniInfosFragment
     }
     actions{
-      ...ActionPlanObjectiveActionFragment
+      ...ActionPlanActionDetailsFragment
     }
     createdAt
     updatedAt
   }
   ${ACTION_PLAN_OBJECTIVE_BASIC_INFOS}
   ${EMPLOYEE_MINI_INFOS}
-  ${ACTION_PLAN_OBJECTIVE_DECISION_DETAILS}
+  ${ACTION_PLAN_ACTION_DETAILS}
 `;

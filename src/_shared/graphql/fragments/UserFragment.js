@@ -3,6 +3,8 @@
 import { gql } from '@apollo/client';
 import { EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
 import { PARTNER_MINI_INFOS } from './PartnerFragment';
+import { SUPPLIER_MINI_INFOS } from './SupplierFragment';
+import { FINANCIER_MINI_INFOS } from './FinancierFragment';
 
 export const USER_BASIC_INFOS = gql`
   fragment UserBasicInfosFragment on UserType {
@@ -22,9 +24,17 @@ export const USER_BASIC_INFOS = gql`
     partner {
       ...PartnerMiniInfosFragment
     }
+    financier {
+      ...FinancierMiniInfosFragment
+    }
+    supplier {
+      ...SupplierMiniInfosFragment
+    }
   }
   ${EMPLOYEE_MINI_INFOS}
   ${PARTNER_MINI_INFOS}
+  ${FINANCIER_MINI_INFOS}
+  ${SUPPLIER_MINI_INFOS}
 `;
 
 // export const USER_DETAILS2 = gql`

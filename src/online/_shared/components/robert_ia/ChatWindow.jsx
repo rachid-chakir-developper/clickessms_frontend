@@ -21,7 +21,7 @@ import { USER_QUESTION } from '../../../../_shared/graphql/mutations/RobertIaMut
 
 const ChatWindow = ({ open, onClose, }) => {
     const [question, setQuestion] = useState('');
-    const [messages, setMessages] = useState([{ sender: 'bot', text: 'Bonjour, je suis ROBERP, votre assistant virtuel spécialiste du secteur social et médico-social. Je suis là pour répondre à toutes vos questions et corriger vos écrits professionnel. Comment puis-je vous aider aujourd\'hui ?  ' }]);
+    const [messages, setMessages] = useState([{ sender: 'bot', text: `Bonjour, je suis ROBERP, votre assistant spécialiste du secteur social et médico-social. Je suis là pour répondre à toutes vos questions et corriger vos écrits professionnels . Comment puis-je vous aider aujourd'hui ?` }]);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const messagesEndRef = useRef(null);
     const [isBlocked, setIsBlocked] = useState(false);

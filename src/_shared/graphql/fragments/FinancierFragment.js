@@ -1,7 +1,6 @@
 // FinancierFragment.js
 
 import { gql } from '@apollo/client';
-import { FOLDER_MINI_INFOS } from './MediaFragment';
 
 export const FINANCIER_PHONE_INFOS = gql`
   fragment FinancierPhoneInfosFragment on FinancierType {
@@ -16,8 +15,8 @@ export const FINANCIER_PHONE_INFOS = gql`
   }
 `;
 
-export const FINANCIER_BASIC_INFOS = gql`
-  fragment FinancierBasicInfosFragment on FinancierType {
+export const FINANCIER_MINI_INFOS = gql`
+  fragment FinancierMiniInfosFragment on FinancierType {
     id
     name
     email
@@ -27,11 +26,18 @@ export const FINANCIER_BASIC_INFOS = gql`
     zipCode
     address
     isActive
+  }
+`;
+
+export const FINANCIER_BASIC_INFOS = gql`
+  fragment FinancierBasicInfosFragment on FinancierType {
+    ...FinancierMiniInfosFragment
     folder {
-      ...FolderMiniInfosFragment
+      id
+      name
     }
   }
-  ${FOLDER_MINI_INFOS}
+  ${FINANCIER_MINI_INFOS}
 `;
 
 export const FINANCIER_DETAILS = gql`

@@ -32,6 +32,11 @@ const MENU_OPTIONS = [
     route: '/online/account/profil',
   },
   {
+    label: 'Mes actions',
+    icon: 'eva:person-fill',
+    route: '/online/travaux/actions/',
+  },
+  {
     label: 'Paramètres',
     icon: 'eva:settings-2-fill',
     route: '/online/parametres',

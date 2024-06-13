@@ -1,6 +1,6 @@
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import * as React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
   Box,
@@ -12,12 +12,14 @@ import {
   Button,
 } from '@mui/material';
 
-import { UNDESIRABLE_EVENT_RECAP } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
+import { GET_UNDESIRABLE_EVENTS, UNDESIRABLE_EVENT_RECAP } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
 import { Done, Edit } from '@mui/icons-material';
 import UndesirableEventTabs from './undesirable-events-tabs/UndesirableEventTabs';
+import { POST_UNDESIRABLE_EVENT_OBJECTIVE } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -28,6 +30,8 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function UndesirableEventDetails() {
+  const navigate = useNavigate();
+  const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   let { idUndesirableEvent } = useParams();
   const [
     getUndesirableEvent,
@@ -43,19 +47,54 @@ export default function UndesirableEventDetails() {
     }
   }, [idUndesirableEvent]);
 
+  const [createUndesirableEventObjective, { loading: loadingPostObjective }] =
+  useMutation(POST_UNDESIRABLE_EVENT_OBJECTIVE, {
+    onCompleted: (datas) => {
+      if (datas.createUndesirableEventObjective.done) {
+        let actionPlanObjective = datas.createUndesirableEventObjective?.undesirableEvent?.actionPlanObjective
+        navigate(`/online/qualites/plan-action/objectifs/modifier/${actionPlanObjective?.id}`);
+      } else {
+        setNotifyAlert({
+          isOpen: true,
+          message: `Non analysé ! ${datas.createUndesirableEventObjective.message}.`,
+          type: 'error',
+        });
+      }
+    },
+    refetchQueries: [{ query: GET_UNDESIRABLE_EVENTS }],
+    onError: (err) => {
+      console.log(err);
+      setNotifyAlert({
+        isOpen: true,
+        message: 'Non changée ! Veuillez réessayer.',
+        type: 'error',
+      });
+    },
+  });
+
+  const onCreateUndesirableEventObjective = (id) => {
+    setConfirmDialog({
+      isOpen: true,
+      title: 'ATTENTION',
+      subTitle: 'Voulez vous vraiment analyser ?',
+      onConfirm: () => {
+        setConfirmDialog({ isOpen: false });
+        createUndesirableEventObjective({ variables: { id: id } });
+      },
+    });
+  };
+
   if (loadingUndesirableEvent) return <ProgressService type="form" />;
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1}}>
-        <Link
-          to={`/online/qualites/plan-action/objectifs/evenements-indesirable/${undesirableEventData?.undesirableEvent?.id}`}
-          className="no_style"
-        >
-          <Button variant="contained" endIcon={<Done />}
-          sx={{mx: 2}}>
-            Analyser
-          </Button>
-        </Link>
+        <Button variant="contained" endIcon={<Done />}
+        sx={{mx: 2}}
+        onClick={() => {
+          onCreateUndesirableEventObjective(undesirableEventData?.undesirableEvent?.id);
+        }}>
+          Analyser
+        </Button>
         <Link
           to={`/online/qualites/evenements-indesirables/modifier/${undesirableEventData?.undesirableEvent?.id}`}
           className="no_style"
