@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import EstablishmentActivityAuthorization from './EstablishmentActivityAuthorization';
 import BeneficiaryUndesirableEvents from './BeneficiaryUndesirableEvents';
 import { Stack } from '@mui/material';
+import EstablishmentInfos from './EstablishmentInfos';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -97,14 +98,18 @@ export default function EstablishmentTabs({establishment}) {
                 aria-label="nav tabs example"
                 role="navigation"
             >
+                <LinkTab label="Autres Informations" href="/spam" />
                 <LinkTab label="Evénements indésirables" href="/spam" />
                 <LinkTab label="Habilitations" href="/trash" />
             </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          <BeneficiaryUndesirableEvents establishment={establishment} />
+          <EstablishmentInfos establishment={establishment} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
+          <BeneficiaryUndesirableEvents establishment={establishment} />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
             <EstablishmentActivityAuthorization activityAuthorizations={establishment?.activityAuthorizations} />
         </CustomTabPanel>
     </Box>

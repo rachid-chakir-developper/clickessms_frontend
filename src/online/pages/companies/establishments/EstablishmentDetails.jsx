@@ -65,27 +65,13 @@ const EstablishmentDetailsPage = ({ establishment }) => {
     measurementActivityUnit,
     establishmentType,
     establishmentCategory,
-    latitude,
-    longitude,
     city,
     zipCode,
     address,
     additionalAddress,
     mobile,
     fix,
-    fax,
     email,
-    webSite,
-    otherContacts,
-    iban,
-    bic,
-    bankName,
-    description,
-    observation,
-    managers,
-    establishmentChilds,
-    establishmentParent,
-    isActive,
     createdAt,
     updatedAt,
   } = establishment;
@@ -202,83 +188,8 @@ const EstablishmentDetailsPage = ({ establishment }) => {
               Date d'ouverture: {getFormatDate(openingDate)}
             </Typography>
           </Paper>
-          
-          {managers?.length > 0 && (
-              <Paper sx={{ padding: 2 }}>
-                <Typography variant="h6" gutterBottom>
-                  Les responsables
-                </Typography>
-                <Paper sx={{ padding: 2 }} variant="outlined">
-                  <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
-                    {managers?.map((manager, index) => (
-                      <Grid xs={12} sm={12} md={6} key={index}>
-                        <Item>
-                          <EmployeeItemCard employee={manager?.employee} />
-                        </Item>
-                      </Grid>
-                    ))}
-                  </Grid>
-                </Paper>
-              </Paper>
-          )}
-          {establishmentParent && (
-            <>
-              <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-                Structure mère
-              </Typography>
-              <Paper sx={{ padding: 2 }} variant="outlined">
-                <Item>
-                  <EstablishmentItemCard establishment={establishmentParent} />
-                </Item>
-              </Paper>
-            </>
-          )}
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={12}>
-        <Paper sx={{ padding: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Description
-          </Typography>
-          <Paper sx={{ padding: 2 }} variant="outlined">
-            <Typography variant="body1">
-              {description ? description : "Aucune description pour l'instant"}
-            </Typography>
-          </Paper>
-        </Paper>
-      </Grid>
-      <Grid item xs={12} sm={12}>
-        <Paper sx={{ padding: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Observation
-          </Typography>
-          <Paper sx={{ padding: 2 }} variant="outlined">
-            <Typography variant="body1">
-              {observation ? observation : "Aucune observation pour l'instant"}
-            </Typography>
-          </Paper>
-        </Paper>
-      </Grid>
-      {establishmentChilds?.length > 0 && (
-        <Grid item xs={12} sm={12}>
-          <Paper sx={{ padding: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Les structures filles
-            </Typography>
-            <Paper sx={{ padding: 2 }} variant="outlined">
-              <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
-                {establishmentChilds?.map((establishment, index) => (
-                  <Grid xs={12} sm={6} md={4} key={index}>
-                    <Item>
-                      <EstablishmentItemCard establishment={establishment} />
-                    </Item>
-                  </Grid>
-                ))}
-              </Grid>
-            </Paper>
-          </Paper>
-        </Grid>
-      )}
       <Grid item xs={12} sm={12}>
         <Paper sx={{ padding: 2 }}>
           <EstablishmentTabs establishment={establishment}/>

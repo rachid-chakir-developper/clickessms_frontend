@@ -69,12 +69,42 @@ export default function UserItemCard({
               title={`Le partenaire: ${user?.partner?.name}`}
             >
               <Link
-                to={`/online/partenariats/partenaires/${user?.partner?.id}`}
+                to={`/online/partenariats/partenaires/details/${user?.partner?.id}`}
                 className="no_style"
               >
                 <Avatar
                   alt={`${user?.partner?.name}`}
                   src={user?.partner?.photo}
+                />
+              </Link>
+            </Tooltip>
+          )}
+          {user?.financier && (
+            <Tooltip
+              title={`Le financeur: ${user?.financier?.name}`}
+            >
+              <Link
+                to={`/online/partenariats/financeurs/details/${user?.financier?.id}`}
+                className="no_style"
+              >
+                <Avatar
+                  alt={`${user?.financier?.name}`}
+                  src={user?.financier?.photo}
+                />
+              </Link>
+            </Tooltip>
+          )}
+          {user?.supplier && (
+            <Tooltip
+              title={`Le fournisseur: ${user?.supplier?.name}`}
+            >
+              <Link
+                to={`/online/achats/fournisseurs/details/${user?.supplier?.id}`}
+                className="no_style"
+              >
+                <Avatar
+                  alt={`${user?.supplier?.name}`}
+                  src={user?.supplier?.photo}
                 />
               </Link>
             </Tooltip>

@@ -25,6 +25,8 @@ import TransferList from '../../../_shared/components/helpers/TransferList';
 import { GET_EMPLOYEES } from '../../../_shared/graphql/queries/EmployeeQueries';
 import TheAutocomplete from '../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_PARTNERS } from '../../../_shared/graphql/queries/PartnerQueries';
+import { GET_FINANCIERS } from '../../../_shared/graphql/queries/FinancierQueries';
+import { GET_SUPPLIERS } from '../../../_shared/graphql/queries/SupplierQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -107,6 +109,24 @@ export default function AddUserForm({ idUser, title }) {
     error: partnersError,
     fetchMore: fetchMorePartners,
   } = useQuery(GET_PARTNERS, {
+    fetchPolicy: 'network-only',
+  });
+
+  const {
+    loading: loadingFinanciers,
+    data: financiersData,
+    error: financiersError,
+    fetchMore: fetchMoreFinanciers,
+  } = useQuery(GET_FINANCIERS, {
+    fetchPolicy: 'network-only',
+  });
+
+  const {
+    loading: loadingSuppliers,
+    data: suppliersData,
+    error: suppliersError,
+    fetchMore: fetchMoreSuppliers,
+  } = useQuery(GET_SUPPLIERS, {
     fetchPolicy: 'network-only',
   });
 
@@ -304,21 +324,6 @@ export default function AddUserForm({ idUser, title }) {
                 />
               </Item>
               <Item>
-                <TheAutocomplete
-                  options={employeesData?.employees?.nodes}
-                  label="Employé"
-                  placeholder="Choisissez un employé"
-                  limitTags={2}
-                  multiple={false}
-                  value={formik.values.employee}
-                  onChange={(e, newValue) => {
-                    formik.setFieldValue('employee', newValue);
-                  }}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
                 <TheTextField
                   variant="outlined"
                   label="username"
@@ -352,6 +357,21 @@ export default function AddUserForm({ idUser, title }) {
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
+            </Grid>
+            <Grid xs={2} sm={4} md={4}>
+              <Item>
+                <TheAutocomplete
+                  options={employeesData?.employees?.nodes}
+                  label="Employé"
+                  placeholder="Choisissez un employé"
+                  limitTags={2}
+                  multiple={false}
+                  value={formik.values.employee}
+                  onChange={(e, newValue) => {
+                    formik.setFieldValue('employee', newValue);
+                  }}
+                />
+              </Item>
               <Item>
                 <TheAutocomplete
                   options={partnersData?.partners?.nodes}
@@ -362,6 +382,32 @@ export default function AddUserForm({ idUser, title }) {
                   value={formik.values.partner}
                   onChange={(e, newValue) => {
                     formik.setFieldValue('partner', newValue);
+                  }}
+                />
+              </Item>
+              <Item>
+                <TheAutocomplete
+                  options={financiersData?.financiers?.nodes}
+                  label="Financeur"
+                  placeholder="Choisissez un financeur"
+                  limitTags={2}
+                  multiple={false}
+                  value={formik.values.financier}
+                  onChange={(e, newValue) => {
+                    formik.setFieldValue('financier', newValue);
+                  }}
+                />
+              </Item>
+              <Item>
+                <TheAutocomplete
+                  options={suppliersData?.suppliers?.nodes}
+                  label="Fournisseur"
+                  placeholder="Choisissez un fournisseur"
+                  limitTags={2}
+                  multiple={false}
+                  value={formik.values.supplier}
+                  onChange={(e, newValue) => {
+                    formik.setFieldValue('supplier', newValue);
                   }}
                 />
               </Item>

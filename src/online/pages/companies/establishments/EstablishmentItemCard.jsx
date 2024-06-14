@@ -97,23 +97,6 @@ export default function EstablishmentItemCard({
               anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
               transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           >
-              {establishment?.establishmentParent && (
-              <Tooltip
-                title={`L'éstablishment parent: ${establishment?.establishmentParent?.name}`}
-              >
-                <Link
-                  to={`/online/associations/structures/details/${establishment?.establishmentParent?.id}`}
-                  className="no_style"
-                >
-                  <MenuItem onClick={handleCloseMenu}>
-                    <Avatar
-                      alt={`${establishment?.establishmentParent?.name}`}
-                      src={establishment?.establishmentParent?.logo}
-                    />
-                  </MenuItem>
-                </Link>
-              </Tooltip>
-            )}
             {onDeleteEstablishment && (
               <Tooltip title="Supprimer">
                 <MenuItem
