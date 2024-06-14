@@ -9,6 +9,7 @@ export default function Establishments() {
     <Box>
       <Routes>
         <Route path={`liste`} element={<ListEstablishments />} />
+        <Route path={`liste/:idParent`} element={<ListEstablishments />} />
         <Route path={`ajouter`} element={<AddEstablishment />} />
         <Route
           path={`modifier/:idEstablishment`}

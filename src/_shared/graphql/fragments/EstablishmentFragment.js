@@ -17,8 +17,8 @@ export const ESTABLISHMENT_PHONE_INFOS = gql`
   }
 `;
 
-export const ESTABLISHMENT_MINI_INFOS = gql`
-  fragment EstablishmentMiniInfosFragment on EstablishmentType {
+export const ESTABLISHMENT_MIN_MINI_INFOS = gql`
+  fragment EstablishmentMiniMiniInfosFragment on EstablishmentType {
     id
     number
     name
@@ -30,6 +30,16 @@ export const ESTABLISHMENT_MINI_INFOS = gql`
     coverImage
     isActive
   }
+`;
+
+export const ESTABLISHMENT_MINI_INFOS = gql`
+  fragment EstablishmentMiniInfosFragment on EstablishmentType {
+    ...EstablishmentMiniMiniInfosFragment
+    establishmentParent{
+    ...EstablishmentMiniMiniInfosFragment
+    }
+  }
+${ESTABLISHMENT_MIN_MINI_INFOS}
 `;
 
 export const ESTABLISHMENT_MANAGER_DETAILS = gql`
@@ -62,6 +72,9 @@ export const ESTABLISHMENT_BASIC_INFOS = gql`
     establishmentParent {
       ...EstablishmentMiniInfosFragment
     }
+    establishmentChilds {
+      ...EstablishmentMiniInfosFragment
+    }
     folder {
       ...FolderMiniInfosFragment
     }
@@ -85,9 +98,6 @@ export const ACTIVITY_AUTHORIZATION_DETAILS = gql`
 export const ESTABLISHMENT_DETAILS = gql`
   fragment EstablishmentDetailsFragment on EstablishmentType {
     ...EstablishmentBasicInfosFragment
-    establishmentChilds {
-      ...EstablishmentBasicInfosFragment
-    }
     measurementActivityUnit
     latitude
     longitude
@@ -114,9 +124,6 @@ export const ESTABLISHMENT_DETAILS = gql`
 export const ESTABLISHMENT_RECAP_DETAILS = gql`
   fragment EstablishmentReacpDetailsFragment on EstablishmentType {
     ...EstablishmentBasicInfosFragment
-    establishmentChilds {
-      ...EstablishmentBasicInfosFragment
-    }
     measurementActivityUnit
     latitude
     longitude

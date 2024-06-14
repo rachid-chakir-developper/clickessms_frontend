@@ -23,9 +23,10 @@ import {
   Done,
   Edit,
   Folder,
+  KeyboardArrowRight,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
+import { Alert, Avatar, Breadcrumbs, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
@@ -181,6 +182,8 @@ function EnhancedTableHead(props) {
             </TableSortLabel>
           </StyledTableCell>
         ))}
+        <StyledTableCell padding="checkbox">
+        </StyledTableCell>
       </TableRow>
     </TableHead>
   );
@@ -245,7 +248,7 @@ function EnhancedTableToolbar(props) {
 export default function TableListEstablishments({
   loading,
   rows,
-  onDeleteEstablishment
+  onDeleteEstablishment,
 }) {
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
@@ -317,6 +320,20 @@ export default function TableListEstablishments({
   const [anchorElList, setAnchorElList] = React.useState([]);
   return (
     <Box sx={{ width: '100%' }}>
+      {rows[0]?.establishmentParent && <Breadcrumbs maxItems={4} aria-label="breadcrumb">
+        <Link underline="hover" color="inherit" href="#">
+          Home
+        </Link>
+        <Link underline="hover" color="inherit" href="#">
+          Catalog
+        </Link>
+        <Link underline="hover" color="inherit" href="#">
+          Accessories
+        </Link>
+        <Link underline="hover" color="inherit" href="#">
+          New Collection
+        </Link>
+      </Breadcrumbs>}
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
@@ -336,14 +353,14 @@ export default function TableListEstablishments({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="8">
+                  <StyledTableCell colSpan="9">
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="8">
+                  <StyledTableCell colSpan="9">
                     <Alert severity="warning">
                       Aucune structures trouvée.
                     </Alert>
@@ -518,6 +535,14 @@ export default function TableListEstablishments({
                         </MenuItem>
                       </Popover>
                     </StyledTableCell>
+                    <StyledTableCell>
+                      {row?.establishmentChilds?.length > 0 && <IconButton
+                        size="small"
+                        onClick={()=> navigate(`/online/associations/structures/liste/${row?.id}`)}
+                      >
+                        <KeyboardArrowRight />
+                      </IconButton>}
+                    </StyledTableCell>
                   </StyledTableRow>
                 );
               })}
@@ -527,7 +552,7 @@ export default function TableListEstablishments({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={6} />
+                  <StyledTableCell colSpan={9} />
                 </StyledTableRow>
               )}
             </TableBody>

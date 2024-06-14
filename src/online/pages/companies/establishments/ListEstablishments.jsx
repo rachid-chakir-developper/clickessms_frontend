@@ -6,7 +6,7 @@ import { Alert, Button, Stack } from '@mui/material';
 import EstablishmentItemCard from './EstablishmentItemCard';
 import { useMutation } from '@apollo/client';
 import { Add } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import {
@@ -29,6 +29,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListEstablishments() {
+  let { idParent } = useParams();
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
   const [establishmentFilter, setEstablishmentFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
@@ -48,6 +49,7 @@ export default function ListEstablishments() {
     },
   ] = useLazyQuery(GET_ESTABLISHMENTS, {
     variables: {
+      idParent: idParent ? idParent : -1,
       establishmentFilter,
       page: paginator.page,
       limit: paginator.limit,

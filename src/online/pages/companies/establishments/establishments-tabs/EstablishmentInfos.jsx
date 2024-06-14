@@ -37,29 +37,26 @@ const EstablishmentDetailsPage = ({ establishment }) => {
     <Grid container spacing={3}>
         {managers?.length > 0 && <Grid item xs={12} sm={6}>
                 <Paper sx={{ padding: 2 }}>
-                
-                    <Paper sx={{ padding: 2 }}>
-                        <Typography variant="h6" gutterBottom>
-                        Les responsables
-                        </Typography>
-                        <Paper sx={{ padding: 2 }} variant="outlined">
-                        <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
-                            {managers?.map((manager, index) => (
-                            <Grid xs={12} sm={12} md={6} key={index}>
-                                <Item>
-                                <EmployeeItemCard employee={manager?.employee} />
-                                </Item>
-                            </Grid>
-                            ))}
+                    <Typography variant="h6" gutterBottom>
+                    Les responsables
+                    </Typography>
+                    <Paper sx={{ padding: 2 }} variant="outlined">
+                    <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
+                        {managers?.map((manager, index) => (
+                        <Grid xs={12} sm={12} md={12} key={index}>
+                            <Item>
+                            <EmployeeItemCard employee={manager?.employee} />
+                            </Item>
                         </Grid>
-                        </Paper>
+                        ))}
+                    </Grid>
                     </Paper>
                 </Paper>
             </Grid>
         }
         {establishmentParent && <Grid item xs={12} sm={6}>
                 <Paper sx={{ padding: 2 }}>
-                    <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+                    <Typography variant="h6" gutterBottom>
                         Structure mère
                     </Typography>
                     <Paper sx={{ padding: 2 }} variant="outlined">

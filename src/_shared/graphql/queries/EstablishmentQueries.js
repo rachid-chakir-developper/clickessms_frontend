@@ -16,12 +16,14 @@ export const GET_ESTABLISHMENT = gql`
 
 export const GET_ESTABLISHMENTS = gql`
   query GetEstablishments(
+    $idParent: ID,
     $establishmentFilter: EstablishmentFilterInput
     $offset: Int
     $limit: Int
     $page: Int
   ) {
     establishments(
+      idParent: $idParent,
       establishmentFilter: $establishmentFilter
       offset: $offset
       limit: $limit
