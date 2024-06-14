@@ -10,15 +10,16 @@ import { useFeedBacks } from '../../_shared/context/feedbacks/FeedBacksProvider'
 import { LOGOUT_USER } from '../../_shared/graphql/mutations/AuthMutations';
 import { useMutation } from '@apollo/client';
 import { useSessionDispatch } from '../../_shared/context/SessionProvider';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  HighlightableSubmodule,
-  HighlightableModule,
-  HighlightablePage,
-  filterModules,
+  SubmoduleViewModel,
+  ModuleViewModel,
+  PageViewModel,
+  filterModulesForSearch,
 } from './search';
 import NavEntry from './NavEntry';
 import SearchEntry from './SearchEntry';
+import { filterMap } from '../../_shared/tools/functions';
 
 export default function NavMenu() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -33,7 +34,7 @@ export default function NavMenu() {
   );
 }
 
-function PageNavEntry(props: HighlightablePage) {
+function PageNavEntry(props: PageViewModel) {
   return (
     <NavEntry
       icon={props.icon}
@@ -46,8 +47,8 @@ function PageNavEntry(props: HighlightablePage) {
   );
 }
 
-interface SubmoduleNavEntryProps extends HighlightableSubmodule {
-  expanded?: boolean;
+interface SubmoduleNavEntryProps extends SubmoduleViewModel {
+  animateExpand?: boolean;
   onToggleExpand: (key: string, expanded: boolean) => void;
 }
 
@@ -81,32 +82,28 @@ function SubmoduleNavEntry(props: SubmoduleNavEntryProps) {
   );
 }
 
-interface ModuleNavEntryProps extends HighlightableModule {
-  expanded?: boolean;
-  onToggleExpand: (key: string, expanded: boolean) => void;
+interface ModuleNavEntryProps extends ModuleViewModel {
+  animateExpand?: boolean;
+  onModuleToggleExpand(moduleId: string, expanded: boolean): void;
+  onSubmoduleToggleExpand(
+    moduleId: string,
+    submoduleId: string,
+    expanded: boolean,
+  ): void;
 }
 
 function ModuleNavEntry(props: ModuleNavEntryProps) {
-  const [openedSubmodule, setOpenedSubmodule] = useState('');
-
-  function onToggleExpand(key: string) {
-    if (key === openedSubmodule) {
-      setOpenedSubmodule('');
-    } else {
-      setOpenedSubmodule(key);
-    }
-  }
-
   return (
     <NavEntry
       icon={props.icon}
       name={props.name}
       highlighted={props.highlighted}
       onClick={() => {
-        props.onToggleExpand(props.id, Boolean(props.expanded));
+        props.onModuleToggleExpand(props.id, Boolean(props.expanded));
       }}
       expandable
       expanded={props.expanded}
+      animateExpand={props.animateExpand}
     >
       <List disablePadding>
         {props.entries.map((entry) => {
@@ -119,8 +116,15 @@ function ModuleNavEntry(props: ModuleNavEntryProps) {
                 icon={entry.icon}
                 pages={entry.pages}
                 highlighted={entry.highlighted}
-                onToggleExpand={onToggleExpand}
-                expanded={openedSubmodule === entry.id}
+                onToggleExpand={() => {
+                  props.onSubmoduleToggleExpand(
+                    props.id,
+                    entry.id,
+                    Boolean(entry.expanded),
+                  );
+                }}
+                expanded={entry.expanded}
+                animateExpand={props.animateExpand}
               />
             );
           }
@@ -141,24 +145,83 @@ function ModuleNavEntry(props: ModuleNavEntryProps) {
   );
 }
 
-function NavMenuMain({ searchTerm }: { searchTerm: string }) {
-  const [openedModule, setOpenedModule] = useState('');
-
-  function onToggleExpand(key: string) {
-    if (key === openedModule) {
-      setOpenedModule('');
-    } else {
-      setOpenedModule(key);
+function filterOutDisabledEntries(
+  modules: ModuleViewModel[],
+): ModuleViewModel[] {
+  return filterMap(modules, (module) => {
+    const entries = filterMap(module.entries, (entry) => {
+      if ('pages' in entry) {
+        const pages = filterMap(entry.pages, (page) => {
+          return page.disabled ? undefined : page;
+        });
+        return pages.length > 0 ? { ...entry, pages } : undefined;
+      }
+      return entry.disabled ? undefined : entry;
+    });
+    if (entries.length === 0) {
+      return undefined;
     }
+    return { ...module, entries };
+  });
+}
+
+function NavMenuMain({ searchTerm }: { searchTerm: string }) {
+  const [viewModel, setViewModel] = useState<ModuleViewModel[]>(modules);
+
+  // Filter the entries every time the search term changes
+  useEffect(() => {
+    if (searchTerm) {
+      setViewModel(
+        filterOutDisabledEntries(filterModulesForSearch(modules, searchTerm)),
+      );
+    } else {
+      setViewModel(modules);
+    }
+  }, [searchTerm]);
+
+  function onModuleToggleExpand(moduleId: string, expanded: boolean) {
+    setViewModel((prev) =>
+      prev.map((module) => {
+        if (module.id === moduleId) {
+          return { ...module, expanded: !expanded };
+        }
+        if (!searchTerm) {
+          return { ...module, expanded: false };
+        }
+        return module;
+      }),
+    );
   }
 
-  const filteredModules: HighlightableModule[] = searchTerm
-    ? filterModules(modules, searchTerm)
-    : modules;
+  function onSubmoduleToggleExpand(
+    moduleId: string,
+    submoduleId: string,
+    expanded: boolean,
+  ) {
+    setViewModel((prev) =>
+      prev.map((module) => {
+        if (module.id === moduleId) {
+          return {
+            ...module,
+            entries: module.entries.map((entry) => {
+              if (entry.id === submoduleId) {
+                return { ...entry, expanded: !expanded };
+              }
+              if (!searchTerm && 'pages' in entry) {
+                return { ...entry, expanded: false };
+              }
+              return entry;
+            }),
+          };
+        }
+        return module;
+      }),
+    );
+  }
 
   return (
     <List>
-      {filteredModules.map((module) => (
+      {viewModel.map((module) => (
         <ModuleNavEntry
           key={module.id}
           id={module.id}
@@ -166,8 +229,10 @@ function NavMenuMain({ searchTerm }: { searchTerm: string }) {
           name={module.name}
           icon={module.icon}
           highlighted={module.highlighted}
-          onToggleExpand={onToggleExpand}
-          expanded={openedModule === module.id}
+          onModuleToggleExpand={onModuleToggleExpand}
+          onSubmoduleToggleExpand={onSubmoduleToggleExpand}
+          expanded={module.expanded}
+          animateExpand={!searchTerm}
         />
       ))}
     </List>

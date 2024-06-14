@@ -56,7 +56,6 @@ export const getActionStatusLabel = (status) => {
   return ACTION_STATUS.ALL.find((s) => s.value == status)?.label;
 };
 
-
 export const getLevelLabel = (level) => {
   return LEVELS.ALL.find((l) => l.value == level)?.label;
 };
@@ -101,7 +100,6 @@ export const getMeasurementActivityUnitLabel = (unit) => {
   return MEASUREMENT_ACTIVITY_UNITS.ALL.find((t) => t.value == unit)?.label;
 };
 
-
 export const getVehicleStateLabel = (state) => {
   return VEHICLE_STATES.ALL.find((t) => t.value == state)?.label;
 };
@@ -132,14 +130,20 @@ export const formatCurrencyAmount = (amount) => {
   return intlNumFmt.format(amount);
 };
 
-// export const getMarkerIcon = (type) => {
-//   switch (type) {
-//     case 'task':
-//       return require('../../assets/img/work_map_marker.png');
-//     case 'employee':
-//       return require('../../assets/img/work_map_marker.png');
-//     // Ajoutez d'autres cas pour les types supplémentaires
-//     default:
-//       return require('../../assets/img/work_map_marker.png');
-//   }
-// };
+/**
+ * Combination for a map and a filter. If the function returns undefined, the
+ * result is ignored.
+ */
+export function filterMap<I, O>(
+  array: I[],
+  fn: (item: I) => O | undefined,
+): O[] {
+  const result: O[] = [];
+  for (const item of array) {
+    const mapped = fn(item);
+    if (mapped !== undefined) {
+      result.push(mapped);
+    }
+  }
+  return result;
+}

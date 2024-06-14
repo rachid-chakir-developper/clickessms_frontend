@@ -3,10 +3,11 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import Collapse from '@mui/material/Collapse';
 import { NavLink } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 export interface NavEntryProps {
   icon: React.ReactNode;
@@ -23,6 +24,10 @@ export interface NavEntryProps {
    * is true.
    */
   expanded?: boolean;
+  /**
+   * Whether to enable animate when the entry is expanded or collapsed.
+   */
+  animateExpand?: boolean;
   /**
    * Callback to handle the click event. Most useful to implement the
    * expansion logic for expandable entries, but can be used for other
@@ -53,6 +58,23 @@ export interface NavEntryProps {
  * A generic component to render entries in the navigation menu.
  */
 export default function NavEntry(props: NavEntryProps) {
+  const [animateExpand, setAnimateExpand] = useState(props.animateExpand);
+
+  // Introduce a delay to prevent the animation from playing immediately when
+  // the value is set back to `true`.
+  useEffect(() => {
+    const newValue = props.animateExpand;
+    if (newValue) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setAnimateExpand(newValue);
+        });
+      });
+    } else {
+      setAnimateExpand(newValue);
+    }
+  }, [props.animateExpand]);
+
   const button = (
     <ListItemButton
       sx={{ px: 2.5 }}
@@ -64,15 +86,9 @@ export default function NavEntry(props: NavEntryProps) {
       </ListItemIcon>
       <ListItemText
         primary={props.name}
-        primaryTypographyProps={
-          props.highlighted
-            ? {
-                fontWeight: 'bold',
-              }
-            : {}
-        }
+        primaryTypographyProps={props.highlighted ? { fontWeight: 'bold' } : {}}
       />
-      {props.expandable && (props.expanded ? <ExpandLess /> : <ChevronRight />)}
+      {props.expandable && (props.expanded ? <ExpandMore /> : <ChevronRight />)}
     </ListItemButton>
   );
 
@@ -84,7 +100,11 @@ export default function NavEntry(props: NavEntryProps) {
     );
 
   const children = props.expandable ? (
-    <Collapse in={props.expanded} timeout="auto" unmountOnExit>
+    <Collapse
+      in={props.expanded}
+      timeout={animateExpand ? 'auto' : 0}
+      unmountOnExit
+    >
       {props.children}
     </Collapse>
   ) : (

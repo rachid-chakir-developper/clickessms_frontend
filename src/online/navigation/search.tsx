@@ -1,29 +1,35 @@
+import { filterMap } from '../../_shared/tools/functions';
 import { Submodule, Module, Page } from './modules';
 
 /**
- * Given a search term, filter the modules to only keep what is relevant in
+ * Given a search term, filters the modules to only keep what is relevant in
  * the search. Entries that match the search, whether they are modules,
  * submodules or pages, are marked as highlighted.
  * When a module or submodule matches, all its sub-entries are kept, but are
  * not highlighted (unless they themselves are a match).
+ * Modules and submodules that contain a highlighted entry are automatically
+ * expanded.
  */
-export function filterModules(
+export function filterModulesForSearch(
   modules: Module[],
   term: string,
-): HighlightableModule[] {
+): ModuleViewModel[] {
   return filterMap(modules, (_module) => {
-    let module: HighlightableModule = _module;
+    const module: ModuleViewModel = { ..._module };
     if (doesStringMatchTerm(module.name, term)) {
-      module = { ...module, highlighted: true };
+      module.highlighted = true;
     }
     const filteredEntries = filterMap(module.entries, (_entry) => {
-      let entry: HighlightableSubmodule | HighlightablePage = _entry;
+      let entry: SubmoduleViewModel | PageViewModel = _entry;
       if (doesStringMatchTerm(entry.name, term)) {
+        module.expanded = true;
         entry = { ...entry, highlighted: true };
       }
       if ('pages' in entry) {
         const filteredPages = filterMap(entry.pages, (page) => {
           if (doesStringMatchTerm(page.name, term)) {
+            module.expanded = true;
+            entry.expanded = true;
             return { ...page, highlighted: true };
           }
           return entry.highlighted ? page : undefined;
@@ -32,7 +38,10 @@ export function filterModules(
           return { ...entry, pages: filteredPages };
         }
       }
-      return module.highlighted || entry.highlighted ? entry : undefined;
+      if (module.highlighted || entry.highlighted) {
+        return entry;
+      }
+      return undefined;
     });
     if (filteredEntries.length > 0) {
       return { ...module, entries: filteredEntries };
@@ -57,31 +66,18 @@ function removeAccents(str: string): string {
   return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
-/**
- * Combination for a map and a filter. If the function returns undefined, the
- * result is ignored.
- */
-function filterMap<I, O>(array: I[], fn: (item: I) => O | undefined): O[] {
-  const result: O[] = [];
-  for (const item of array) {
-    const mapped = fn(item);
-    if (mapped !== undefined) {
-      result.push(mapped);
-    }
-  }
-  return result;
-}
-
-export interface HighlightableModule extends Module {
-  entries: (HighlightableSubmodule | HighlightablePage)[];
+export interface ModuleViewModel extends Module {
+  entries: (SubmoduleViewModel | PageViewModel)[];
   highlighted?: boolean;
+  expanded?: boolean;
 }
 
-export interface HighlightableSubmodule extends Submodule {
-  pages: HighlightablePage[];
+export interface SubmoduleViewModel extends Submodule {
+  pages: PageViewModel[];
   highlighted?: boolean;
+  expanded?: boolean;
 }
 
-export interface HighlightablePage extends Page {
+export interface PageViewModel extends Page {
   highlighted?: boolean;
 }
