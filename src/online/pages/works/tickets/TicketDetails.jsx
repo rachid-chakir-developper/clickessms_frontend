@@ -6,11 +6,11 @@ import { Box, Grid, Paper, Typography, Divider, Chip, Stack, Button, ListItem, L
 
 import { TICKET_RECAP } from '../../../../_shared/graphql/queries/TicketQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import { getFormatDate, getFormatDateTime } from '../../../../_shared/tools/functions';
-import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
+import { getFormatDate, getFormatDateTime, getPriorityLabel } from '../../../../_shared/tools/functions';
 import EstablishmentItemCard from '../../companies/establishments/EstablishmentItemCard';
-import { Check, CheckBoxOutlineBlank, Done, Edit, Note } from '@mui/icons-material';
-import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard';
+import { AssignmentInd, Check, Edit } from '@mui/icons-material';
+import TicketStatusLabelMenu from './TicketStatusLabelMenu';
+import TaskActionStatusLabelMenu from '../actions/TaskActionStatusLabelMenu';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -47,36 +47,8 @@ export default function TicketDetails() {
           </Link>
         </Box>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid item="true" xs={7}>
+          <Grid item="true" xs={6}>
             <TicketMiniInfos ticket={ticketData?.ticket} />
-          </Grid>
-          <Grid item="true" xs={5}>
-              <Paper
-                variant="outlined"
-                sx={{
-                  p: 2,
-                  margin: 'auto',
-                  marginTop: 2,
-                  flexGrow: 1,
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-                }}
-              >
-                <Typography gutterBottom variant="subtitle3" component="h3">
-                  Type de ticket
-                </Typography>
-                {ticketData?.ticket?.ticketTypes?.map((ticketType, index) => (
-                  <Chip
-                    color="info"
-                    key={index}
-                    label={ticketType?.name}
-                    sx={{ marginRight: 1 }}
-                  />
-                ))}
-              </Paper>
-          </Grid>
-          <Grid item="true" xs={12} sx={{ marginY: 3 }}>
-            <Divider />
           </Grid>
           <Grid item="true" xs={6}>
             <Paper sx={{ padding: 2 }} variant="outlined">
@@ -88,49 +60,11 @@ export default function TicketDetails() {
               </Typography>
             </Paper>
           </Grid>
-          <Grid item="true" xs={6}>
-            <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography gutterBottom variant="subtitle3" component="h3">
-                Observation
-              </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {ticketData?.ticket?.observation}
-              </Typography>
-            </Paper>
-          </Grid>
           <Grid item="true" xs={12} sx={{ marginY: 3 }}>
             <Divider />
-          </Grid>
-          <Grid item="true" xs={6}>
-            <TicketParticipantsInfos ticket={ticketData?.ticket} />
-          </Grid>
-          <Grid item="true" xs={6}>
-            <TicketOtherInfos ticket={ticketData?.ticket} />
-          </Grid>
-          <Grid item="true" xs={12} sx={{ marginY: 3 }}>
-            <Divider sx={{ marginY: 3 }}/>
-            <Typography gutterBottom variant="subtitle3" component="h1">
-              Le compte rendu
-            </Typography>
           </Grid>
           <Grid item="true" xs={12}>
-            <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography gutterBottom variant="subtitle3" component="h3">
-                Les notes prises
-              </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {ticketData?.ticket?.notes}
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid item="true" xs={6}>
-            <TicketDecisions ticket={ticketData?.ticket} />
-          </Grid>
-          <Grid item="true" xs={6}>
-            <TicketReviewPoints ticket={ticketData?.ticket} />
-          </Grid>
-          <Grid item="true" xs={12} sx={{ marginY: 3 }}>
-            <Divider />
+            <TicketActions ticket={ticketData?.ticket} />
           </Grid>
         </Grid>
       </Stack>
@@ -166,7 +100,7 @@ function TicketMiniInfos({ ticket }) {
                 <Typography gutterBottom variant="subtitle1" component="div">
                   Réference : <b>{ticket?.number}</b>
                 </Typography>
-                <Typography gutterBottom variant="subtitle1" component="div">
+                <Typography gutterBottom variant="h6" component="div">
                   {ticket?.title}
                 </Typography>
                 <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
@@ -176,12 +110,17 @@ function TicketMiniInfos({ ticket }) {
                   <b>Dernière modification: </b>
                   {`${getFormatDateTime(ticket?.updatedAt)}`}
                 </Typography>
-                <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
                 <Typography variant="body2" color="text.secondary">
-                  <b>Date début: </b>{' '}
-                  {`${getFormatDateTime(ticket?.startingDateTime)}`} <br />
-                  <b>Date fin: </b>{' '}
-                  {`${getFormatDateTime(ticket?.endingDateTime)}`}
+                  <b>Priorité de ticket</b>
+                  <Chip
+                    color="info"
+                    label={getPriorityLabel(ticket?.priority)}
+                    sx={{ marginLeft: 1 }}
+                  />
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  <b>Status: </b>
+                  <TicketStatusLabelMenu ticket={ticket} />
                 </Typography>
               </Grid>
             </Grid>
@@ -193,68 +132,20 @@ function TicketMiniInfos({ ticket }) {
 }
 
 
-function TicketParticipantsInfos({ ticket }) {
-  return (
-    <Paper
-      variant="outlined"
-      sx={{
-        p: 2,
-        margin: 'auto',
-        flexGrow: 1,
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'dark' ? '#1A2027' : '#f1f1f1',
-      }}
-    >
-      {ticket?.participants.length > 0 && (
-          <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
-            <Typography variant="h6" gutterBottom>
-              Personnes concernées
-            </Typography>
-              <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-                {ticket?.participants?.map((participant, index) => (
-                  <Grid xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
-                    <Item>
-                      <EmployeeItemCard employee={participant.employee} />
-                    </Item>
-                  </Grid>
-                ))}
-              </Grid>
-          </Paper>
-      )}
-      {ticket?.absentParticipants?.length > 0 && (
-          <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
-            <Typography variant="h6" gutterBottom>
-              Personnes absentes
-            </Typography>
-            <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
-              {ticket?.absentParticipants?.map((participant, index) => (
-                <Grid xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
-                  <Item>
-                    <EmployeeItemCard employee={participant} />
-                  </Item>
-                </Grid>
-              ))}
-            </Grid>
-          </Paper>
-      )}
-    </Paper>
-  );
-}
-
 
 function TicketOtherInfos({ ticket }) {
-  return (
-    <Paper
-      variant="outlined"
-      sx={{
-        p: 2,
-        margin: 'auto',
-        flexGrow: 1,
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'dark' ? '#1A2027' : '#f1f1f1',
-      }}
-    >
+  return (<>
       {ticket?.establishments.length > 0 && (
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 2,
+            margin: 'auto',
+            flexGrow: 1,
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'dark' ? '#1A2027' : '#ffffff',
+          }}
+        >
           <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
             <Typography variant="h6" gutterBottom>
               Les structures concernées
@@ -263,34 +154,19 @@ function TicketOtherInfos({ ticket }) {
                 {ticket?.establishments?.map((establishment, index) => (
                   <Grid xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
                     <Item>
-                      <EstablishmentItemCard establishment={establishment.establishment} />
+                      <EstablishmentItemCard establishment={establishment} />
                     </Item>
                   </Grid>
                 ))}
               </Grid>
           </Paper>
+        </Paper>
       )}
-      {ticket?.beneficiaries?.length > 0 && (
-          <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
-            <Typography variant="h6" gutterBottom>
-              Bénificiaires concernés
-            </Typography>
-            <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
-              {ticket?.beneficiaries?.map((beneficiary, index) => (
-                <Grid xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
-                  <Item>
-                    <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
-                  </Item>
-                </Grid>
-              ))}
-            </Grid>
-          </Paper>
-      )}
-    </Paper>
+      </>
   );
 }
 
-function TicketDecisions({ ticket }) {
+function TicketActions({ ticket }) {
   return (
     <Paper
       variant="outlined"
@@ -299,36 +175,39 @@ function TicketDecisions({ ticket }) {
         margin: 'auto',
         flexGrow: 1,
         backgroundColor: (theme) =>
-          theme.palette.mode === 'dark' ? '#1A2027' : '#f1f1f1',
+          theme.palette.mode === 'dark' ? '#1A2027' : '#ffffff',
       }}
     >
-      {ticket?.ticketDecisions.length > 0 && (
+    <Typography variant="h6" gutterBottom>
+      Les actions
+    </Typography>
+      {ticket?.actions.length > 0 && (
           <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
-            <Typography variant="h6" gutterBottom>
-              Les décisions
-            </Typography>
               <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                {ticket?.ticketDecisions?.map((ticketDecision, index) => (
+                {ticket?.actions?.map((ticketAction, index) => (
                   <Box sx={{background: index%2 === 0 ?  "#f5f5f5" : "#ffffff", padding:1}}>
                   <ListItem
                     alignItems="flex-start"
                     key={index}
                   >
                     <ListItemIcon>
-                      <Check />
+                      <AssignmentInd />
                     </ListItemIcon>
                     <ListItemText
-                      primary={ticketDecision?.decision}
-                      secondary={ticketDecision?.dueDate ? `Échéance: ${getFormatDate(ticketDecision?.dueDate)}` : ''}
+                      primary={ticketAction?.description}
+                      secondary={ticketAction?.dueDate ? `Échéance: ${getFormatDate(ticketAction?.dueDate)}` : ''}
                     />
+                    <ListItemIcon>
+                      <TaskActionStatusLabelMenu taskAction={ticketAction} />
+                    </ListItemIcon>
                   </ListItem>
-                  {ticketDecision?.employees?.length > 0 && (
+                  {ticketAction?.employees?.length > 0 && (
                       <>
                         <Typography variant="p" gutterBottom sx={{fontSize: 12, fontStyle: 'italic'}}>
                           Personnes concernées
                         </Typography>
                         <Stack direction="row" flexWrap='wrap' spacing={1}>
-                          {ticketDecision?.employees?.map((employee, index) => (
+                          {ticketAction?.employees?.map((employee, index) => (
                             <Chip
                               key={index}
                               avatar={
@@ -348,46 +227,6 @@ function TicketDecisions({ ticket }) {
                         </Stack>
                       </>
                     )}
-                </Box>
-                ))}
-              </List>
-          </Paper>
-      )}
-    </Paper>
-  );
-}
-
-function TicketReviewPoints({ ticket }) {
-  return (
-    <Paper
-      variant="outlined"
-      sx={{
-        p: 2,
-        margin: 'auto',
-        flexGrow: 1,
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'dark' ? '#1A2027' : '#f1f1f1',
-      }}
-    >
-      {ticket?.ticketReviewPoints.length > 0 && (
-          <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
-            <Typography variant="h6" gutterBottom>
-              Les points à revoir
-            </Typography>
-              <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                {ticket?.ticketReviewPoints?.map((ticketReviewPoint, index) => (
-                  <Box sx={{background: index%2 === 0 ?  "#f5f5f5" : "#ffffff", padding:1}}>
-                  <ListItem
-                    alignItems="flex-start"
-                    key={index}
-                  >
-                    <ListItemIcon>
-                      <Check />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={ticketReviewPoint?.pointToReview}
-                    />
-                  </ListItem>
                 </Box>
                 ))}
               </List>

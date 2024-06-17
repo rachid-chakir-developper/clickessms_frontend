@@ -379,8 +379,8 @@ export default function AddVehicleForm({ idVehicle, title }) {
   };
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <Typography component="div" variant="h5">
-        {title} {formik.values.number}
+      <Typography component="div" variant="h5" sx={{marginBottom: 3}}>
+        {title} <u><b>{formik.values.name}</b></u> immatriculé <u><b>{formik.values.registrationNumber}</b></u> rattaché à l'établissement <u><b>{formik.values.vehicleEstablishments[0]?.establishments[0]?.name}</b></u>
       </Typography>
       {loadingVehicle && <ProgressService type="form" />}
       {!loadingVehicle && (
@@ -405,20 +405,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
-                  <Grid xs={2} sm={4} md={4}>
-                    <Item>
-                      <ImageFileField
-                        variant="outlined"
-                        label="Image"
-                        imageValue={formik.values.image}
-                        onChange={(imageFile) =>
-                          formik.setFieldValue('image', imageFile)
-                        }
-                        disabled={loadingPost || loadingPut}
-                      />
-                    </Item>
-                  </Grid>
-                  <Grid xs={2} sm={4} md={4}>
+                  <Grid xs={12} sm={6} md={3}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -434,7 +421,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={2} sm={4} md={4}>
+                  <Grid xs={12} sm={6} md={3}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -540,8 +527,6 @@ export default function AddVehicleForm({ idVehicle, title }) {
                         </Select>
                       </FormControl>
                     </Item>
-                  </Grid>
-                  <Grid xs={12} sm={6} md={3}>
                     <Item>
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
@@ -573,31 +558,16 @@ export default function AddVehicleForm({ idVehicle, title }) {
                       </FormControl>
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={6}>
+                  <Grid xs={12} sm={12} md={9}>
                     <Item>
                       <TheTextField
                         variant="outlined"
                         label="Description"
                         multiline
-                        rows={4}
+                        rows={5}
                         value={formik.values.description}
                         onChange={(e) =>
                           formik.setFieldValue('description', e.target.value)
-                        }
-                        disabled={loadingPost || loadingPut}
-                      />
-                    </Item>
-                  </Grid>
-                  <Grid xs={12} sm={6} md={6}>
-                    <Item>
-                      <TheTextField
-                        variant="outlined"
-                        label="Observation"
-                        multiline
-                        rows={4}
-                        value={formik.values.observation}
-                        onChange={(e) =>
-                          formik.setFieldValue('observation', e.target.value)
                         }
                         disabled={loadingPost || loadingPut}
                       />
@@ -794,10 +764,10 @@ export default function AddVehicleForm({ idVehicle, title }) {
               <StepLabel
                 onClick={() => onGoToStep(3)}
                 optional={
-                  <Typography variant="caption">Modalité de propriété</Typography>
+                  <Typography variant="caption">Statut de détention</Typography>
                 }
               >
-                Modalité de propriété
+                Statut de détention
               </StepLabel>
               <StepContent>
                 <Grid
@@ -943,7 +913,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                             </Item>
                           </Grid>
                           <Grid xs={12} sm={6} md={3}>
-                            <Item>
+                            <Item sx={{position: 'relative'}}>
                               <TheTextField
                                 variant="outlined"
                                 label="Prix de location"
@@ -957,10 +927,15 @@ export default function AddVehicleForm({ idVehicle, title }) {
                                 }
                                 disabled={loadingPost || loadingPut}
                               />
+                              <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                                onClick={() => removeVehicleOwnership(index)}
+                                edge="end"
+                                color="error"
+                              >
+                                <Close />
+                              </IconButton>
                             </Item>
-                          </Grid>
-                          <Grid xs={12} sm={6} md={3}>
-                            <Item sx={{position: 'relative'}}>
+                            <Item>
                               <TheTextField
                                 variant="outlined"
                                 label="Kilométrage prévisionnel"
@@ -974,13 +949,6 @@ export default function AddVehicleForm({ idVehicle, title }) {
                                 }
                                 disabled={loadingPost || loadingPut}
                               />
-                                <IconButton sx={{position: 'absolute', top: -3, right: -2}}
-                                  onClick={() => removeVehicleOwnership(index)}
-                                  edge="end"
-                                  color="error"
-                                >
-                                  <Close />
-                                </IconButton>
                             </Item>
                           </Grid></>}
                         </Grid>

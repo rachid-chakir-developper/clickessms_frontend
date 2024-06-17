@@ -50,10 +50,23 @@ const StyledMenu = styled((props) => (
 
 // Options with icons for each status
 const STATUS = [
+    { value: 'NEW', label: 'Nouveau', icon: <HourglassEmpty />, color: 'default'},
+    { value: "IN_PROGRESS", label: "En cours de traitement", icon: <Pending />, color: 'info'},
+    { value: "DONE", label: "Traité", icon: <TaskAlt />, color: 'success'},
+  ];
+
+// Options with icons for each status
+const EI_STATUS = [
     { value: 'NEW', label: 'Déclaré', icon: <HourglassEmpty />, color: 'default'},
     { value: "IN_PROGRESS", label: "En cours de traitement", icon: <Pending />, color: 'info'},
     { value: "DONE", label: "Traité", icon: <TaskAlt />, color: 'success'},
   ];
+  // Options with icons for each status
+  const TICKET_STATUS = [
+      { value: 'NEW', label: 'Nouveau', icon: <HourglassEmpty />, color: 'default'},
+      { value: "IN_PROGRESS", label: "En cours de traitement", icon: <Pending />, color: 'info'},
+      { value: "COMPLETED", label: "Terminée", icon: <TaskAlt />, color: 'success'},
+    ];
 
   // Options with icons for each status
 const ACTION_STATUS = [
@@ -86,7 +99,21 @@ export default function CustomizedStatusLabelMenu({status, type=null, loading=fa
     return options?.find((s) => s.value == status)?.color;
   };
   React.useEffect(()=>{
-    setOptions(type === 'action' ? ACTION_STATUS : STATUS)
+    switch (type) {
+      case 'undesirableEvent':
+        setOptions(EI_STATUS)
+        break;
+      case 'action':
+        setOptions(ACTION_STATUS)
+        break;
+      case 'ticket':
+        setOptions(TICKET_STATUS)
+        break;
+    
+      default:
+        setOptions(STATUS)
+        break;
+    }
   }, [type])
   return (
     <Box>

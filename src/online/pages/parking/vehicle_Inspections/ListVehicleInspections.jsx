@@ -132,11 +132,11 @@ export default function ListVehicleInspections() {
       <Grid item="true" xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
-            to="/online/parc-automobile/controles-mensuels/ajouter"
+            to="/online/parc-automobile/controles-vehicules/ajouter"
             className="no_style"
           >
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter un contrôle menssuel
+              Ajouter un contrôle véhicule
             </Button>
           </Link>
         </Box>
@@ -158,7 +158,7 @@ export default function ListVehicleInspections() {
             )}
             {vehicleInspectionsData?.vehicleInspections?.nodes?.length < 1 &&
               !loadingVehicleInspections && (
-                <Alert severity="warning">Aucun contrôle menssuel trouvé.</Alert>
+                <Alert severity="warning">Aucun contrôle véhicule trouvé.</Alert>
               )}
             {vehicleInspectionsData?.vehicleInspections?.nodes?.map(
               (vehicleInspection, index) => (

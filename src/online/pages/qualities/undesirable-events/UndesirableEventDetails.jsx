@@ -20,6 +20,8 @@ import { Done, Edit } from '@mui/icons-material';
 import UndesirableEventTabs from './undesirable-events-tabs/UndesirableEventTabs';
 import { POST_UNDESIRABLE_EVENT_TICKET } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import UndesirableEventStatusLabelMenu from './UndesirableEventStatusLabelMenu';
+import CircularProgressWithLabel from '../../../../_shared/components/feedbacks/CircularProgressWithLabel';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -189,32 +191,37 @@ function UndesirableEventMiniInfos({ undesirableEvent }) {
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b>{' '}
+                <b>Crée le: </b>
                 {`${getFormatDateTime(undesirableEvent?.createdAt)}`} <br />
                 <b>Dernière modification: </b>
                 {`${getFormatDateTime(undesirableEvent?.updatedAt)}`}
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Date début : </b>{' '}
-                {`${getFormatDateTime(undesirableEvent?.startingDateTime)}`}{' '}
+                <b>Date début : </b>
+                {`${getFormatDateTime(undesirableEvent?.startingDateTime)}`}
                 <br />
-                <b>Date fin: </b>{' '}
+                <b>Date fin: </b>
                 {`${getFormatDateTime(undesirableEvent?.endingDateTime)}`}
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Type d'événement: </b>{' '}
-                {`${undesirableEvent?.undesirableEventType}`}{' '}
+                <b>Type d'événement: </b>
+                {`${undesirableEvent?.undesirableEventType}`}
                 <br />
-                <b>Sévérité: </b>{' '}
+                <b>Sévérité: </b>
                 {`${undesirableEvent?.severity}`}
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Pourcentage de complétion: </b>{' '}
-                {`${undesirableEvent?.completionPercentage}%`}
+                <b>Pourcentage de complétion: </b>
+                <CircularProgressWithLabel value={undesirableEvent?.completionPercentage}/>
               </Typography>
+              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+              <Typography variant="body2" color="text.secondary">
+                <b>Status: </b>
+              </Typography>
+              <UndesirableEventStatusLabelMenu  undesirableEvent={undesirableEvent}/>
             </Grid>
           </Grid>
         </Grid>

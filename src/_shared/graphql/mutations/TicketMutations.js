@@ -37,6 +37,20 @@ export const PUT_TICKET_STATE = gql`
   ${TICKET_BASIC_INFOS}
 `;
 
+export const PUT_TICKET_FIELDS = gql`
+  mutation UpdateTicketFields($id: ID!, $ticketData: TicketInput!) {
+    updateTicketFields(id: $id, ticketData: $ticketData) {
+      done
+      success
+      message
+      ticket {
+        ...TicketBasicInfosFragment
+      }
+    }
+  }
+  ${TICKET_BASIC_INFOS}
+`;
+
 export const DELETE_TICKET = gql`
   mutation DeleteTicket($id: ID!) {
     deleteTicket(id: $id) {

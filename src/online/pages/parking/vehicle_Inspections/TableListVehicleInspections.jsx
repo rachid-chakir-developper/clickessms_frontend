@@ -114,12 +114,6 @@ const headCells = [
     label: 'Date et heure du contrôle',
   },
   {
-    id: 'nextInspectionDate',
-    numeric: false,
-    disablePadding: false,
-    label: 'Prochain contrôle',
-  },
-  {
     id: 'nextTechnicalInspectionDate',
     numeric: false,
     disablePadding: false,
@@ -221,7 +215,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les contrôles mensuels
+          Les contrôles véhicules
         </Typography>
       )}
 
@@ -344,7 +338,7 @@ export default function TableListVehicleInspections({
                 <StyledTableRow>
                   <StyledTableCell colSpan="7">
                     <Alert severity="warning">
-                        Aucun contrôle menssuel trouvé.
+                        Aucun contrôle véhicule trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -452,7 +446,6 @@ export default function TableListVehicleInspections({
                       </Stack>}
                     </StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDateTime(row?.inspectionDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.nextInspectionDate)}`}</StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.nextTechnicalInspectionDate)}`}</StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
@@ -472,7 +465,7 @@ export default function TableListVehicleInspections({
                         }}
                       >
                         <Link
-                          to={`/online/parc-automobile/controles-mensuels/details/${row?.id}`}
+                          to={`/online/parc-automobile/controles-vehicules/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -490,7 +483,7 @@ export default function TableListVehicleInspections({
                           Bibliothèque
                         </MenuItem>
                         <Link
-                          to={`/online/parc-automobile/controles-mensuels/modifier/${row?.id}`}
+                          to={`/online/parc-automobile/controles-vehicules/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>

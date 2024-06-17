@@ -33,11 +33,7 @@ import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import CustomizedStatusLabelMenu from '../../../../_shared/components/app/menu/CustomizedStatusLabelMenu';
-import { PUT_TASK_ACTION } from '../../../../_shared/graphql/mutations/TaskActionMutations';
-import { useMutation } from '@apollo/client';
-import { GET_TICKETS } from '../../../../_shared/graphql/queries/TicketQueries';
-import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
+import TaskActionStatusLabelMenu from './TaskActionStatusLabelMenu';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -247,37 +243,9 @@ export default function TableListTaskActions({
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
-  const [touchedItem, setTouchedItem] = React.useState(null);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [updateTaskAction, { loading: loadingPut }] = useMutation(PUT_TASK_ACTION, {
-    refetchQueries: [{ query: GET_UNDESIRABLE_EVENTS }, { query: GET_TICKETS }],
-    update(cache, { data: { updateTaskAction } }) {
-      const updatedTaskAction = updateTaskAction.taskAction;
-
-      cache.modify({
-        fields: {
-          taskActions(
-            existingTaskActions = { totalCount: 0, nodes: [] },
-            { readField },
-          ) {
-            const updatedTaskActions = existingTaskActions.nodes.map((taskAction) =>
-              readField('id', taskAction) === updatedTaskAction.id
-                ? updatedTaskAction
-                : taskAction,
-            );
-
-            return {
-              totalCount: existingTaskActions.totalCount,
-              nodes: updatedTaskActions,
-            };
-          },
-        },
-      });
-    },
-  });
-  
 
   React.useEffect(() => {
     console.log(loading, rows);
@@ -454,12 +422,7 @@ export default function TableListTaskActions({
                       </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <CustomizedStatusLabelMenu 
-                          status={row?.status}
-                          type="action"
-                          loading={loadingPut && touchedItem && touchedItem?.id === row?.id}
-                          onChange={(status)=> {setTouchedItem(row); updateTaskAction({ variables: {id: row?.id, taskActionData: {status}} })}}
-                        />
+                      <TaskActionStatusLabelMenu taskAction={row} />
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton

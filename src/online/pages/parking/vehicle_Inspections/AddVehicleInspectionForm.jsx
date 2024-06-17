@@ -130,7 +130,7 @@ export default function AddVehicleInspectionForm({
         let { __typename, ...vehicleInspectionCopy } =
           data.createVehicleInspection.vehicleInspection;
         //   formik.setValues(vehicleInspectionCopy);
-        navigate('/online/parc-automobile/controles-mensuels/liste');
+        navigate('/online/parc-automobile/controles-vehicules/liste');
       },
       update(cache, { data: { createVehicleInspection } }) {
         const newVehicleInspection =
@@ -175,7 +175,7 @@ export default function AddVehicleInspectionForm({
         let { __typename, ...vehicleInspectionCopy } =
           data.updateVehicleInspection.vehicleInspection;
         //   formik.setValues(vehicleInspectionCopy);
-        navigate('/online/parc-automobile/controles-mensuels/liste');
+        navigate('/online/parc-automobile/controles-vehicules/liste');
       },
       update(cache, { data: { updateVehicleInspection } }) {
         const updatedVehicleInspection =
@@ -263,18 +263,6 @@ export default function AddVehicleInspectionForm({
                   value={formik.values.inspectionDateTime}
                   onChange={(date) =>
                     formik.setFieldValue('inspectionDateTime', date)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={12} sm={6} md={4}>
-              <Item>
-                <TheDesktopDatePicker
-                  label="Date du prochain contrôle"
-                  value={formik.values.nextInspectionDate}
-                  onChange={(date) =>
-                    formik.setFieldValue('nextInspectionDate', date)
                   }
                   disabled={loadingPost || loadingPut}
                 />
@@ -563,7 +551,7 @@ export default function AddVehicleInspectionForm({
             <Grid xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
-                  to="/online/parc-automobile/controles-mensuels/liste"
+                  to="/online/parc-automobile/controles-vehicules/liste"
                   className="no_style"
                 >
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>

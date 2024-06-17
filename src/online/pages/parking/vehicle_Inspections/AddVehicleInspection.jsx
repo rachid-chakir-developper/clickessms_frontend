@@ -9,8 +9,8 @@ export default function AddVehicleInspection() {
       idVehicleInspection={idVehicleInspection}
       title={
         idVehicleInspection && idVehicleInspection > 0
-          ? `Modifier le contrôle menssuel`
-          : `Ajouter un contrôle menssuel`
+          ? `Modifier le contrôle véhicule`
+          : `Ajouter un contrôle véhicule`
       }
     />
   );

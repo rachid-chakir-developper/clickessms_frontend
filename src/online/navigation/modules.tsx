@@ -418,8 +418,8 @@ export const modules: Module[] = [
           },
           {
             id: 'monthly-checks',
-            name: 'Contrôles mensuels',
-            path: '/online/parc-automobile/controles-mensuels',
+            name: 'Contrôles véhicules',
+            path: '/online/parc-automobile/controles-vehicules',
             icon: <CarCrashIcon />,
           },
           {

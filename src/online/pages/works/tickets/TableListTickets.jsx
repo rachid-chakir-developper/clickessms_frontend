@@ -37,6 +37,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import CircularProgressWithLabel from '../../../../_shared/components/feedbacks/CircularProgressWithLabel';
+import CustomizedStatusLabelMenu from '../../../../_shared/components/app/menu/CustomizedStatusLabelMenu';
+import TicketStatusLabelMenu from './TicketStatusLabelMenu';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -453,12 +455,7 @@ export default function TableListTickets({
                       </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <Chip
-                          label={getStatusLabel(row?.status)}
-                          variant="outlined"
-                        />
-                      </Stack>
+                      <TicketStatusLabelMenu ticket={row} />
                     </StyledTableCell>
                     <StyledTableCell align="left">
                       <CircularProgressWithLabel value={row?.completionPercentage}/>

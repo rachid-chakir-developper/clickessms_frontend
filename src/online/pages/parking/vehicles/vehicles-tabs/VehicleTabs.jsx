@@ -89,31 +89,31 @@ export default function VehicleTabs({vehicle}) {
                 aria-label="nav tabs example"
                 role="navigation"
             >
-                <LinkTab label="Structures" href="/spam" />
-                <LinkTab label="Employés" href="/spam" />
-                <LinkTab label="Modalité de propriété" href="/spam" />
                 <LinkTab label="Contrôles mensuels" href="/spam" />
+                <LinkTab label="Carnet d'entretien (réparations)" href="/spam" />
                 <LinkTab label="Contrôles techniques" href="/spam" />
-                <LinkTab label="Suivi des réparations" href="/spam" />
+                <LinkTab label="Structures rattachées" href="/spam" />
+                <LinkTab label="Employés" href="/spam" />
+                <LinkTab label="Statut de détention" href="/spam" />
             </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-            <VehicleEstablishments vehicleEstablishments={vehicle?.vehicleEstablishments} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
-            <VehicleEmployees vehicleEmployees={vehicle?.vehicleEmployees} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={2}>
-            <VehicleOwnerships vehicleOwnerships={vehicle?.vehicleOwnerships} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={3}>
             <VehicleInspections vehicle={vehicle} />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={4}>
+        <CustomTabPanel value={value} index={1}>
+            <VehicleRepairs vehicle={vehicle} />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
             <VehicleTechnicalInspections vehicle={vehicle} />
         </CustomTabPanel>
+        <CustomTabPanel value={value} index={3}>
+            <VehicleEstablishments vehicleEstablishments={vehicle?.vehicleEstablishments} />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={4}>
+            <VehicleEmployees vehicleEmployees={vehicle?.vehicleEmployees} />
+        </CustomTabPanel>
         <CustomTabPanel value={value} index={5}>
-            <VehicleRepairs vehicle={vehicle} />
+            <VehicleOwnerships vehicleOwnerships={vehicle?.vehicleOwnerships} />
         </CustomTabPanel>
     </Box>
   );

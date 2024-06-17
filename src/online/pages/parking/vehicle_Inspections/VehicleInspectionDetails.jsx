@@ -43,7 +43,7 @@ export default function VehicleInspectionDetails() {
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
         <Link
-          to={`/online/parc-automobile/controles-mensuels/modifier/${vehicleInspectionData?.vehicleInspection?.id}`}
+          to={`/online/parc-automobile/controles-vehicules/modifier/${vehicleInspectionData?.vehicleInspection?.id}`}
           className="no_style"
         >
           <Button variant="outlined" endIcon={<Edit />}>
