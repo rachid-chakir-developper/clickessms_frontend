@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Grid, Stack, IconButton } from '@mui/material';
 import styled from '@emotion/styled';
-import TheTextField from '../../../../../_shared/components/form-fields/TheTextField';
-import TheDateTimePicker from '../../../../../_shared/components/form-fields/TheDateTimePicker';
+import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
+import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
 import { Close } from '@mui/icons-material';
 
 const Item = styled(Stack)(({ theme }) => ({
@@ -13,7 +13,7 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const ActionPlanObjectiveFilter = ({ onFilterChange }) => {
+const TicketFilter = ({ onFilterChange }) => {
   const [filterValues, setFilterValues] = useState({
     recoveryDate: null,
     returnDate: null,
@@ -91,4 +91,4 @@ const ActionPlanObjectiveFilter = ({ onFilterChange }) => {
   );
 };
 
-export default ActionPlanObjectiveFilter;
+export default TicketFilter;

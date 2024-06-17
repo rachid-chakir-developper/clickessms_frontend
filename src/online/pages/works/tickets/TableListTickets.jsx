@@ -19,7 +19,9 @@ import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
   getFormatDate,
-  formatCurrencyAmount,
+  getPriorityLabel,
+  getStatusLabel,
+  getStatusLebelColor,
 } from '../../../../_shared/tools/functions';
 import {
   Article,
@@ -30,14 +32,11 @@ import {
   MoreVert,
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
-import { Link } from 'react-router-dom';
+import AppLabel from '../../../../_shared/components/app/label/AppLabel';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import CustomizedStatusLabelMenu from '../../../../_shared/components/app/menu/CustomizedStatusLabelMenu';
-import { PUT_ACTION_PLAN_ACTION } from '../../../../_shared/graphql/mutations/ActionPlanActionMutations';
-import { useMutation } from '@apollo/client';
-import { GET_ACTION_PLAN_OBJECTIVES } from '../../../../_shared/graphql/queries/ActionPlanObjectiveQueries';
-import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
+import CircularProgressWithLabel from '../../../../_shared/components/feedbacks/CircularProgressWithLabel';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -97,36 +96,48 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  {
-    id: 'action',
-    numeric: false,
-    disablePadding: true,
-    label: 'Libellé',
-  },,
-  {
-    id: 'dueDate',
-    numeric: false,
-    disablePadding: false,
-    label: 'Échéance',
-  },
-  {
-    id: 'employees',
-    numeric: false,
-    disablePadding: true,
-    label: 'Responsables',
-  },
-  {
-    id: 'status',
-    numeric: false,
-    disablePadding: false,
-    label: 'Statut',
-  },
-  {
-    id: 'action',
-    numeric: true,
-    disablePadding: false,
-    label: 'Actions',
-  },
+    {
+      id: 'title',
+      numeric: false,
+      disablePadding: true,
+      label: 'Libellé',
+    },
+    {
+        id: 'establishments',
+        numeric: false,
+        disablePadding: false,
+        label: 'Structures',
+    },
+    {
+        id: 'source',
+        numeric: false,
+        disablePadding: false,
+        label: 'Source',
+    },
+    {
+        id: 'priority',
+        numeric: false,
+        disablePadding: false,
+        label: 'Priorité',
+    },
+    {
+        id: 'status',
+        numeric: false,
+        disablePadding: false,
+        label: 'Status',
+    },
+    {
+        id: 'completionPercentage',
+        numeric: false,
+        disablePadding: false,
+        label: 'Avancement',
+    },
+    {
+        id: 'action',
+        numeric: true,
+        disablePadding: false,
+        label: 'Actions',
+    },
 ];
 
 function EnhancedTableHead(props) {
@@ -217,7 +228,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les actions
+          Les tickets
         </Typography>
       )}
 
@@ -238,50 +249,19 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListActionPlanActions({
+export default function TableListTickets({
   loading,
   rows,
-  onDeleteActionPlanAction,
-  onUpdateActionPlanActionState,
+  onDeleteTicket,
+  onUpdateTicketState,
 }) {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
-  const [touchedItem, setTouchedItem] = React.useState(null);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [updateActionPlanAction, { loading: loadingPut }] = useMutation(PUT_ACTION_PLAN_ACTION, {
-    refetchQueries: [{ query: GET_UNDESIRABLE_EVENTS }, { query: GET_ACTION_PLAN_OBJECTIVES }],
-    update(cache, { data: { updateActionPlanAction } }) {
-      const updatedActionPlanAction = updateActionPlanAction.actionPlanAction;
-
-      cache.modify({
-        fields: {
-          actionPlanActions(
-            existingActionPlanActions = { totalCount: 0, nodes: [] },
-            { readField },
-          ) {
-            const updatedActionPlanActions = existingActionPlanActions.nodes.map((actionPlanAction) =>
-              readField('id', actionPlanAction) === updatedActionPlanAction.id
-                ? updatedActionPlanAction
-                : actionPlanAction,
-            );
-
-            return {
-              totalCount: existingActionPlanActions.totalCount,
-              nodes: updatedActionPlanActions,
-            };
-          },
-        },
-      });
-    },
-  });
-  
-
-  React.useEffect(() => {
-    console.log(loading, rows);
-  }, [loading, rows]);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -364,15 +344,17 @@ export default function TableListActionPlanActions({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan="8">
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
-                    <Alert severity="warning">Aucune action trouvé.</Alert>
+                  <StyledTableCell colSpan="8">
+                    <Alert severity="warning">
+                      Aucun ticket trouvé.
+                    </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
               )}
@@ -427,26 +409,25 @@ export default function TableListActionPlanActions({
                       scope="row"
                       padding="none"
                     >
-                      {row.action}
+                    {row.title}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.dueDate)}`}</StyledTableCell>
                     <StyledTableCell align="left">
                       <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.employees?.map((employee, index) => {
+                        {row?.establishments?.map((establishment, index) => {
                           return (
                             <Chip
                               key={index}
                               avatar={
                                 <Avatar
-                                  alt={employee?.firstName}
+                                  alt={establishment?.name}
                                   src={
-                                    employee?.photo
-                                      ? employee?.photo
+                                    establishment?.logo
+                                      ? establishment?.logo
                                       : '/default-placeholder.jpg'
                                   }
                                 />
                               }
-                              label={employee?.firstName}
+                              label={establishment?.name}
                               variant="outlined"
                             />
                           );
@@ -454,12 +435,33 @@ export default function TableListActionPlanActions({
                       </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <CustomizedStatusLabelMenu 
-                          status={row?.status}
-                          type="action"
-                          loading={loadingPut && touchedItem && touchedItem?.id === row?.id}
-                          onChange={(status)=> {setTouchedItem(row); updateActionPlanAction({ variables: {id: row?.id, actionPlanActionData: {status}} })}}
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
+                        {row?.undesirableEvent && <Chip
+                          label={`EI: ${row?.undesirableEvent?.title}`}
+                          variant="filled"
+                          clickable
+                          onClick={()=> navigate(`/online/qualites/evenements-indesirables/details/${row?.undesirableEvent?.id}`)}
+                        />}
+                      </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
+                        <Chip
+                          label={getPriorityLabel(row?.priority)}
+                          variant="filled"
                         />
+                      </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
+                        <Chip
+                          label={getStatusLabel(row?.status)}
+                          variant="outlined"
+                        />
+                      </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <CircularProgressWithLabel value={row?.completionPercentage}/>
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
@@ -478,8 +480,8 @@ export default function TableListActionPlanActions({
                           horizontal: 'right',
                         }}
                       >
-                        {/* <Link
-                          to={`/online/travaux/actions/details/${row?.id}`}
+                        <Link
+                          to={`/online/qualites/plan-action/tickets/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -495,9 +497,9 @@ export default function TableListActionPlanActions({
                         >
                           <Folder sx={{ mr: 2 }} />
                           Bibliothèque
-                        </MenuItem> */}
+                        </MenuItem>
                         <Link
-                          to={`/online/travaux/actions/modifier/${row?.id}`}
+                          to={`/online/qualites/plan-action/tickets/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -507,7 +509,7 @@ export default function TableListActionPlanActions({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteActionPlanAction(row?.id);
+                            onDeleteTicket(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

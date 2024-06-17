@@ -4,13 +4,13 @@ import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Box, Grid, Paper, Typography, Divider, Chip, Stack, Button, ListItem, ListItemIcon, ListItemText, List, Avatar } from '@mui/material';
 
-import { ACTION_PLAN_OBJECTIVE_RECAP } from '../../../../../_shared/graphql/queries/ActionPlanObjectiveQueries';
-import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
-import { getFormatDate, getFormatDateTime } from '../../../../../_shared/tools/functions';
-import BeneficiaryItemCard from '../../../human_ressources/beneficiaries/BeneficiaryItemCard';
-import EstablishmentItemCard from '../../../companies/establishments/EstablishmentItemCard';
+import { TICKET_RECAP } from '../../../../_shared/graphql/queries/TicketQueries';
+import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import { getFormatDate, getFormatDateTime } from '../../../../_shared/tools/functions';
+import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
+import EstablishmentItemCard from '../../companies/establishments/EstablishmentItemCard';
 import { Check, CheckBoxOutlineBlank, Done, Edit, Note } from '@mui/icons-material';
-import EmployeeItemCard from '../../../human_ressources/employees/EmployeeItemCard';
+import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -20,25 +20,25 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function ActionPlanObjectiveDetails() {
-  let { idActionPlanObjective } = useParams();
+export default function TicketDetails() {
+  let { idTicket } = useParams();
   const [
-    getActionPlanObjective,
-    { loading: loadingActionPlanObjective, data: actionPlanObjectiveData, error: actionPlanObjectiveError },
-  ] = useLazyQuery(ACTION_PLAN_OBJECTIVE_RECAP);
+    getTicket,
+    { loading: loadingTicket, data: ticketData, error: ticketError },
+  ] = useLazyQuery(TICKET_RECAP);
   React.useEffect(() => {
-    if (idActionPlanObjective) {
-      getActionPlanObjective({ variables: { id: idActionPlanObjective } });
+    if (idTicket) {
+      getTicket({ variables: { id: idTicket } });
     }
-  }, [idActionPlanObjective]);
+  }, [idTicket]);
 
-  if (loadingActionPlanObjective) return <ProgressService type="form" />;
+  if (loadingTicket) return <ProgressService type="form" />;
   return (
     <>
       <Stack>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
           <Link
-            to={`/online/qualites/plan-action/objectifs/modifier/${actionPlanObjectiveData?.actionPlanObjective?.id}`}
+            to={`/online/qualites/plan-action/tickets/modifier/${ticketData?.ticket?.id}`}
             className="no_style"
           >
             <Button variant="outlined" endIcon={<Edit />}>
@@ -48,7 +48,7 @@ export default function ActionPlanObjectiveDetails() {
         </Box>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item="true" xs={7}>
-            <ActionPlanObjectiveMiniInfos actionPlanObjective={actionPlanObjectiveData?.actionPlanObjective} />
+            <TicketMiniInfos ticket={ticketData?.ticket} />
           </Grid>
           <Grid item="true" xs={5}>
               <Paper
@@ -63,13 +63,13 @@ export default function ActionPlanObjectiveDetails() {
                 }}
               >
                 <Typography gutterBottom variant="subtitle3" component="h3">
-                  Type de objectif
+                  Type de ticket
                 </Typography>
-                {actionPlanObjectiveData?.actionPlanObjective?.actionPlanObjectiveTypes?.map((actionPlanObjectiveType, index) => (
+                {ticketData?.ticket?.ticketTypes?.map((ticketType, index) => (
                   <Chip
                     color="info"
                     key={index}
-                    label={actionPlanObjectiveType?.name}
+                    label={ticketType?.name}
                     sx={{ marginRight: 1 }}
                   />
                 ))}
@@ -84,7 +84,7 @@ export default function ActionPlanObjectiveDetails() {
                 Description
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {actionPlanObjectiveData?.actionPlanObjective?.description}
+                {ticketData?.ticket?.description}
               </Typography>
             </Paper>
           </Grid>
@@ -94,7 +94,7 @@ export default function ActionPlanObjectiveDetails() {
                 Observation
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {actionPlanObjectiveData?.actionPlanObjective?.observation}
+                {ticketData?.ticket?.observation}
               </Typography>
             </Paper>
           </Grid>
@@ -102,10 +102,10 @@ export default function ActionPlanObjectiveDetails() {
             <Divider />
           </Grid>
           <Grid item="true" xs={6}>
-            <ActionPlanObjectiveParticipantsInfos actionPlanObjective={actionPlanObjectiveData?.actionPlanObjective} />
+            <TicketParticipantsInfos ticket={ticketData?.ticket} />
           </Grid>
           <Grid item="true" xs={6}>
-            <ActionPlanObjectiveOtherInfos actionPlanObjective={actionPlanObjectiveData?.actionPlanObjective} />
+            <TicketOtherInfos ticket={ticketData?.ticket} />
           </Grid>
           <Grid item="true" xs={12} sx={{ marginY: 3 }}>
             <Divider sx={{ marginY: 3 }}/>
@@ -119,15 +119,15 @@ export default function ActionPlanObjectiveDetails() {
                 Les notes prises
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {actionPlanObjectiveData?.actionPlanObjective?.notes}
+                {ticketData?.ticket?.notes}
               </Typography>
             </Paper>
           </Grid>
           <Grid item="true" xs={6}>
-            <ActionPlanObjectiveDecisions actionPlanObjective={actionPlanObjectiveData?.actionPlanObjective} />
+            <TicketDecisions ticket={ticketData?.ticket} />
           </Grid>
           <Grid item="true" xs={6}>
-            <ActionPlanObjectiveReviewPoints actionPlanObjective={actionPlanObjectiveData?.actionPlanObjective} />
+            <TicketReviewPoints ticket={ticketData?.ticket} />
           </Grid>
           <Grid item="true" xs={12} sx={{ marginY: 3 }}>
             <Divider />
@@ -145,7 +145,7 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-function ActionPlanObjectiveMiniInfos({ actionPlanObjective }) {
+function TicketMiniInfos({ ticket }) {
   return (
     <>
       <Paper
@@ -164,24 +164,24 @@ function ActionPlanObjectiveMiniInfos({ actionPlanObjective }) {
             <Grid item="true" xs container direction="column" spacing={2}>
               <Grid item="true" xs>
                 <Typography gutterBottom variant="subtitle1" component="div">
-                  Réference : <b>{actionPlanObjective?.number}</b>
+                  Réference : <b>{ticket?.number}</b>
                 </Typography>
                 <Typography gutterBottom variant="subtitle1" component="div">
-                  {actionPlanObjective?.title}
+                  {ticket?.title}
                 </Typography>
                 <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
                 <Typography variant="body2" color="text.secondary">
-                  <b>Crée le: </b> {`${getFormatDateTime(actionPlanObjective?.createdAt)}`}{' '}
+                  <b>Crée le: </b> {`${getFormatDateTime(ticket?.createdAt)}`}{' '}
                   <br />
                   <b>Dernière modification: </b>
-                  {`${getFormatDateTime(actionPlanObjective?.updatedAt)}`}
+                  {`${getFormatDateTime(ticket?.updatedAt)}`}
                 </Typography>
                 <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
                 <Typography variant="body2" color="text.secondary">
                   <b>Date début: </b>{' '}
-                  {`${getFormatDateTime(actionPlanObjective?.startingDateTime)}`} <br />
+                  {`${getFormatDateTime(ticket?.startingDateTime)}`} <br />
                   <b>Date fin: </b>{' '}
-                  {`${getFormatDateTime(actionPlanObjective?.endingDateTime)}`}
+                  {`${getFormatDateTime(ticket?.endingDateTime)}`}
                 </Typography>
               </Grid>
             </Grid>
@@ -193,7 +193,7 @@ function ActionPlanObjectiveMiniInfos({ actionPlanObjective }) {
 }
 
 
-function ActionPlanObjectiveParticipantsInfos({ actionPlanObjective }) {
+function TicketParticipantsInfos({ ticket }) {
   return (
     <Paper
       variant="outlined"
@@ -205,13 +205,13 @@ function ActionPlanObjectiveParticipantsInfos({ actionPlanObjective }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#f1f1f1',
       }}
     >
-      {actionPlanObjective?.participants.length > 0 && (
+      {ticket?.participants.length > 0 && (
           <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
             <Typography variant="h6" gutterBottom>
               Personnes concernées
             </Typography>
               <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-                {actionPlanObjective?.participants?.map((participant, index) => (
+                {ticket?.participants?.map((participant, index) => (
                   <Grid xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
                     <Item>
                       <EmployeeItemCard employee={participant.employee} />
@@ -221,13 +221,13 @@ function ActionPlanObjectiveParticipantsInfos({ actionPlanObjective }) {
               </Grid>
           </Paper>
       )}
-      {actionPlanObjective?.absentParticipants?.length > 0 && (
+      {ticket?.absentParticipants?.length > 0 && (
           <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
             <Typography variant="h6" gutterBottom>
               Personnes absentes
             </Typography>
             <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
-              {actionPlanObjective?.absentParticipants?.map((participant, index) => (
+              {ticket?.absentParticipants?.map((participant, index) => (
                 <Grid xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
                   <Item>
                     <EmployeeItemCard employee={participant} />
@@ -242,7 +242,7 @@ function ActionPlanObjectiveParticipantsInfos({ actionPlanObjective }) {
 }
 
 
-function ActionPlanObjectiveOtherInfos({ actionPlanObjective }) {
+function TicketOtherInfos({ ticket }) {
   return (
     <Paper
       variant="outlined"
@@ -254,13 +254,13 @@ function ActionPlanObjectiveOtherInfos({ actionPlanObjective }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#f1f1f1',
       }}
     >
-      {actionPlanObjective?.establishments.length > 0 && (
+      {ticket?.establishments.length > 0 && (
           <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
             <Typography variant="h6" gutterBottom>
               Les structures concernées
             </Typography>
               <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-                {actionPlanObjective?.establishments?.map((establishment, index) => (
+                {ticket?.establishments?.map((establishment, index) => (
                   <Grid xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
                     <Item>
                       <EstablishmentItemCard establishment={establishment.establishment} />
@@ -270,13 +270,13 @@ function ActionPlanObjectiveOtherInfos({ actionPlanObjective }) {
               </Grid>
           </Paper>
       )}
-      {actionPlanObjective?.beneficiaries?.length > 0 && (
+      {ticket?.beneficiaries?.length > 0 && (
           <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
             <Typography variant="h6" gutterBottom>
               Bénificiaires concernés
             </Typography>
             <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
-              {actionPlanObjective?.beneficiaries?.map((beneficiary, index) => (
+              {ticket?.beneficiaries?.map((beneficiary, index) => (
                 <Grid xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
                   <Item>
                     <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
@@ -290,7 +290,7 @@ function ActionPlanObjectiveOtherInfos({ actionPlanObjective }) {
   );
 }
 
-function ActionPlanObjectiveDecisions({ actionPlanObjective }) {
+function TicketDecisions({ ticket }) {
   return (
     <Paper
       variant="outlined"
@@ -302,13 +302,13 @@ function ActionPlanObjectiveDecisions({ actionPlanObjective }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#f1f1f1',
       }}
     >
-      {actionPlanObjective?.actionPlanObjectiveDecisions.length > 0 && (
+      {ticket?.ticketDecisions.length > 0 && (
           <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
             <Typography variant="h6" gutterBottom>
               Les décisions
             </Typography>
               <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                {actionPlanObjective?.actionPlanObjectiveDecisions?.map((actionPlanObjectiveDecision, index) => (
+                {ticket?.ticketDecisions?.map((ticketDecision, index) => (
                   <Box sx={{background: index%2 === 0 ?  "#f5f5f5" : "#ffffff", padding:1}}>
                   <ListItem
                     alignItems="flex-start"
@@ -318,17 +318,17 @@ function ActionPlanObjectiveDecisions({ actionPlanObjective }) {
                       <Check />
                     </ListItemIcon>
                     <ListItemText
-                      primary={actionPlanObjectiveDecision?.decision}
-                      secondary={actionPlanObjectiveDecision?.dueDate ? `Échéance: ${getFormatDate(actionPlanObjectiveDecision?.dueDate)}` : ''}
+                      primary={ticketDecision?.decision}
+                      secondary={ticketDecision?.dueDate ? `Échéance: ${getFormatDate(ticketDecision?.dueDate)}` : ''}
                     />
                   </ListItem>
-                  {actionPlanObjectiveDecision?.employees?.length > 0 && (
+                  {ticketDecision?.employees?.length > 0 && (
                       <>
                         <Typography variant="p" gutterBottom sx={{fontSize: 12, fontStyle: 'italic'}}>
                           Personnes concernées
                         </Typography>
                         <Stack direction="row" flexWrap='wrap' spacing={1}>
-                          {actionPlanObjectiveDecision?.employees?.map((employee, index) => (
+                          {ticketDecision?.employees?.map((employee, index) => (
                             <Chip
                               key={index}
                               avatar={
@@ -357,7 +357,7 @@ function ActionPlanObjectiveDecisions({ actionPlanObjective }) {
   );
 }
 
-function ActionPlanObjectiveReviewPoints({ actionPlanObjective }) {
+function TicketReviewPoints({ ticket }) {
   return (
     <Paper
       variant="outlined"
@@ -369,13 +369,13 @@ function ActionPlanObjectiveReviewPoints({ actionPlanObjective }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#f1f1f1',
       }}
     >
-      {actionPlanObjective?.actionPlanObjectiveReviewPoints.length > 0 && (
+      {ticket?.ticketReviewPoints.length > 0 && (
           <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
             <Typography variant="h6" gutterBottom>
               Les points à revoir
             </Typography>
               <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                {actionPlanObjective?.actionPlanObjectiveReviewPoints?.map((actionPlanObjectiveReviewPoint, index) => (
+                {ticket?.ticketReviewPoints?.map((ticketReviewPoint, index) => (
                   <Box sx={{background: index%2 === 0 ?  "#f5f5f5" : "#ffffff", padding:1}}>
                   <ListItem
                     alignItems="flex-start"
@@ -385,7 +385,7 @@ function ActionPlanObjectiveReviewPoints({ actionPlanObjective }) {
                       <Check />
                     </ListItemIcon>
                     <ListItemText
-                      primary={actionPlanObjectiveReviewPoint?.pointToReview}
+                      primary={ticketReviewPoint?.pointToReview}
                     />
                   </ListItem>
                 </Box>

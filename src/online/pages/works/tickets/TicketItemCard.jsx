@@ -6,10 +6,10 @@ import Typography from '@mui/material/Typography';
 import { Stack, Tooltip } from '@mui/material';
 import { Delete, Edit, Article, Folder } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import { getFormatDateTime } from '../../../../../_shared/tools/functions';
-import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { getFormatDateTime } from '../../../../_shared/tools/functions';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
-export default function ActionPlanObjectiveItemCard({ actionPlanObjective, onDeleteActionPlanObjective }) {
+export default function TicketItemCard({ ticket, onDeleteTicket }) {
   //   const theme = useTheme();
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -26,20 +26,20 @@ export default function ActionPlanObjectiveItemCard({ actionPlanObjective, onDel
       variant="outlined"
       sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2 }}
     >
-      <Tooltip title={actionPlanObjective?.title}>
+      <Tooltip title={ticket?.title}>
         <CardMedia
           component="img"
           width="100"
           height="100"
-          alt={actionPlanObjective?.title}
-          src={actionPlanObjective?.image ? actionPlanObjective?.image : '/default-placeholder.jpg'}
+          alt={ticket?.title}
+          src={ticket?.image ? ticket?.image : '/default-placeholder.jpg'}
           sx={{ borderRadius: 0.6, height: 100, width: 100 }}
         />
       </Tooltip>
       <Stack direction="column" spacing={2} alignItems="center">
         <Stack direction="column" spacing={0.2} alignItems="center">
           <Typography color="text.primary" fontWeight="medium" fontSize={18}>
-            {actionPlanObjective?.title}
+            {ticket?.title}
           </Typography>
           <Typography
             component="div"
@@ -47,7 +47,7 @@ export default function ActionPlanObjectiveItemCard({ actionPlanObjective, onDel
             color="text.secondary"
             fontWeight="regular"
           >
-            À {`${getFormatDateTime(actionPlanObjective?.startingDateTime)}`}
+            À {`${getFormatDateTime(ticket?.startingDateTime)}`}
           </Typography>
         </Stack>
         <Stack direction="row" alignItems="center" spacing={1.5}>
@@ -56,14 +56,14 @@ export default function ActionPlanObjectiveItemCard({ actionPlanObjective, onDel
               aria-label="delete"
               size="small"
               sx={{ flexGrow: 0 }}
-              onClick={() => onDeleteActionPlanObjective(actionPlanObjective?.id)}
+              onClick={() => onDeleteTicket(ticket?.id)}
             >
               <Delete fontSize="small" />
             </IconButton>
           </Tooltip>
           <Tooltip title="Modifier">
             <Link
-              to={`/online/qualites/plan-action/objectifs/modifier/${actionPlanObjective?.id}`}
+              to={`/online/qualites/plan-action/tickets/modifier/${ticket?.id}`}
               className="no_style"
             >
               <IconButton aria-label="edit" size="small">
@@ -71,13 +71,13 @@ export default function ActionPlanObjectiveItemCard({ actionPlanObjective, onDel
               </IconButton>
             </Link>
           </Tooltip>
-          {actionPlanObjective?.folder && (
+          {ticket?.folder && (
             <Tooltip title="Pièces jointes">
               <IconButton
                 aria-label="Attachment"
                 size="small"
                 sx={{ flexGrow: 0 }}
-                onClick={() => onOpenDialogListLibrary(actionPlanObjective?.folder)}
+                onClick={() => onOpenDialogListLibrary(ticket?.folder)}
               >
                 <Folder fontSize="small" />
               </IconButton>
@@ -85,7 +85,7 @@ export default function ActionPlanObjectiveItemCard({ actionPlanObjective, onDel
           )}
           <Tooltip title="Détails">
             <Link
-              to={`/online/qualites/plan-action/objectifs/details/${actionPlanObjective?.id}`}
+              to={`/online/qualites/plan-action/tickets/details/${ticket?.id}`}
               className="no_style"
             >
               <IconButton aria-label="edit" size="small">

@@ -8,11 +8,11 @@ import { Add } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { DELETE_ACTION_PLAN_ACTION } from '../../../../_shared/graphql/mutations/ActionPlanActionMutations';
-import { GET_ACTION_PLAN_ACTIONS } from '../../../../_shared/graphql/queries/ActionPlanActionQueries';
-import ActionPlanActionFilter from './ActionPlanActionFilter';
+import { DELETE_TASK_ACTION } from '../../../../_shared/graphql/mutations/TaskActionMutations';
+import { GET_TASK_ACTIONS } from '../../../../_shared/graphql/queries/TaskActionQueries';
+import TaskActionFilter from './TaskActionFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
-import TableListActionPlanActions from './TableListActionPlanActions';
+import TableListTaskActions from './TableListTaskActions';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -22,40 +22,40 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function ListActionPlanActions() {
+export default function ListTaskActions() {
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
-  const [actionPlanActionFilter, setActionPlanActionFilter] = React.useState(null);
+  const [taskActionFilter, setTaskActionFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
-    setActionPlanActionFilter(newFilter);
+    setTaskActionFilter(newFilter);
   };
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const [
-    getActionPlanActions,
+    getTaskActions,
     {
-      loading: loadingActionPlanActions,
-      data: actionPlanActionsData,
-      error: actionPlanActionsError,
-      fetchMore: fetchMoreActionPlanActions,
+      loading: loadingTaskActions,
+      data: taskActionsData,
+      error: taskActionsError,
+      fetchMore: fetchMoreTaskActions,
     },
-  ] = useLazyQuery(GET_ACTION_PLAN_ACTIONS, {
+  ] = useLazyQuery(GET_TASK_ACTIONS, {
     variables: {
-      actionPlanActionFilter,
+      taskActionFilter,
       page: paginator.page,
       limit: paginator.limit,
     },
   });
 
   React.useEffect(() => {
-    getActionPlanActions();
-  }, [actionPlanActionFilter, paginator]);
+    getTaskActions();
+  }, [taskActionFilter, paginator]);
 
-  const [deleteActionPlanAction, { loading: loadingDelete }] = useMutation(
-    DELETE_ACTION_PLAN_ACTION,
+  const [deleteTaskAction, { loading: loadingDelete }] = useMutation(
+    DELETE_TASK_ACTION,
     {
       onCompleted: (datas) => {
-        if (datas.deleteActionPlanAction.deleted) {
+        if (datas.deleteTaskAction.deleted) {
           setNotifyAlert({
             isOpen: true,
             message: 'Supprimé avec succès',
@@ -64,32 +64,32 @@ export default function ListActionPlanActions() {
         } else {
           setNotifyAlert({
             isOpen: true,
-            message: `Non Supprimé ! ${datas.deleteActionPlanAction.message}.`,
+            message: `Non Supprimé ! ${datas.deleteTaskAction.message}.`,
             type: 'error',
           });
         }
       },
-      update(cache, { data: { deleteActionPlanAction } }) {
-        console.log('Updating cache after deletion:', deleteActionPlanAction);
+      update(cache, { data: { deleteTaskAction } }) {
+        console.log('Updating cache after deletion:', deleteTaskAction);
 
-        const deletedActionPlanActionId = deleteActionPlanAction.id;
+        const deletedTaskActionId = deleteTaskAction.id;
 
         cache.modify({
           fields: {
-            actionPlanActions(
-              existingActionPlanActions = { totalCount: 0, nodes: [] },
+            taskActions(
+              existingTaskActions = { totalCount: 0, nodes: [] },
               { readField },
             ) {
-              const updatedActionPlanActions = existingActionPlanActions.nodes.filter(
-                (actionPlanAction) =>
-                  readField('id', actionPlanAction) !== deletedActionPlanActionId,
+              const updatedTaskActions = existingTaskActions.nodes.filter(
+                (taskAction) =>
+                  readField('id', taskAction) !== deletedTaskActionId,
               );
 
-              console.log('Updated actionPlanActions:', updatedActionPlanActions);
+              console.log('Updated taskActions:', updatedTaskActions);
 
               return {
-                totalCount: existingActionPlanActions.totalCount - 1,
-                nodes: updatedActionPlanActions,
+                totalCount: existingTaskActions.totalCount - 1,
+                nodes: updatedTaskActions,
               };
             },
           },
@@ -106,14 +106,14 @@ export default function ListActionPlanActions() {
     },
   );
 
-  const onDeleteActionPlanAction = (id) => {
+  const onDeleteTaskAction = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment supprimer ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        deleteActionPlanAction({ variables: { id: id } });
+        deleteTaskAction({ variables: { id: id } });
       },
     });
   };
@@ -133,18 +133,18 @@ export default function ListActionPlanActions() {
         </Box>
       </Grid>
       <Grid item="true" xs={12}>
-        <ActionPlanActionFilter onFilterChange={handleFilterChange} />
+        <TaskActionFilter onFilterChange={handleFilterChange} />
       </Grid>
       <Grid item="true" xs={12}>
-        <TableListActionPlanActions
-          loading={loadingActionPlanActions}
-          rows={actionPlanActionsData?.actionPlanActions?.nodes || []}
-          onDeleteActionPlanAction={onDeleteActionPlanAction}
+        <TableListTaskActions
+          loading={loadingTaskActions}
+          rows={taskActionsData?.taskActions?.nodes || []}
+          onDeleteTaskAction={onDeleteTaskAction}
         />
       </Grid>
       <Grid item="true" xs={12}>
         <PaginationControlled
-          totalItems={actionPlanActionsData?.actionPlanActions?.totalCount} // Nombre total d'éléments
+          totalItems={taskActionsData?.taskActions?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
           currentPage={1}
           onChange={(page) => setPaginator({ ...paginator, page })}

@@ -13,7 +13,7 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const ActionPlanActionFilter = ({ onFilterChange }) => {
+const TaskActionFilter = ({ onFilterChange }) => {
   const [filterValues, setFilterValues] = useState({
     recoveryDate: null,
     returnDate: null,
@@ -91,4 +91,4 @@ const ActionPlanActionFilter = ({ onFilterChange }) => {
   );
 };
 
-export default ActionPlanActionFilter;
+export default TaskActionFilter;

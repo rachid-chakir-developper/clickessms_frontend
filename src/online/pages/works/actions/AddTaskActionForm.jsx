@@ -11,18 +11,18 @@ import * as yup from 'yup';
 
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_ACTION_PLAN_ACTION } from '../../../../_shared/graphql/queries/ActionPlanActionQueries';
+import { GET_TASK_ACTION } from '../../../../_shared/graphql/queries/TaskActionQueries';
 import {
-  POST_ACTION_PLAN_ACTION,
-  PUT_ACTION_PLAN_ACTION,
-} from '../../../../_shared/graphql/mutations/ActionPlanActionMutations';
+  POST_TASK_ACTION,
+  PUT_TASK_ACTION,
+} from '../../../../_shared/graphql/mutations/TaskActionMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import { ACTION_STATUS } from '../../../../_shared/tools/constants';
 import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
-import { GET_ACTION_PLAN_OBJECTIVES } from '../../../../_shared/graphql/queries/ActionPlanObjectiveQueries';
+import { GET_TICKETS } from '../../../../_shared/graphql/queries/TicketQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -32,26 +32,26 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function AddActionPlanActionForm({ idActionPlanAction, title }) {
+export default function AddTaskActionForm({ idTaskAction, title }) {
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({});
   const formik = useFormik({
-    initialValues: { action: '', dueDate: null, employees:[], status: ACTION_STATUS.TO_DO},
+    initialValues: { description: '', dueDate: null, employees:[], status: ACTION_STATUS.TO_DO},
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let { document, ...actionPlanActionCopy } = values;
-      actionPlanActionCopy.employees = actionPlanActionCopy.employees.map((i) => i?.id);
-      if (idActionPlanAction && idActionPlanAction != '') {
-        onUpdateActionPlanAction({
-          id: actionPlanActionCopy.id,
-          actionPlanActionData: actionPlanActionCopy,
+      let { document, ...taskActionCopy } = values;
+      taskActionCopy.employees = taskActionCopy.employees.map((i) => i?.id);
+      if (idTaskAction && idTaskAction != '') {
+        onUpdateTaskAction({
+          id: taskActionCopy.id,
+          taskActionData: taskActionCopy,
           document: document,
         });
       } else
-        createActionPlanAction({
+        createTaskAction({
           variables: {
-            actionPlanActionData: actionPlanActionCopy,
+            taskActionData: taskActionCopy,
             document: document,
           },
         });
@@ -66,7 +66,7 @@ export default function AddActionPlanActionForm({ idActionPlanAction, title }) {
     fetchPolicy: 'network-only',
   });
 
-  const [createActionPlanAction, { loading: loadingPost }] = useMutation(POST_ACTION_PLAN_ACTION, {
+  const [createTaskAction, { loading: loadingPost }] = useMutation(POST_TASK_ACTION, {
     onCompleted: (data) => {
       console.log(data);
       setNotifyAlert({
@@ -74,19 +74,19 @@ export default function AddActionPlanActionForm({ idActionPlanAction, title }) {
         message: 'Ajouté avec succès',
         type: 'success',
       });
-      let { __typename, ...actionPlanActionCopy } = data.createActionPlanAction.actionPlanAction;
-      //   formik.setValues(actionPlanActionCopy);
+      let { __typename, ...taskActionCopy } = data.createTaskAction.taskAction;
+      //   formik.setValues(taskActionCopy);
       navigate('/online/travaux/actions/liste');
     },
-    update(cache, { data: { createActionPlanAction } }) {
-      const newActionPlanAction = createActionPlanAction.actionPlanAction;
+    update(cache, { data: { createTaskAction } }) {
+      const newTaskAction = createTaskAction.taskAction;
 
       cache.modify({
         fields: {
-          actionPlanActions(existingActionPlanActions = { totalCount: 0, nodes: [] }) {
+          taskActions(existingTaskActions = { totalCount: 0, nodes: [] }) {
             return {
-              totalCount: existingActionPlanActions.totalCount + 1,
-              nodes: [newActionPlanAction, ...existingActionPlanActions.nodes],
+              totalCount: existingTaskActions.totalCount + 1,
+              nodes: [newTaskAction, ...existingTaskActions.nodes],
             };
           },
         },
@@ -101,7 +101,7 @@ export default function AddActionPlanActionForm({ idActionPlanAction, title }) {
       });
     },
   });
-  const [updateActionPlanAction, { loading: loadingPut }] = useMutation(PUT_ACTION_PLAN_ACTION, {
+  const [updateTaskAction, { loading: loadingPut }] = useMutation(PUT_TASK_ACTION, {
     onCompleted: (data) => {
       console.log(data);
       setNotifyAlert({
@@ -109,29 +109,29 @@ export default function AddActionPlanActionForm({ idActionPlanAction, title }) {
         message: 'Modifié avec succès',
         type: 'success',
       });
-      let { __typename, ...actionPlanActionCopy } = data.updateActionPlanAction.actionPlanAction;
-      //   formik.setValues(actionPlanActionCopy);
+      let { __typename, ...taskActionCopy } = data.updateTaskAction.taskAction;
+      //   formik.setValues(taskActionCopy);
       navigate('/online/travaux/actions/liste');
     },
-    refetchQueries: [{ query: GET_UNDESIRABLE_EVENTS }, { query: GET_ACTION_PLAN_OBJECTIVES }],
-    update(cache, { data: { updateActionPlanAction } }) {
-      const updatedActionPlanAction = updateActionPlanAction.actionPlanAction;
+    refetchQueries: [{ query: GET_UNDESIRABLE_EVENTS }, { query: GET_TICKETS }],
+    update(cache, { data: { updateTaskAction } }) {
+      const updatedTaskAction = updateTaskAction.taskAction;
 
       cache.modify({
         fields: {
-          actionPlanActions(
-            existingActionPlanActions = { totalCount: 0, nodes: [] },
+          taskActions(
+            existingTaskActions = { totalCount: 0, nodes: [] },
             { readField },
           ) {
-            const updatedActionPlanActions = existingActionPlanActions.nodes.map((actionPlanAction) =>
-              readField('id', actionPlanAction) === updatedActionPlanAction.id
-                ? updatedActionPlanAction
-                : actionPlanAction,
+            const updatedTaskActions = existingTaskActions.nodes.map((taskAction) =>
+              readField('id', taskAction) === updatedTaskAction.id
+                ? updatedTaskAction
+                : taskAction,
             );
 
             return {
-              totalCount: existingActionPlanActions.totalCount,
-              nodes: updatedActionPlanActions,
+              totalCount: existingTaskActions.totalCount,
+              nodes: updatedTaskActions,
             };
           },
         },
@@ -146,39 +146,39 @@ export default function AddActionPlanActionForm({ idActionPlanAction, title }) {
       });
     },
   });
-  const onUpdateActionPlanAction = (variables) => {
+  const onUpdateTaskAction = (variables) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment modifier ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        updateActionPlanAction({ variables });
+        updateTaskAction({ variables });
       },
     });
   };
-  const [getActionPlanAction, { loading: loadingActionPlanAction }] = useLazyQuery(GET_ACTION_PLAN_ACTION, {
+  const [getTaskAction, { loading: loadingTaskAction }] = useLazyQuery(GET_TASK_ACTION, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, folder, ...actionPlanActionCopy } = data.actionPlanAction;
-      actionPlanActionCopy.dueDate = actionPlanActionCopy.dueDate ? dayjs(actionPlanActionCopy.dueDate) : null;
-      formik.setValues(actionPlanActionCopy);
+      let { __typename, folder, ...taskActionCopy } = data.taskAction;
+      taskActionCopy.dueDate = taskActionCopy.dueDate ? dayjs(taskActionCopy.dueDate) : null;
+      formik.setValues(taskActionCopy);
     },
     onError: (err) => console.log(err),
   });
 
   React.useEffect(() => {
-    if (idActionPlanAction) {
-      getActionPlanAction({ variables: { id: idActionPlanAction } });
+    if (idTaskAction) {
+      getTaskAction({ variables: { id: idTaskAction } });
     }
-  }, [idActionPlanAction]);
+  }, [idTaskAction]);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
         {title} {formik.values.number}
       </Typography>
-      {loadingActionPlanAction && <ProgressService type="form" />}
-      {!loadingActionPlanAction && (
+      {loadingTaskAction && <ProgressService type="form" />}
+      {!loadingTaskAction && (
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={{ xs: 2, md: 3 }}>
             <Grid xs={12} sm={12} md={8} item="true">
@@ -188,10 +188,10 @@ export default function AddActionPlanActionForm({ idActionPlanAction, title }) {
                   label="Action"
                   multiline
                   rows={5}
-                  value={formik.values.action}
+                  value={formik.values.description}
                   onChange={(e) =>
                     formik.setFieldValue(
-                      'action',
+                      'description',
                       e.target.value,
                     )
                   }

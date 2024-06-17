@@ -18,7 +18,7 @@ import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
 import { Done, Edit } from '@mui/icons-material';
 import UndesirableEventTabs from './undesirable-events-tabs/UndesirableEventTabs';
-import { POST_UNDESIRABLE_EVENT_OBJECTIVE } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
+import { POST_UNDESIRABLE_EVENT_TICKET } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -47,16 +47,16 @@ export default function UndesirableEventDetails() {
     }
   }, [idUndesirableEvent]);
 
-  const [createUndesirableEventObjective, { loading: loadingPostObjective }] =
-  useMutation(POST_UNDESIRABLE_EVENT_OBJECTIVE, {
+  const [createUndesirableEventTicket, { loading: loadingPostTicket }] =
+  useMutation(POST_UNDESIRABLE_EVENT_TICKET, {
     onCompleted: (datas) => {
-      if (datas.createUndesirableEventObjective.done) {
-        let actionPlanObjective = datas.createUndesirableEventObjective?.undesirableEvent?.actionPlanObjective
-        navigate(`/online/qualites/plan-action/objectifs/modifier/${actionPlanObjective?.id}`);
+      if (datas.createUndesirableEventTicket.done) {
+        let ticket = datas.createUndesirableEventTicket?.undesirableEvent?.ticket
+        navigate(`/online/qualites/plan-action/tickets/modifier/${ticket?.id}`);
       } else {
         setNotifyAlert({
           isOpen: true,
-          message: `Non analysé ! ${datas.createUndesirableEventObjective.message}.`,
+          message: `Non analysé ! ${datas.createUndesirableEventTicket.message}.`,
           type: 'error',
         });
       }
@@ -72,14 +72,14 @@ export default function UndesirableEventDetails() {
     },
   });
 
-  const onCreateUndesirableEventObjective = (id) => {
+  const onCreateUndesirableEventTicket = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment analyser ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        createUndesirableEventObjective({ variables: { id: id } });
+        createUndesirableEventTicket({ variables: { id: id } });
       },
     });
   };
@@ -91,7 +91,7 @@ export default function UndesirableEventDetails() {
         <Button variant="contained" endIcon={<Done />}
         sx={{mx: 2}}
         onClick={() => {
-          onCreateUndesirableEventObjective(undesirableEventData?.undesirableEvent?.id);
+          onCreateUndesirableEventTicket(undesirableEventData?.undesirableEvent?.id);
         }}>
           Analyser
         </Button>

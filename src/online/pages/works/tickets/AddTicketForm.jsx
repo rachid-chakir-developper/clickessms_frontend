@@ -9,23 +9,23 @@ import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
-import TheTextField from '../../../../../_shared/components/form-fields/TheTextField';
-import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_ACTION_PLAN_OBJECTIVE } from '../../../../../_shared/graphql/queries/ActionPlanObjectiveQueries';
+import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { GET_TICKET } from '../../../../_shared/graphql/queries/TicketQueries';
 import {
-  POST_ACTION_PLAN_OBJECTIVE,
-  PUT_ACTION_PLAN_OBJECTIVE,
-} from '../../../../../_shared/graphql/mutations/ActionPlanObjectiveMutations';
-import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
-import TheDateTimePicker from '../../../../../_shared/components/form-fields/TheDateTimePicker';
-import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
-import { GET_EMPLOYEES } from '../../../../../_shared/graphql/queries/EmployeeQueries';
-import { GET_ESTABLISHMENTS } from '../../../../../_shared/graphql/queries/EstablishmentQueries';
+  POST_TICKET,
+  PUT_TICKET,
+} from '../../../../_shared/graphql/mutations/TicketMutations';
+import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
+import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
+import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
+import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import { Close } from '@mui/icons-material';
-import TheDesktopDatePicker from '../../../../../_shared/components/form-fields/TheDesktopDatePicker';
-import { ACTION_STATUS, PRIORITIES } from '../../../../../_shared/tools/constants';
-import { GET_ACTION_PLAN_ACTIONS } from '../../../../../_shared/graphql/queries/ActionPlanActionQueries';
-import { GET_UNDESIRABLE_EVENTS } from '../../../../../_shared/graphql/queries/UndesirableEventQueries';
+import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
+import { ACTION_STATUS, PRIORITIES } from '../../../../_shared/tools/constants';
+import { GET_TASK_ACTIONS } from '../../../../_shared/graphql/queries/TaskActionQueries';
+import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -35,14 +35,14 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function AddActionPlanObjectiveForm({ idActionPlanObjective, title }) {
+export default function AddTicketForm({ idTicket, title }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({
     title: yup
-      .string("Entrez l'objet de l'objectif")
-      .required("L'objet de l'objectif est obligatoire"),
+      .string("Entrez l'objet de l'ticket")
+      .required("L'objet de l'ticket est obligatoire"),
   });
   const formik = useFormik({
     initialValues: {
@@ -55,26 +55,26 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let actionPlanObjectiveCopy = { ...values };
-      actionPlanObjectiveCopy.establishments = actionPlanObjectiveCopy.establishments.map((i) => i?.id);
-      actionPlanObjectiveCopy.employee = actionPlanObjectiveCopy.employee ? actionPlanObjectiveCopy.employee.id : null;
-      if (!actionPlanObjectiveCopy?.actions) actionPlanObjectiveCopy['actions'] = [];
+      let ticketCopy = { ...values };
+      ticketCopy.establishments = ticketCopy.establishments.map((i) => i?.id);
+      ticketCopy.employee = ticketCopy.employee ? ticketCopy.employee.id : null;
+      if (!ticketCopy?.actions) ticketCopy['actions'] = [];
       let items = [];
-      actionPlanObjectiveCopy.actions.forEach((item) => {
+      ticketCopy.actions.forEach((item) => {
         let { __typename, ...itemCopy } = item;
         itemCopy.employees = itemCopy.employees.map((i) => i?.id);
         items.push(itemCopy);
       });
-      actionPlanObjectiveCopy.actions = items;
-      if (idActionPlanObjective && idActionPlanObjective != '') {
-        onUpdateActionPlanObjective({
-          id: actionPlanObjectiveCopy.id,
-          actionPlanObjectiveData: actionPlanObjectiveCopy,
+      ticketCopy.actions = items;
+      if (idTicket && idTicket != '') {
+        onUpdateTicket({
+          id: ticketCopy.id,
+          ticketData: ticketCopy,
         });
       } else
-        createActionPlanObjective({
+        createTicket({
           variables: {
-            actionPlanObjectiveData: actionPlanObjectiveCopy,
+            ticketData: ticketCopy,
           },
         });
     },
@@ -86,7 +86,7 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
       ...formik.values,
       actions: [
         ...formik.values.actions,
-        { action: '', dueDate: null, employees:[], status: ACTION_STATUS.TO_DO},
+        { description: '', dueDate: null, employees:[], status: ACTION_STATUS.TO_DO},
       ],
     });
   };
@@ -101,7 +101,7 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
     });
   }; 
 
-  const [createActionPlanObjective, { loading: loadingPost }] = useMutation(POST_ACTION_PLAN_OBJECTIVE, {
+  const [createTicket, { loading: loadingPost }] = useMutation(POST_TICKET, {
     onCompleted: (data) => {
       console.log(data);
       setNotifyAlert({
@@ -109,21 +109,21 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
         message: 'Ajouté avec succès',
         type: 'success',
       });
-      let { __typename, ...actionPlanObjectiveCopy } = data.createActionPlanObjective.actionPlanObjective;
-      //   formik.setValues(actionPlanObjectiveCopy);
-        formik.setFieldValue('id', actionPlanObjectiveCopy.id);
+      let { __typename, ...ticketCopy } = data.createTicket.ticket;
+      //   formik.setValues(ticketCopy);
+        formik.setFieldValue('id', ticketCopy.id);
         handleNext();
     },
-    refetchQueries: [{ query: GET_ACTION_PLAN_ACTIONS }],
-    update(cache, { data: { createActionPlanObjective } }) {
-      const newActionPlanObjective = createActionPlanObjective.actionPlanObjective;
+    refetchQueries: [{ query: GET_TASK_ACTIONS }],
+    update(cache, { data: { createTicket } }) {
+      const newTicket = createTicket.ticket;
 
       cache.modify({
         fields: {
-          actionPlanObjectives(existingActionPlanObjectives = { totalCount: 0, nodes: [] }) {
+          tickets(existingTickets = { totalCount: 0, nodes: [] }) {
             return {
-              totalCount: existingActionPlanObjectives.totalCount + 1,
-              nodes: [newActionPlanObjective, ...existingActionPlanObjectives.nodes],
+              totalCount: existingTickets.totalCount + 1,
+              nodes: [newTicket, ...existingTickets.nodes],
             };
           },
         },
@@ -138,7 +138,7 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
       });
     },
   });
-  const [updateActionPlanObjective, { loading: loadingPut }] = useMutation(PUT_ACTION_PLAN_OBJECTIVE, {
+  const [updateTicket, { loading: loadingPut }] = useMutation(PUT_TICKET, {
     onCompleted: (data) => {
       console.log(data);
       setNotifyAlert({
@@ -146,29 +146,29 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
         message: 'Modifié avec succès',
         type: 'success',
       });
-      let { __typename, ...actionPlanObjectiveCopy } = data.updateActionPlanObjective.actionPlanObjective;
-      //   formik.setValues(actionPlanObjectiveCopy);
+      let { __typename, ...ticketCopy } = data.updateTicket.ticket;
+      //   formik.setValues(ticketCopy);
       handleNext();
     },
-    refetchQueries: [{ query: GET_UNDESIRABLE_EVENTS }, { query: GET_ACTION_PLAN_ACTIONS }],
-    update(cache, { data: { updateActionPlanObjective } }) {
-      const updatedActionPlanObjective = updateActionPlanObjective.actionPlanObjective;
+    refetchQueries: [{ query: GET_UNDESIRABLE_EVENTS }, { query: GET_TASK_ACTIONS }],
+    update(cache, { data: { updateTicket } }) {
+      const updatedTicket = updateTicket.ticket;
 
       cache.modify({
         fields: {
-          actionPlanObjectives(
-            existingActionPlanObjectives = { totalCount: 0, nodes: [] },
+          tickets(
+            existingTickets = { totalCount: 0, nodes: [] },
             { readField },
           ) {
-            const updatedActionPlanObjectives = existingActionPlanObjectives.nodes.map((actionPlanObjective) =>
-              readField('id', actionPlanObjective) === updatedActionPlanObjective.id
-                ? updatedActionPlanObjective
-                : actionPlanObjective,
+            const updatedTickets = existingTickets.nodes.map((ticket) =>
+              readField('id', ticket) === updatedTicket.id
+                ? updatedTicket
+                : ticket,
             );
 
             return {
-              totalCount: existingActionPlanObjectives.totalCount,
-              nodes: updatedActionPlanObjectives,
+              totalCount: existingTickets.totalCount,
+              nodes: updatedTickets,
             };
           },
         },
@@ -183,30 +183,30 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
       });
     },
   });
-  const onUpdateActionPlanObjective = (variables) => {
+  const onUpdateTicket = (variables) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment modifier ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        updateActionPlanObjective({ variables });
+        updateTicket({ variables });
       },
     });
   };
-  const [getActionPlanObjective, { loading: loadingActionPlanObjective }] = useLazyQuery(GET_ACTION_PLAN_OBJECTIVE, {
+  const [getTicket, { loading: loadingTicket }] = useLazyQuery(GET_TICKET, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, folder, completionPercentage, undesirableEvent, ...actionPlanObjectiveCopy } = data.actionPlanObjective;
-        if (!actionPlanObjectiveCopy?.actions) actionPlanObjectiveCopy['actions'] = [];
+      let { __typename, folder, completionPercentage, undesirableEvent, ...ticketCopy } = data.ticket;
+        if (!ticketCopy?.actions) ticketCopy['actions'] = [];
         let items = [];
-        actionPlanObjectiveCopy.actions.forEach((item) => {
+        ticketCopy.actions.forEach((item) => {
           let { __typename, ...itemCopy } = item;
           itemCopy.dueDate = itemCopy.dueDate ? dayjs(itemCopy.dueDate): null;
           items.push(itemCopy);
         });
-        actionPlanObjectiveCopy.actions = items;
-      formik.setValues(actionPlanObjectiveCopy);
+        ticketCopy.actions = items;
+      formik.setValues(ticketCopy);
     },
     onError: (err) => console.log(err),
   });
@@ -231,15 +231,15 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
   });
 
   React.useEffect(() => {
-    if (idActionPlanObjective) {
-      getActionPlanObjective({ variables: { id: idActionPlanObjective } });
+    if (idTicket) {
+      getTicket({ variables: { id: idTicket } });
     }
-  }, [idActionPlanObjective]);
+  }, [idTicket]);
 
   
   React.useEffect(() => {
-    if (searchParams.get('id') && !idActionPlanObjective) {
-      getActionPlanObjective({ variables: { id: searchParams.get('id') } });
+    if (searchParams.get('id') && !idTicket) {
+      getTicket({ variables: { id: searchParams.get('id') } });
     }
   }, []);
 
@@ -249,7 +249,7 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if(activeStep >= 1) navigate('/online/qualites/plan-action/objectifs/liste');
+    if(activeStep >= 1) navigate('/online/qualites/plan-action/tickets/liste');
     else if (formik.values.id)
       setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });
@@ -276,14 +276,14 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
       <Typography component="div" variant="h5">
         {title} {formik.values.number}
       </Typography>
-      {loadingActionPlanObjective && <ProgressService type="form" />}
-      {!loadingActionPlanObjective && (
+      {loadingTicket && <ProgressService type="form" />}
+      {!loadingTicket && (
         <form onSubmit={formik.handleSubmit}>
           
           <Stepper
             activeStep={activeStep}
             orientation="vertical"
-            nonLinear={idActionPlanObjective ? true : false}
+            nonLinear={idTicket ? true : false}
           >
             <Step>
               <StepLabel
@@ -400,10 +400,10 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
                               label="Action"
                               multiline
                               rows={2}
-                              value={item.action}
+                              value={item.description}
                               onChange={(e) =>
                                 formik.setFieldValue(
-                                  `actions.${index}.action`,
+                                  `actions.${index}.description`,
                                   e.target.value,
                                 )
                               }
@@ -495,7 +495,7 @@ export default function AddActionPlanObjectiveForm({ idActionPlanObjective, titl
             <Grid xs={12} sm={12} md={12} item="true">
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
-                  to="/online/qualites/plan-action/objectifs/liste"
+                  to="/online/qualites/plan-action/tickets/liste"
                   className="no_style"
                 >
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>

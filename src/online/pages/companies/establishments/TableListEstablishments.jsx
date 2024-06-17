@@ -31,6 +31,7 @@ import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import EstablishmentBreadcrumbs from './establishments-tabs/EstablishmentBreadcrumbs';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -316,24 +317,10 @@ export default function TableListEstablishments({
       ),
     [rows, order, orderBy, page, rowsPerPage],
   );
-
   const [anchorElList, setAnchorElList] = React.useState([]);
   return (
     <Box sx={{ width: '100%' }}>
-      {rows[0]?.establishmentParent && <Breadcrumbs maxItems={4} aria-label="breadcrumb">
-        <Link underline="hover" color="inherit" href="#">
-          Home
-        </Link>
-        <Link underline="hover" color="inherit" href="#">
-          Catalog
-        </Link>
-        <Link underline="hover" color="inherit" href="#">
-          Accessories
-        </Link>
-        <Link underline="hover" color="inherit" href="#">
-          New Collection
-        </Link>
-      </Breadcrumbs>}
+      {rows[0]?.establishmentParent && <EstablishmentBreadcrumbs establishment={rows[0]?.establishmentParent} />}
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>

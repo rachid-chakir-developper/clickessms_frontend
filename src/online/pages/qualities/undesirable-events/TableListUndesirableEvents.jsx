@@ -252,7 +252,7 @@ export default function TableListUndesirableEvents({
   loading,
   rows,
   onDeleteUndesirableEvent,
-  onCreateUndesirableEventObjective,
+  onCreateUndesirableEventTicket,
 }) {
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
@@ -457,10 +457,10 @@ export default function TableListUndesirableEvents({
                       <CustomizedStatusLabelMenu status={row?.status} />
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      {row?.actionPlanObjective ? <CircularProgressWithLabel value={row?.completionPercentage}/> :
+                      {row?.ticket ? <CircularProgressWithLabel value={row?.completionPercentage}/> :
                       <Button variant="text" size="small" endIcon={<Done />} 
                         onClick={() => {
-                          onCreateUndesirableEventObjective(row?.id);
+                          onCreateUndesirableEventTicket(row?.id);
                         }}>
                         Analyser
                       </Button>}
@@ -502,7 +502,7 @@ export default function TableListUndesirableEvents({
                         </MenuItem>
                         <MenuItem
                           onClick={() => {
-                            onCreateUndesirableEventObjective(row?.id);
+                            onCreateUndesirableEventTicket(row?.id);
                             handleCloseMenu();
                           }}
                         >

@@ -11,7 +11,7 @@ import {
   Divider,
 } from '@mui/material';
 
-import { ACTION_PLAN_ACTION_RECAP } from '../../../../_shared/graphql/queries/ActionPlanActionQueries';
+import { TASK_ACTION_RECAP } from '../../../../_shared/graphql/queries/TaskActionQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import {
   getFormatDateTime,
@@ -28,28 +28,28 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function ActionPlanActionDetails() {
-  let { idActionPlanAction } = useParams();
+export default function TaskActionDetails() {
+  let { idTaskAction } = useParams();
   const [
-    getActionPlanAction,
-    { loading: loadingActionPlanAction, data: actionPlanActionData, error: actionPlanActionError },
-  ] = useLazyQuery(ACTION_PLAN_ACTION_RECAP);
+    getTaskAction,
+    { loading: loadingTaskAction, data: taskActionData, error: taskActionError },
+  ] = useLazyQuery(TASK_ACTION_RECAP);
   React.useEffect(() => {
-    if (idActionPlanAction) {
-      getActionPlanAction({ variables: { id: idActionPlanAction } });
+    if (idTaskAction) {
+      getTaskAction({ variables: { id: idTaskAction } });
     }
-  }, [idActionPlanAction]);
+  }, [idTaskAction]);
 
-  if (loadingActionPlanAction) return <ProgressService type="form" />;
+  if (loadingTaskAction) return <ProgressService type="form" />;
   return (
     <>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
-            <ActionPlanActionMiniInfos actionPlanAction={actionPlanActionData?.actionPlanAction} />
+            <TaskActionMiniInfos taskAction={taskActionData?.taskAction} />
           </Grid>
           <Grid item xs={5}>
-            <ActionPlanActionOtherInfos actionPlanAction={actionPlanActionData?.actionPlanAction} />
+            <TaskActionOtherInfos taskAction={taskActionData?.taskAction} />
           </Grid>
           <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
             <Divider />
@@ -60,7 +60,7 @@ export default function ActionPlanActionDetails() {
                 Description
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {actionPlanActionData?.actionPlanAction?.description}
+                {taskActionData?.taskAction?.description}
               </Typography>
             </Paper>
           </Grid>
@@ -70,7 +70,7 @@ export default function ActionPlanActionDetails() {
                 Observation
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {actionPlanActionData?.actionPlanAction?.observation}
+                {taskActionData?.taskAction?.observation}
               </Typography>
             </Paper>
           </Grid>
@@ -87,7 +87,7 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-function ActionPlanActionMiniInfos({ actionPlanAction }) {
+function TaskActionMiniInfos({ taskAction }) {
   return (
     <Paper
       variant="outlined"
@@ -101,10 +101,10 @@ function ActionPlanActionMiniInfos({ actionPlanAction }) {
       }}
     >
       <Grid container spacing={2}>
-        {actionPlanAction?.image && actionPlanAction?.image != '' && (
+        {taskAction?.image && taskAction?.image != '' && (
           <Grid item>
             <ButtonBase sx={{ width: 128, height: 'auto' }}>
-              <Img alt="complex" src={actionPlanAction?.image} />
+              <Img alt="complex" src={taskAction?.image} />
             </ButtonBase>
           </Grid>
         )}
@@ -112,33 +112,33 @@ function ActionPlanActionMiniInfos({ actionPlanAction }) {
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
-                Réference : <b>{actionPlanAction?.number}</b>
+                Réference : <b>{taskAction?.number}</b>
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {actionPlanAction?.name}
+                {taskAction?.name}
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                Montant : {formatCurrencyAmount(actionPlanAction?.amount)}
+                Montant : {formatCurrencyAmount(taskAction?.amount)}
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                IBAN : <b>{actionPlanAction?.iban}</b>
+                IBAN : <b>{taskAction?.iban}</b>
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                BIC : <b>{actionPlanAction?.bic}</b>
+                BIC : <b>{taskAction?.bic}</b>
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b> {`${getFormatDateTime(actionPlanAction?.createdAt)}`}{' '}
+                <b>Crée le: </b> {`${getFormatDateTime(taskAction?.createdAt)}`}{' '}
                 <br />
                 <b>Dernière modification: </b>
-                {`${getFormatDateTime(actionPlanAction?.updatedAt)}`}
+                {`${getFormatDateTime(taskAction?.updatedAt)}`}
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
                 <b>Date début prévue: </b>{' '}
-                {`${getFormatDateTime(actionPlanAction?.startingDateTime)}`} <br />
+                {`${getFormatDateTime(taskAction?.startingDateTime)}`} <br />
                 <b>Date fin prévue: </b>{' '}
-                {`${getFormatDateTime(actionPlanAction?.endingDateTime)}`}
+                {`${getFormatDateTime(taskAction?.endingDateTime)}`}
               </Typography>
             </Grid>
           </Grid>
@@ -148,7 +148,7 @@ function ActionPlanActionMiniInfos({ actionPlanAction }) {
   );
 }
 
-function ActionPlanActionOtherInfos({ actionPlanAction }) {
+function TaskActionOtherInfos({ taskAction }) {
   return (
     <Paper
       variant="outlined"
@@ -160,7 +160,7 @@ function ActionPlanActionOtherInfos({ actionPlanAction }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
-      {actionPlanAction?.bankAccount?.establishment && (
+      {taskAction?.bankAccount?.establishment && (
         <>
           <Typography variant="h6" gutterBottom>
             Structure
@@ -168,7 +168,7 @@ function ActionPlanActionOtherInfos({ actionPlanAction }) {
           <Paper sx={{ padding: 2 }} variant="outlined">
             <Item>
               <EstablishmentItemCard
-                establishment={actionPlanAction?.bankAccount?.establishment}
+                establishment={taskAction?.bankAccount?.establishment}
               />
             </Item>
           </Paper>

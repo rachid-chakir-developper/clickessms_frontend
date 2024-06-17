@@ -10,7 +10,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import {
   DELETE_UNDESIRABLE_EVENT,
-  POST_UNDESIRABLE_EVENT_OBJECTIVE,
+  POST_UNDESIRABLE_EVENT_TICKET,
   PUT_UNDESIRABLE_EVENT_STATE,
 } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
 import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
@@ -130,16 +130,16 @@ export default function ListUndesirableEvents() {
     });
   };
 
-  const [createUndesirableEventObjective, { loading: loadingPostObjective }] =
-    useMutation(POST_UNDESIRABLE_EVENT_OBJECTIVE, {
+  const [createUndesirableEventTicket, { loading: loadingPostTicket }] =
+    useMutation(POST_UNDESIRABLE_EVENT_TICKET, {
       onCompleted: (datas) => {
-        if (datas.createUndesirableEventObjective.done) {
-          let actionPlanObjective = datas.createUndesirableEventObjective?.undesirableEvent?.actionPlanObjective
-          navigate(`/online/qualites/plan-action/objectifs/modifier/${actionPlanObjective?.id}`);
+        if (datas.createUndesirableEventTicket.done) {
+          let ticket = datas.createUndesirableEventTicket?.undesirableEvent?.ticket
+          navigate(`/online/qualites/plan-action/tickets/modifier/${ticket?.id}`);
         } else {
           setNotifyAlert({
             isOpen: true,
-            message: `Non analysé ! ${datas.createUndesirableEventObjective.message}.`,
+            message: `Non analysé ! ${datas.createUndesirableEventTicket.message}.`,
             type: 'error',
           });
         }
@@ -155,14 +155,14 @@ export default function ListUndesirableEvents() {
       },
     });
 
-  const onCreateUndesirableEventObjective = (id) => {
+  const onCreateUndesirableEventTicket = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment analyser ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        createUndesirableEventObjective({ variables: { id: id } });
+        createUndesirableEventTicket({ variables: { id: id } });
       },
     });
   };
@@ -194,7 +194,7 @@ export default function ListUndesirableEvents() {
                     <UndesirableEventItemCard 
                                         undesirableEvent={undesirableEvent}
                                         onDeleteUndesirableEvent={onDeleteUndesirableEvent}
-                                        onCreateUndesirableEventObjective={onCreateUndesirableEventObjective}
+                                        onCreateUndesirableEventTicket={onCreateUndesirableEventTicket}
                     />
                   </Item>
                 </Grid>
@@ -207,7 +207,7 @@ export default function ListUndesirableEvents() {
           loading={loadingUndesirableEvents}
           rows={undesirableEventsData?.undesirableEvents?.nodes || []}
           onDeleteUndesirableEvent={onDeleteUndesirableEvent}
-          onCreateUndesirableEventObjective={onCreateUndesirableEventObjective}
+          onCreateUndesirableEventTicket={onCreateUndesirableEventTicket}
         />
       </Grid>
       <Grid item="true" xs={12}>

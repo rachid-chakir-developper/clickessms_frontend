@@ -4,7 +4,7 @@ import{ gql } from '@apollo/client';
 import{ BENEFICIARY_MINI_INFOS } from './BeneficiaryFragment';
 import{ EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
 import{ ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
-import { ACTION_PLAN_OBJECTIVE_MINI_INFOS } from './ActionPlanObjectiveFragment';
+import { TICKET_MINI_INFOS } from './TicketFragment';
 
 export const UNDESIRABLE_EVENT_ESTABLISHMENT_DETAILS = gql`
   fragment UndesirableEventEstablishmentTypeFragment on UndesirableEventEstablishmentType{
@@ -40,8 +40,8 @@ export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
     employee{
       ...EmployeeBasicInfosFragment
     } 
-    actionPlanObjective {
-      ...ActionPlanObjectiveMiniInfosFragment
+    ticket {
+      ...TicketMiniInfosFragment
     }
     folder{
       id
@@ -52,7 +52,7 @@ export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
   ${UNDESIRABLE_EVENT_MINI_INFOS}
   ${UNDESIRABLE_EVENT_ESTABLISHMENT_DETAILS}
   ${EMPLOYEE_BASIC_INFOS}
-  ${ACTION_PLAN_OBJECTIVE_MINI_INFOS}
+  ${TICKET_MINI_INFOS}
 `;
 
 export const UNDESIRABLE_EVENT_BENEFICIARY_DETAILS = gql`

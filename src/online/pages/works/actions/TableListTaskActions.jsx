@@ -19,10 +19,8 @@ import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
   getFormatDate,
-  getPriorityLabel,
-  getStatusLabel,
-  getStatusLebelColor,
-} from '../../../../../_shared/tools/functions';
+  formatCurrencyAmount,
+} from '../../../../_shared/tools/functions';
 import {
   Article,
   Delete,
@@ -32,11 +30,14 @@ import {
   MoreVert,
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
-import AppLabel from '../../../../../_shared/components/app/label/AppLabel';
-import { Link, useNavigate } from 'react-router-dom';
-import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
-import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
-import CircularProgressWithLabel from '../../../../../_shared/components/feedbacks/CircularProgressWithLabel';
+import { Link } from 'react-router-dom';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import CustomizedStatusLabelMenu from '../../../../_shared/components/app/menu/CustomizedStatusLabelMenu';
+import { PUT_TASK_ACTION } from '../../../../_shared/graphql/mutations/TaskActionMutations';
+import { useMutation } from '@apollo/client';
+import { GET_TICKETS } from '../../../../_shared/graphql/queries/TicketQueries';
+import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -96,48 +97,36 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-    {
-      id: 'title',
-      numeric: false,
-      disablePadding: true,
-      label: 'Libellé',
-    },
-    {
-        id: 'establishments',
-        numeric: false,
-        disablePadding: false,
-        label: 'Structures',
-    },
-    {
-        id: 'source',
-        numeric: false,
-        disablePadding: false,
-        label: 'Source',
-    },
-    {
-        id: 'priority',
-        numeric: false,
-        disablePadding: false,
-        label: 'Priorité',
-    },
-    {
-        id: 'status',
-        numeric: false,
-        disablePadding: false,
-        label: 'Status',
-    },
-    {
-        id: 'completionPercentage',
-        numeric: false,
-        disablePadding: false,
-        label: 'Avancement',
-    },
-    {
-        id: 'action',
-        numeric: true,
-        disablePadding: false,
-        label: 'Actions',
-    },
+  {
+    id: 'description',
+    numeric: false,
+    disablePadding: true,
+    label: 'Description',
+  },,
+  {
+    id: 'dueDate',
+    numeric: false,
+    disablePadding: false,
+    label: 'Échéance',
+  },
+  {
+    id: 'employees',
+    numeric: false,
+    disablePadding: true,
+    label: 'Responsables',
+  },
+  {
+    id: 'status',
+    numeric: false,
+    disablePadding: false,
+    label: 'Statut',
+  },
+  {
+    id: 'action',
+    numeric: true,
+    disablePadding: false,
+    label: 'Actions',
+  },
 ];
 
 function EnhancedTableHead(props) {
@@ -228,7 +217,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les objectifs
+          Les actions
         </Typography>
       )}
 
@@ -249,19 +238,50 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListActionPlanObjectives({
+export default function TableListTaskActions({
   loading,
   rows,
-  onDeleteActionPlanObjective,
-  onUpdateActionPlanObjectiveState,
+  onDeleteTaskAction,
+  onUpdateTaskActionState,
 }) {
-  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
+  const [touchedItem, setTouchedItem] = React.useState(null);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [updateTaskAction, { loading: loadingPut }] = useMutation(PUT_TASK_ACTION, {
+    refetchQueries: [{ query: GET_UNDESIRABLE_EVENTS }, { query: GET_TICKETS }],
+    update(cache, { data: { updateTaskAction } }) {
+      const updatedTaskAction = updateTaskAction.taskAction;
+
+      cache.modify({
+        fields: {
+          taskActions(
+            existingTaskActions = { totalCount: 0, nodes: [] },
+            { readField },
+          ) {
+            const updatedTaskActions = existingTaskActions.nodes.map((taskAction) =>
+              readField('id', taskAction) === updatedTaskAction.id
+                ? updatedTaskAction
+                : taskAction,
+            );
+
+            return {
+              totalCount: existingTaskActions.totalCount,
+              nodes: updatedTaskActions,
+            };
+          },
+        },
+      });
+    },
+  });
+  
+
+  React.useEffect(() => {
+    console.log(loading, rows);
+  }, [loading, rows]);
 
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -344,17 +364,15 @@ export default function TableListActionPlanObjectives({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="8">
+                  <StyledTableCell colSpan="7">
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="8">
-                    <Alert severity="warning">
-                      Aucun objectif trouvé.
-                    </Alert>
+                  <StyledTableCell colSpan="7">
+                    <Alert severity="warning">Aucune action trouvé.</Alert>
                   </StyledTableCell>
                 </StyledTableRow>
               )}
@@ -409,25 +427,26 @@ export default function TableListActionPlanObjectives({
                       scope="row"
                       padding="none"
                     >
-                    {row.title}
+                      {row.description}
                     </StyledTableCell>
+                    <StyledTableCell align="left">{`${getFormatDate(row?.dueDate)}`}</StyledTableCell>
                     <StyledTableCell align="left">
                       <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.establishments?.map((establishment, index) => {
+                        {row?.employees?.map((employee, index) => {
                           return (
                             <Chip
                               key={index}
                               avatar={
                                 <Avatar
-                                  alt={establishment?.name}
+                                  alt={employee?.firstName}
                                   src={
-                                    establishment?.logo
-                                      ? establishment?.logo
+                                    employee?.photo
+                                      ? employee?.photo
                                       : '/default-placeholder.jpg'
                                   }
                                 />
                               }
-                              label={establishment?.name}
+                              label={employee?.firstName}
                               variant="outlined"
                             />
                           );
@@ -435,33 +454,12 @@ export default function TableListActionPlanObjectives({
                       </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.undesirableEvent && <Chip
-                          label={`EI: ${row?.undesirableEvent?.title}`}
-                          variant="filled"
-                          clickable
-                          onClick={()=> navigate(`/online/qualites/evenements-indesirables/details/${row?.undesirableEvent?.id}`)}
-                        />}
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <Chip
-                          label={getPriorityLabel(row?.priority)}
-                          variant="filled"
+                      <CustomizedStatusLabelMenu 
+                          status={row?.status}
+                          type="action"
+                          loading={loadingPut && touchedItem && touchedItem?.id === row?.id}
+                          onChange={(status)=> {setTouchedItem(row); updateTaskAction({ variables: {id: row?.id, taskActionData: {status}} })}}
                         />
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <Chip
-                          label={getStatusLabel(row?.status)}
-                          variant="outlined"
-                        />
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <CircularProgressWithLabel value={row?.completionPercentage}/>
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
@@ -480,8 +478,8 @@ export default function TableListActionPlanObjectives({
                           horizontal: 'right',
                         }}
                       >
-                        <Link
-                          to={`/online/qualites/plan-action/objectifs/details/${row?.id}`}
+                        {/* <Link
+                          to={`/online/travaux/actions/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -497,9 +495,9 @@ export default function TableListActionPlanObjectives({
                         >
                           <Folder sx={{ mr: 2 }} />
                           Bibliothèque
-                        </MenuItem>
+                        </MenuItem> */}
                         <Link
-                          to={`/online/qualites/plan-action/objectifs/modifier/${row?.id}`}
+                          to={`/online/travaux/actions/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -509,7 +507,7 @@ export default function TableListActionPlanObjectives({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteActionPlanObjective(row?.id);
+                            onDeleteTaskAction(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

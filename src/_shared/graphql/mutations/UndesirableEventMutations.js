@@ -50,9 +50,9 @@ export const PUT_UNDESIRABLE_EVENT_STATE = gql`
   }
   ${UNDESIRABLE_EVENT_BASIC_INFOS}
 `;
-export const POST_UNDESIRABLE_EVENT_OBJECTIVE = gql`
-  mutation CreateUndesirableEventObjective($id: ID!) {
-    createUndesirableEventObjective(id: $id) {
+export const POST_UNDESIRABLE_EVENT_TICKET = gql`
+  mutation CreateUndesirableEventTicket($id: ID!) {
+    createUndesirableEventTicket(id: $id) {
       done
       success
       message
