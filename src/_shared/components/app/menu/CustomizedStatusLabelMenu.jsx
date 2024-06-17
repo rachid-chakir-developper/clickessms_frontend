@@ -50,10 +50,9 @@ const StyledMenu = styled((props) => (
 
 // Options with icons for each status
 const STATUS = [
-    { value: 'NEW', label: 'En cours de traitement', icon: <Pending />, color: 'default'},
-    { value: 'PENDING', label: 'En attente', icon: <HourglassEmpty />, color: 'warning'},
-    { value: 'VALIDATED', label: 'Validé', icon: <CheckCircleOutline />, color: 'info'},
-    { value: 'COMPLETED', label: 'Traité', icon: <TaskAlt />, color: 'success'},
+    { value: 'NEW', label: 'Déclaré', icon: <HourglassEmpty />, color: 'default'},
+    { value: "IN_PROGRESS", label: "En cours de traitement", icon: <Pending />, color: 'info'},
+    { value: "DONE", label: "Traité", icon: <TaskAlt />, color: 'success'},
   ];
 
   // Options with icons for each status
@@ -114,10 +113,11 @@ export default function CustomizedStatusLabelMenu({status, type=null, loading=fa
             onClick={() => handleClose(option)}
             selected={status === option.value}
           >
-            {status === option.value ? <Done /> : option.icon}
+            {option.icon}
             <Typography variant="inherit">
               {option.label}
             </Typography>
+            {status === option.value && <Done sx={{marginLeft: 3}} />}
           </MenuItem>
         ))}
       </StyledMenu>

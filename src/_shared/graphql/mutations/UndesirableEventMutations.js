@@ -37,6 +37,20 @@ export const PUT_UNDESIRABLE_EVENT = gql`
   ${UNDESIRABLE_EVENT_BASIC_INFOS}
 `;
 
+export const PUT_UNDESIRABLE_EVENT_FIELDS = gql`
+  mutation UpdateUndesirableEventFields($id: ID!, $undesirableEventData: UndesirableEventInput!) {
+    updateUndesirableEventFields(id: $id, undesirableEventData: $undesirableEventData) {
+      done
+      success
+      message
+      undesirableEvent {
+        ...UndesirableEventBasicInfosFragment
+      }
+    }
+  }
+  ${UNDESIRABLE_EVENT_BASIC_INFOS}
+`;
+
 export const PUT_UNDESIRABLE_EVENT_STATE = gql`
   mutation UpdateUndesirableEventState($id: ID!) {
     updateUndesirableEventState(id: $id) {

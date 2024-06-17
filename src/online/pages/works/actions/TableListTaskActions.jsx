@@ -250,7 +250,7 @@ export default function TableListTaskActions({
   const [touchedItem, setTouchedItem] = React.useState(null);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [updateTaskAction, { loading: loadingPut }] = useMutation(PUT_TASK_ACTION, {
     refetchQueries: [{ query: GET_UNDESIRABLE_EVENTS }, { query: GET_TICKETS }],
     update(cache, { data: { updateTaskAction } }) {
