@@ -12,6 +12,9 @@ import {
   STEP_TYPES,
   TECH_INSPECTION_STATES,
   VEHICLE_STATES,
+  ABSENCE_TYPES,
+  ABSENCE_STATUS_CHOICES,
+  LEAVE_TYPE_CHOICES
 } from './constants';
 
 export const getStatusColor = (status) => {
@@ -116,6 +119,15 @@ export const getTechnicalInspectionLabel = (state) => {
 };
 export const getRepairStateLabel = (state) => {
   return REPAIR_STATES.ALL.find((t) => t.value == state)?.label;
+};
+export const getAbsenceTypeLabel = (type) => {
+  return ABSENCE_TYPES.ALL.find((t) => t.value == type)?.label;
+};
+export const getAbsenceStatusLabel = (status) => {
+  return ABSENCE_STATUS_CHOICES.ALL.find((t) => t.value == status)?.label;
+};
+export const getLeaveTypeLabel = (type) => {
+  return LEAVE_TYPE_CHOICES.ALL.find((t) => t.value == type)?.label;
 };
 
 const intlNumFmt = new Intl.NumberFormat('fr-FR', {

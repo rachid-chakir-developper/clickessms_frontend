@@ -18,7 +18,9 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
+  getAbsenceTypeLabel,
   getFormatDate,
+  getLeaveTypeLabel,
   getStatusLabel,
   getStatusLebelColor,
 } from '../../../../_shared/tools/functions';
@@ -35,6 +37,7 @@ import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import { ABSENCE_TYPES } from '../../../../_shared/tools/constants';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -95,16 +98,34 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'startingDateTime',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date',
-  },
-  {
     id: 'employee',
     numeric: false,
     disablePadding: false,
     label: 'Employés',
+  },
+  {
+    id: 'absenceType',
+    numeric: false,
+    disablePadding: false,
+    label: 'Type',
+  },
+  {
+    id: 'startingDateTime',
+    numeric: false,
+    disablePadding: false,
+    label: 'Date début',
+  },
+  {
+    id: 'endingDateTime',
+    numeric: false,
+    disablePadding: false,
+    label: 'Date fin',
+  },
+  {
+    id: 'duration',
+    numeric: false,
+    disablePadding: false,
+    label: 'Durée',
   },
   {
     id: 'reasons',
@@ -328,14 +349,14 @@ export default function TableListEmployeeAbsences({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan="9">
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan="9">
                     <Alert severity="warning">
                         Aucune absence trouvé.
                     </Alert>
@@ -387,7 +408,6 @@ export default function TableListEmployeeAbsences({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
                     <StyledTableCell align="left">
                       <Stack direction="row" flexWrap='wrap' spacing={1}>
                         {row?.employees?.map((beneficiarie, index) => {
@@ -410,6 +430,14 @@ export default function TableListEmployeeAbsences({
                           );
                         })}
                       </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <AppLabel color={row?.absenceType === ABSENCE_TYPES.ABSENCE ? "secondary" : "primary"}>{getLeaveTypeLabel(row?.leaveType)}</AppLabel>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
+                    <StyledTableCell align="left">{`${getFormatDate(row?.endingDateTime)}`}</StyledTableCell>
+                    <StyledTableCell align="left">
+                      {row?.duration} jour{row?.duration > 1 ? 's' : ''}
                     </StyledTableCell>
                     <StyledTableCell align="right">
                         <Stack direction="row" flexWrap='wrap' spacing={1}>

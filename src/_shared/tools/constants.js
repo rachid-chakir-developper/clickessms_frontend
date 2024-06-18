@@ -179,3 +179,50 @@ export const REPAIR_STATES = {
     { value: 'TO_DO', label: 'À faire' },
   ],
 };
+
+export const ABSENCE_TYPES = {
+  ABSENCE: 'ABSENCE',
+  LEAVE: 'LEAVE',
+  ALL: [
+    { value: 'ABSENCE', label: 'Absence' },
+    { value: 'LEAVE', label: 'Congé' },
+  ],
+};
+
+export const ABSENCE_STATUS_CHOICES = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  ALL: [
+    { value: 'PENDING', label: 'En Attente' },
+    { value: 'APPROVED', label: 'Approuvé' },
+    { value: 'REJECTED', label: 'Rejeté' },
+  ],
+};
+
+export const LEAVE_TYPE_CHOICES = {
+  ANNUAL: 'ANNUAL',
+  SICK: 'SICK',
+  MATERNITY: 'MATERNITY',
+  PATERNITY: 'PATERNITY',
+  UNPAID: 'UNPAID',
+  PARENTAL: 'PARENTAL',
+  BEREAVEMENT: 'BEREAVEMENT',
+  MARRIAGE: 'MARRIAGE',
+  STUDY: 'STUDY',
+  ADOPTION: 'ADOPTION',
+  ABSENCE: 'ABSENCE',
+  ALL: [
+    { value: 'ANNUAL', label: 'Congé Annuel' },
+    { value: 'SICK', label: 'Congé Maladie' },
+    { value: 'MATERNITY', label: 'Congé Maternité' },
+    { value: 'PATERNITY', label: 'Congé Paternité' },
+    { value: 'UNPAID', label: 'Congé Sans Solde' },
+    { value: 'PARENTAL', label: 'Congé Parental' },
+    { value: 'BEREAVEMENT', label: 'Congé de Décès' },
+    { value: 'MARRIAGE', label: 'Congé de Mariage' },
+    { value: 'STUDY', label: 'Congé de Formation' },
+    { value: 'ADOPTION', label: "Congé d'Adoption"},
+    { value: 'ABSENCE', label: 'Absence' },
+  ],
+};

@@ -20,9 +20,13 @@ export const EMPLOYEE_ABSENCE_BASIC_INFOS = gql`
     id
     number
     title
+    absenceType
+    leaveType
     startingDateTime
     endingDateTime
+    duration
     comment
+    status
     reasons{
       id
       name
