@@ -52,4 +52,26 @@ export const GET_TASK_STEP_COMMENTS = gql`
   ${COMMENT_BASIC_INFOS}
 `;
 
+export const GET_TICKET_COMMENTS = gql`
+  query GetTicketComments(
+    $ticketId: ID
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    ticketComments(
+      ticketId: $ticketId
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
+      totalCount
+      nodes {
+        ...CommentBasicInfosFragment
+      }
+    }
+  }
+  ${COMMENT_BASIC_INFOS}
+`;
+
 // Add more comment-related queries here

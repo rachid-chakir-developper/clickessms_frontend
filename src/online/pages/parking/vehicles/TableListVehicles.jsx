@@ -23,15 +23,13 @@ import {
   Done,
   Edit,
   Folder,
-  KeyboardArrowRight,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Breadcrumbs, Chip, MenuItem, Popover, Stack } from '@mui/material';
+import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import EstablishmentBreadcrumbs from './establishments-tabs/EstablishmentBreadcrumbs';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -91,48 +89,42 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  {
-    id: 'name',
-    numeric: false,
-    disablePadding: true,
-    label: 'Nom',
-  },
-  {
-    id: 'currentCapacity',
-    numeric: false,
-    disablePadding: false,
-    label: "Capacité actuelle",
-  },
-  {
-    id: 'establishmentCategory',
-    numeric: false,
-    disablePadding: false,
-    label: 'Catégorie',
-  },
-  {
-    id: 'establishmentType',
-    numeric: false,
-    disablePadding: false,
-    label: 'Type',
-  },
-  {
-    id: 'establishmentParent',
-    numeric: false,
-    disablePadding: false,
-    label: 'Structure mère',
-  },
-  {
-    id: 'managers',
-    numeric: false,
-    disablePadding: false,
-    label: 'Responsables',
-  },
-  {
-    id: 'action',
-    numeric: true,
-    disablePadding: false,
-    label: 'Actions',
-  },
+    {
+      id: 'name',
+      numeric: false,
+      disablePadding: true,
+      label: 'Nom',
+    },
+    {
+        id: 'brand',
+        numeric: false,
+        disablePadding: false,
+        label: 'Marque et Model',
+    },
+    {
+        id: 'registrationNumber',
+        numeric: false,
+        disablePadding: false,
+        label: 'Matricule',
+    },
+    {
+        id: 'establishments',
+        numeric: false,
+        disablePadding: false,
+        label: 'Structures actuelles',
+    },
+    {
+        id: 'employees',
+        numeric: false,
+        disablePadding: false,
+        label: 'Employées actuels',
+    },
+    {
+        id: 'action',
+        numeric: true,
+        disablePadding: false,
+        label: 'Actions',
+    },
 ];
 
 function EnhancedTableHead(props) {
@@ -183,8 +175,6 @@ function EnhancedTableHead(props) {
             </TableSortLabel>
           </StyledTableCell>
         ))}
-        <StyledTableCell padding="checkbox">
-        </StyledTableCell>
       </TableRow>
     </TableHead>
   );
@@ -225,7 +215,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les structures
+          Les véhicules
         </Typography>
       )}
 
@@ -246,10 +236,11 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListEstablishments({
+export default function TableListVehicles({
   loading,
   rows,
-  onDeleteEstablishment,
+  onDeleteVehicle,
+  onUpdateVehicleState,
 }) {
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
@@ -317,10 +308,10 @@ export default function TableListEstablishments({
       ),
     [rows, order, orderBy, page, rowsPerPage],
   );
+
   const [anchorElList, setAnchorElList] = React.useState([]);
   return (
     <Box sx={{ width: '100%' }}>
-      {rows[0]?.establishmentParent && <EstablishmentBreadcrumbs establishment={rows[0]?.establishmentParent} />}
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
@@ -340,16 +331,16 @@ export default function TableListEstablishments({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="9">
+                  <StyledTableCell colSpan="7">
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="9">
+                  <StyledTableCell colSpan="7">
                     <Alert severity="warning">
-                      Aucune structures trouvée.
+                      Aucun véhicule trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -404,67 +395,61 @@ export default function TableListEstablishments({
                       id={labelId}
                       scope="row"
                       padding="none"
-                      onClick={()=> navigate(`/online/associations/structures/details/${row?.id}`)}
+                      onClick={()=> navigate(`/online/parc-automobile/vehicules/details/${row?.id}`)}
                     >
-                      {row.name}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{row?.currentCapacity} {row?.currentTemporaryCapacity ? `dont temporaire: ${row?.currentTemporaryCapacity}` : ''}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                          {row?.establishmentCategory && <Chip
-                          label={row?.establishmentCategory?.name}
-                          variant="outlined"
-                        />}
-                      </Stack>
+                    {row?.name}
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                          {row?.establishmentType && <Chip
-                          label={row?.establishmentType?.name}
-                          variant="outlined"
-                        />}
-                      </Stack>
+                      {`${row?.vehicleBrand ? row?.vehicleBrand?.name : ''} ${row?.vehicleModel ? row?.vehicleModel?.name : ''}`}
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                        <Stack direction="row" flexWrap='wrap' spacing={1}>
-                            {row?.establishmentParent && <Chip
-                                avatar={
-                                <Avatar
-                                    alt={row?.establishmentParent?.name}
-                                    src={
-                                        row?.establishmentParent?.logo
-                                        ? row?.establishmentParent?.logo
-                                        : '/default-placeholder.jpg'
-                                    }
-                                />
-                                }
-                                label={row?.establishmentParent?.name}
-                                variant="outlined"
-                            />}
-                        </Stack>
+                      {row?.registrationNumber}
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.managers?.map((manager, index) => {
+                      {row?.vehicleEstablishments && row?.vehicleEstablishments?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+                        {row?.vehicleEstablishments[row?.vehicleEstablishments?.length - 1]?.establishments?.map((establishment, index) => {
                           return (
                             <Chip
                               key={index}
                               avatar={
                                 <Avatar
-                                  alt={`${manager?.employee?.firstName} ${manager?.employee?.lastName}`}
+                                  alt={establishment?.name}
                                   src={
-                                    manager?.employee?.photo
-                                      ? manager?.employee?.photo
+                                    establishment?.logo
+                                      ? establishment?.logo
                                       : '/default-placeholder.jpg'
                                   }
                                 />
                               }
-                              label={`${manager?.employee?.firstName} ${manager?.employee?.lastName}`}
+                              label={establishment?.name}
                               variant="outlined"
                             />
                           );
                         })}
-                      </Stack>
+                      </Stack>}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      {row?.vehicleEmployees && row?.vehicleEmployees?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+                        {row?.vehicleEmployees[row?.vehicleEmployees?.length - 1]?.employees?.map((employee, index) => {
+                          return (
+                            <Chip
+                              key={index}
+                              avatar={
+                                <Avatar
+                                  alt={`${employee?.firstName} ${employee?.lastName}`}
+                                  src={
+                                    employee?.photo
+                                      ? employee?.photo
+                                      : '/default-placeholder.jpg'
+                                  }
+                                />
+                              }
+                              label={`${employee?.firstName} ${employee?.lastName}`}
+                              variant="outlined"
+                            />
+                          );
+                        })}
+                      </Stack>}
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
@@ -484,7 +469,7 @@ export default function TableListEstablishments({
                         }}
                       >
                         <Link
-                          to={`/online/associations/structures/details/${row?.id}`}
+                          to={`/online/parc-automobile/vehicules/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -502,7 +487,7 @@ export default function TableListEstablishments({
                           Bibliothèque
                         </MenuItem>
                         <Link
-                          to={`/online/associations/structures/modifier/${row?.id}`}
+                          to={`/online/parc-automobile/vehicules/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -512,7 +497,7 @@ export default function TableListEstablishments({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteEstablishment(row?.id);
+                            onDeleteVehicle(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}
@@ -521,14 +506,6 @@ export default function TableListEstablishments({
                           Supprimer
                         </MenuItem>
                       </Popover>
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {row?.establishmentChilds?.length > 0 && <Tooltip title="Voir les structures filles"><IconButton
-                        size="small"
-                        onClick={()=> navigate(`/online/associations/structures/liste/${row?.id}`)}
-                      >
-                        <KeyboardArrowRight />
-                      </IconButton></Tooltip>}
                     </StyledTableCell>
                   </StyledTableRow>
                 );
@@ -539,7 +516,7 @@ export default function TableListEstablishments({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={9} />
+                  <StyledTableCell colSpan={6} />
                 </StyledTableRow>
               )}
             </TableBody>

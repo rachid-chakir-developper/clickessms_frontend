@@ -410,6 +410,7 @@ export default function TableListTickets({
                       id={labelId}
                       scope="row"
                       padding="none"
+                      onClick={()=> navigate(`/online/qualites/plan-action/tickets/details/${row?.id}`)}
                     >
                     {row.title}
                     </StyledTableCell>

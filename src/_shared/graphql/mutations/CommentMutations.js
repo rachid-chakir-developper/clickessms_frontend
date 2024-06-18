@@ -4,11 +4,13 @@ import { COMMENT_BASIC_INFOS } from '../fragments/CommentFragment';
 export const POST_COMMENT = gql`
   mutation CreateComment(
     $taskStepId: ID
+    $ticketId: ID
     $commentData: CommentInput!
     $image: Upload
   ) {
     createComment(
       taskStepId: $taskStepId
+      ticketId: $ticketId
       commentData: $commentData
       image: $image
     ) {

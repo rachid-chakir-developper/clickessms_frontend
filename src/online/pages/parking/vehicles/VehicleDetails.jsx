@@ -6,7 +6,7 @@ import { Grid, Typography, Avatar } from '@mui/material';
 import { GET_RECAP_VEHICLE } from '../../../../_shared/graphql/queries/VehicleQueries';
 import { getCritAirVignetteLabel, getFormatDateTime, getVehicleStateLabel } from '../../../../_shared/tools/functions';
 import styled from '@emotion/styled';
-import { Edit } from '@mui/icons-material';
+import { DriveEta, Edit } from '@mui/icons-material';
 import VehicleTabs from './vehicles-tabs/VehicleTabs';
 
 const Item = styled(Stack)(({ theme }) => ({
@@ -110,7 +110,9 @@ const VehicleDetailsPage = ({ vehicle }) => {
                 boxShadow: '0px 0px 4px rgba(0, 0, 0, 0.5)', // Ajoutez l'ombre extérieure ici
                 border: '2px solid white', // Ajoutez une bordure blanche autour de l'avatar si nécessaire
               }}
-            />
+            >
+              <DriveEta />
+            </Avatar>
             <Box
               sx={{
                 mt: 1,

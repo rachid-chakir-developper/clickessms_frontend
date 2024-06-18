@@ -19,7 +19,7 @@ export const COMMENT_BASIC_INFOS = gql`
 export const COMMENT_DETAILS = gql`
   fragment CommentDetailsFragment on CommentType {
     ...CommentBasicInfosFragment
-    upatedAt
+    updatedAt
   }
   ${COMMENT_BASIC_INFOS}
 `;

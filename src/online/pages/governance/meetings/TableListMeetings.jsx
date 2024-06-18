@@ -445,7 +445,7 @@ export default function TableListMeetings({
                               key={index}
                               avatar={
                                 <Avatar
-                                  alt={participant?.employee?.firstName}
+                                  alt={`${participant?.employee?.firstName} ${participant?.employee?.lastName}`}
                                   src={
                                     participant?.employee?.photo
                                       ? participant?.employee?.photo
@@ -453,7 +453,7 @@ export default function TableListMeetings({
                                   }
                                 />
                               }
-                              label={participant?.employee?.firstName}
+                              label={`${participant?.employee?.firstName} ${participant?.employee?.lastName}`}
                               variant="outlined"
                             />
                           );

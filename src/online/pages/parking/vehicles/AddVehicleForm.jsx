@@ -198,8 +198,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
   const [getVehicle, { loading: loadingVehicle }] = useLazyQuery(GET_VEHICLE, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, ...vehicleCopy1 } = data.vehicle;
-      let { folder, ...vehicleCopy } = vehicleCopy1;
+      let { __typename, folder, ...vehicleCopy } = data.vehicle;
       vehicleCopy.vehicleBrand = vehicleCopy.vehicleBrand ? Number(vehicleCopy.vehicleBrand.id) : null;
       vehicleCopy.vehicleModel = vehicleCopy.vehicleModel ? Number(vehicleCopy.vehicleModel.id) : null;
         
