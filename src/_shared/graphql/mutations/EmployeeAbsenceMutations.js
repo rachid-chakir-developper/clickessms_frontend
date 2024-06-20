@@ -31,6 +31,20 @@ export const PUT_EMPLOYEE_ABSENCE = gql`
   ${EMPLOYEE_ABSENCE_BASIC_INFOS}
 `;
 
+export const PUT_EMPLOYEE_ABSENCE_FIELDS = gql`
+  mutation UpdateEmployeeAbsenceFields($id: ID!, $employeeAbsenceData: EmployeeAbsenceInput!) {
+    updateEmployeeAbsenceFields(id: $id, employeeAbsenceData: $employeeAbsenceData) {
+      done
+      success
+      message
+      employeeAbsence {
+        ...EmployeeAbsenceBasicInfosFragment
+      }
+    }
+  }
+  ${EMPLOYEE_ABSENCE_BASIC_INFOS}
+`;
+
 export const PUT_EMPLOYEE_ABSENCE_STATE = gql`
   mutation UpdateEmployeeAbsenceState($id: ID!) {
     updateEmployeeAbsenceState(id: $id) {

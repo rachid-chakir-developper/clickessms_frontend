@@ -38,6 +38,7 @@ import { Link } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { ABSENCE_TYPES } from '../../../../_shared/tools/constants';
+import EmployeeAbsenceStatusLabelMenu from './EmployeeAbsenceStatusLabelMenu';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -98,7 +99,7 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'employee',
+    id: 'employees',
     numeric: false,
     disablePadding: false,
     label: 'Employés',
@@ -138,6 +139,12 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: 'Déclaré par',
+  },
+  {
+      id: 'status',
+      numeric: false,
+      disablePadding: false,
+      label: 'Status',
   },
   {
     id: 'action',
@@ -349,14 +356,14 @@ export default function TableListEmployeeAbsences({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="9">
+                  <StyledTableCell colSpan="10">
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="9">
+                  <StyledTableCell colSpan="10">
                     <Alert severity="warning">
                         Aucune absence trouvé.
                     </Alert>
@@ -473,6 +480,9 @@ export default function TableListEmployeeAbsences({
                           variant="outlined"
                         />
                         </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <EmployeeAbsenceStatusLabelMenu employeeAbsence={row} />
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton

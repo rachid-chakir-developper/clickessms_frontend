@@ -15,6 +15,7 @@ export default function TheAutocomplete({
   onChange,
   multiple = true,
   helperText = null,
+  disabled=false
 }) {
   const getPhoto = (option) => {
     if (option?.photo) return option?.photo;
@@ -25,6 +26,7 @@ export default function TheAutocomplete({
   return (
     <Autocomplete
       multiple={multiple}
+      disabled={disabled}
       fullWidth
       noOptionsText="Pas de résultat"
       id="multiple-limit-tags"

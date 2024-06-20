@@ -132,6 +132,15 @@ export default function ListEmployeeAbsences() {
       <Grid item="true" xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
+            to="/online/planning/absences-employes/ajouter?type=LEAVE"
+            className="no_style"
+          >
+            <Button variant="outlined" endIcon={<Add />}
+            sx={{ mx: 3 }}>
+              Demander un congé
+            </Button>
+          </Link>
+          <Link
             to="/online/planning/absences-employes/ajouter"
             className="no_style"
           >

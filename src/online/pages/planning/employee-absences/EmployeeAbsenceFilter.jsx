@@ -80,7 +80,7 @@ const EmployeeAbsenceFilter = ({ onFilterChange }) => {
   
   return (
     <Grid container spacing={2}>
-        <Grid item="true" xs={12} md={6}>
+        <Grid item  xs={12} md={6}>
             <Item>
                 <TheTextField variant="outlined"
                     label="Recherche"
@@ -107,7 +107,7 @@ const EmployeeAbsenceFilter = ({ onFilterChange }) => {
                 />
             </Item>
         </Grid>
-        <Grid item="true" xs={12} sm={6} md={3}>
+        <Grid item  xs={12} sm={6} md={3}>
             <Item>
                 <TheDesktopDatePicker
                     type="date"
@@ -117,7 +117,7 @@ const EmployeeAbsenceFilter = ({ onFilterChange }) => {
                 />
             </Item>
         </Grid>
-        <Grid item="true" xs={12} sm={6} md={3}>
+        <Grid item  xs={12} sm={6} md={3}>
             <Item>
                 <TheAutocomplete
                         options={employeesData?.employees?.nodes}

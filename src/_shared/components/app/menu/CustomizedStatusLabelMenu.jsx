@@ -1,10 +1,7 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import Chip from '@mui/material/Chip';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import { ArrowDropDown, CheckCircleOutline, Done, Face, HourglassEmpty, Pending, TaskAlt } from '@mui/icons-material';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import {  ArrowDropDown, Cancel, Done, HourglassEmpty, Pending, TaskAlt } from '@mui/icons-material';
+import { Chip, Menu, MenuItem, Box, CircularProgress, Typography } from '@mui/material';
 
 // Custom styled menu component
 const StyledMenu = styled((props) => (
@@ -55,12 +52,12 @@ const STATUS = [
     { value: "DONE", label: "Traité", icon: <TaskAlt />, color: 'success'},
   ];
 
-// Options with icons for each status
-const EI_STATUS = [
-    { value: 'NEW', label: 'Déclaré', icon: <HourglassEmpty />, color: 'default'},
-    { value: "IN_PROGRESS", label: "En cours de traitement", icon: <Pending />, color: 'info'},
-    { value: "DONE", label: "Traité", icon: <TaskAlt />, color: 'success'},
-  ];
+  // Options with icons for each status
+  const EI_STATUS = [
+      { value: 'NEW', label: 'Déclaré', icon: <HourglassEmpty />, color: 'default'},
+      { value: "IN_PROGRESS", label: "En cours de traitement", icon: <Pending />, color: 'info'},
+      { value: "DONE", label: "Traité", icon: <TaskAlt />, color: 'success'},
+    ];
   // Options with icons for each status
   const TICKET_STATUS = [
       { value: 'NEW', label: 'Nouveau', icon: <HourglassEmpty />, color: 'default'},
@@ -69,10 +66,17 @@ const EI_STATUS = [
     ];
 
   // Options with icons for each status
-const ACTION_STATUS = [
-  { value: "TO_DO", label: "À traiter", icon: <HourglassEmpty />, color: 'default'},
-  { value: "IN_PROGRESS", label: "En cours", icon: <Pending />, color: 'info'},
-  { value: "DONE", label: "Traité", icon: <TaskAlt />, color: 'success'},
+  const ABSENCE_STATUS_CHOICES = [
+      { value: 'PENDING', label: 'En Attente', icon: <Pending />, color: 'default'},
+      { value: "APPROVED", label: "Approuvé", icon: <Done />, color: 'success'},
+      { value: "REJECTED", label: "Rejeté", icon: <Cancel />, color: 'warning'},
+    ];
+
+  // Options with icons for each status
+  const ACTION_STATUS = [
+    { value: "TO_DO", label: "À traiter", icon: <HourglassEmpty />, color: 'default'},
+    { value: "IN_PROGRESS", label: "En cours", icon: <Pending />, color: 'info'},
+    { value: "DONE", label: "Traité", icon: <TaskAlt />, color: 'success'},
 ];
 
 export default function CustomizedStatusLabelMenu({status, type=null, loading=false, onChange}) {
@@ -108,6 +112,9 @@ export default function CustomizedStatusLabelMenu({status, type=null, loading=fa
         break;
       case 'ticket':
         setOptions(TICKET_STATUS)
+        break;
+      case 'absence':
+        setOptions(ABSENCE_STATUS_CHOICES)
         break;
     
       default:

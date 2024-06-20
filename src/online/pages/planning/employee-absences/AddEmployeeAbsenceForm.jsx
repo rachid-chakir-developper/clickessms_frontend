@@ -4,7 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Stack, Box, Typography, Button, Divider, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import dayjs from 'dayjs';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -23,6 +23,7 @@ import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutoc
 import SelectCheckmarks from '../../../../_shared/components/form-fields/SelectCheckmarks';
 import { GET_DATAS_EMPLOYEE_ABSENCE } from '../../../../_shared/graphql/queries/DataQueries';
 import { ABSENCE_TYPES, LEAVE_TYPE_CHOICES } from '../../../../_shared/tools/constants';
+import { useSession } from '../../../../_shared/context/SessionProvider';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -36,6 +37,9 @@ export default function AddEmployeeAbsenceForm({
   idEmployeeAbsence,
   title,
 }) {
+  const { user } = useSession();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [isLeaveType, setIsLeaveType] = React.useState(false);
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({});
@@ -225,6 +229,16 @@ export default function AddEmployeeAbsenceForm({
       getEmployeeAbsence({ variables: { id: idEmployeeAbsence } });
     }
   }, [idEmployeeAbsence]);
+
+  React.useEffect(() => {
+    if (searchParams.get('type') === ABSENCE_TYPES.LEAVE && !idEmployeeAbsence) {
+      formik.setFieldValue('absenceType', ABSENCE_TYPES.LEAVE)
+      formik.setFieldValue('leaveType', LEAVE_TYPE_CHOICES.ANNUAL)
+      formik.setFieldValue('employees', [user?.employee])
+      setIsLeaveType(true)
+    }
+  }, []);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
@@ -242,9 +256,8 @@ export default function AddEmployeeAbsenceForm({
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Titre"
+                  label="Libellé"
                   value={formik.values.title}
-                  required
                   onChange={(e) =>
                     formik.setFieldValue('title', e.target.value)
                   }
@@ -252,9 +265,10 @@ export default function AddEmployeeAbsenceForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={8} item="true">
+            {!isLeaveType && <Grid xs={12} sm={6} md={8} item="true">
               <Item>
                 <TheAutocomplete
+                  disabled={isLeaveType}
                   options={employeesData?.employees?.nodes}
                   label="Employés"
                   placeholder="Ajouter un employé"
@@ -265,7 +279,7 @@ export default function AddEmployeeAbsenceForm({
                   }
                 />
               </Item>
-            </Grid>
+            </Grid>}
             <Grid xs={12} sm={6} md={4}>
               <Item>
                 <TheDateTimePicker
@@ -277,6 +291,8 @@ export default function AddEmployeeAbsenceForm({
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
+            </Grid>
+            <Grid xs={12} sm={6} md={4}>
               <Item>
                 <TheDateTimePicker
                   label="Date de fin"
@@ -289,7 +305,7 @@ export default function AddEmployeeAbsenceForm({
               </Item>
             </Grid>
             <Grid xs={2} sm={4} md={4}>
-              <Item>
+              {/* <Item>
                 <FormControl fullWidth>
                   <InputLabel>Type </InputLabel>
                   <Select
@@ -309,14 +325,15 @@ export default function AddEmployeeAbsenceForm({
                     })}
                   </Select>
                 </FormControl>
-              </Item>
-              {formik.values.absenceType === ABSENCE_TYPES.LEAVE  && <Item>
+              </Item> */}
+              <Item>
                 <FormControl fullWidth>
-                  <InputLabel>Type du congé</InputLabel>
+                  <InputLabel>Type</InputLabel>
                   <Select
                     value={formik.values.leaveType}
                     onChange={(e) =>
-                      formik.setFieldValue('leaveType', e.target.value)
+                      {formik.setFieldValue('leaveType', e.target.value)
+                      if(e.target.value === LEAVE_TYPE_CHOICES.ABSENCE ) formik.setFieldValue('absenceType', ABSENCE_TYPES.ABSENCE)}
                     }
                     disabled={loadingPost || loadingPut}
                   >
@@ -329,7 +346,7 @@ export default function AddEmployeeAbsenceForm({
                     })}
                   </Select>
                 </FormControl>
-              </Item>}
+              </Item>
             </Grid>
             <Grid xs={12} sm={6} md={4} item="true">
               <Item>
@@ -344,6 +361,8 @@ export default function AddEmployeeAbsenceForm({
                   }
                 />
               </Item>
+            </Grid>
+            <Grid xs={12} sm={6} md={4} item="true">
               <Item>
                 <TheTextField
                   variant="outlined"

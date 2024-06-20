@@ -32,12 +32,10 @@ import {
   MoreVert,
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
-import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import CircularProgressWithLabel from '../../../../_shared/components/feedbacks/CircularProgressWithLabel';
-import CustomizedStatusLabelMenu from '../../../../_shared/components/app/menu/CustomizedStatusLabelMenu';
 import TicketStatusLabelMenu from './TicketStatusLabelMenu';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
