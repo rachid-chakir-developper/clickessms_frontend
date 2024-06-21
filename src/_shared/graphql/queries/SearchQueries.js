@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 import {
-  EMPLOYEE_BASIC_INFOS,
+  EMPLOYEE_MINI_INFOS,
   EMPLOYEE_PHONE_INFOS,
 } from '../fragments/EmployeeFragment';
 import {
@@ -38,7 +38,7 @@ export const GET_SEARCH = gql`
         employees {
           totalCount
           nodes {
-            ...EmployeeBasicInfosFragment
+            ...EmployeeMiniInfosFragment
           }
         }
         beneficiaries {
@@ -56,7 +56,7 @@ export const GET_SEARCH = gql`
       }
     }
   }
-  ${EMPLOYEE_BASIC_INFOS}
+  ${EMPLOYEE_MINI_INFOS}
   ${ESTABLISHMENT_MINI_INFOS}
   ${BENEFICIARY_MINI_INFOS}
   ${SUPPLIER_BASIC_INFOS}

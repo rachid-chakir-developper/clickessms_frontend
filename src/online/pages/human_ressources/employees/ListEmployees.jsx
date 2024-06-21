@@ -17,6 +17,7 @@ import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueri
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import EmployeeFilter from './EmployeeFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
+import TableListEmployees from './TableListEmployees';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -231,7 +232,7 @@ export default function ListEmployees() {
       <Grid item="true" xs={12}>
         <EmployeeFilter onFilterChange={handleFilterChange} />
       </Grid>
-      <Grid item="true" xs={12}>
+      {/* <Grid item="true" xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -260,6 +261,14 @@ export default function ListEmployees() {
             ))}
           </Grid>
         </Box>
+      </Grid> */}
+      
+      <Grid item="true" xs={12}>
+        <TableListEmployees
+          loading={loadingEmployees}
+          rows={employeesData?.employees?.nodes || []}
+          onDeleteEmployee={onDeleteEmployee}
+        />
       </Grid>
       <Grid item="true" xs={12}>
         <PaginationControlled

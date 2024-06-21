@@ -1,6 +1,7 @@
 // EmployeeFragment.js
 
 import { gql } from '@apollo/client';
+import { EMPLOYEE_CONTRACT_MINI_INFOS } from './EmployeeContractFragment';
 
 export const EMPLOYEE_PHONE_INFOS = gql`
   fragment EmployeePhoneInfosFragment on EmployeeType {
@@ -34,6 +35,9 @@ export const EMPLOYEE_BASIC_INFOS = gql`
   fragment EmployeeBasicInfosFragment on EmployeeType {
     ...EmployeeMiniInfosFragment
     birthDate
+    currentContract{
+      ...EmployeeContractMiniInfosFragment
+    }
     folder {
       id
       number
@@ -41,6 +45,7 @@ export const EMPLOYEE_BASIC_INFOS = gql`
     }
   }
   ${EMPLOYEE_MINI_INFOS}
+  ${EMPLOYEE_CONTRACT_MINI_INFOS}
 `;
 
 export const EMPLOYEE_DETAILS = gql`

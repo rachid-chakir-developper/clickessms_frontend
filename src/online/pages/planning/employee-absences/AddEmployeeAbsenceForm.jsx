@@ -234,7 +234,6 @@ export default function AddEmployeeAbsenceForm({
     if (searchParams.get('type') === ABSENCE_TYPES.LEAVE && !idEmployeeAbsence) {
       formik.setFieldValue('absenceType', ABSENCE_TYPES.LEAVE)
       formik.setFieldValue('leaveType', LEAVE_TYPE_CHOICES.ANNUAL)
-      formik.setFieldValue('employees', [user?.employee])
       setIsLeaveType(true)
     }
   }, []);

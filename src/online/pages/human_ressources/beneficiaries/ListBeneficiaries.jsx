@@ -17,6 +17,7 @@ import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/Beneficia
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import BeneficiaryFilter from './BeneficiaryFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
+import TableListBeneficiaries from './TableListBeneficiaries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -180,7 +181,7 @@ export default function ListBeneficiaries() {
       <Grid item="true" xs={12}>
         <BeneficiaryFilter onFilterChange={handleFilterChange} />
       </Grid>
-      <Grid item="true" xs={12}>
+      {/* <Grid item="true" xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -211,6 +212,13 @@ export default function ListBeneficiaries() {
             )}
           </Grid>
         </Box>
+      </Grid> */}
+      <Grid item="true" xs={12}>
+        <TableListBeneficiaries
+          loading={loadingBeneficiaries}
+          rows={beneficiariesData?.beneficiaries?.nodes || []}
+          onDeleteBeneficiary={onDeleteBeneficiary}
+        />
       </Grid>
       <Grid item="true" xs={12}>
         <PaginationControlled

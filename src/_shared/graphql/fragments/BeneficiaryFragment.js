@@ -36,10 +36,28 @@ export const BENEFICIARY_MINI_INFOS = gql`
     isActive
   }
 `;
+export const BENEFICIARY_ENTRY_DETAILS = gql`
+  fragment BeneficiaryEntryFragment on BeneficiaryEntryType {
+    id
+    entryDate
+    releaseDate
+    establishments{
+      ...EstablishmentMiniInfosFragment
+    }
+    internalReferents{
+      ...EmployeeMiniInfosFragment
+    }
+  }
+  ${ESTABLISHMENT_MINI_INFOS}
+  ${EMPLOYEE_MINI_INFOS}
+`;
 
 export const BENEFICIARY_BASIC_INFOS = gql`
   fragment BeneficiaryBasicInfosFragment on BeneficiaryType {
     ...BeneficiaryMiniInfosFragment
+    beneficiaryEntries{
+      ...BeneficiaryEntryFragment
+    }
     folder {
       id
       number
@@ -47,6 +65,7 @@ export const BENEFICIARY_BASIC_INFOS = gql`
     }
   }
   ${BENEFICIARY_MINI_INFOS}
+  ${BENEFICIARY_ENTRY_DETAILS}
 `;
 
 export const BENEFICIARY_ADMISSION_DETAILS = gql`
@@ -66,21 +85,6 @@ export const BENEFICIARY_ADMISSION_DETAILS = gql`
   ${FINANCIER_BASIC_INFOS}
 `;
 
-export const BENEFICIARY_ENTRY_DETAILS = gql`
-  fragment BeneficiaryEntryFragment on BeneficiaryEntryType {
-    id
-    entryDate
-    releaseDate
-    establishments{
-      ...EstablishmentMiniInfosFragment
-    }
-    internalReferents{
-      ...EmployeeMiniInfosFragment
-    }
-  }
-  ${ESTABLISHMENT_MINI_INFOS}
-  ${EMPLOYEE_MINI_INFOS}
-`;
 
 export const BENEFICIARY_DETAILS = gql`
   fragment BeneficiaryDetailsFragment on BeneficiaryType {
@@ -107,13 +111,9 @@ export const BENEFICIARY_DETAILS = gql`
     beneficiaryAdmissionDocuments{
       ...BeneficiaryAdmissionDocumentFragment
     }
-    beneficiaryEntries{
-      ...BeneficiaryEntryFragment
-    }
   }
   ${BENEFICIARY_BASIC_INFOS}
   ${BENEFICIARY_ADMISSION_DETAILS}
-  ${BENEFICIARY_ENTRY_DETAILS}
 `;
 export const BENEFICIARY_RECAP_DETAILS = gql`
   fragment BeneficiaryRecapDetailsFragment on BeneficiaryType {
@@ -140,14 +140,10 @@ export const BENEFICIARY_RECAP_DETAILS = gql`
     beneficiaryAdmissionDocuments{
       ...BeneficiaryAdmissionDocumentFragment
     }
-    beneficiaryEntries{
-      ...BeneficiaryEntryFragment
-    }
     createdAt
     updatedAt
   }
   ${BENEFICIARY_BASIC_INFOS}
   ${BENEFICIARY_ADMISSION_DETAILS}
-  ${BENEFICIARY_ENTRY_DETAILS}
 `;
 

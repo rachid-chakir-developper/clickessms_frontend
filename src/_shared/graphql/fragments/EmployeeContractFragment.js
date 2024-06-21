@@ -1,10 +1,24 @@
 // EmployeeContractFragment.js
 
 import { gql } from '@apollo/client';
-import { EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
 
-export const EMPLOYEE_CONTRACT_BASIC_INFOS = gql`
-  fragment EmployeeContractBasicInfosFragment on EmployeeContractType {
+export const EMPLOYEE_CONTRACT_ESTABLISHMENT_DETAILS = gql`
+  fragment EmployeeContractEstablishmentTypeFragment on EmployeeContractEstablishmentType {
+    id
+    establishment{
+      id
+      number
+      name
+      email
+      logo
+      coverImage
+      isActive
+    }
+  }
+`;
+
+export const EMPLOYEE_CONTRACT_MINI_INFOS = gql`
+  fragment EmployeeContractMiniInfosFragment on EmployeeContractType {
     id
     number
     title
@@ -15,20 +29,34 @@ export const EMPLOYEE_CONTRACT_BASIC_INFOS = gql`
     endingDate
     description
     isActive
+    restLeaveDays
     contractType{
       id
       name
     }
-    employee{
-      ...EmployeeBasicInfosFragment
+    establishments{
+      ...EmployeeContractEstablishmentTypeFragment
     }
   }
-  ${EMPLOYEE_BASIC_INFOS}
+  ${EMPLOYEE_CONTRACT_ESTABLISHMENT_DETAILS}
+`;
+
+export const EMPLOYEE_CONTRACT_BASIC_INFOS = gql`
+  fragment EmployeeContractBasicInfosFragment on EmployeeContractType {
+    ...EmployeeContractMiniInfosFragment
+    employee{
+      id
+      firstName
+      lastName
+    }
+  }
+  ${EMPLOYEE_CONTRACT_MINI_INFOS}
 `;
 
 export const EMPLOYEE_CONTRACT_DETAILS = gql`
   fragment EmployeeContractDetailsFragment on EmployeeContractType {
     ...EmployeeContractBasicInfosFragment
+    annualLeaveDays
     observation
     startedAt
     endedAt
@@ -39,13 +67,10 @@ export const EMPLOYEE_CONTRACT_DETAILS = gql`
 export const EMPLOYEE_CONTRACT_RECAP_DETAILS = gql`
   fragment EmployeeContractRecapDetailsFragment on EmployeeContractType {
     ...EmployeeContractBasicInfosFragment
+    annualLeaveDays
     observation
-    employee{
-      ...EmployeeBasicInfosFragment
-    }
     startedAt
     endedAt
   }
   ${EMPLOYEE_CONTRACT_BASIC_INFOS}
-  ${EMPLOYEE_BASIC_INFOS}
 `;

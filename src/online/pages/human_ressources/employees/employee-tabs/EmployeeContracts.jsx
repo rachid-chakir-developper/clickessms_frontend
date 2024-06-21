@@ -1,22 +1,13 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Alert, Button, List, Stack } from '@mui/material';
+import { Alert, Button, Stack } from '@mui/material';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { Add } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
-
-import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
-import {
-  DELETE_EMPLOYEE_CONTRACT,
-  PUT_EMPLOYEE_CONTRACT_STATE,
-} from '../../../../../_shared/graphql/mutations/EmployeeContractMutations';
+import { DELETE_EMPLOYEE_CONTRACT } from '../../../../../_shared/graphql/mutations/EmployeeContractMutations';
 import { GET_EMPLOYEE_CONTRACTS } from '../../../../../_shared/graphql/queries/EmployeeContractQueries';
-import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
-import EmployeeContractFilter from './EmployeeContractFilter';
+import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
 import PaginationControlled from '../../../../../_shared/components/helpers/PaginationControlled';
-import TableListEmployeeContracts from './TableListEmployeeContracts';
+import TableListEmployeeContracts from '../employee-contracts/TableListEmployeeContracts';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -26,9 +17,10 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function ListEmployeeContracts() {
+export default function EmployeeContracts({employee}) {
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
-  const [employeeContractFilter, setEmployeeContractFilter] = React.useState(null);
+  const [employeeContractFilter, setEmployeeContractFilter] =
+    React.useState({employees: [employee?.id]});
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
     setEmployeeContractFilter(newFilter);
@@ -84,12 +76,17 @@ export default function ListEmployeeContracts() {
               existingEmployeeContracts = { totalCount: 0, nodes: [] },
               { readField },
             ) {
-              const updatedEmployeeContracts = existingEmployeeContracts.nodes.filter(
-                (employeeContract) =>
-                  readField('id', employeeContract) !== deletedEmployeeContractId,
-              );
+              const updatedEmployeeContracts =
+                existingEmployeeContracts.nodes.filter(
+                  (employeeContract) =>
+                    readField('id', employeeContract) !==
+                    deletedEmployeeContractId,
+                );
 
-              console.log('Updated employeeContracts:', updatedEmployeeContracts);
+              console.log(
+                'Updated employeeContracts:',
+                updatedEmployeeContracts,
+              );
 
               return {
                 totalCount: existingEmployeeContracts.totalCount - 1,
@@ -122,78 +119,13 @@ export default function ListEmployeeContracts() {
     });
   };
 
-  const [updateEmployeeContractState, { loading: loadingPutState }] = useMutation(
-    PUT_EMPLOYEE_CONTRACT_STATE,
-    {
-      onCompleted: (datas) => {
-        if (datas.updateEmployeeContractState.done) {
-          setNotifyAlert({
-            isOpen: true,
-            message: 'Changée avec succès',
-            type: 'success',
-          });
-        } else {
-          setNotifyAlert({
-            isOpen: true,
-            message: `Non changée ! ${datas.updateEmployeeContractState.message}.`,
-            type: 'error',
-          });
-        }
-      },
-      refetchQueries: [{ query: GET_EMPLOYEE_CONTRACTS }],
-      onError: (err) => {
-        console.log(err);
-        setNotifyAlert({
-          isOpen: true,
-          message: 'Non changée ! Veuillez réessayer.',
-          type: 'error',
-        });
-      },
-    },
-  );
-
-  const onUpdateEmployeeContractState = (id) => {
-    setConfirmDialog({
-      isOpen: true,
-      title: 'ATTENTION',
-      subTitle: 'Voulez vous vraiment changer ?',
-      onConfirm: () => {
-        setConfirmDialog({ isOpen: false });
-        updateEmployeeContractState({ variables: { id: id } });
-      },
-    });
-  };
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
-          <Link
-            to="/online/ressources-humaines/employes/liste"
-            className="no_style"
-          >
-            <Button variant="outlined" sx={{ mr: 2 }} endIcon={<List />}>
-              Liste des employés
-            </Button>
-          </Link>
-          <Link
-            to="/online/ressources-humaines/employes/contrats/ajouter"
-            className="no_style"
-          >
-            <Button variant="contained" sx={{ mr: 2 }} endIcon={<Add />}>
-              Ajouter un contrat d'employé
-            </Button>
-          </Link>
-        </Box>
-      </Grid>
-      <Grid item="true" xs={12}>
-        <EmployeeContractFilter onFilterChange={handleFilterChange} />
-      </Grid>
       <Grid item="true" xs={12}>
         <TableListEmployeeContracts
           loading={loadingEmployeeContracts}
           rows={employeeContractsData?.employeeContracts?.nodes || []}
           onDeleteEmployeeContract={onDeleteEmployeeContract}
-          onUpdateEmployeeContractState={onUpdateEmployeeContractState}
         />
       </Grid>
       <Grid item="true" xs={12}>

@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import EmployeeAbsences from './EmployeeAbsences';
 import EmployeeUndesirableEvents from './EmployeeUndesirableEvents';
 import { Stack } from '@mui/material';
+import EmployeeContracts from './EmployeeContracts';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -98,14 +99,18 @@ export default function EmployeeTabs({employee}) {
                 aria-label="nav tabs example"
                 role="navigation"
             >
+                <LinkTab label="Contrats" href="/spam" />
                 <LinkTab label="Abscences" href="/spam" />
                 <LinkTab label="Evénements indésirables" href="/spam" />
             </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          <EmployeeAbsences employee={employee} />
+          <EmployeeContracts employee={employee} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
+          <EmployeeAbsences employee={employee} />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
           <EmployeeUndesirableEvents employee={employee} />
         </CustomTabPanel>
     </Box>

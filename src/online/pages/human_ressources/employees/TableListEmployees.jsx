@@ -17,7 +17,6 @@ import Tooltip from '@mui/material/Tooltip';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
-import { getFormatDate } from '../../../../../_shared/tools/functions';
 import {
   Article,
   Delete,
@@ -27,9 +26,11 @@ import {
   MoreVert,
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
-import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
+import AppLabel from '../../../../_shared/components/app/label/AppLabel';
+import { Link, useNavigate } from 'react-router-dom';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import { getFormatDate } from '../../../../_shared/tools/functions';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -89,54 +90,66 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  {
-    id: 'employee',
-    numeric: false,
-    disablePadding: false,
-    label: 'Employé',
-  },
-  {
-    id: 'position',
-    numeric: false,
-    disablePadding: true,
-    label: 'Poste',
-  },
-  {
-    id: 'contractType',
-    numeric: false,
-    disablePadding: false,
-    label: 'Type de contrat',
-  },
-  {
-      id: 'establishments',
+    {
+      id: 'photo',
+      numeric: false,
+      disablePadding: true,
+      label: 'Photo',
+    },
+    {
+      id: 'firstName',
       numeric: false,
       disablePadding: false,
-      label: 'Structures',
-  },
-  {
-    id: 'startingDate',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date de début',
-  },
-  {
-    id: 'endingDate',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date de fin',
-  },
-  {
-    id: 'restLeaveDays',
-    numeric: false,
-    disablePadding: false,
-    label: 'Jours du congé restants',
-  },
-  {
-    id: 'action',
-    numeric: true,
-    disablePadding: false,
-    label: 'Actions',
-  },
+      label: 'Prénom',
+    },
+    {
+        id: 'lastName',
+        numeric: false,
+        disablePadding: false,
+        label: 'Nom',
+    },
+    {
+        id: 'birthDate',
+        numeric: false,
+        disablePadding: false,
+        label: 'Date de naissance',
+    },
+    {
+        id: 'position',
+        numeric: false,
+        disablePadding: false,
+        label: 'Poste',
+    },
+    {
+      id: 'contractType',
+      numeric: false,
+      disablePadding: false,
+      label: 'Type de contrat',
+    },
+    {
+        id: 'establishments',
+        numeric: false,
+        disablePadding: false,
+        label: 'Structures',
+    },
+    {
+      id: 'startingDate',
+      numeric: false,
+      disablePadding: false,
+      label: 'Date de début',
+    },
+    {
+      id: 'endingDate',
+      numeric: false,
+      disablePadding: false,
+      label: 'Date de fin',
+    },
+    {
+        id: 'action',
+        numeric: true,
+        disablePadding: false,
+        label: 'Actions',
+    },
 ];
 
 function EnhancedTableHead(props) {
@@ -227,7 +240,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les contrats
+          Les employés
         </Typography>
       )}
 
@@ -248,22 +261,19 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListEmployeeContracts({
+export default function TableListEmployees({
   loading,
   rows,
-  onDeleteEmployeeContract,
-  onUpdateEmployeeContractState,
+  onDeleteEmployee,
+  onUpdateEmployeeState,
 }) {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  React.useEffect(() => {
-    console.log(loading, rows);
-  }, [loading, rows]);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -346,19 +356,22 @@ export default function TableListEmployeeContracts({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="8">
+                  <StyledTableCell colSpan="11">
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="8">
-                    <Alert severity="warning">Aucun contrat trouvé.</Alert>
+                  <StyledTableCell colSpan="11">
+                    <Alert severity="warning">
+                      Aucun employé trouvé.
+                    </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {visibleRows?.map((row, index) => {
+                const { currentContract } = row;
                 if (!anchorElList[index]) {
                   anchorElList[index] = null;
                 }
@@ -403,43 +416,51 @@ export default function TableListEmployeeContracts({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell align="left"> 
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
-                              src={
-                                row?.employee?.photo
-                                  ? row?.employee?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
-                          variant="outlined"
-                        />
-                        </Stack>
-                    </StyledTableCell>
                     <StyledTableCell
                       component="th"
                       id={labelId}
                       scope="row"
                       padding="none"
+                      onClick={()=> navigate(`/online/ressources-humaines/employes/details/${row?.id}`)}
                     >
-                      {row.position}
+                      <Avatar
+                        alt={`${row?.firstName} ${row?.lastName}`}
+                        variant="rounded"
+                        src={
+                          row?.photo
+                            ? row?.photo
+                            : '/default-placeholder.jpg'
+                        }
+                        sx={{ width: 50, height: 50, bgcolor: '#e1e1e1' }}
+                      />
+                    </StyledTableCell>
+                    <StyledTableCell align="left"
+                      onClick={()=> navigate(`/online/ressources-humaines/employes/details/${row?.id}`)}>
+                      {row?.firstName}
+                    </StyledTableCell>
+                    <StyledTableCell align="left"
+                      onClick={()=> navigate(`/online/ressources-humaines/employes/details/${row?.id}`)}>
+                      {row?.lastName}
+                    </StyledTableCell>
+                    <StyledTableCell align="left"
+                      onClick={()=> navigate(`/online/ressources-humaines/employes/details/${row?.id}`)}>
+                        {getFormatDate(row?.birthDate)}
+                    </StyledTableCell>
+                    <StyledTableCell align="left"
+                      onClick={()=> navigate(`/online/ressources-humaines/employes/details/${row?.id}`)}>
+                      {currentContract?.position}
                     </StyledTableCell>
                     <StyledTableCell align="left"> 
                       <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <Chip
-                          label={row?.contractType?.name}
+                        {currentContract?.contractType && <Chip
+                          label={currentContract?.contractType?.name}
                           variant="outlined"
-                        />
+                        />}
                         </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.establishments?.map((establishment, index) => {
+                      {currentContract && <Stack direction="row" flexWrap='wrap' spacing={1}>
+                        {currentContract?.establishments?.map((establishment, index) => {
                           return (
                             <Chip
                               key={index}
@@ -458,11 +479,10 @@ export default function TableListEmployeeContracts({
                             />
                           );
                         })}
-                      </Stack>
+                      </Stack>}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.startingDate)}`}</StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.endingDate)}`}</StyledTableCell>
-                    <StyledTableCell align="left">{row?.restLeaveDays} jour{row?.restLeaveDays > 1 ? 's' : ''}</StyledTableCell>
+                    <StyledTableCell align="left">{`${getFormatDate(currentContract?.startingDate)}`}</StyledTableCell>
+                    <StyledTableCell align="left">{`${getFormatDate(currentContract?.endingDate)}`}</StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -481,7 +501,7 @@ export default function TableListEmployeeContracts({
                         }}
                       >
                         <Link
-                          to={`/online/ressources-humaines/employes/contrats/details/${row?.id}`}
+                          to={`/online/ressources-humaines/employes/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -499,7 +519,7 @@ export default function TableListEmployeeContracts({
                           Bibliothèque
                         </MenuItem>
                         <Link
-                          to={`/online/ressources-humaines/employes/contrats/modifier/${row?.id}`}
+                          to={`/online/ressources-humaines/employes/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -509,7 +529,7 @@ export default function TableListEmployeeContracts({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteEmployeeContract(row?.id);
+                            onDeleteEmployee(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

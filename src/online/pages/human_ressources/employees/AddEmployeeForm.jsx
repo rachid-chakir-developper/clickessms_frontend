@@ -194,8 +194,7 @@ export default function AddEmployeeForm({ idEmployee, title }) {
     {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
-        let { __typename, ...employeeCopy1 } = data.employee;
-        let { folder, ...employeeCopy } = employeeCopy1;
+        let { __typename, folder, currentContract, ...employeeCopy } = data.employee;
         employeeCopy.birthDate = employeeCopy.birthDate ? dayjs(employeeCopy.birthDate) : null;
         employeeCopy.hiringDate = employeeCopy.hiringDate ? dayjs(employeeCopy.hiringDate) : null;
         employeeCopy.probationEndDate = employeeCopy.probationEndDate ? dayjs(employeeCopy.probationEndDate) : null;

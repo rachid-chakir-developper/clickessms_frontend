@@ -126,6 +126,15 @@ export default function AddMeetingForm({ idMeeting, title }) {
     fetchMore: fetchMoreDatas,
   } = useQuery(GET_DATAS_MEETING, { fetchPolicy: 'network-only' });
 
+  const {
+    loading: loadingEstablishments,
+    data: establishmentsData,
+    error: establishmentsError,
+    fetchMore: fetchMoreEstablishments,
+  } = useQuery(GET_ESTABLISHMENTS, {
+    fetchPolicy: 'network-only',
+  });
+
   
   const addMeetingDecision = () => {
     formik.setValues({
@@ -294,15 +303,6 @@ export default function AddMeetingForm({ idMeeting, title }) {
       formik.setValues(meetingCopy);
     },
     onError: (err) => console.log(err),
-  });
-
-  const {
-    loading: loadingEstablishments,
-    data: establishmentsData,
-    error: establishmentsError,
-    fetchMore: fetchMoreEstablishments,
-  } = useQuery(GET_ESTABLISHMENTS, {
-    fetchPolicy: 'network-only',
   });
 
   React.useEffect(() => {

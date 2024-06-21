@@ -22,6 +22,7 @@ import TheDateTimePicker from '../../../../../_shared/components/form-fields/The
 import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_EMPLOYEES } from '../../../../../_shared/graphql/queries/EmployeeQueries';
 import { GET_DATAS_EMPLOYEE } from '../../../../../_shared/graphql/queries/DataQueries';
+import { GET_ESTABLISHMENTS } from '../../../../../_shared/graphql/queries/EstablishmentQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -43,17 +44,20 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
       salary: 0,
       position: '',
       startingDate: dayjs(new Date()),
-      endingDate: dayjs(new Date()),
+      endingDate: null,
+      annualLeaveDays: 25,
       description: '',
       observation: '',
       isActive: true,
       employee: null,
-      contractType: null
+      contractType: null,
+      establishments :[]
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       let { document, ...employeeContractCopy } = values;
       employeeContractCopy.employee = employeeContractCopy.employee ? employeeContractCopy.employee.id : null;
+      employeeContractCopy.establishments = employeeContractCopy.establishments.map((i) => i?.id);
       if (idEmployeeContract && idEmployeeContract != '') {
         onUpdateEmployeeContract({
           id: employeeContractCopy.id,
@@ -75,6 +79,15 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
     error: employeesError,
     fetchMore: fetchMoreEmployees,
   } = useQuery(GET_EMPLOYEES, {
+    fetchPolicy: 'network-only',
+  }); 
+  
+  const {
+    loading: loadingEstablishments,
+    data: establishmentsData,
+    error: establishmentsError,
+    fetchMore: fetchMoreEstablishments,
+  } = useQuery(GET_ESTABLISHMENTS, {
     fetchPolicy: 'network-only',
   });
 
@@ -166,11 +179,14 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
   const [getEmployeeContract, { loading: loadingEmployeeContract }] = useLazyQuery(GET_EMPLOYEE_CONTRACT, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, ...employeeContractCopy1 } = data.employeeContract;
-      let { folder, ...employeeContractCopy } = employeeContractCopy1;
-      employeeContractCopy.startingDate = dayjs(employeeContractCopy.startingDate);
-      employeeContractCopy.endingDate = dayjs(employeeContractCopy.endingDate);
+      let { __typename, folder, restLeaveDays, ...employeeContractCopy } = data.employeeContract;
+      employeeContractCopy.startingDate = employeeContractCopy.startingDate ? dayjs(employeeContractCopy.startingDate) : null;
+      employeeContractCopy.endingDate = employeeContractCopy.endingDate ? dayjs(employeeContractCopy.endingDate) : null;
       employeeContractCopy.contractType = employeeContractCopy.contractType ? Number(employeeContractCopy.contractType.id) : null;
+      employeeContractCopy.establishments =
+      employeeContractCopy.establishments
+        ? employeeContractCopy.establishments.map((i) => i?.establishment)
+        : [];
       formik.setValues(employeeContractCopy);
     },
     onError: (err) => console.log(err),
@@ -295,6 +311,20 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                 />
               </Item>
             </Grid>
+            <Grid xs={12} sm={6} md={4}>
+              <Item>
+                <TheAutocomplete
+                  options={establishmentsData?.establishments?.nodes}
+                  label="Structures concernées"
+                  placeholder="Ajouter une tructure"
+                  limitTags={3}
+                  value={formik.values.establishments}
+                  onChange={(e, newValue) =>
+                    formik.setFieldValue('establishments', newValue)
+                  }
+                />
+              </Item>
+            </Grid>
             <Grid xs={12} sm={6} md={4} item="true">
               <Item>
                 <TheFileField variant="outlined" label="Document de contrat"
@@ -302,6 +332,23 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                   onChange={(file) => formik.setFieldValue('document', file)}
                   disabled={loadingPost || loadingPut}
                   />
+              </Item>
+            </Grid>
+            <Grid xs={12} sm={6} md={4} item="true">
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Nombre de jours de congé annuels"
+                  type="number"
+                  InputProps={{
+                      endAdornment: <InputAdornment position="start">Jours</InputAdornment>,
+                  }}
+                  value={formik.values.annualLeaveDays}
+                  onChange={(e) =>
+                    formik.setFieldValue(`annualLeaveDays`, e.target.value)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
               </Item>
             </Grid>
             <Grid xs={12} sm={12} md={12}>
