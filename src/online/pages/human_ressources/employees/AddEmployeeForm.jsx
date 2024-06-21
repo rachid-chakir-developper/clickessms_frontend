@@ -212,7 +212,7 @@ export default function AddEmployeeForm({ idEmployee, title }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
-        {title} {formik.values.number}
+        {title} {formik.values.firstName} {formik.values.lastName}
       </Typography>
       {loadingEmployee && <ProgressService type="form" />}
       {!loadingEmployee && (
@@ -223,14 +223,6 @@ export default function AddEmployeeForm({ idEmployee, title }) {
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
             <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Référence"
-                  value={formik.values.number}
-                  disabled
-                />
-              </Item>
               <Item>
                 <ImageFileField
                   variant="outlined"
@@ -289,17 +281,6 @@ export default function AddEmployeeForm({ idEmployee, title }) {
                   label="Date de naissance"
                   value={formik.values.birthDate}
                   onChange={(date) => formik.setFieldValue('birthDate', date)}
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Poste occupé"
-                  value={formik.values.position}
-                  onChange={(e) =>
-                    formik.setFieldValue('position', e.target.value)
-                  }
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
