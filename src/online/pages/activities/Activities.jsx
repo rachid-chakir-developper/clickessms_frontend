@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import BeneficiaryAbsences from './beneficiary-absences/BeneficiaryAbsences';
-import Events from './events/Events';
+import TransmissionEvents from './transmission-events/TransmissionEvents';
 
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './dashboard/Dashboard';
@@ -10,7 +10,7 @@ export default function Activities() {
     <Box>
       <Routes>
         <Route path={`dashboard/*`} element={<Dashboard />} />
-        <Route path={`evenements/*`} element={<Events />} />
+        <Route path={`evenements/*`} element={<TransmissionEvents />} />
         <Route
           path={`absences-beneficiaires/*`}
           element={<BeneficiaryAbsences />}

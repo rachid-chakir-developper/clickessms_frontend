@@ -12,11 +12,11 @@ import * as yup from 'yup';
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_EVENT } from '../../../../_shared/graphql/queries/EventQueries';
+import { GET_TRANSMISSION_EVENT } from '../../../../_shared/graphql/queries/TransmissionEventQueries';
 import {
-  POST_EVENT,
-  PUT_EVENT,
-} from '../../../../_shared/graphql/mutations/EventMutations';
+  POST_TRANSMISSION_EVENT,
+  PUT_TRANSMISSION_EVENT,
+} from '../../../../_shared/graphql/mutations/TransmissionEventMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
 import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
@@ -31,7 +31,7 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function AddEventForm({ idEvent, title }) {
+export default function AddTransmissionEventForm({ idTransmissionEvent, title }) {
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({});
@@ -50,19 +50,19 @@ export default function AddEventForm({ idEvent, title }) {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let { image, ...eventCopy } = values;
-      eventCopy.beneficiaries = eventCopy.beneficiaries.map((i) => i?.id);
-      eventCopy.employee = eventCopy.employee ? eventCopy.employee.id : null;
-      if (idEvent && idEvent != '') {
-        onUpdateEvent({
-          id: eventCopy.id,
-          eventData: eventCopy,
+      let { image, ...transmissionEventCopy } = values;
+      transmissionEventCopy.beneficiaries = transmissionEventCopy.beneficiaries.map((i) => i?.id);
+      transmissionEventCopy.employee = transmissionEventCopy.employee ? transmissionEventCopy.employee.id : null;
+      if (idTransmissionEvent && idTransmissionEvent != '') {
+        onUpdateTransmissionEvent({
+          id: transmissionEventCopy.id,
+          transmissionEventData: transmissionEventCopy,
           image: image,
         });
       } else
-        createEvent({
+        createTransmissionEvent({
           variables: {
-            eventData: eventCopy,
+            transmissionEventData: transmissionEventCopy,
             image: image,
           },
         });
@@ -85,7 +85,7 @@ export default function AddEventForm({ idEvent, title }) {
     fetchPolicy: 'network-only',
   });
 
-  const [createEvent, { loading: loadingPost }] = useMutation(POST_EVENT, {
+  const [createTransmissionEvent, { loading: loadingPost }] = useMutation(POST_TRANSMISSION_EVENT, {
     onCompleted: (data) => {
       console.log(data);
       setNotifyAlert({
@@ -93,19 +93,19 @@ export default function AddEventForm({ idEvent, title }) {
         message: 'Ajouté avec succès',
         type: 'success',
       });
-      let { __typename, ...eventCopy } = data.createEvent.event;
-      //   formik.setValues(eventCopy);
+      let { __typename, ...transmissionEventCopy } = data.createTransmissionEvent.transmissionEvent;
+      //   formik.setValues(transmissionEventCopy);
       navigate('/online/activites/evenements/liste');
     },
-    update(cache, { data: { createEvent } }) {
-      const newEvent = createEvent.event;
+    update(cache, { data: { createTransmissionEvent } }) {
+      const newTransmissionEvent = createTransmissionEvent.transmissionEvent;
 
       cache.modify({
         fields: {
-          events(existingEvents = { totalCount: 0, nodes: [] }) {
+          transmissionEvents(existingTransmissionEvents = { totalCount: 0, nodes: [] }) {
             return {
-              totalCount: existingEvents.totalCount + 1,
-              nodes: [newEvent, ...existingEvents.nodes],
+              totalCount: existingTransmissionEvents.totalCount + 1,
+              nodes: [newTransmissionEvent, ...existingTransmissionEvents.nodes],
             };
           },
         },
@@ -120,7 +120,7 @@ export default function AddEventForm({ idEvent, title }) {
       });
     },
   });
-  const [updateEvent, { loading: loadingPut }] = useMutation(PUT_EVENT, {
+  const [updateTransmissionEvent, { loading: loadingPut }] = useMutation(PUT_TRANSMISSION_EVENT, {
     onCompleted: (data) => {
       console.log(data);
       setNotifyAlert({
@@ -128,23 +128,23 @@ export default function AddEventForm({ idEvent, title }) {
         message: 'Modifié avec succès',
         type: 'success',
       });
-      let { __typename, ...eventCopy } = data.updateEvent.event;
-      //   formik.setValues(eventCopy);
+      let { __typename, ...transmissionEventCopy } = data.updateTransmissionEvent.transmissionEvent;
+      //   formik.setValues(transmissionEventCopy);
       navigate('/online/activites/evenements/liste');
     },
-    update(cache, { data: { updateEvent } }) {
-      const updatedEvent = updateEvent.event;
+    update(cache, { data: { updateTransmissionEvent } }) {
+      const updatedTransmissionEvent = updateTransmissionEvent.transmissionEvent;
 
       cache.modify({
         fields: {
-          events(existingEvents = { totalCount: 0, nodes: [] }, { readField }) {
-            const updatedEvents = existingEvents.nodes.map((event) =>
-              readField('id', event) === updatedEvent.id ? updatedEvent : event,
+          transmissionEvents(existingTransmissionEvents = { totalCount: 0, nodes: [] }, { readField }) {
+            const updatedTransmissionEvents = existingTransmissionEvents.nodes.map((transmissionEvent) =>
+              readField('id', transmissionEvent) === updatedTransmissionEvent.id ? updatedTransmissionEvent : transmissionEvent,
             );
 
             return {
-              totalCount: existingEvents.totalCount,
-              nodes: updatedEvents,
+              totalCount: existingTransmissionEvents.totalCount,
+              nodes: updatedTransmissionEvents,
             };
           },
         },
@@ -159,59 +159,49 @@ export default function AddEventForm({ idEvent, title }) {
       });
     },
   });
-  const onUpdateEvent = (variables) => {
+  const onUpdateTransmissionEvent = (variables) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment modifier ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        updateEvent({ variables });
+        updateTransmissionEvent({ variables });
       },
     });
   };
-  const [getEvent, { loading: loadingEvent }] = useLazyQuery(GET_EVENT, {
+  const [getTransmissionEvent, { loading: loadingTransmissionEvent }] = useLazyQuery(GET_TRANSMISSION_EVENT, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, ...eventCopy1 } = data.event;
-      let { folder, ...eventCopy } = eventCopy1;
-      eventCopy.startingDateTime = dayjs(eventCopy.startingDateTime);
-      eventCopy.endingDateTime = dayjs(eventCopy.endingDateTime);
-      eventCopy.beneficiaries = eventCopy.beneficiaries
-        ? eventCopy.beneficiaries.map((i) => i?.beneficiary)
+      let { __typename, ...transmissionEventCopy1 } = data.transmissionEvent;
+      let { folder, ...transmissionEventCopy } = transmissionEventCopy1;
+      transmissionEventCopy.startingDateTime = dayjs(transmissionEventCopy.startingDateTime);
+      transmissionEventCopy.endingDateTime = dayjs(transmissionEventCopy.endingDateTime);
+      transmissionEventCopy.beneficiaries = transmissionEventCopy.beneficiaries
+        ? transmissionEventCopy.beneficiaries.map((i) => i?.beneficiary)
         : [];
-      formik.setValues(eventCopy);
+      formik.setValues(transmissionEventCopy);
     },
     onError: (err) => console.log(err),
   });
   React.useEffect(() => {
-    if (idEvent) {
-      getEvent({ variables: { id: idEvent } });
+    if (idTransmissionEvent) {
+      getTransmissionEvent({ variables: { id: idTransmissionEvent } });
     }
-  }, [idEvent]);
+  }, [idTransmissionEvent]);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
-        {title} {formik.values.number}
+        {title} {formik.values.title}
       </Typography>
-      {loadingEvent && <ProgressService type="form" />}
-      {!loadingEvent && (
+      {loadingTransmissionEvent && <ProgressService type="form" />}
+      {!loadingTransmissionEvent && (
         <form onSubmit={formik.handleSubmit}>
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Référence"
-                  value={formik.values.number}
-                  disabled
-                />
-              </Item>
-            </Grid>
             <Grid xs={2} sm={4} md={4}>
               <Item>
                 <TheTextField
@@ -228,19 +218,6 @@ export default function AddEventForm({ idEvent, title }) {
             </Grid>
             <Grid xs={2} sm={4} md={4}>
               <Item>
-                <ImageFileField
-                  variant="outlined"
-                  label="Image"
-                  imageValue={formik.values.image}
-                  onChange={(imageFile) =>
-                    formik.setFieldValue('image', imageFile)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
                 <TheDateTimePicker
                   label="Date et heure de début"
                   value={formik.values.startingDateTime}
@@ -250,9 +227,11 @@ export default function AddEventForm({ idEvent, title }) {
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
+            </Grid>
+            <Grid xs={2} sm={4} md={4}>
               <Item>
                 <TheDateTimePicker
-                  label="Date de fin"
+                  label="Date et heure de fin"
                   value={formik.values.endingDateTime}
                   onChange={(date) =>
                     formik.setFieldValue('endingDateTime', date)
@@ -293,7 +272,7 @@ export default function AddEventForm({ idEvent, title }) {
             <Grid xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid xs={12} sm={6} md={6}>
+            <Grid xs={12} sm={12} md={12}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -303,21 +282,6 @@ export default function AddEventForm({ idEvent, title }) {
                   value={formik.values.description}
                   onChange={(e) =>
                     formik.setFieldValue('description', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={12} sm={6} md={6}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Observation"
-                  multiline
-                  rows={4}
-                  value={formik.values.observation}
-                  onChange={(e) =>
-                    formik.setFieldValue('observation', e.target.value)
                   }
                   disabled={loadingPost || loadingPut}
                 />

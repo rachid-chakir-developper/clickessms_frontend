@@ -12,7 +12,7 @@ import {
   Button,
 } from '@mui/material';
 
-import { EVENT_RECAP } from '../../../../_shared/graphql/queries/EventQueries';
+import { TRANSMISSION_EVENT_RECAP } from '../../../../_shared/graphql/queries/TransmissionEventQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
@@ -26,24 +26,24 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function EventDetails() {
-  let { idEvent } = useParams();
+export default function TransmissionEventDetails() {
+  let { idTransmissionEvent } = useParams();
   const [
-    getEvent,
-    { loading: loadingEvent, data: eventData, error: eventError },
-  ] = useLazyQuery(EVENT_RECAP);
+    getTransmissionEvent,
+    { loading: loadingTransmissionEvent, data: transmissionEventData, error: transmissionEventError },
+  ] = useLazyQuery(TRANSMISSION_EVENT_RECAP);
   React.useEffect(() => {
-    if (idEvent) {
-      getEvent({ variables: { id: idEvent } });
+    if (idTransmissionEvent) {
+      getTransmissionEvent({ variables: { id: idTransmissionEvent } });
     }
-  }, [idEvent]);
+  }, [idTransmissionEvent]);
 
-  if (loadingEvent) return <ProgressService type="form" />;
+  if (loadingTransmissionEvent) return <ProgressService type="form" />;
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
         <Link
-          to={`/online/activites/evenements/modifier/${eventData?.event?.id}`}
+          to={`/online/activites/evenements/modifier/${transmissionEventData?.transmissionEvent?.id}`}
           className="no_style"
         >
           <Button variant="outlined" endIcon={<Edit />}>
@@ -54,10 +54,10 @@ export default function EventDetails() {
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
-            <EventMiniInfos event={eventData?.event} />
+            <TransmissionEventMiniInfos transmissionEvent={transmissionEventData?.transmissionEvent} />
           </Grid>
           <Grid item xs={5}>
-            <EventOtherInfos event={eventData?.event} />
+            <TransmissionEventOtherInfos transmissionEvent={transmissionEventData?.transmissionEvent} />
           </Grid>
           <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
             <Divider />
@@ -68,7 +68,7 @@ export default function EventDetails() {
                 Description
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {eventData?.event?.description}
+                {transmissionEventData?.transmissionEvent?.description}
               </Typography>
             </Paper>
           </Grid>
@@ -78,7 +78,7 @@ export default function EventDetails() {
                 Observation
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {eventData?.event?.observation}
+                {transmissionEventData?.transmissionEvent?.observation}
               </Typography>
             </Paper>
           </Grid>
@@ -95,7 +95,7 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-function EventMiniInfos({ event }) {
+function TransmissionEventMiniInfos({ transmissionEvent }) {
   return (
     <Paper
       variant="outlined"
@@ -109,10 +109,10 @@ function EventMiniInfos({ event }) {
       }}
     >
       <Grid container spacing={2}>
-        {event?.image && event?.image != '' && (
+        {transmissionEvent?.image && transmissionEvent?.image != '' && (
           <Grid item>
             <ButtonBase sx={{ width: 128, height: 'auto' }}>
-              <Img alt="complex" src={event?.image} />
+              <Img alt="complex" src={transmissionEvent?.image} />
             </ButtonBase>
           </Grid>
         )}
@@ -120,24 +120,24 @@ function EventMiniInfos({ event }) {
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
-                Réference : <b>{event?.number}</b>
+                Réference : <b>{transmissionEvent?.number}</b>
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {event?.title}
+                {transmissionEvent?.title}
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b> {`${getFormatDateTime(event?.createdAt)}`}{' '}
+                <b>Crée le: </b> {`${getFormatDateTime(transmissionEvent?.createdAt)}`}{' '}
                 <br />
                 <b>Dernière modification: </b>
-                {`${getFormatDateTime(event?.updatedAt)}`}
+                {`${getFormatDateTime(transmissionEvent?.updatedAt)}`}
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
                 <b>Date début prévue: </b>{' '}
-                {`${getFormatDateTime(event?.startingDateTime)}`} <br />
+                {`${getFormatDateTime(transmissionEvent?.startingDateTime)}`} <br />
                 <b>Date fin prévue: </b>{' '}
-                {`${getFormatDateTime(event?.endingDateTime)}`}
+                {`${getFormatDateTime(transmissionEvent?.endingDateTime)}`}
               </Typography>
             </Grid>
           </Grid>
@@ -147,7 +147,7 @@ function EventMiniInfos({ event }) {
   );
 }
 
-function EventOtherInfos({ event }) {
+function TransmissionEventOtherInfos({ transmissionEvent }) {
   return (
     <Paper
       variant="outlined"
@@ -163,7 +163,7 @@ function EventOtherInfos({ event }) {
         Les Bénificiaires
       </Typography>
       <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-        {event?.beneficiaries?.map((beneficiary, index) => (
+        {transmissionEvent?.beneficiaries?.map((beneficiary, index) => (
           <Grid xs={12} sm={12} md={12} key={index}>
             <Item>
               <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />

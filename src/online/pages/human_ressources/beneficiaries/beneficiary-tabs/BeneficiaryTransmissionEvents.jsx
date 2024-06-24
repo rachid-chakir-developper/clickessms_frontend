@@ -4,10 +4,10 @@ import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Stack } from '@mui/material';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { DELETE_EVENT } from '../../../../../_shared/graphql/mutations/EventMutations';
-import { GET_EVENTS } from '../../../../../_shared/graphql/queries/EventQueries';
+import { DELETE_TRANSMISSION_EVENT } from '../../../../../_shared/graphql/mutations/TransmissionEventMutations';
+import { GET_TRANSMISSION_EVENTS } from '../../../../../_shared/graphql/queries/TransmissionEventQueries';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
-import TableListEvents from '../../../activities/events/TableListEvents';
+import TableListTransmissionEvents from '../../../activities/transmission-events/TableListTransmissionEvents';
 import PaginationControlled from '../../../../../_shared/components/helpers/PaginationControlled';
 
 const Item = styled(Stack)(({ theme }) => ({
@@ -18,41 +18,41 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function BeneficiaryEvents({beneficiary}) {
+export default function BeneficiaryTransmissionEvents({beneficiary}) {
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
-  const [eventFilter, setEventFilter] =
+  const [transmissionEventFilter, setTransmissionEventFilter] =
     React.useState({beneficiaries: [beneficiary?.id]});
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
-    setEventFilter(newFilter);
+    setTransmissionEventFilter(newFilter);
   };
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const [
-    getEvents,
+    getTransmissionEvents,
     {
-      loading: loadingEvents,
-      data: eventsData,
-      error: eventsError,
-      fetchMore: fetchMoreEvents,
+      loading: loadingTransmissionEvents,
+      data: transmissionEventsData,
+      error: transmissionEventsError,
+      fetchMore: fetchMoreTransmissionEvents,
     },
-  ] = useLazyQuery(GET_EVENTS, {
+  ] = useLazyQuery(GET_TRANSMISSION_EVENTS, {
     variables: {
-      eventFilter,
+      transmissionEventFilter,
       page: paginator.page,
       limit: paginator.limit,
     },
   });
 
   React.useEffect(() => {
-    getEvents();
-  }, [eventFilter, paginator]);
+    getTransmissionEvents();
+  }, [transmissionEventFilter, paginator]);
 
-  const [deleteEvent, { loading: loadingDelete }] = useMutation(
-    DELETE_EVENT,
+  const [deleteTransmissionEvent, { loading: loadingDelete }] = useMutation(
+    DELETE_TRANSMISSION_EVENT,
     {
       onCompleted: (datas) => {
-        if (datas.deleteEvent.deleted) {
+        if (datas.deleteTransmissionEvent.deleted) {
           setNotifyAlert({
             isOpen: true,
             message: 'Supprimé avec succès',
@@ -61,37 +61,37 @@ export default function BeneficiaryEvents({beneficiary}) {
         } else {
           setNotifyAlert({
             isOpen: true,
-            message: `Non Supprimé ! ${datas.deleteEvent.message}.`,
+            message: `Non Supprimé ! ${datas.deleteTransmissionEvent.message}.`,
             type: 'error',
           });
         }
       },
-      update(cache, { data: { deleteEvent } }) {
-        console.log('Updating cache after deletion:', deleteEvent);
+      update(cache, { data: { deleteTransmissionEvent } }) {
+        console.log('Updating cache after deletion:', deleteTransmissionEvent);
 
-        const deletedEventId = deleteEvent.id;
+        const deletedTransmissionEventId = deleteTransmissionEvent.id;
 
         cache.modify({
           fields: {
-            events(
-              existingEvents = { totalCount: 0, nodes: [] },
+            transmissionEvents(
+              existingTransmissionEvents = { totalCount: 0, nodes: [] },
               { readField },
             ) {
-              const updatedEvents =
-                existingEvents.nodes.filter(
-                  (event) =>
-                    readField('id', event) !==
-                    deletedEventId,
+              const updatedTransmissionEvents =
+                existingTransmissionEvents.nodes.filter(
+                  (transmissionEvent) =>
+                    readField('id', transmissionEvent) !==
+                    deletedTransmissionEventId,
                 );
 
               console.log(
-                'Updated events:',
-                updatedEvents,
+                'Updated transmissionEvents:',
+                updatedTransmissionEvents,
               );
 
               return {
-                totalCount: existingEvents.totalCount - 1,
-                nodes: updatedEvents,
+                totalCount: existingTransmissionEvents.totalCount - 1,
+                nodes: updatedTransmissionEvents,
               };
             },
           },
@@ -108,14 +108,14 @@ export default function BeneficiaryEvents({beneficiary}) {
     },
   );
 
-  const onDeleteEvent = (id) => {
+  const onDeleteTransmissionEvent = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment supprimer ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        deleteEvent({ variables: { id: id } });
+        deleteTransmissionEvent({ variables: { id: id } });
       },
     });
   };
@@ -123,15 +123,15 @@ export default function BeneficiaryEvents({beneficiary}) {
   return (
     <Grid container spacing={2}>
       <Grid item="true" xs={12}>
-        <TableListEvents
-          loading={loadingEvents}
-          rows={eventsData?.events?.nodes || []}
-          onDeleteEvent={onDeleteEvent}
+        <TableListTransmissionEvents
+          loading={loadingTransmissionEvents}
+          rows={transmissionEventsData?.transmissionEvents?.nodes || []}
+          onDeleteTransmissionEvent={onDeleteTransmissionEvent}
         />
       </Grid>
       <Grid item="true" xs={12}>
         <PaginationControlled
-          totalItems={eventsData?.events?.totalCount} // Nombre total d'éléments
+          totalItems={transmissionEventsData?.transmissionEvents?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
           currentPage={1}
           onChange={(page) => setPaginator({ ...paginator, page })}

@@ -124,8 +124,8 @@ function EnhancedTableHead(props) {
     rowCount,
     onRequestSort,
   } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property) => (transmissionEvent) => {
+    onRequestSort(transmissionEvent, property);
   };
 
   return (
@@ -224,11 +224,11 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListEvents({
+export default function TableListTransmissionEvents({
   loading,
   rows,
-  onDeleteEvent,
-  onUpdateEventState,
+  onDeleteTransmissionEvent,
+  onUpdateTransmissionEventState,
 }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -252,14 +252,14 @@ export default function TableListEvents({
     });
   };
 
-  const handleRequestSort = (event, property) => {
+  const handleRequestSort = (transmissionEvent, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
+  const handleSelectAllClick = (transmissionEvent) => {
+    if (transmissionEvent.target.checked) {
       const newSelected = rows?.map((n) => n.id);
       setSelected(newSelected);
       return;
@@ -267,7 +267,7 @@ export default function TableListEvents({
     setSelected([]);
   };
 
-  const handleClick = (event, id) => {
+  const handleClick = (transmissionEvent, id) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
@@ -339,10 +339,10 @@ export default function TableListEvents({
                   anchorElList[index] = null;
                 }
 
-                const handleOpenMenu = (event) => {
+                const handleOpenMenu = (transmissionEvent) => {
                   // Utilisez l'index de la ligne pour mettre à jour l'état d'ancrage correspondant
                   const newAnchorElList = [...anchorElList];
-                  newAnchorElList[index] = event.currentTarget;
+                  newAnchorElList[index] = transmissionEvent.currentTarget;
                   setAnchorElList(newAnchorElList);
                 };
 
@@ -371,7 +371,7 @@ export default function TableListEvents({
                   >
                     <StyledTableCell padding="checkbox">
                       <Checkbox
-                        onClick={(event) => handleClick(event, row.id)}
+                        onClick={(transmissionEvent) => handleClick(transmissionEvent, row.id)}
                         color="primary"
                         checked={isItemSelected}
                         inputProps={{
@@ -467,7 +467,7 @@ export default function TableListEvents({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteEvent(row?.id);
+                            onDeleteTransmissionEvent(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

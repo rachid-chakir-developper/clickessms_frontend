@@ -28,7 +28,7 @@ const Item = styled(Stack)(({ theme }) => ({
     color: theme.palette.text.secondary,
   }));
 
-const EventFilter = ({ onFilterChange }) => {
+const TransmissionEventFilter = ({ onFilterChange }) => {
   const [filterValues, setFilterValues] = useState({
     startingDateTime: null,
     endingDateTime: null,
@@ -124,7 +124,7 @@ const EventFilter = ({ onFilterChange }) => {
                         label="Bénéficiaires"
                         limitTags={3}
                         value={selectedBeneficiaries}
-                        onChange={(event, newValue) => {
+                        onChange={(transmissionEvent, newValue) => {
                             setFilterSelectedBeneficiaries(newValue)
                             setFilterValues({ ...filterValues, beneficiaries: newValue.map((v) => v.id) })
                         }}
@@ -135,4 +135,4 @@ const EventFilter = ({ onFilterChange }) => {
   );
 };
 
-export default EventFilter;
+export default TransmissionEventFilter;

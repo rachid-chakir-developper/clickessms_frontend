@@ -9,13 +9,13 @@ import { Link } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import {
-  DELETE_EVENT,
-  PUT_EVENT_STATE,
-} from '../../../../_shared/graphql/mutations/EventMutations';
-import { GET_EVENTS } from '../../../../_shared/graphql/queries/EventQueries';
-import EventFilter from './EventFilter';
+  DELETE_TRANSMISSION_EVENT,
+  PUT_TRANSMISSION_EVENT_STATE,
+} from '../../../../_shared/graphql/mutations/TransmissionEventMutations';
+import { GET_TRANSMISSION_EVENTS } from '../../../../_shared/graphql/queries/TransmissionEventQueries';
+import TransmissionEventFilter from './TransmissionEventFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
-import TableListEvents from './TableListEvents';
+import TableListTransmissionEvents from './TableListTransmissionEvents';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -25,35 +25,35 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function ListEvents() {
+export default function ListTransmissionEvents() {
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
-  const [eventFilter, setEventFilter] = React.useState(null);
+  const [transmissionEventFilter, setTransmissionEventFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
-    setEventFilter(newFilter);
+    setTransmissionEventFilter(newFilter);
     setPaginator({ ...paginator, page: 1 });
   };
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const [
-    getEvents,
+    getTransmissionEvents,
     {
-      loading: loadingEvents,
-      data: eventsData,
-      error: eventsError,
-      fetchMore: fetchMoreEvents,
+      loading: loadingTransmissionEvents,
+      data: transmissionEventsData,
+      error: transmissionEventsError,
+      fetchMore: fetchMoreTransmissionEvents,
     },
-  ] = useLazyQuery(GET_EVENTS, {
-    variables: { eventFilter, page: paginator.page, limit: paginator.limit },
+  ] = useLazyQuery(GET_TRANSMISSION_EVENTS, {
+    variables: { transmissionEventFilter, page: paginator.page, limit: paginator.limit },
   });
 
   React.useEffect(() => {
-    getEvents();
+    getTransmissionEvents();
   }, [paginator]);
 
-  const [deleteEvent, { loading: loadingDelete }] = useMutation(DELETE_EVENT, {
+  const [deleteTransmissionEvent, { loading: loadingDelete }] = useMutation(DELETE_TRANSMISSION_EVENT, {
     onCompleted: (datas) => {
-      if (datas.deleteEvent.deleted) {
+      if (datas.deleteTransmissionEvent.deleted) {
         setNotifyAlert({
           isOpen: true,
           message: 'Supprimé avec succès',
@@ -62,28 +62,28 @@ export default function ListEvents() {
       } else {
         setNotifyAlert({
           isOpen: true,
-          message: `Non Supprimé ! ${datas.deleteEvent.message}.`,
+          message: `Non Supprimé ! ${datas.deleteTransmissionEvent.message}.`,
           type: 'error',
         });
       }
     },
-    update(cache, { data: { deleteEvent } }) {
-      console.log('Updating cache after deletion:', deleteEvent);
+    update(cache, { data: { deleteTransmissionEvent } }) {
+      console.log('Updating cache after deletion:', deleteTransmissionEvent);
 
-      const deletedEventId = deleteEvent.id;
+      const deletedTransmissionEventId = deleteTransmissionEvent.id;
 
       cache.modify({
         fields: {
-          events(existingEvents = { totalCount: 0, nodes: [] }, { readField }) {
-            const updatedEvents = existingEvents.nodes.filter(
-              (event) => readField('id', event) !== deletedEventId,
+          transmissionEvents(existingTransmissionEvents = { totalCount: 0, nodes: [] }, { readField }) {
+            const updatedTransmissionEvents = existingTransmissionEvents.nodes.filter(
+              (transmissionEvent) => readField('id', transmissionEvent) !== deletedTransmissionEventId,
             );
 
-            console.log('Updated events:', updatedEvents);
+            console.log('Updated transmissionEvents:', updatedTransmissionEvents);
 
             return {
-              totalCount: existingEvents.totalCount - 1,
-              nodes: updatedEvents,
+              totalCount: existingTransmissionEvents.totalCount - 1,
+              nodes: updatedTransmissionEvents,
             };
           },
         },
@@ -99,23 +99,23 @@ export default function ListEvents() {
     },
   });
 
-  const onDeleteEvent = (id) => {
+  const onDeleteTransmissionEvent = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment supprimer ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        deleteEvent({ variables: { id: id } });
+        deleteTransmissionEvent({ variables: { id: id } });
       },
     });
   };
 
-  const [updateEventState, { loading: loadingPutState }] = useMutation(
-    PUT_EVENT_STATE,
+  const [updateTransmissionEventState, { loading: loadingPutState }] = useMutation(
+    PUT_TRANSMISSION_EVENT_STATE,
     {
       onCompleted: (datas) => {
-        if (datas.updateEventState.done) {
+        if (datas.updateTransmissionEventState.done) {
           setNotifyAlert({
             isOpen: true,
             message: 'Changée avec succès',
@@ -124,12 +124,12 @@ export default function ListEvents() {
         } else {
           setNotifyAlert({
             isOpen: true,
-            message: `Non changée ! ${datas.updateEventState.message}.`,
+            message: `Non changée ! ${datas.updateTransmissionEventState.message}.`,
             type: 'error',
           });
         }
       },
-      refetchQueries: [{ query: GET_EVENTS }],
+      refetchQueries: [{ query: GET_TRANSMISSION_EVENTS }],
       onError: (err) => {
         console.log(err);
         setNotifyAlert({
@@ -141,14 +141,14 @@ export default function ListEvents() {
     },
   );
 
-  const onUpdateEventState = (id) => {
+  const onUpdateTransmissionEventState = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment changer ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        updateEventState({ variables: { id: id } });
+        updateTransmissionEventState({ variables: { id: id } });
       },
     });
   };
@@ -164,19 +164,19 @@ export default function ListEvents() {
         </Box>
       </Grid>
       <Grid item="true" xs={12}>
-        <EventFilter onFilterChange={handleFilterChange} />
+        <TransmissionEventFilter onFilterChange={handleFilterChange} />
       </Grid>
       <Grid item="true" xs={12}>
-        <TableListEvents
-          loading={loadingEvents}
-          rows={eventsData?.events?.nodes || []}
-          onDeleteEvent={onDeleteEvent}
-          onUpdateEventState={onUpdateEventState}
+        <TableListTransmissionEvents
+          loading={loadingTransmissionEvents}
+          rows={transmissionEventsData?.transmissionEvents?.nodes || []}
+          onDeleteTransmissionEvent={onDeleteTransmissionEvent}
+          onUpdateTransmissionEventState={onUpdateTransmissionEventState}
         />
       </Grid>
       <Grid item="true" xs={12}>
         <PaginationControlled
-          totalItems={eventsData?.events?.totalCount} // Nombre total d'éléments
+          totalItems={transmissionEventsData?.transmissionEvents?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
           currentPage={paginator.page}
           onChange={(page) => setPaginator({ ...paginator, page })}

@@ -234,7 +234,7 @@ export default function AddLetterForm({ idLetter, title }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
-        {title} {formik.values.number}
+        {title} {formik.values.title}
       </Typography>
       {loadingLetter && <ProgressService type="form" />}
       {!loadingLetter && (
@@ -244,17 +244,7 @@ export default function AddLetterForm({ idLetter, title }) {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Référence"
-                  value={formik.values.number}
-                  disabled
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={6} md={6}>
+            <Grid xs={12} sm={6} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -272,7 +262,7 @@ export default function AddLetterForm({ idLetter, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={2} md={2}>
+            <Grid  xs={12} sm={6} md={4}>
               <Item>
                 <FormControl fullWidth>
                   <InputLabel>Type d'courrier</InputLabel>
@@ -289,7 +279,7 @@ export default function AddLetterForm({ idLetter, title }) {
                 </FormControl>
               </Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4}>
+            <Grid xs={12} sm={6} md={4}>
               <Item>
                 <TheDateTimePicker
                   label="Date et heure"
@@ -302,7 +292,7 @@ export default function AddLetterForm({ idLetter, title }) {
               </Item>
               <Item></Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4}>
+            <Grid xs={12} sm={6} md={4}>
               <Item>
                 <TheAutocomplete
                   options={establishmentsData?.establishments?.nodes}
@@ -316,7 +306,7 @@ export default function AddLetterForm({ idLetter, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4}>
+            <Grid xs={12} sm={6} md={4}>
               <Item>
                 <TheAutocomplete
                   options={employeesData?.employees?.nodes}
@@ -329,7 +319,7 @@ export default function AddLetterForm({ idLetter, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4} item>
+            <Grid xs={12} sm={6} md={4}>
               <Item>
                 <TheAutocomplete
                   options={beneficiariesData?.beneficiaries?.nodes}
@@ -346,31 +336,16 @@ export default function AddLetterForm({ idLetter, title }) {
             <Grid xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid xs={12} sm={6} md={6}>
+            <Grid xs={12} sm={12} md={12}>
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Description"
+                  label="Commentaire"
                   multiline
                   rows={4}
                   value={formik.values.description}
                   onChange={(e) =>
                     formik.setFieldValue('description', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={12} sm={6} md={6}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Observation"
-                  multiline
-                  rows={4}
-                  value={formik.values.observation}
-                  onChange={(e) =>
-                    formik.setFieldValue('observation', e.target.value)
                   }
                   disabled={loadingPost || loadingPut}
                 />

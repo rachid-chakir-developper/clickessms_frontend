@@ -16,10 +16,10 @@ import { Link } from 'react-router-dom';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
-export default function EventItemCard({
-  event,
-  onDeleteEvent,
-  onUpdateEventState,
+export default function TransmissionEventItemCard({
+  transmissionEvent,
+  onDeleteTransmissionEvent,
+  onUpdateTransmissionEventState,
 }) {
   //   const theme = useTheme();
   const { setDialogListLibrary } = useFeedBacks();
@@ -37,20 +37,20 @@ export default function EventItemCard({
       variant="outlined"
       sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2 }}
     >
-      <Tooltip title={event?.title}>
+      <Tooltip title={transmissionEvent?.title}>
         <CardMedia
           component="img"
           width="100"
           height="100"
-          alt={event?.title}
-          src={event?.image ? event?.image : '/default-placeholder.jpg'}
+          alt={transmissionEvent?.title}
+          src={transmissionEvent?.image ? transmissionEvent?.image : '/default-placeholder.jpg'}
           sx={{ borderRadius: 0.6, height: 100, width: 100 }}
         />
       </Tooltip>
       <Stack direction="column" spacing={2} alignItems="center">
         <Stack direction="column" spacing={0.2} alignItems="center">
           <Typography color="text.primary" fontWeight="medium" fontSize={18}>
-            {event?.title}
+            {transmissionEvent?.title}
           </Typography>
           <Typography
             component="div"
@@ -58,7 +58,7 @@ export default function EventItemCard({
             color="text.secondary"
             fontWeight="regular"
           >
-            À {`${getFormatDateTime(event?.startingDateTime)}`}
+            À {`${getFormatDateTime(transmissionEvent?.startingDateTime)}`}
           </Typography>
         </Stack>
         <Stack direction="row" alignItems="center" spacing={1.5}>
@@ -67,23 +67,23 @@ export default function EventItemCard({
               aria-label="delete"
               size="small"
               sx={{ flexGrow: 0 }}
-              onClick={() => onDeleteEvent(event?.id)}
+              onClick={() => onDeleteTransmissionEvent(transmissionEvent?.id)}
             >
               <Delete fontSize="small" />
             </IconButton>
           </Tooltip>
-          <Tooltip title={!event?.isActive ? 'Activer' : 'Désactiver'}>
+          <Tooltip title={!transmissionEvent?.isActive ? 'Activer' : 'Désactiver'}>
             <IconButton
-              aria-label={!event?.isActive ? 'play' : 'pause'}
+              aria-label={!transmissionEvent?.isActive ? 'play' : 'pause'}
               sx={{ mx: 1 }}
-              onClick={() => onUpdateEventState(event?.id)}
+              onClick={() => onUpdateTransmissionEventState(transmissionEvent?.id)}
             >
-              {!event?.isActive ? <PlayArrowRounded /> : <PauseRounded />}
+              {!transmissionEvent?.isActive ? <PlayArrowRounded /> : <PauseRounded />}
             </IconButton>
           </Tooltip>
           <Tooltip title="Modifier">
             <Link
-              to={`/online/activites/evenements/modifier/${event?.id}`}
+              to={`/online/activites/evenements/modifier/${transmissionEvent?.id}`}
               className="no_style"
             >
               <IconButton aria-label="edit" size="small">
@@ -91,13 +91,13 @@ export default function EventItemCard({
               </IconButton>
             </Link>
           </Tooltip>
-          {event?.folder && (
+          {transmissionEvent?.folder && (
             <Tooltip title="Pièces jointes">
               <IconButton
                 aria-label="Attachment"
                 size="small"
                 sx={{ flexGrow: 0 }}
-                onClick={() => onOpenDialogListLibrary(event?.folder)}
+                onClick={() => onOpenDialogListLibrary(transmissionEvent?.folder)}
               >
                 <Folder fontSize="small" />
               </IconButton>
@@ -105,7 +105,7 @@ export default function EventItemCard({
           )}
           <Tooltip title="Détails">
             <Link
-              to={`/online/activites/evenements/details/${event?.id}`}
+              to={`/online/activites/evenements/details/${transmissionEvent?.id}`}
               className="no_style"
             >
               <IconButton aria-label="edit" size="small">

@@ -349,7 +349,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
-        {title} {formik.values.number}
+        {title} {formik.values.title}
       </Typography>
       {loadingMeeting && <ProgressService type="form" />}
       {!loadingMeeting && (

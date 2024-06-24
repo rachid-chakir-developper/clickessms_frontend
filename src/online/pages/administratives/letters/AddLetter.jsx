@@ -8,7 +8,7 @@ export default function AddLetter() {
     <AddLetterForm
       idLetter={idLetter}
       title={
-        idLetter && idLetter > 0 ? `Modifier l'courrier` : `Ajouter un courrier`
+        idLetter && idLetter > 0 ? `Modifier le courrier` : `Ajouter un courrier`
       }
     />
   );

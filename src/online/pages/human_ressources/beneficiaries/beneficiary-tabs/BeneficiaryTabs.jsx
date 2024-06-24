@@ -6,7 +6,7 @@ import Tab from '@mui/material/Tab';
 import BeneficiaryAdmissionDocuments from './BeneficiaryAdmissionDocuments';
 import BeneficiaryEntries from './BeneficiaryEntries';
 import BeneficiaryAbsences from './BeneficiaryAbsences';
-import BeneficiaryEvents from './BeneficiaryEvents';
+import BeneficiaryTransmissionEvents from './BeneficiaryTransmissionEvents';
 import BeneficiaryUndesirableEvents from './BeneficiaryUndesirableEvents';
 import { Stack } from '@mui/material';
 
@@ -111,7 +111,7 @@ export default function BeneficiaryTabs({beneficiary}) {
           <BeneficiaryAbsences beneficiary={beneficiary} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          <BeneficiaryEvents beneficiary={beneficiary} />
+          <BeneficiaryTransmissionEvents beneficiary={beneficiary} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
           <BeneficiaryUndesirableEvents beneficiary={beneficiary} />
