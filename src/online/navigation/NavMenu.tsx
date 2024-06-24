@@ -58,6 +58,7 @@ function SubmoduleNavEntry(props: SubmoduleNavEntryProps) {
       icon={props.icon}
       name={props.name}
       highlighted={props.highlighted}
+      disabled={props.disabled}
       indented
       onClick={() => {
         props.onToggleExpand(props.id, Boolean(props.expanded));
@@ -98,6 +99,7 @@ function ModuleNavEntry(props: ModuleNavEntryProps) {
       icon={props.icon}
       name={props.name}
       highlighted={props.highlighted}
+      disabled={props.disabled}
       onClick={() => {
         props.onModuleToggleExpand(props.id, Boolean(props.expanded));
       }}
@@ -123,6 +125,7 @@ function ModuleNavEntry(props: ModuleNavEntryProps) {
                     Boolean(entry.expanded),
                   );
                 }}
+                disabled={entry.disabled}
                 expanded={entry.expanded}
                 animateExpand={props.animateExpand}
               />

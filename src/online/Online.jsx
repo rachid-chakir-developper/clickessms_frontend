@@ -36,6 +36,7 @@ import Planning from './pages/planning/Planning';
 import Parking from './pages/parking/Parking';
 import ChatbotButton from './_shared/components/robert_ia/ChatBotButton';
 import SpeedDialTooltipOpen from '../_shared/components/app/SpeedDialTooltipOpen';
+import { AuthorizationSystemProvider } from '../_shared/context/AuthorizationSystemProvider';
 
 const drawerWidth = 280;
 
@@ -140,62 +141,70 @@ export default function Online() {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBarHeader open={open} handleDrawerToggle={handleDrawerToggle} />
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader
+    <AuthorizationSystemProvider>
+      <Box sx={{ display: 'flex' }}>
+        <CssBaseline />
+        <AppBarHeader open={open} handleDrawerToggle={handleDrawerToggle} />
+        <Drawer variant="permanent" open={open}>
+          <DrawerHeader
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Logo />
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'rtl' ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <AccountCard open={open} />
+          <NavMenu />
+        </Drawer>
+        <Box
+          component="main"
           sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            flexGrow: 1,
+            p: 3,
+            width: '100%',
+            height: '100%',
+            paddingBottom: 20,
           }}
         >
-          <Logo />
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <AccountCard open={open} />
-        <NavMenu />
-      </Drawer>
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, p: 3, width: '100%', height: '100%', paddingBottom:20}}
-      >
-        <DrawerHeader />
-        <Routes>
-          <Route path={`dashboard/*`} element={<Dashboard />} />
-          <Route path="/" element={<Navigate to={`dashboard`} replace />} />
-          <Route path={`carte/*`} element={<Maps />} />
-          <Route path={`associations/*`} element={<Companies />} />
-          <Route path={`parc-automobile/*`} element={<Parking />} />
-          <Route path={`materiels/*`} element={<Materials />} />
-          <Route path={`travaux/*`} element={<Works />} />
-          <Route path={`recuperations/*`} element={<Loans />} />
-          <Route path={`partenariats/*`} element={<Partnerships />} />
-          <Route path={`achats/*`} element={<Purchases />} />
-          <Route path={`ventes/*`} element={<Sales />} />
-          <Route path={`activites/*`} element={<Activities />} />
-          <Route path={`qualites/*`} element={<Qualities />} />
-          <Route path={`administratif/*`} element={<Administratives />} />
-          <Route path={`finance/*`} element={<Finance />} />
-          <Route path={`ressources-humaines/*`} element={<Humans />} />
-          <Route path={`gouvernance/*`} element={<Governance />} />
-          <Route path={`utilisateurs/*`} element={<Users />} />
-          <Route path={`parametres/*`} element={<Settings />} />
-          <Route path={`chat/*`} element={<Chat />} />
-          <Route path={`account/*`} element={<Account />} />
-          <Route path={`planning/*`} element={<Planning />} />
-        </Routes>
+          <DrawerHeader />
+          <Routes>
+            <Route path={`dashboard/*`} element={<Dashboard />} />
+            <Route path="/" element={<Navigate to={`dashboard`} replace />} />
+            <Route path={`carte/*`} element={<Maps />} />
+            <Route path={`associations/*`} element={<Companies />} />
+            <Route path={`parc-automobile/*`} element={<Parking />} />
+            <Route path={`materiels/*`} element={<Materials />} />
+            <Route path={`travaux/*`} element={<Works />} />
+            <Route path={`recuperations/*`} element={<Loans />} />
+            <Route path={`partenariats/*`} element={<Partnerships />} />
+            <Route path={`achats/*`} element={<Purchases />} />
+            <Route path={`ventes/*`} element={<Sales />} />
+            <Route path={`activites/*`} element={<Activities />} />
+            <Route path={`qualites/*`} element={<Qualities />} />
+            <Route path={`administratif/*`} element={<Administratives />} />
+            <Route path={`finance/*`} element={<Finance />} />
+            <Route path={`ressources-humaines/*`} element={<Humans />} />
+            <Route path={`gouvernance/*`} element={<Governance />} />
+            <Route path={`utilisateurs/*`} element={<Users />} />
+            <Route path={`parametres/*`} element={<Settings />} />
+            <Route path={`chat/*`} element={<Chat />} />
+            <Route path={`account/*`} element={<Account />} />
+            <Route path={`planning/*`} element={<Planning />} />
+          </Routes>
+        </Box>
+        <SpeedDialTooltipOpen />
+        <ChatbotButton />
       </Box>
-      <SpeedDialTooltipOpen />
-      <ChatbotButton />
-    </Box>
+    </AuthorizationSystemProvider>
   );
 }

@@ -85,6 +85,7 @@ import GarageIcon from '@mui/icons-material/Garage';
 import CarRepairIcon from '@mui/icons-material/CarRepair';
 import MoneyIcon from '@mui/icons-material/Money';
 import SaveIcon from '@mui/icons-material/Save';
+import { CurrentAuthorizationSystem } from '../../_shared/context/AuthorizationSystemProvider';
 
 export const modules: Module[] = [
   {
@@ -409,6 +410,11 @@ export const modules: Module[] = [
         id: 'car-fleet',
         name: 'Parc automobile',
         icon: <AirportShuttleIcon />,
+        disabled(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'getVehicles',
+          }).authorized;
+        },
         pages: [
           {
             id: 'vehicles',
@@ -740,6 +746,9 @@ export interface Module {
   name: string;
   icon: ReactElement;
   entries: (Submodule | Page)[];
+  disabled?:
+    | boolean
+    | ((authorizationSystem: CurrentAuthorizationSystem) => boolean);
 }
 
 export interface Submodule {
@@ -747,6 +756,9 @@ export interface Submodule {
   name: string;
   icon: ReactElement;
   pages: Page[];
+  disabled?:
+    | boolean
+    | ((authorizationSystem: CurrentAuthorizationSystem) => boolean);
 }
 
 export interface Page {
@@ -754,5 +766,7 @@ export interface Page {
   name: string;
   path: string;
   icon: ReactElement;
-  disabled?: boolean;
+  disabled?:
+    | boolean
+    | ((authorizationSystem: CurrentAuthorizationSystem) => boolean);
 }

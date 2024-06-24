@@ -7,5 +7,9 @@ export const rolesModel = defineRolesModel(entitiesModel, {
       vehicle: 'view',
       vehicleInspection: 'edit',
     },
+    admin: {
+      vehicle: 'view',
+      vehicleInspection: 'edit',
+    },
   },
 });

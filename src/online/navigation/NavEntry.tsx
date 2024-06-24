@@ -8,6 +8,10 @@ import ChevronRight from '@mui/icons-material/ChevronRight';
 import Collapse from '@mui/material/Collapse';
 import { NavLink } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import {
+  CurrentAuthorizationSystem,
+  useAuthorizationSystem,
+} from '../../_shared/context/AuthorizationSystemProvider';
 
 export interface NavEntryProps {
   icon: React.ReactNode;
@@ -37,7 +41,9 @@ export interface NavEntryProps {
   /**
    * If `true`, entry is greyed out and cannot be clicked.
    */
-  disabled?: boolean;
+  disabled?:
+    | boolean
+    | ((authorizationSystem: CurrentAuthorizationSystem) => boolean);
   /**
    * Adds padding to the left of the entry, to indicate a hierarchy.
    */
@@ -58,6 +64,8 @@ export interface NavEntryProps {
  * A generic component to render entries in the navigation menu.
  */
 export default function NavEntry(props: NavEntryProps) {
+  const authorizationSystem = useAuthorizationSystem();
+
   const [animateExpand, setAnimateExpand] = useState(props.animateExpand);
 
   // Introduce a delay to prevent the animation from playing immediately when
@@ -75,10 +83,15 @@ export default function NavEntry(props: NavEntryProps) {
     }
   }, [props.animateExpand]);
 
+  const disabled =
+    typeof props.disabled === 'function'
+      ? props.disabled(authorizationSystem)
+      : props.disabled;
+
   const button = (
     <ListItemButton
       sx={{ px: 2.5 }}
-      disabled={props.disabled}
+      disabled={disabled}
       onClick={props.onClick}
     >
       <ListItemIcon sx={{ pl: props.indented ? 1.5 : 0 }}>
@@ -93,7 +106,7 @@ export default function NavEntry(props: NavEntryProps) {
   );
 
   const maybeLink =
-    !props.disabled && props.path ? (
+    !disabled && props.path ? (
       <StyledNavLink to={props.path}>{button}</StyledNavLink>
     ) : (
       button

@@ -81,8 +81,7 @@ export default function ListBalances() {
               { readField },
             ) {
               const updatedBalances = existingBalances.nodes.filter(
-                (balance) =>
-                  readField('id', balance) !== deletedBalanceId,
+                (balance) => readField('id', balance) !== deletedBalanceId,
               );
 
               console.log('Updated balances:', updatedBalances);

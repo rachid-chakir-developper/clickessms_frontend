@@ -43,7 +43,7 @@ const authReducer = (state, action) => {
 
 export const SessionProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initializerArg);
-  const { data: currentUserData, loading: loadingCurrentuSer } =
+  const { data: currentUserData, loading: loadingCurrentUser } =
     useQuery(GET_CURRENT_USER);
   React.useEffect(() => {
     if (currentUserData?.currentUser)
