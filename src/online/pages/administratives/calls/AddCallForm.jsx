@@ -32,6 +32,7 @@ import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/Beneficia
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import SearchNumbersAutocomplete from '../../../../_shared/components/form-fields/SearchNumbersAutocomplete';
+import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -44,11 +45,7 @@ const Item = styled(Stack)(({ theme }) => ({
 export default function AddCallForm({ idCall, title }) {
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
-  const validationSchema = yup.object({
-    title: yup
-      .string("Entrez le titre d'appel")
-      .required("Le titre d'appel est obligatoire"),
-  });
+  const validationSchema = yup.object({});
   const formik = useFormik({
     initialValues: {
       image: undefined,
@@ -59,6 +56,8 @@ export default function AddCallForm({ idCall, title }) {
       description: '',
       observation: '',
       isActive: true,
+      establishments: [],
+      employees: [],
       beneficiaries: [],
       employee: null,
       caller: null,
@@ -66,8 +65,9 @@ export default function AddCallForm({ idCall, title }) {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       let { image, ...callCopy } = values;
+      callCopy.establishments = callCopy.establishments.map((i) => i?.id);
+      callCopy.employees = callCopy.employees.map((i) => i?.id);
       callCopy.beneficiaries = callCopy.beneficiaries.map((i) => i?.id);
-      callCopy.employee = callCopy.employee ? callCopy.employee.id : null;
       console.log('callCopy.caller****************', callCopy.caller);
       if (typeof callCopy?.caller === 'string') {
         callCopy.caller = { phone: callCopy.caller, callerType: 'PhoneNumber' };
@@ -141,6 +141,15 @@ export default function AddCallForm({ idCall, title }) {
   } = useQuery(GET_BENEFICIARIES, {
     fetchPolicy: 'network-only',
   });
+  const {
+    loading: loadingEstablishments,
+    data: establishmentsData,
+    error: establishmentsError,
+    fetchMore: fetchMoreEstablishments,
+  } = useQuery(GET_ESTABLISHMENTS, {
+    fetchPolicy: 'network-only',
+  });
+
   const {
     loading: loadingEmployees,
     data: employeesData,
@@ -240,7 +249,17 @@ export default function AddCallForm({ idCall, title }) {
     onCompleted: (data) => {
       let { __typename, ...callCopy1 } = data.call;
       let { folder, ...callCopy } = callCopy1;
-      callCopy.entryDateTime = dayjs(callCopy.entryDateTime);
+      callCopy.entryDateTime = callCopy.entryDateTime ? dayjs(callCopy.entryDateTime) : null;
+      
+      callCopy.establishments =
+      callCopy.establishments
+        ? callCopy.establishments.map((i) => i?.establishment)
+        : [];    
+
+      callCopy.employees =
+      callCopy.employees
+        ? callCopy.employees.map((i) => i?.employee)
+        : [];
       callCopy.beneficiaries = callCopy.beneficiaries
         ? callCopy.beneficiaries.map((i) => i?.beneficiary)
         : [];
@@ -313,35 +332,21 @@ export default function AddCallForm({ idCall, title }) {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid xs={2} sm={3} md={3}>
+            <Grid xs={12} sm={6} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Référence"
-                  value={formik.values.number}
-                  disabled
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Titre"
+                  label="Libellé"
                   id="title"
                   value={formik.values.title}
-                  required
                   onChange={(e) =>
                     formik.setFieldValue('title', e.target.value)
                   }
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.title && Boolean(formik.errors.title)}
-                  helperText={formik.touched.title && formik.errors.title}
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={2} md={2}>
+            <Grid xs={12} sm={6} md={4}>
               <Item>
                 <FormControl fullWidth>
                   <InputLabel>Type d'appel</InputLabel>
@@ -358,7 +363,7 @@ export default function AddCallForm({ idCall, title }) {
                 </FormControl>
               </Item>
             </Grid>
-            <Grid xs={2} sm={3} md={3}>
+            <Grid xs={12} sm={6} md={4}>
               <Item>
                 <TheDateTimePicker
                   label="Date et heure"
@@ -371,22 +376,7 @@ export default function AddCallForm({ idCall, title }) {
               </Item>
               <Item></Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheAutocomplete
-                  options={employeesData?.employees?.nodes}
-                  label="Pour quel employé ?"
-                  placeholder="Choisissez un employé ?"
-                  multiple={false}
-                  value={formik.values.employee}
-                  helperText="Si c'est pour vous. laissez ce champ vide."
-                  onChange={(e, newValue) =>
-                    formik.setFieldValue('employee', newValue)
-                  }
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4} item="true">
+            <Grid xs={12} sm={6} md={4} item="true">
               <Item>
                 <SearchNumbersAutocomplete
                   options={beneficiariesData?.beneficiaries?.nodes}
@@ -399,7 +389,34 @@ export default function AddCallForm({ idCall, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4} item="true">
+            <Grid xs={2} sm={4} md={4}>
+              <Item>
+                <TheAutocomplete
+                  options={establishmentsData?.establishments?.nodes}
+                  label="Structures concernées"
+                  placeholder="Ajouter une tructure"
+                  limitTags={3}
+                  value={formik.values.establishments}
+                  onChange={(e, newValue) =>
+                    formik.setFieldValue('establishments', newValue)
+                  }
+                />
+              </Item>
+            </Grid>
+            <Grid xs={12} sm={6} md={4}>
+              <Item>
+                <TheAutocomplete
+                  options={employeesData?.employees?.nodes}
+                  label="Employées concernées"
+                  placeholder="Ajouter un employé"
+                  value={formik.values.employees}
+                  onChange={(e, newValue) =>
+                    formik.setFieldValue('employees', newValue)
+                  }
+                />
+              </Item>
+            </Grid>
+            <Grid xs={12} sm={6} md={4} item="true">
               <Item>
                 <TheAutocomplete
                   options={beneficiariesData?.beneficiaries?.nodes}
@@ -416,31 +433,16 @@ export default function AddCallForm({ idCall, title }) {
             <Grid xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid xs={12} sm={6} md={6}>
+            <Grid xs={12} sm={12} md={12}>
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Description"
+                  label="Commentaire"
                   multiline
                   rows={4}
                   value={formik.values.description}
                   onChange={(e) =>
                     formik.setFieldValue('description', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={12} sm={6} md={6}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Observation"
-                  multiline
-                  rows={4}
-                  value={formik.values.observation}
-                  onChange={(e) =>
-                    formik.setFieldValue('observation', e.target.value)
                   }
                   disabled={loadingPost || loadingPut}
                 />

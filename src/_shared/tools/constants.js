@@ -98,6 +98,22 @@ export const ACCOUNT_TYPES = {
     { value: 'FIXED_TERM', label: 'Compte à terme' },
   ],
 };
+export const CALL_TYPES = {
+  INCOMING: 'INCOMING',
+  OUTGOING: 'OUTGOING',
+  ALL: [
+    { value: 'INCOMING', label: 'Entrant' },
+    { value: 'OUTGOING', label: 'Sortant' },
+  ],
+};
+export const LETTER_TYPES = {
+  INCOMING: 'INCOMING',
+  OUTGOING: 'OUTGOING',
+  ALL: [
+    { value: 'INCOMING', label: 'Entrant' },
+    { value: 'OUTGOING', label: 'Sortant' },
+  ],
+};
 
 export const MEASUREMENT_ACTIVITY_UNITS = {
   DAY: 'DAY',

@@ -31,6 +31,7 @@ import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDat
 import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
+import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -58,12 +59,16 @@ export default function AddLetterForm({ idLetter, title }) {
       description: '',
       observation: '',
       isActive: true,
+      establishments: [],
+      employees: [],
       beneficiaries: [],
       employee: null,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       let { image, ...letterCopy } = values;
+      letterCopy.establishments = letterCopy.establishments.map((i) => i?.id);
+      letterCopy.employees = letterCopy.employees.map((i) => i?.id);
       letterCopy.beneficiaries = letterCopy.beneficiaries.map((i) => i?.id);
       letterCopy.employee = letterCopy.employee ? letterCopy.employee.id : null;
       if (idLetter && idLetter != '') {
@@ -89,6 +94,15 @@ export default function AddLetterForm({ idLetter, title }) {
   } = useQuery(GET_BENEFICIARIES, {
     fetchPolicy: 'network-only',
   });
+  const {
+    loading: loadingEstablishments,
+    data: establishmentsData,
+    error: establishmentsError,
+    fetchMore: fetchMoreEstablishments,
+  } = useQuery(GET_ESTABLISHMENTS, {
+    fetchPolicy: 'network-only',
+  });
+
   const {
     loading: loadingEmployees,
     data: employeesData,
@@ -193,7 +207,18 @@ export default function AddLetterForm({ idLetter, title }) {
     onCompleted: (data) => {
       let { __typename, ...letterCopy1 } = data.letter;
       let { folder, ...letterCopy } = letterCopy1;
-      letterCopy.entryDateTime = dayjs(letterCopy.entryDateTime);
+      letterCopy.entryDateTime = letterCopy.entryDateTime ? dayjs(letterCopy.entryDateTime) : null;
+      
+      letterCopy.establishments =
+      letterCopy.establishments
+        ? letterCopy.establishments.map((i) => i?.establishment)
+        : [];    
+
+      letterCopy.employees =
+      letterCopy.employees
+        ? letterCopy.employees.map((i) => i?.employee)
+        : [];
+
       letterCopy.beneficiaries = letterCopy.beneficiaries
         ? letterCopy.beneficiaries.map((i) => i?.beneficiary)
         : [];
@@ -280,14 +305,26 @@ export default function AddLetterForm({ idLetter, title }) {
             <Grid xs={2} sm={4} md={4}>
               <Item>
                 <TheAutocomplete
-                  options={employeesData?.employees?.nodes}
-                  label="Pour quel employé ?"
-                  placeholder="Choisissez un employé ?"
-                  multiple={false}
-                  value={formik.values.employee}
-                  helperText="Si c'est pour vous. laissez ce champ vide."
+                  options={establishmentsData?.establishments?.nodes}
+                  label="Structures concernées"
+                  placeholder="Ajouter une tructure"
+                  limitTags={3}
+                  value={formik.values.establishments}
                   onChange={(e, newValue) =>
-                    formik.setFieldValue('employee', newValue)
+                    formik.setFieldValue('establishments', newValue)
+                  }
+                />
+              </Item>
+            </Grid>
+            <Grid xs={2} sm={4} md={4}>
+              <Item>
+                <TheAutocomplete
+                  options={employeesData?.employees?.nodes}
+                  label="Employées concernées"
+                  placeholder="Ajouter un employé"
+                  value={formik.values.employees}
+                  onChange={(e, newValue) =>
+                    formik.setFieldValue('employees', newValue)
                   }
                 />
               </Item>

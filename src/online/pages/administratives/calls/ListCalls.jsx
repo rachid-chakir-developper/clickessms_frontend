@@ -17,6 +17,7 @@ import { GET_CALLS } from '../../../../_shared/graphql/queries/CallQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import CallFilter from './CallFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
+import TableListCalls from './TableListCalls';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -166,7 +167,7 @@ export default function ListCalls() {
       <Grid item="true" xs={12}>
         <CallFilter onFilterChange={handleFilterChange} />
       </Grid>
-      <Grid item="true" xs={12}>
+      {/* <Grid item="true" xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -194,6 +195,13 @@ export default function ListCalls() {
             ))}
           </Grid>
         </Box>
+      </Grid> */}
+      <Grid item="true" xs={12}>
+        <TableListCalls
+          loading={loadingCalls}
+          rows={callsData?.calls?.nodes || []}
+          onDeleteCall={onDeleteCall}
+        />
       </Grid>
       <Grid item="true" xs={12}>
         <PaginationControlled
