@@ -3,7 +3,7 @@ import { defineRolesModel } from './lib/rolesModelEngine';
 
 export const rolesModel = defineRolesModel(entitiesModel, {
   company: {
-    garagist: {
+    mechanic: {
       vehicle: 'view',
       vehicleInspection: 'edit',
     },

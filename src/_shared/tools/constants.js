@@ -114,6 +114,14 @@ export const LETTER_TYPES = {
     { value: 'OUTGOING', label: 'Sortant' },
   ],
 };
+export const CONTRACT_TYPES = {
+  CDI: 'CDI',
+  CDD: 'CDD',
+  ALL: [
+    { value: 'CDI', label: 'CDI' },
+    { value: 'CDD', label: 'CDD' },
+  ],
+};
 
 export const MEASUREMENT_ACTIVITY_UNITS = {
   DAY: 'DAY',

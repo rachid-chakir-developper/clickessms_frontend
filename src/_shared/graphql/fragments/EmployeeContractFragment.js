@@ -30,10 +30,7 @@ export const EMPLOYEE_CONTRACT_MINI_INFOS = gql`
     description
     isActive
     restLeaveDays
-    contractType{
-      id
-      name
-    }
+    contractType
     establishments{
       ...EmployeeContractEstablishmentTypeFragment
     }

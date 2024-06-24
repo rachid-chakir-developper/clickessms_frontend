@@ -81,14 +81,6 @@ export const GET_DATAS_MEETING = gql`
   ${DATA_BASIC_INFOS}
 `;
 
-export const GET_DATAS_EMPLOYEE = gql`
-  query {
-    employeeContractTypes: datas(typeData: "EmployeeContractType") {
-      ...DataBasicInfosFragment
-    }
-  }
-  ${DATA_BASIC_INFOS}
-`;
 
 export const GET_DATAS_VEHICLE = gql`
   query {

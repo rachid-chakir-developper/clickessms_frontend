@@ -29,7 +29,6 @@ const modulesToManage = [
     title: 'Ressources humaines',
     datas: [
       { name: "Genre de l'Homme", description: '', type: 'HumanGender' },
-      { name: "Type de contrat", description: '', type: 'EmployeeContractType' },
     ],
   },
   {

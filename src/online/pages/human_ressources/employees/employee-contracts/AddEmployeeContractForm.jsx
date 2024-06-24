@@ -21,8 +21,8 @@ import ProgressService from '../../../../../_shared/services/feedbacks/ProgressS
 import TheDateTimePicker from '../../../../../_shared/components/form-fields/TheDateTimePicker';
 import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_EMPLOYEES } from '../../../../../_shared/graphql/queries/EmployeeQueries';
-import { GET_DATAS_EMPLOYEE } from '../../../../../_shared/graphql/queries/DataQueries';
 import { GET_ESTABLISHMENTS } from '../../../../../_shared/graphql/queries/EstablishmentQueries';
+import { CONTRACT_TYPES } from '../../../../../_shared/tools/constants';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -50,7 +50,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
       observation: '',
       isActive: true,
       employee: null,
-      contractType: null,
+      contractType: 'CDI',
       establishments :[]
     },
     validationSchema: validationSchema,
@@ -182,7 +182,6 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
       let { __typename, folder, restLeaveDays, ...employeeContractCopy } = data.employeeContract;
       employeeContractCopy.startingDate = employeeContractCopy.startingDate ? dayjs(employeeContractCopy.startingDate) : null;
       employeeContractCopy.endingDate = employeeContractCopy.endingDate ? dayjs(employeeContractCopy.endingDate) : null;
-      employeeContractCopy.contractType = employeeContractCopy.contractType ? Number(employeeContractCopy.contractType.id) : null;
       employeeContractCopy.establishments =
       employeeContractCopy.establishments
         ? employeeContractCopy.establishments.map((i) => i?.establishment)
@@ -191,13 +190,6 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
     },
     onError: (err) => console.log(err),
   });
-
-  const {
-    loading: loadingDatas,
-    data: dataData,
-    error: datsError,
-    fetchMore: fetchMoreDatas,
-  } = useQuery(GET_DATAS_EMPLOYEE, { fetchPolicy: 'network-only' });
 
   React.useEffect(() => {
     if (idEmployeeContract) {
@@ -259,10 +251,10 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                     <MenuItem value="">
                       <em>Choisissez un type</em>
                     </MenuItem>
-                    {dataData?.employeeContractTypes?.map((data, index) => {
+                    {CONTRACT_TYPES?.ALL?.map((data, index) => {
                       return (
-                        <MenuItem key={index} value={data.id}>
-                          {data.name}
+                        <MenuItem key={index} value={data.value}>
+                          {data.label}
                         </MenuItem>
                       );
                     })}

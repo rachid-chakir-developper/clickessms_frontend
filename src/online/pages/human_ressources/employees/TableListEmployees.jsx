@@ -453,7 +453,7 @@ export default function TableListEmployees({
                     <StyledTableCell align="left"> 
                       <Stack direction="row" flexWrap='wrap' spacing={1}>
                         {currentContract?.contractType && <Chip
-                          label={currentContract?.contractType?.name}
+                          label={currentContract?.contractType}
                           variant="outlined"
                         />}
                         </Stack>

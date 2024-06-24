@@ -346,14 +346,14 @@ export default function TableListEmployeeContracts({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="8">
+                  <StyledTableCell colSpan="9">
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="8">
+                  <StyledTableCell colSpan="9">
                     <Alert severity="warning">Aucun contrat trouvé.</Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -432,7 +432,7 @@ export default function TableListEmployeeContracts({
                     <StyledTableCell align="left"> 
                       <Stack direction="row" flexWrap='wrap' spacing={1}>
                         <Chip
-                          label={row?.contractType?.name}
+                          label={row?.contractType}
                           variant="outlined"
                         />
                         </Stack>
