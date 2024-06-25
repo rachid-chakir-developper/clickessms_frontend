@@ -22,8 +22,9 @@ import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueri
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import SelectCheckmarks from '../../../../_shared/components/form-fields/SelectCheckmarks';
 import { GET_DATAS_EMPLOYEE_ABSENCE } from '../../../../_shared/graphql/queries/DataQueries';
-import { ABSENCE_TYPES, LEAVE_TYPE_CHOICES } from '../../../../_shared/tools/constants';
+import { LEAVE_TYPE_CHOICES } from '../../../../_shared/tools/constants';
 import { useSession } from '../../../../_shared/context/SessionProvider';
+import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -47,12 +48,11 @@ export default function AddEmployeeAbsenceForm({
     initialValues: {
       number: '',
       title: '',
-      absenceType: ABSENCE_TYPES.ABSENCE,
+      document: undefined,
       leaveType: LEAVE_TYPE_CHOICES.ABSENCE,
       startingDateTime: dayjs(new Date()),
       endingDateTime: dayjs(new Date()),
-      comment: '',
-      observation: '',
+      message: '',
       employees: [],
       employee: null,
       reasons: [],
@@ -60,7 +60,7 @@ export default function AddEmployeeAbsenceForm({
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let employeeAbsenceCopy = { ...values };
+      let { document, ...employeeAbsenceCopy } = values;
       employeeAbsenceCopy.employees =
         employeeAbsenceCopy.employees.map((i) => i?.id);
       employeeAbsenceCopy.reasons = employeeAbsenceCopy.reasons.map(
@@ -73,11 +73,13 @@ export default function AddEmployeeAbsenceForm({
         onUpdateEmployeeAbsence({
           id: employeeAbsenceCopy.id,
           employeeAbsenceData: employeeAbsenceCopy,
+          document: document
         });
       } else
         createEmployeeAbsence({
           variables: {
             employeeAbsenceData: employeeAbsenceCopy,
+            document: document
           },
         });
     },
@@ -231,9 +233,8 @@ export default function AddEmployeeAbsenceForm({
   }, [idEmployeeAbsence]);
 
   React.useEffect(() => {
-    if (searchParams.get('type') === ABSENCE_TYPES.LEAVE && !idEmployeeAbsence) {
-      formik.setFieldValue('absenceType', ABSENCE_TYPES.LEAVE)
-      formik.setFieldValue('leaveType', LEAVE_TYPE_CHOICES.ANNUAL)
+    if (searchParams.get('type') !== LEAVE_TYPE_CHOICES.ABSENCE && !idEmployeeAbsence) {
+      formik.setFieldValue('leaveType', LEAVE_TYPE_CHOICES.PAID)
       setIsLeaveType(true)
     }
   }, []);
@@ -304,35 +305,13 @@ export default function AddEmployeeAbsenceForm({
               </Item>
             </Grid>
             <Grid xs={2} sm={4} md={4}>
-              {/* <Item>
-                <FormControl fullWidth>
-                  <InputLabel>Type </InputLabel>
-                  <Select
-                    value={formik.values.absenceType}
-                    onChange={(e) =>
-                      {formik.setFieldValue('absenceType', e.target.value)
-                      if(e.target.value === ABSENCE_TYPES.ABSENCE ) formik.setFieldValue('leaveType', LEAVE_TYPE_CHOICES.ABSENCE)}
-                    }
-                    disabled={loadingPost || loadingPut}
-                  >
-                    {ABSENCE_TYPES?.ALL?.map((type, index) => {
-                      return (
-                        <MenuItem key={index} value={type.value}>
-                          {type.label}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Item> */}
               <Item>
                 <FormControl fullWidth>
                   <InputLabel>Type</InputLabel>
                   <Select
                     value={formik.values.leaveType}
                     onChange={(e) =>
-                      {formik.setFieldValue('leaveType', e.target.value)
-                      if(e.target.value === LEAVE_TYPE_CHOICES.ABSENCE ) formik.setFieldValue('absenceType', ABSENCE_TYPES.ABSENCE)}
+                      formik.setFieldValue('leaveType', e.target.value)
                     }
                     disabled={loadingPost || loadingPut}
                   >
@@ -375,34 +354,28 @@ export default function AddEmployeeAbsenceForm({
                 />
               </Item>
             </Grid>
+            <Grid xs={12} sm={6} md={4} item="true">
+              <Item>
+                <TheFileField variant="outlined" label="Justificatif"
+                  fileValue={formik.values.document}
+                  onChange={(file) => formik.setFieldValue('document', file)}
+                  disabled={loadingPost || loadingPut}
+                  />
+              </Item>
+            </Grid>
             <Grid xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid xs={12} sm={6} md={6}>
+            <Grid xs={12} sm={12} md={12}>
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Commentaire"
+                  label="Message"
                   multiline
                   rows={4}
-                  value={formik.values.comment}
+                  value={formik.values.message}
                   onChange={(e) =>
-                    formik.setFieldValue('comment', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={12} sm={6} md={6}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Observation"
-                  multiline
-                  rows={4}
-                  value={formik.values.observation}
-                  onChange={(e) =>
-                    formik.setFieldValue('observation', e.target.value)
+                    formik.setFieldValue('message', e.target.value)
                   }
                   disabled={loadingPost || loadingPut}
                 />

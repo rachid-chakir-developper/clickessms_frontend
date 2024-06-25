@@ -24,6 +24,7 @@ export const EMPLOYEE_CONTRACT_MINI_INFOS = gql`
     title
     document
     position
+    monthlyGrossSalary
     salary
     startingDate
     endingDate
@@ -53,7 +54,9 @@ export const EMPLOYEE_CONTRACT_BASIC_INFOS = gql`
 export const EMPLOYEE_CONTRACT_DETAILS = gql`
   fragment EmployeeContractDetailsFragment on EmployeeContractType {
     ...EmployeeContractBasicInfosFragment
-    annualLeaveDays
+    initialAnnualLeaveDays
+    initialRttDays
+    initialCtDays
     observation
     startedAt
     endedAt
@@ -64,7 +67,9 @@ export const EMPLOYEE_CONTRACT_DETAILS = gql`
 export const EMPLOYEE_CONTRACT_RECAP_DETAILS = gql`
   fragment EmployeeContractRecapDetailsFragment on EmployeeContractType {
     ...EmployeeContractBasicInfosFragment
-    annualLeaveDays
+    initialAnnualLeaveDays
+    initialRttDays
+    initialCtDays
     observation
     startedAt
     endedAt

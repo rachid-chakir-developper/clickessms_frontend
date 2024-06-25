@@ -4,8 +4,9 @@ import { EMPLOYEE_ABSENCE_BASIC_INFOS } from '../fragments/EmployeeAbsenceFragme
 export const POST_EMPLOYEE_ABSENCE = gql`
   mutation CreateEmployeeAbsence(
     $employeeAbsenceData: EmployeeAbsenceInput!
+    $document: Upload
   ) {
-    createEmployeeAbsence(employeeAbsenceData: $employeeAbsenceData) {
+    createEmployeeAbsence(employeeAbsenceData: $employeeAbsenceData, document: $document) {
       employeeAbsence {
         ...EmployeeAbsenceBasicInfosFragment
       }
@@ -18,10 +19,11 @@ export const PUT_EMPLOYEE_ABSENCE = gql`
   mutation UpdateEmployeeAbsence(
     $id: ID!
     $employeeAbsenceData: EmployeeAbsenceInput!
+    $document: Upload
   ) {
     updateEmployeeAbsence(
       id: $id
-      employeeAbsenceData: $employeeAbsenceData
+      employeeAbsenceData: $employeeAbsenceData, document: $document
     ) {
       employeeAbsence {
         ...EmployeeAbsenceBasicInfosFragment

@@ -41,11 +41,14 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
       document: undefined,
       number: '',
       title: '',
+      monthlyGrossSalary: 0,
       salary: 0,
       position: '',
       startingDate: dayjs(new Date()),
       endingDate: null,
-      annualLeaveDays: 25,
+      initialAnnualLeaveDays: 25,
+      initialRttDays: 10,
+      initialCtDays: 5,
       description: '',
       observation: '',
       isActive: true,
@@ -266,14 +269,14 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Salaire"
+                  label="Salaire brut mensuel"
                   type="number"
                   InputProps={{
                       endAdornment: <InputAdornment position="start">€</InputAdornment>,
                   }}
-                  value={formik.values.salary}
+                  value={formik.values.monthlyGrossSalary}
                   onChange={(e) =>
-                    formik.setFieldValue(`salary`, e.target.value)
+                    formik.setFieldValue(`monthlyGrossSalary`, e.target.value)
                   }
                   disabled={loadingPost || loadingPut}
                 />
@@ -330,14 +333,44 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Nombre de jours de congé annuels"
+                  label="Jours de congé annuel initiaux (CP)"
                   type="number"
                   InputProps={{
                       endAdornment: <InputAdornment position="start">Jours</InputAdornment>,
                   }}
-                  value={formik.values.annualLeaveDays}
+                  value={formik.values.initialAnnualLeaveDays}
                   onChange={(e) =>
-                    formik.setFieldValue(`annualLeaveDays`, e.target.value)
+                    formik.setFieldValue(`initialAnnualLeaveDays`, e.target.value)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Jours RTT initiaux"
+                  type="number"
+                  InputProps={{
+                      endAdornment: <InputAdornment position="start">Jours</InputAdornment>,
+                  }}
+                  value={formik.values.initialRttDays}
+                  onChange={(e) =>
+                    formik.setFieldValue(`initialRttDays`, e.target.value)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Jours de congé temporaire initiaux (CT)"
+                  type="number"
+                  InputProps={{
+                      endAdornment: <InputAdornment position="start">Jours</InputAdornment>,
+                  }}
+                  value={formik.values.initialCtDays}
+                  onChange={(e) =>
+                    formik.setFieldValue(`initialCtDays`, e.target.value)
                   }
                   disabled={loadingPost || loadingPut}
                 />

@@ -18,11 +18,8 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
-  getAbsenceTypeLabel,
   getFormatDate,
   getLeaveTypeLabel,
-  getStatusLabel,
-  getStatusLebelColor,
 } from '../../../../_shared/tools/functions';
 import {
   Article,
@@ -37,7 +34,7 @@ import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import { ABSENCE_TYPES } from '../../../../_shared/tools/constants';
+import { LEAVE_TYPE_CHOICES } from '../../../../_shared/tools/constants';
 import EmployeeAbsenceStatusLabelMenu from './EmployeeAbsenceStatusLabelMenu';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -105,7 +102,7 @@ const headCells = [
     label: 'Employés',
   },
   {
-    id: 'absenceType',
+    id: 'leaveType',
     numeric: false,
     disablePadding: false,
     label: 'Type',
@@ -439,7 +436,8 @@ export default function TableListEmployeeAbsences({
                       </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <AppLabel color={row?.absenceType === ABSENCE_TYPES.ABSENCE ? "secondary" : "primary"}>{getLeaveTypeLabel(row?.leaveType)}</AppLabel>
+                      <AppLabel color={row?.leaveType === LEAVE_TYPE_CHOICES.ABSENCE ? "info" : "primary"}>{getLeaveTypeLabel(row?.leaveType)}</AppLabel>
+                      {row?.leaveType === LEAVE_TYPE_CHOICES.ABSENCE && <AppLabel sx={{marginLeft: 1, fontSize: 10}} color={row?.document ? "secondary" : "warning"}>{row?.document ? 'Avec un justificatif' : 'Sans justificatif'}</AppLabel>}
                     </StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.endingDateTime)}`}</StyledTableCell>
