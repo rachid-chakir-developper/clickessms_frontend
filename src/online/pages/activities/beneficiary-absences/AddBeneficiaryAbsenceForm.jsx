@@ -235,7 +235,7 @@ export default function AddBeneficiaryAbsenceForm({
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
-        {title} {formik.values.number}
+        {title} {formik.values.title}
       </Typography>
       {loadingBeneficiaryAbsence && <ProgressService type="form" />}
       {!loadingBeneficiaryAbsence && (
@@ -245,23 +245,12 @@ export default function AddBeneficiaryAbsenceForm({
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid xs={2} sm={4} md={4}>
+            <Grid xs={12} sm={6} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Référence"
-                  value={formik.values.number}
-                  disabled
-                />
-              </Item>
-            </Grid>
-            <Grid xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Titre"
+                  label="Libellé"
                   value={formik.values.title}
-                  required
                   onChange={(e) =>
                     formik.setFieldValue('title', e.target.value)
                   }
@@ -269,7 +258,7 @@ export default function AddBeneficiaryAbsenceForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4}>
+            <Grid xs={12} sm={6} md={4}>
               <Item>
                 <TheDateTimePicker
                   label="Date et heure de début"
@@ -280,9 +269,11 @@ export default function AddBeneficiaryAbsenceForm({
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
+            </Grid>
+            <Grid xs={12} sm={6} md={4}>
               <Item>
                 <TheDateTimePicker
-                  label="Date de fin"
+                  label="Date et heure de fin"
                   value={formik.values.endingDateTime}
                   onChange={(date) =>
                     formik.setFieldValue('endingDateTime', date)
@@ -291,7 +282,7 @@ export default function AddBeneficiaryAbsenceForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4}>
+            <Grid xs={12} sm={6} md={4}>
               <Item>
                 <TheAutocomplete
                   options={employeesData?.employees?.nodes}
@@ -299,14 +290,14 @@ export default function AddBeneficiaryAbsenceForm({
                   placeholder="Choisissez un employé ?"
                   multiple={false}
                   value={formik.values.employee}
-                  helperText="Si c'est pour vous. laissez ce champ vide."
+                  helperText="Laissez ce champ vide si c'est pour vous."
                   onChange={(e, newValue) =>
                     formik.setFieldValue('employee', newValue)
                   }
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4} item>
+            <Grid xs={12} sm={6} md={4} item>
               <Item>
                 <TheAutocomplete
                   options={beneficiariesData?.beneficiaries?.nodes}
@@ -320,7 +311,7 @@ export default function AddBeneficiaryAbsenceForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4} item>
+            <Grid xs={12} sm={6} md={4} item>
               <Item>
                 <SelectCheckmarks
                   options={dataData?.absenceReasons}
@@ -349,7 +340,7 @@ export default function AddBeneficiaryAbsenceForm({
             <Grid xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid xs={12} sm={6} md={6}>
+            <Grid xs={12} sm={12} md={12}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -359,21 +350,6 @@ export default function AddBeneficiaryAbsenceForm({
                   value={formik.values.comment}
                   onChange={(e) =>
                     formik.setFieldValue('comment', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid xs={12} sm={6} md={6}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Observation"
-                  multiline
-                  rows={4}
-                  value={formik.values.observation}
-                  onChange={(e) =>
-                    formik.setFieldValue('observation', e.target.value)
                   }
                   disabled={loadingPost || loadingPut}
                 />

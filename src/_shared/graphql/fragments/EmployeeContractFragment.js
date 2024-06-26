@@ -30,7 +30,16 @@ export const EMPLOYEE_CONTRACT_MINI_INFOS = gql`
     endingDate
     description
     isActive
-    restLeaveDays
+    leaveDayInfos{
+      restPaidLeaveDays
+      acquiredPaidLeaveDaysByMonth
+      acquiredPaidLeaveDays
+      beingAcquiredPaidLeaveDays
+      reportedPaidLeaveDaysPerYear
+      totalReportedPaidLeaveDays
+      restRwtLeaveDays
+      restTemporaryLeaveDays
+    }
     contractType
     establishments{
       ...EmployeeContractEstablishmentTypeFragment
@@ -46,6 +55,7 @@ export const EMPLOYEE_CONTRACT_BASIC_INFOS = gql`
       id
       firstName
       lastName
+      photo
     }
   }
   ${EMPLOYEE_CONTRACT_MINI_INFOS}
@@ -54,9 +64,9 @@ export const EMPLOYEE_CONTRACT_BASIC_INFOS = gql`
 export const EMPLOYEE_CONTRACT_DETAILS = gql`
   fragment EmployeeContractDetailsFragment on EmployeeContractType {
     ...EmployeeContractBasicInfosFragment
-    initialAnnualLeaveDays
-    initialRttDays
-    initialCtDays
+    initialPaidLeaveDays
+    initialRwtDays
+    initialTemporaryDays
     observation
     startedAt
     endedAt
@@ -67,9 +77,9 @@ export const EMPLOYEE_CONTRACT_DETAILS = gql`
 export const EMPLOYEE_CONTRACT_RECAP_DETAILS = gql`
   fragment EmployeeContractRecapDetailsFragment on EmployeeContractType {
     ...EmployeeContractBasicInfosFragment
-    initialAnnualLeaveDays
-    initialRttDays
-    initialCtDays
+    initialPaidLeaveDays
+    initialRwtDays
+    initialTemporaryDays
     observation
     startedAt
     endedAt

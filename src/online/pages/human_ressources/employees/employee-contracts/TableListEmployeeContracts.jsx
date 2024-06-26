@@ -382,7 +382,7 @@ export default function TableListEmployeeContracts({
 
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
-
+                const {leaveDayInfos} = row
                 return (
                   <StyledTableRow
                     hover
@@ -462,7 +462,15 @@ export default function TableListEmployeeContracts({
                     </StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.startingDate)}`}</StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.endingDate)}`}</StyledTableCell>
-                    <StyledTableCell align="left">{row?.restLeaveDays} jour{row?.restLeaveDays > 1 ? 's' : ''}</StyledTableCell>
+                    <StyledTableCell align="left">
+                          CP: {leaveDayInfos?.restPaidLeaveDays} jour{leaveDayInfos?.restPaidLeaveDays > 1 ? 's' : ''}
+                      <br/>CP Acquis Par mois: {leaveDayInfos?.acquiredPaidLeaveDaysByMonth}
+                      <br/>CP Acquis: {leaveDayInfos?.acquiredPaidLeaveDays}
+                      <br/>CP en cours d'acquisition: {leaveDayInfos?.beingAcquiredPaidLeaveDays}
+                      <br/>CP reportés: {leaveDayInfos?.totalReportedPaidLeaveDays}
+                      <br/>RTT: {leaveDayInfos?.restRwtLeaveDays} jour{leaveDayInfos?.restRwtLeaveDays > 1 ? 's' : ''}
+                      <br/>CT: {leaveDayInfos?.restTemporaryLeaveDays} jour{leaveDayInfos?.restTemporaryLeaveDays > 1 ? 's' : ''}
+                    </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}

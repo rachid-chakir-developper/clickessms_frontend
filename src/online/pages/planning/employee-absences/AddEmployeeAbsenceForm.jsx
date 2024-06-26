@@ -25,6 +25,7 @@ import { GET_DATAS_EMPLOYEE_ABSENCE } from '../../../../_shared/graphql/queries/
 import { LEAVE_TYPE_CHOICES } from '../../../../_shared/tools/constants';
 import { useSession } from '../../../../_shared/context/SessionProvider';
 import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
+import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -233,7 +234,7 @@ export default function AddEmployeeAbsenceForm({
   }, [idEmployeeAbsence]);
 
   React.useEffect(() => {
-    if (searchParams.get('type') !== LEAVE_TYPE_CHOICES.ABSENCE && !idEmployeeAbsence) {
+    if (searchParams.get('type') && searchParams.get('type') !== LEAVE_TYPE_CHOICES.ABSENCE && !idEmployeeAbsence) {
       formik.setFieldValue('leaveType', LEAVE_TYPE_CHOICES.PAID)
       setIsLeaveType(true)
     }
@@ -282,8 +283,8 @@ export default function AddEmployeeAbsenceForm({
             </Grid>}
             <Grid xs={12} sm={6} md={4}>
               <Item>
-                <TheDateTimePicker
-                  label="Date et heure de début"
+                <TheDesktopDatePicker
+                  label="Date de début"
                   value={formik.values.startingDateTime}
                   onChange={(date) =>
                     formik.setFieldValue('startingDateTime', date)
@@ -294,7 +295,7 @@ export default function AddEmployeeAbsenceForm({
             </Grid>
             <Grid xs={12} sm={6} md={4}>
               <Item>
-                <TheDateTimePicker
+                <TheDesktopDatePicker
                   label="Date de fin"
                   value={formik.values.endingDateTime}
                   onChange={(date) =>

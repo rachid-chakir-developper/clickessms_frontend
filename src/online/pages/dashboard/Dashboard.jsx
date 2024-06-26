@@ -7,6 +7,7 @@ import styled from '@emotion/styled';
 import { useQuery } from '@apollo/client';
 import { GET_DASHBOARD } from '../../../_shared/graphql/queries/DashboardQueries';
 import ProgressService from '../../../_shared/services/feedbacks/ProgressService';
+import LeaveDayInfos from './charts/LeaveDayInfos';
 
 const FirstItem = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -64,9 +65,14 @@ export default function Dashboard() {
           </Grid>
           <Grid item xs={12} md={4} lg={4}>
             <Item>
-              <AppPieChart data={dashboardData?.dashboard?.taskPercent} />
+              <LeaveDayInfos leaveDayInfos={dashboardData?.dashboard?.currentEmployee?.currentContract?.leaveDayInfos} />
             </Item>
           </Grid>
+          {/* <Grid item xs={12} md={4} lg={4}>
+            <Item>
+              <AppPieChart data={dashboardData?.dashboard?.taskPercent} />
+            </Item>
+          </Grid> */}
           {/* Recent Tasks */}
           <Grid item xs={12}>
             <Item>

@@ -23,6 +23,7 @@ import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAu
 import { GET_EMPLOYEES } from '../../../../../_shared/graphql/queries/EmployeeQueries';
 import { GET_ESTABLISHMENTS } from '../../../../../_shared/graphql/queries/EstablishmentQueries';
 import { CONTRACT_TYPES } from '../../../../../_shared/tools/constants';
+import TheDesktopDatePicker from '../../../../../_shared/components/form-fields/TheDesktopDatePicker';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -46,8 +47,8 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
       position: '',
       startingDate: dayjs(new Date()),
       endingDate: null,
-      initialAnnualLeaveDays: 25,
-      initialRttDays: 10,
+      initialPaidLeaveDays: 25,
+      initialRwtDays: 10,
       initialCtDays: 5,
       description: '',
       observation: '',
@@ -182,7 +183,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
   const [getEmployeeContract, { loading: loadingEmployeeContract }] = useLazyQuery(GET_EMPLOYEE_CONTRACT, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, folder, restLeaveDays, ...employeeContractCopy } = data.employeeContract;
+      let { __typename, folder, leaveDayInfos, ...employeeContractCopy } = data.employeeContract;
       employeeContractCopy.startingDate = employeeContractCopy.startingDate ? dayjs(employeeContractCopy.startingDate) : null;
       employeeContractCopy.endingDate = employeeContractCopy.endingDate ? dayjs(employeeContractCopy.endingDate) : null;
       employeeContractCopy.establishments =
@@ -284,7 +285,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
             </Grid>
             <Grid xs={12} sm={6} md={4} item="true">
               <Item>
-                <TheDateTimePicker
+                <TheDesktopDatePicker
                   label="Date et heure de début"
                   value={formik.values.startingDate}
                   onChange={(date) =>
@@ -296,7 +297,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
             </Grid>
             <Grid xs={12} sm={6} md={4} item="true">
               <Item>
-                <TheDateTimePicker
+                <TheDesktopDatePicker
                   label="Date de fin"
                   value={formik.values.endingDate}
                   onChange={(date) =>
@@ -338,9 +339,9 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                   InputProps={{
                       endAdornment: <InputAdornment position="start">Jours</InputAdornment>,
                   }}
-                  value={formik.values.initialAnnualLeaveDays}
+                  value={formik.values.initialPaidLeaveDays}
                   onChange={(e) =>
-                    formik.setFieldValue(`initialAnnualLeaveDays`, e.target.value)
+                    formik.setFieldValue(`initialPaidLeaveDays`, e.target.value)
                   }
                   disabled={loadingPost || loadingPut}
                 />
@@ -353,9 +354,9 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                   InputProps={{
                       endAdornment: <InputAdornment position="start">Jours</InputAdornment>,
                   }}
-                  value={formik.values.initialRttDays}
+                  value={formik.values.initialRwtDays}
                   onChange={(e) =>
-                    formik.setFieldValue(`initialRttDays`, e.target.value)
+                    formik.setFieldValue(`initialRwtDays`, e.target.value)
                   }
                   disabled={loadingPost || loadingPut}
                 />

@@ -27,7 +27,7 @@ import {
   MoreVert,
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 
@@ -230,6 +230,7 @@ export default function TableListTransmissionEvents({
   onDeleteTransmissionEvent,
   onUpdateTransmissionEventState,
 }) {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -379,7 +380,9 @@ export default function TableListTransmissionEvents({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
+                    <StyledTableCell align="left"
+                    onClick={()=> navigate(`/online/qualites/evenements-indesirables/details/${row?.id}`)}
+                    >{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
                     <StyledTableCell align="left"> 
                       <Stack direction="row" flexWrap='wrap' spacing={1}>
                           {row?.beneficiaries?.map((beneficiarie, index) => {
