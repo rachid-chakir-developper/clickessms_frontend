@@ -468,7 +468,7 @@ export default function TableListTaskActions({
                             Modifier
                           </MenuItem>
                         </Link>
-                        <MenuItem
+                        {onDeleteTaskAction && <MenuItem
                           onClick={() => {
                             onDeleteTaskAction(row?.id);
                             handleCloseMenu();
@@ -477,7 +477,7 @@ export default function TableListTaskActions({
                         >
                           <Delete sx={{ mr: 2 }} />
                           Supprimer
-                        </MenuItem>
+                        </MenuItem>}
                       </Popover>
                     </StyledTableCell>
                   </StyledTableRow>

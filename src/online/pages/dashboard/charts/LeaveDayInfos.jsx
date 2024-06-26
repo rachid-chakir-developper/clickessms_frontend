@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, List, ListItem, ListItemText, Chip, Collapse, IconButton, Typography } from '@mui/material';
+import { Box, List, ListItem, ListItemText, Chip, Collapse, IconButton, Typography, Alert } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
 const LeaveDayInfos = ({ leaveDayInfos }) => {
@@ -20,10 +20,10 @@ const LeaveDayInfos = ({ leaveDayInfos }) => {
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h5" sx={{ mb: 2 }}>Compteurs Congés (jours)</Typography>
-      <List>
+      {leaveDayInfos ? <List>
         <ListItem button onClick={handleClick}>
           <ListItemText primary="CP Restants" />
-          <IconButton edge="end" size="small">
+          <IconButton edge="end" size="small" sx={{ marginRight: 1}}>
             {open ? <ExpandLess /> : <ExpandMore />}
           </IconButton>
           <Chip label={leaveDayInfos?.restPaidLeaveDays ?? 0} color="primary" />
@@ -44,9 +44,9 @@ const LeaveDayInfos = ({ leaveDayInfos }) => {
             </ListItem>
             <ListItem button onClick={handleReportedClick}>
               <ListItemText primary="CP Reportés" sx={{ fontStyle: 'italic'}} />
-              <IconButton edge="end" size="small">
+              {leaveDayInfos?.totalReportedPaidLeaveDays && leaveDayInfos?.totalReportedPaidLeaveDays > 0 && <IconButton edge="end" size="small" sx={{ marginRight: 1}}>
                 {openReported ? <ExpandLess /> : <ExpandMore />}
-              </IconButton>
+              </IconButton>}
               <Chip label={leaveDayInfos?.totalReportedPaidLeaveDays ?? 0} color="info" />
             </ListItem>
             <Collapse in={openReported} timeout="auto" unmountOnExit sx={{ marginLeft: 2}}>
@@ -70,6 +70,9 @@ const LeaveDayInfos = ({ leaveDayInfos }) => {
           <Chip label={leaveDayInfos?.restTemporaryLeaveDays ?? 0} color="primary" />
         </ListItem>
       </List>
+      :
+      <Alert severity="warning">Votre contrat n'est pas encore créée pour pouvoir voir les compteurs congés.</Alert>
+      }
     </Box>
   );
 };

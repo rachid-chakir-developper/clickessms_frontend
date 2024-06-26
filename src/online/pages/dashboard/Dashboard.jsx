@@ -8,6 +8,8 @@ import { useQuery } from '@apollo/client';
 import { GET_DASHBOARD } from '../../../_shared/graphql/queries/DashboardQueries';
 import ProgressService from '../../../_shared/services/feedbacks/ProgressService';
 import LeaveDayInfos from './charts/LeaveDayInfos';
+import TaskActions from './charts/TaskActions';
+import UndesirableEvents from './charts/UndesirableEvents';
 
 const FirstItem = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -60,14 +62,14 @@ export default function Dashboard() {
           {/* Chart */}
           <Grid item xs={12} md={8} lg={8}>
             <FirstItem>
-              <AppChart data={dashboardData?.dashboard?.tasksWeek} />
+              <AppChart data={dashboardData?.dashboard?.undesirableEventsWeek} />
             </FirstItem>
           </Grid>
-          <Grid item xs={12} md={4} lg={4}>
+          {<Grid item xs={12} md={4} lg={4}>
             <Item>
               <LeaveDayInfos leaveDayInfos={dashboardData?.dashboard?.currentEmployee?.currentContract?.leaveDayInfos} />
             </Item>
-          </Grid>
+          </Grid>}
           {/* <Grid item xs={12} md={4} lg={4}>
             <Item>
               <AppPieChart data={dashboardData?.dashboard?.taskPercent} />
@@ -75,10 +77,16 @@ export default function Dashboard() {
           </Grid> */}
           {/* Recent Tasks */}
           <Grid item xs={12}>
+            <TaskActions taskActions={dashboardData?.dashboard?.taskActions} />
+          </Grid>
+          <Grid item xs={12}>
+            <UndesirableEvents undesirableEvents={dashboardData?.dashboard?.undesirableEvents} />
+          </Grid>
+          {/* <Grid item xs={12}>
             <Item>
               <Tasks tasks={dashboardData?.dashboard?.tasks} />
             </Item>
-          </Grid>
+          </Grid> */}
           {/* <Grid item xs={12} md={4} lg={4}>
             <Item>
               <AppLineChart />

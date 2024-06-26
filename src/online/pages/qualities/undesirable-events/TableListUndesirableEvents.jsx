@@ -36,6 +36,9 @@ import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksPro
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import CircularProgressWithLabel from '../../../../_shared/components/feedbacks/CircularProgressWithLabel';
 import UndesirableEventStatusLabelMenu from './UndesirableEventStatusLabelMenu';
+import { POST_UNDESIRABLE_EVENT_TICKET } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
+import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
+import { useMutation } from '@apollo/client';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -252,16 +255,51 @@ export default function TableListUndesirableEvents({
   loading,
   rows,
   onDeleteUndesirableEvent,
-  onCreateUndesirableEventTicket,
 }) {
   const navigate = useNavigate();
+  const { setNotifyAlert, setConfirmDialog, setDialogListLibrary } = useFeedBacks();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const { setDialogListLibrary } = useFeedBacks();
+  const [createUndesirableEventTicket, { loading: loadingPostTicket }] =
+    useMutation(POST_UNDESIRABLE_EVENT_TICKET, {
+      onCompleted: (datas) => {
+        if (datas.createUndesirableEventTicket.done) {
+          let ticket = datas.createUndesirableEventTicket?.undesirableEvent?.ticket
+          navigate(`/online/qualites/plan-action/tickets/modifier/${ticket?.id}`);
+        } else {
+          setNotifyAlert({
+            isOpen: true,
+            message: `Non analysé ! ${datas.createUndesirableEventTicket.message}.`,
+            type: 'error',
+          });
+        }
+      },
+      refetchQueries: [{ query: GET_UNDESIRABLE_EVENTS }],
+      onError: (err) => {
+        console.log(err);
+        setNotifyAlert({
+          isOpen: true,
+          message: 'Non changée ! Veuillez réessayer.',
+          type: 'error',
+        });
+      },
+    });
+
+  const onCreateUndesirableEventTicket = (id) => {
+    setConfirmDialog({
+      isOpen: true,
+      title: 'ATTENTION',
+      subTitle: 'Voulez vous vraiment analyser ?',
+      onConfirm: () => {
+        setConfirmDialog({ isOpen: false });
+        createUndesirableEventTicket({ variables: { id: id } });
+      },
+    });
+  };
   const onOpenDialogListLibrary = (folderParent) => {
     setDialogListLibrary({
       isOpen: true,
@@ -517,7 +555,7 @@ export default function TableListUndesirableEvents({
                             Modifier
                           </MenuItem>
                         </Link>
-                        <MenuItem
+                        {onDeleteUndesirableEvent && <MenuItem
                           onClick={() => {
                             onDeleteUndesirableEvent(row?.id);
                             handleCloseMenu();
@@ -526,7 +564,7 @@ export default function TableListUndesirableEvents({
                         >
                           <Delete sx={{ mr: 2 }} />
                           Supprimer
-                        </MenuItem>
+                        </MenuItem>}
                       </Popover>
                     </StyledTableCell>
                   </StyledTableRow>

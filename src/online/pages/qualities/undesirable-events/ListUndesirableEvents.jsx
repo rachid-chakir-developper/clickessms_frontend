@@ -27,7 +27,6 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListUndesirableEvents() {
-  const navigate = useNavigate();
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
   const [undesirableEventFilter, setUndesirableEventFilter] =
     React.useState(null);
@@ -130,42 +129,6 @@ export default function ListUndesirableEvents() {
     });
   };
 
-  const [createUndesirableEventTicket, { loading: loadingPostTicket }] =
-    useMutation(POST_UNDESIRABLE_EVENT_TICKET, {
-      onCompleted: (datas) => {
-        if (datas.createUndesirableEventTicket.done) {
-          let ticket = datas.createUndesirableEventTicket?.undesirableEvent?.ticket
-          navigate(`/online/qualites/plan-action/tickets/modifier/${ticket?.id}`);
-        } else {
-          setNotifyAlert({
-            isOpen: true,
-            message: `Non analysé ! ${datas.createUndesirableEventTicket.message}.`,
-            type: 'error',
-          });
-        }
-      },
-      refetchQueries: [{ query: GET_UNDESIRABLE_EVENTS }],
-      onError: (err) => {
-        console.log(err);
-        setNotifyAlert({
-          isOpen: true,
-          message: 'Non changée ! Veuillez réessayer.',
-          type: 'error',
-        });
-      },
-    });
-
-  const onCreateUndesirableEventTicket = (id) => {
-    setConfirmDialog({
-      isOpen: true,
-      title: 'ATTENTION',
-      subTitle: 'Voulez vous vraiment analyser ?',
-      onConfirm: () => {
-        setConfirmDialog({ isOpen: false });
-        createUndesirableEventTicket({ variables: { id: id } });
-      },
-    });
-  };
   return (
     <Grid container spacing={2}>
       <Grid item="true" xs={12}>
@@ -207,7 +170,6 @@ export default function ListUndesirableEvents() {
           loading={loadingUndesirableEvents}
           rows={undesirableEventsData?.undesirableEvents?.nodes || []}
           onDeleteUndesirableEvent={onDeleteUndesirableEvent}
-          onCreateUndesirableEventTicket={onCreateUndesirableEventTicket}
         />
       </Grid>
       <Grid item="true" xs={12}>
