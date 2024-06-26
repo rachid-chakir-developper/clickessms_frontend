@@ -56,6 +56,7 @@ export default function AddCallForm({ idCall, title }) {
       description: '',
       observation: '',
       isActive: true,
+      isCreateUndesirableEventFrom: false,
       establishments: [],
       employees: [],
       beneficiaries: [],

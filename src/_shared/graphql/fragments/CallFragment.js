@@ -90,6 +90,7 @@ export const CALL_BASIC_INFOS = gql`
     image
     entryDateTime
     isActive
+    isCreateUndesirableEventFrom
     caller {
       ...CallerDetailsFragment
     }
