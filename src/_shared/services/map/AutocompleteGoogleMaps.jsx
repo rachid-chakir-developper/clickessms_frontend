@@ -7,6 +7,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import parse from 'autosuggest-highlight/parse';
 import { debounce } from '@mui/material/utils';
+import { GOOGLE } from '../../tools/constants';
 
 // This key was created specifically for the demo in mui.com.
 // You need to create a new one for your application.
@@ -25,7 +26,7 @@ function loadScript(src, position, id) {
 
 const autocompleteService = { current: null };
 
-export default function AutocompleteGoogleMaps({ onSelect }) {
+export default function AutocompleteGoogleMaps({onSelect}) {
   const [value, setValue] = React.useState(null);
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
@@ -55,10 +56,8 @@ export default function AutocompleteGoogleMaps({ onSelect }) {
     let active = true;
 
     if (!autocompleteService.current && window.google) {
-      if (window.google.maps.places)
-        autocompleteService.current =
-          new window.google.maps.places.AutocompleteService();
-      else return undefined;
+        if(window.google.maps.places) autocompleteService.current = new window.google.maps.places.AutocompleteService();
+        else return undefined;
     }
     if (!autocompleteService.current) {
       return undefined;
@@ -107,13 +106,13 @@ export default function AutocompleteGoogleMaps({ onSelect }) {
       onChange={(event, newValue) => {
         setOptions(newValue ? [newValue, ...options] : options);
         setValue(newValue);
-        onSelect(newValue);
+        onSelect(newValue)
       }}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
       }}
       renderInput={(params) => (
-        <TextField {...params} label="Trouver où se trouve" fullWidth />
+        <TextField {...params} label="Trouver où se trouve" fullWidth sx={{ backgroundColor : '#ffffff'}}/>
       )}
       renderOption={(props, option) => {
         const matches =
@@ -130,10 +129,7 @@ export default function AutocompleteGoogleMaps({ onSelect }) {
               <Grid item sx={{ display: 'flex', width: 44 }}>
                 <LocationOnIcon sx={{ color: 'text.secondary' }} />
               </Grid>
-              <Grid
-                item
-                sx={{ width: 'calc(100% - 44px)', wordWrap: 'break-word' }}
-              >
+              <Grid item sx={{ width: 'calc(100% - 44px)', wordWrap: 'break-word' }}>
                 {parts.map((part, index) => (
                   <Box
                     key={index}

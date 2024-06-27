@@ -8,13 +8,53 @@ import { VEHICLE_BASIC_INFOS } from './VehicleFragment';
 import { MATERIAL_BASIC_INFOS } from './MaterialFragment';
 import { COMMENT_BASIC_INFOS } from './CommentFragment';
 import { FOLDER_MINI_INFOS } from './MediaFragment';
+import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
+
+export const TASK_WORKER_DETAILS = gql`
+  fragment TaskWorkerTypeFragment on TaskWorkerType {
+    id
+    employee {
+      ...EmployeeBasicInfosFragment
+    }
+  }
+  ${EMPLOYEE_BASIC_INFOS}
+`;
+
+export const TASK_ESTABLISHMENT_DETAILS = gql`
+  fragment TaskEstablishmentTypeFragment on TaskEstablishmentType {
+    id
+    establishment {
+      ...EstablishmentMiniInfosFragment
+    }
+  }
+  ${ESTABLISHMENT_MINI_INFOS}
+`;
+
+export const TASK_VEHICLE_DETAILS = gql`
+  fragment TaskVehicleTypeFragment on TaskVehicleType {
+    id
+    vehicle {
+      ...VehicleBasicInfosFragment
+    }
+  }
+  ${VEHICLE_BASIC_INFOS}
+`;
+
+export const TASK_MATERIAL_DETAILS = gql`
+  fragment TaskMaterialTypeFragment on TaskMaterialType {
+    id
+    material {
+      ...MaterialBasicInfosFragment
+    }
+  }
+  ${MATERIAL_BASIC_INFOS}
+`;
 
 export const TASK_MINI_BASIC_INFOS = gql`
   fragment TaskMiniBasicInfosFragment on TaskType {
     id
     number
     name
-    image
   }
 `;
 export const TASK_BASIC_INFOS = gql`
@@ -24,22 +64,27 @@ export const TASK_BASIC_INFOS = gql`
     startingDateTime
     endingDateTime
     address
+    additionalAddress
     latitude
     longitude
     isActive
     priority
     workLevel
     status
-    client {
-      ...ClientBasicInfosFragment
+    establishments {
+      ...TaskEstablishmentTypeFragment
+    }
+    workers {
+      ...TaskWorkerTypeFragment
     }
     folder {
       ...FolderMiniInfosFragment
     }
   }
   ${TASK_MINI_BASIC_INFOS}
-  ${CLIENT_BASIC_INFOS}
   ${FOLDER_MINI_INFOS}
+  ${TASK_ESTABLISHMENT_DETAILS}
+  ${TASK_WORKER_DETAILS}
 `;
 
 export const TASK_STEP_BASIC_INFOS = gql`
@@ -103,75 +148,22 @@ export const TASK_CHECK_LIST_DETAILS = gql`
   }
 `;
 
-export const TASK_WORKER_DETAILS = gql`
-  fragment TaskWorkerTypeFragment on TaskWorkerType {
-    id
-    employee {
-      ...EmployeeBasicInfosFragment
-    }
-  }
-  ${EMPLOYEE_BASIC_INFOS}
-`;
-
-export const TASK_VEHICLE_DETAILS = gql`
-  fragment TaskVehicleTypeFragment on TaskVehicleType {
-    id
-    vehicle {
-      ...VehicleBasicInfosFragment
-    }
-  }
-  ${VEHICLE_BASIC_INFOS}
-`;
-
-export const TASK_MATERIAL_DETAILS = gql`
-  fragment TaskMaterialTypeFragment on TaskMaterialType {
-    id
-    material {
-      ...MaterialBasicInfosFragment
-    }
-  }
-  ${MATERIAL_BASIC_INFOS}
-`;
 
 export const TASK_DETAILS = gql`
   fragment TaskDetailsFragment on TaskType {
     ...TaskBasicInfosFragment
-    estimatedBudget
-    email
     latitude
     longitude
     country
     city
     zipCode
     address
-    mobile
-    fix
-    clientTaskNumber
-    clientName
-    billingAddress
-    contractorName
-    contractorTel
-    contractorEmail
-    receiverName
-    receiverTel
-    receiverEmail
-    siteOwnerName
-    siteTenantName
     workersInfos
     vehiclesInfos
     materialsInfos
     comment
     description
     observation
-    totalPriceHt
-    tva
-    discount
-    totalPriceTtc
-    isDisplayPrice
-    isFromQuote
-    workers {
-      ...TaskWorkerTypeFragment
-    }
     vehicles {
       ...TaskVehicleTypeFragment
     }
@@ -183,7 +175,6 @@ export const TASK_DETAILS = gql`
     }
   }
   ${TASK_BASIC_INFOS}
-  ${TASK_WORKER_DETAILS}
   ${TASK_VEHICLE_DETAILS}
   ${TASK_MATERIAL_DETAILS}
   ${TASK_CHECK_LIST_DETAILS}
@@ -216,41 +207,18 @@ export const TASK_RECAP = gql`
     ...TaskBasicInfosFragment
     startedAt
     finishedAt
-    estimatedBudget
-    email
+    latitude
+    longitude
     country
     city
     zipCode
-    mobile
-    fix
-    clientTaskNumber
-    clientName
-    billingAddress
-    contractorName
-    contractorTel
-    contractorEmail
-    receiverName
-    receiverTel
-    receiverEmail
-    siteOwnerName
-    siteTenantName
+    address
     workersInfos
     vehiclesInfos
     materialsInfos
     comment
     description
     observation
-    totalPriceHt
-    tva
-    discount
-    totalPriceTtc
-    isDisplayPrice
-    isFromQuote
-    createdAt
-    updatedAt
-    workers {
-      ...TaskWorkerTypeFragment
-    }
     vehicles {
       ...TaskVehicleTypeFragment
     }
@@ -260,21 +228,9 @@ export const TASK_RECAP = gql`
     taskChecklist {
       ...TaskChecklistItemFragment
     }
-    taskSteps {
-      ...TaskStepRecapInfosFragment
-    }
-    employeeSignature {
-      ...SignatureTypeFragment
-    }
-    clientSignature {
-      ...SignatureTypeFragment
-    }
   }
   ${TASK_BASIC_INFOS}
-  ${TASK_WORKER_DETAILS}
   ${TASK_VEHICLE_DETAILS}
   ${TASK_MATERIAL_DETAILS}
   ${TASK_CHECK_LIST_DETAILS}
-  ${TASK_STEP_RECAP_INFOS}
-  ${SIGNATURE_DETAILS}
 `;

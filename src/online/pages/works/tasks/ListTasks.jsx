@@ -17,6 +17,7 @@ import { GET_TASKS } from '../../../../_shared/graphql/queries/TaskQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TaskFilter from './TaskFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
+import TableListTasks from './TableListTasks';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -157,6 +158,15 @@ export default function ListTasks() {
     <Grid container spacing={2}>
       <Grid item="true" xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
+          <Link
+            to="/online/travaux/interventions/ajouter?type=REQUEST"
+            className="no_style"
+          >
+            <Button variant="outlined" endIcon={<Add />}
+            sx={{ mx: 3 }}>
+              Demander une intervention
+            </Button>
+          </Link>
           <Link to="/online/travaux/interventions/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
               Ajouter une intervention
@@ -168,33 +178,11 @@ export default function ListTasks() {
         <TaskFilter onFilterChange={handleFilterChange} />
       </Grid>
       <Grid item="true" xs={12}>
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-          >
-            {loadingTasks && (
-              <Grid key={'pgrs'} item xs={2} sm={4} md={3}>
-                <ProgressService type="mediaCard" />
-              </Grid>
-            )}
-            {tasksData?.tasks?.nodes?.length < 1 && !loadingTasks && (
-              <Alert severity="warning">Aucune intervention trouvée.</Alert>
-            )}
-            {tasksData?.tasks?.nodes?.map((task, index) => (
-              <Grid xs={2} sm={4} md={3} key={index}>
-                <Item>
-                  <TaskItemCard
-                    task={task}
-                    onDeleteTask={onDeleteTask}
-                    onUpdateTaskState={onUpdateTaskState}
-                  />
-                </Item>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+        <TableListTasks
+          loading={loadingTasks}
+          rows={tasksData?.tasks?.nodes || []}
+          onDeleteTask={onDeleteTask}
+        />
       </Grid>
       <Grid item="true" xs={12}>
         <PaginationControlled

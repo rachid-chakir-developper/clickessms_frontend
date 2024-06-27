@@ -22,18 +22,6 @@ export const GET_DASHBOARD = gql`
         label
         value
       }
-      budgetMonth {
-        date
-        budget
-      }
-      spendingsMonth {
-        date
-        spendings
-      }
-      revenueMonth {
-        date
-        revenue
-      }
       tasks {
         ...TaskBasicInfosFragment
       }

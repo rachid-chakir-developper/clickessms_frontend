@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import {  ArrowDropDown, Cancel, Done, HourglassEmpty, Pending, TaskAlt } from '@mui/icons-material';
+import {  ArrowDropDown, Cancel, Done, HourglassEmpty, HourglassFull, HourglassTop, Pending, TaskAlt } from '@mui/icons-material';
 import { Chip, Menu, MenuItem, Box, CircularProgress, Typography } from '@mui/material';
 
 // Custom styled menu component
@@ -66,18 +66,29 @@ const STATUS = [
     ];
 
   // Options with icons for each status
-  const ABSENCE_STATUS_CHOICES = [
+  const ABSENCE_STATUS = [
       { value: 'PENDING', label: 'En Attente', icon: <Pending />, color: 'default'},
       { value: "APPROVED", label: "Approuvé", icon: <Done />, color: 'success'},
       { value: "REJECTED", label: "Rejeté", icon: <Cancel />, color: 'warning'},
     ];
+  
+    // Options with icons for each status
+  const TASK_STATUS = [
+    { value: 'NEW', label: 'Nouveau', icon: <HourglassEmpty />, color: 'default'},
+    { value: 'PENDING', label: 'En attente', icon: <HourglassTop />, color: 'default'},
+    { value: "APPROVED", label: "Approuvé", icon: <Done />, color: 'success'},
+    { value: "REJECTED", label: "Rejeté", icon: <Cancel />, color: 'warning'},
+    { value: "TO_DO", label: "À faire", icon: <HourglassFull />, color: 'default'},
+    { value: "IN_PROGRESS", label: "En cours", icon: <Pending />, color: 'info'},
+    { value: "COMPLETED", label: "Terminée", icon: <TaskAlt />, color: 'success'},
+  ];
 
   // Options with icons for each status
   const ACTION_STATUS = [
     { value: "TO_DO", label: "À traiter", icon: <HourglassEmpty />, color: 'default'},
     { value: "IN_PROGRESS", label: "En cours", icon: <Pending />, color: 'info'},
     { value: "DONE", label: "Traité", icon: <TaskAlt />, color: 'success'},
-];
+  ];
 
 export default function CustomizedStatusLabelMenu({status, type=null, loading=false, onChange}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -107,6 +118,9 @@ export default function CustomizedStatusLabelMenu({status, type=null, loading=fa
       case 'undesirableEvent':
         setOptions(EI_STATUS)
         break;
+      case 'task':
+        setOptions(TASK_STATUS)
+        break;
       case 'action':
         setOptions(ACTION_STATUS)
         break;
@@ -114,7 +128,7 @@ export default function CustomizedStatusLabelMenu({status, type=null, loading=fa
         setOptions(TICKET_STATUS)
         break;
       case 'absence':
-        setOptions(ABSENCE_STATUS_CHOICES)
+        setOptions(ABSENCE_STATUS)
         break;
     
       default:

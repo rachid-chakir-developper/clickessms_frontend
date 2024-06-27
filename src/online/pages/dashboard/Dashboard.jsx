@@ -77,16 +77,14 @@ export default function Dashboard() {
           </Grid> */}
           {/* Recent Tasks */}
           <Grid item xs={12}>
+            <UndesirableEvents undesirableEvents={dashboardData?.dashboard?.undesirableEvents} />
+          </Grid>
+          <Grid item xs={12}>
             <TaskActions taskActions={dashboardData?.dashboard?.taskActions} />
           </Grid>
           <Grid item xs={12}>
-            <UndesirableEvents undesirableEvents={dashboardData?.dashboard?.undesirableEvents} />
+            <Tasks tasks={dashboardData?.dashboard?.tasks} />
           </Grid>
-          {/* <Grid item xs={12}>
-            <Item>
-              <Tasks tasks={dashboardData?.dashboard?.tasks} />
-            </Item>
-          </Grid> */}
           {/* <Grid item xs={12} md={4} lg={4}>
             <Item>
               <AppLineChart />

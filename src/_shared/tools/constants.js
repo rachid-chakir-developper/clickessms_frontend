@@ -55,6 +55,29 @@ export const STATUS = {
   ],
 };
 
+export const TASK_STATUS = {
+  NEW : "NEW",
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  TO_DO : "TO_DO",
+  IN_PROGRESS : "IN_PROGRESS",
+  COMPLETED : "COMPLETED",
+  CANCELED : "CANCELED",
+  ARCHIVED : "ARCHIVED",
+  ALL: [
+    { value: "NEW", label: "Nouveau"},
+    { value: 'PENDING', label: 'En attente' },
+    { value: 'APPROVED', label: 'Approuvé' },
+    { value: 'REJECTED', label: 'Rejeté' },
+    { value: "TO_DO", label: "À faire"},
+    { value: "IN_PROGRESS", label: "En cours"},
+    { value: "COMPLETED", label: "Terminée"},
+    { value: "CANCELED", label: "Annulée"},
+    { value: "ARCHIVED", label: "Archivée"}
+  ],
+};
+
 export const ACTION_STATUS = {
   TO_DO : "TO_DO",
   IN_PROGRESS : "IN_PROGRESS",
@@ -218,7 +241,7 @@ export const ABSENCE_STATUS_CHOICES = {
   APPROVED: 'APPROVED',
   REJECTED: 'REJECTED',
   ALL: [
-    { value: 'PENDING', label: 'En Attente' },
+    { value: 'PENDING', label: 'En attente' },
     { value: 'APPROVED', label: 'Approuvé' },
     { value: 'REJECTED', label: 'Rejeté' },
   ],

@@ -2,8 +2,8 @@ import { gql } from '@apollo/client';
 import { TASK_BASIC_INFOS } from '../fragments/TaskFragment';
 
 export const POST_TASK = gql`
-  mutation CreateTask($taskData: TaskInput!, $image: Upload) {
-    createTask(taskData: $taskData, image: $image) {
+  mutation CreateTask($taskData: TaskInput!) {
+    createTask(taskData: $taskData,) {
       task {
         ...TaskBasicInfosFragment
       }
@@ -13,8 +13,8 @@ export const POST_TASK = gql`
 `;
 
 export const PUT_TASK = gql`
-  mutation UpdateTask($id: ID!, $taskData: TaskInput!, $image: Upload) {
-    updateTask(id: $id, taskData: $taskData, image: $image) {
+  mutation UpdateTask($id: ID!, $taskData: TaskInput!) {
+    updateTask(id: $id, taskData: $taskData,) {
       task {
         ...TaskBasicInfosFragment
       }
@@ -26,6 +26,19 @@ export const PUT_TASK = gql`
 export const PUT_TASK_STATE = gql`
   mutation UpdateTaskState($id: ID!) {
     updateTaskState(id: $id) {
+      done
+      success
+      message
+      task {
+        ...TaskBasicInfosFragment
+      }
+    }
+  }
+  ${TASK_BASIC_INFOS}
+`;
+export const PUT_TASK_FIELDS = gql`
+  mutation UpdateTaskFields($id: ID!, $taskData: TaskInput!) {
+    updateTaskFields(id: $id, taskData: $taskData) {
       done
       success
       message
