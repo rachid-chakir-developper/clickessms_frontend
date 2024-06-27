@@ -18,6 +18,7 @@ export const USER_BASIC_INFOS = gql`
     currentLatitude
     currentLongitude
     isActive
+    roles
     employee {
       ...EmployeeMiniInfosFragment
     }

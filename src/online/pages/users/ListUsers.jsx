@@ -18,6 +18,7 @@ import DialogListGroups from './groups/DialogListGroups';
 import ProgressService from '../../../_shared/services/feedbacks/ProgressService';
 import UserFilter from './UserFilter';
 import PaginationControlled from '../../../_shared/components/helpers/PaginationControlled';
+import TableListUsers from './TableListUsers';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -207,33 +208,11 @@ export default function ListUsers() {
           <UserFilter onFilterChange={handleFilterChange} />
         </Grid>
         <Grid item="true" xs={12}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Grid
-              container
-              spacing={{ xs: 2, md: 3 }}
-              columns={{ xs: 4, sm: 8, md: 12 }}
-            >
-              {loadingUsers && (
-                <Grid key={'pgrs'} item xs={12} sm={6} md={4}>
-                  <ProgressService type="mediaCard" />
-                </Grid>
-              )}
-              {usersData?.users?.nodes?.length < 1 && !loadingUsers && (
-                <Alert severity="warning">Aucun utilisateur trouvé.</Alert>
-              )}
-              {usersData?.users?.nodes?.map((user, index) => (
-                <Grid xs={12} sm={6} md={4} key={index}>
-                  <Item>
-                    <UserItemCard
-                      user={user}
-                      onDeleteUser={onDeleteUser}
-                      onUpdateUserState={onUpdateUserState}
-                    />
-                  </Item>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
+          <TableListUsers
+            loading={loadingUsers}
+            rows={usersData?.users?.nodes || []}
+            onDeleteUser={onDeleteUser}
+          />
         </Grid>
         <Grid item="true" xs={12}>
           <PaginationControlled
