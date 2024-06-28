@@ -375,9 +375,8 @@ export const modules: Module[] = [
       {
         id: 'documents',
         name: 'Documents / Trames',
-        path: '/online/administratif/documents_trames',
+        path: '/online/administratif/documents-trames',
         icon: <DescriptionIcon />,
-        disabled: true,
       },
       {
         id: 'lup',

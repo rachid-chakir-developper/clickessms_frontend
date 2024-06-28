@@ -17,19 +17,23 @@ import Tooltip from '@mui/material/Tooltip';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
-import { getFormatDate } from '../../../_shared/tools/functions';
+import {
+  getFormatDate,
+  formatCurrencyAmount,
+} from '../../../../_shared/tools/functions';
 import {
   Article,
   Delete,
   Done,
+  Download,
   Edit,
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
+import { Alert, Avatar, Button, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useFeedBacks } from '../../../_shared/context/feedbacks/FeedBacksProvider';
-import ProgressService from '../../../_shared/services/feedbacks/ProgressService';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -88,36 +92,30 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
+const headCells = [,
   {
-    id: 'firstName',
-    numeric: false,
-    disablePadding: false,
-    label: 'Prénom',
-  },
-  {
-    id: 'lastName',
-    numeric: false,
-    disablePadding: false,
-    label: 'Nom',
-  },
-  {
-    id: 'email',
-    numeric: false,
-    disablePadding: false,
-    label: 'Email',
-  },
-  {
-    id: 'relation',
+    id: 'documet',
     numeric: false,
     disablePadding: true,
-    label: 'Assigné à',
+    label: 'Document',
   },
   {
-    id: 'roles',
+    id: 'name',
     numeric: false,
     disablePadding: false,
-    label: 'Roles',
+    label: 'Libellé',
+  },
+  {
+    id: 'documentType',
+    numeric: false,
+    disablePadding: false,
+    label: 'type',
+  },
+  {
+    id: 'description',
+    numeric: false,
+    disablePadding: false,
+    label: 'Description',
   },
   {
     id: 'action',
@@ -215,7 +213,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les utilisateurs
+          Les documents
         </Typography>
       )}
 
@@ -236,33 +234,23 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListUsers({
+export default function TableListFrameDocuments({
   loading,
   rows,
-  onDeleteUser,
-  onUpdateUserState,
+  onDeleteFrameDocument,
+  onUpdateFrameDocumentState,
 }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   React.useEffect(() => {
     console.log(loading, rows);
   }, [loading, rows]);
 
-  const { setDialogListLibrary } = useFeedBacks();
-  const onOpenDialogListLibrary = (folderParent) => {
-    setDialogListLibrary({
-      isOpen: true,
-      folderParent,
-      onClose: () => {
-        setDialogListLibrary({ isOpen: false });
-      },
-    });
-  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -334,15 +322,15 @@ export default function TableListUsers({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="9">
+                  <StyledTableCell colSpan="7">
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="9">
-                    <Alert severity="warning">Aucun utilisateur trouvé.</Alert>
+                  <StyledTableCell colSpan="7">
+                    <Alert severity="warning">Aucun document trouvé.</Alert>
                   </StyledTableCell>
                 </StyledTableRow>
               )}
@@ -370,7 +358,7 @@ export default function TableListUsers({
 
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
-                const {leaveDayInfos} = row
+
                 return (
                   <StyledTableRow
                     hover
@@ -397,73 +385,21 @@ export default function TableListUsers({
                       scope="row"
                       padding="none"
                     >
-                      {row.firstName}
+                      {row?.document && <Button variant="text" size="small" sx={{textTransform: 'capitalize'}}
+                        onClick={() => {
+                          window.open(row?.document);
+                        }}>
+                        {row?.name && row?.name !== '' ? row?.name : 'Voir le document'}
+                      </Button>}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.lastName}</StyledTableCell>
-                    <StyledTableCell align="left">{row.email}</StyledTableCell>
-                    <StyledTableCell align="left"> 
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.employee && <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
-                              src={
-                                row?.employee?.photo
-                                  ? row?.employee?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
-                          variant="outlined"
-                        />}
-                        {row?.partner && <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.partner.name}`}
-                              src={
-                                row?.partner?.photo
-                                  ? row?.partner?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.partner.name}`}
-                          variant="outlined"
-                        />}
-                        {row?.financier && <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.financier.name}`}
-                              src={
-                                row?.financier?.photo
-                                  ? row?.financier?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.financier.name}`}
-                          variant="outlined"
-                        />}
-                        {row?.supplier && <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.supplier.name}`}
-                              src={
-                                row?.supplier?.photo
-                                  ? row?.supplier?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.supplier.name}`}
-                          variant="outlined"
-                        />}
-                        </Stack>
-                    </StyledTableCell>
+                    <StyledTableCell align="left">{row?.name}</StyledTableCell>
                     <StyledTableCell align="left">
-                         {row?.roles}
+                        {row?.documentType && <Chip
+                          label={row?.documentType?.name}
+                          variant="outlined"
+                        />}
                     </StyledTableCell>
+                    <StyledTableCell align="left">{row?.description}</StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -482,7 +418,7 @@ export default function TableListUsers({
                         }}
                       >
                         <Link
-                          to={`/online/utilisateurs/details/${row?.id}`}
+                          to={`/online/administratif/documents-trames/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -492,15 +428,15 @@ export default function TableListUsers({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onOpenDialogListLibrary(row?.folder);
+                            window.open(row?.document);
                             handleCloseMenu();
                           }}
                         >
-                          <Folder sx={{ mr: 2 }} />
-                          Bibliothèque
+                          <Download sx={{ mr: 2 }} />
+                          Télécharger
                         </MenuItem>
                         <Link
-                          to={`/online/utilisateurs/modifier/${row?.id}`}
+                          to={`/online/administratif/documents-trames/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -510,7 +446,7 @@ export default function TableListUsers({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteUser(row?.id);
+                            onDeleteFrameDocument(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

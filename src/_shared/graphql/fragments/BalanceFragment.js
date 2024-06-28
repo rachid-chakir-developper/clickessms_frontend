@@ -28,6 +28,8 @@ export const BALANCE_DETAILS = gql`
 export const BALANCE_RECAP_DETAILS = gql`
   fragment BalanceRecapDetailsFragment on BalanceType {
     ...BalanceBasicInfosFragment
+    createdAt
+    updatedAt
   }
   ${BALANCE_BASIC_INFOS}
 `;

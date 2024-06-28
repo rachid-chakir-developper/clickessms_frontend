@@ -283,13 +283,8 @@ export default function AddTaskForm({ idTask, title }) {
                 <TheTextField
                   variant="outlined"
                   label="Titre"
-                  id="name"
                   value={formik.values.name}
-                  required
                   onChange={(e) => formik.setFieldValue('name', e.target.value)}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.name && Boolean(formik.errors.name)}
-                  helperText={formik.touched.name && formik.errors.name}
                   disabled={loadingPost || loadingPut}
                 />
               </Item>

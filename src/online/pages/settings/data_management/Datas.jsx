@@ -78,6 +78,7 @@ const modulesToManage = [
       { name: 'Type de document d’admission ', description: '', type: 'AdmissionDocumentType' },
       { name: 'Type de la réunion', description: '', type: 'TypeMeeting' },
       { name: 'Motif de la réunion', description: '', type: 'MeetingReason' },
+      { name: 'Type de document', description: '', type: 'DocumentType' },
     ],
   },
   {

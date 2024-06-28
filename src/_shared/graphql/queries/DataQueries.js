@@ -93,3 +93,14 @@ export const GET_DATAS_VEHICLE = gql`
   }
   ${DATA_BASIC_INFOS}
 `;
+
+
+
+export const GET_DATAS_FRAME_DOCUMENT_ = gql`
+  query {
+    documentTypes: datas(typeData: "DocumentType") {
+      ...DataBasicInfosFragment
+    }
+  }
+  ${DATA_BASIC_INFOS}
+`;

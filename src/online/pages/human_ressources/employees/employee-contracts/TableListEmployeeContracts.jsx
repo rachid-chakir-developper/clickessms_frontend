@@ -259,7 +259,7 @@ export default function TableListEmployeeContracts({
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   React.useEffect(() => {
     console.log(loading, rows);
