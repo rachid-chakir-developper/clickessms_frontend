@@ -63,6 +63,20 @@ export const PUT_USER_STATE = gql`
   ${USER_BASIC_INFOS}
 `;
 
+export const PUT_USER_FIELDS = gql`
+  mutation UpdateUserFields($id: ID!, $userData: UserInput!) {
+    updateUserFields(id: $id, userData: $userData) {
+      done
+      success
+      message
+      user {
+        ...UserBasicInfosFragment
+      }
+    }
+  }
+  ${USER_BASIC_INFOS}
+`;
+
 export const PUT_USER_LOCALISATION = gql`
   mutation UpdateUserCurrentLocalisation(
     $currentLocalisationData: CurrentLocalisationInput!

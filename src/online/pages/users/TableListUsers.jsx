@@ -30,6 +30,7 @@ import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useFeedBacks } from '../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../_shared/services/feedbacks/ProgressService';
+import UserRolesLabelMenu from './UserRolesLabelMenu';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -92,7 +93,7 @@ const headCells = [
   {
     id: 'firstName',
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: 'Prénom',
   },
   {
@@ -110,7 +111,7 @@ const headCells = [
   {
     id: 'relation',
     numeric: false,
-    disablePadding: true,
+    disablePadding: false,
     label: 'Assigné à',
   },
   {
@@ -462,7 +463,7 @@ export default function TableListUsers({
                         </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                         {row?.roles}
+                      <UserRolesLabelMenu user={row} />
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
