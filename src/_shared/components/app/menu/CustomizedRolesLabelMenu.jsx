@@ -80,7 +80,7 @@ export default function CustomizedRolesLabelMenu({roles, loading=false, onChange
   };
 
   const getRolesLabel = () => {
-    return roles.map(role => options.find(s => s.value === role)?.label).join(', ') || 'choisissez un rôle';
+    return roles.map(role => options.find(s => s.value === role)?.label).join(' / ') || 'choisissez un rôle';
   };
 
   const getRolesIcons = () => {

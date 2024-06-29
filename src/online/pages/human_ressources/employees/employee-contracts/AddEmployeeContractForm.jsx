@@ -49,7 +49,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
       endingDate: null,
       initialPaidLeaveDays: 25,
       initialRwtDays: 10,
-      initialCtDays: 5,
+      initialTemporaryDays: 5,
       description: '',
       observation: '',
       isActive: true,
@@ -286,7 +286,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
             <Grid xs={12} sm={6} md={4} item="true">
               <Item>
                 <TheDesktopDatePicker
-                  label="Date et heure de début"
+                  label="Date de début"
                   value={formik.values.startingDate}
                   onChange={(date) =>
                     formik.setFieldValue('startingDate', date)
@@ -369,9 +369,9 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                   InputProps={{
                       endAdornment: <InputAdornment position="start">Jours</InputAdornment>,
                   }}
-                  value={formik.values.initialCtDays}
+                  value={formik.values.initialTemporaryDays}
                   onChange={(e) =>
-                    formik.setFieldValue(`initialCtDays`, e.target.value)
+                    formik.setFieldValue(`initialTemporaryDays`, e.target.value)
                   }
                   disabled={loadingPost || loadingPut}
                 />

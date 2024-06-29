@@ -18,6 +18,7 @@ import {
   LEAVE_TYPE_CHOICES,
   CALL_TYPES,
   LETTER_TYPES,
+  MSG_NOTIF_TYPES,
 } from './constants';
 
 export const getStatusColor = (status) => {
@@ -142,6 +143,10 @@ export const getCallTypeLabel = (type) => {
 export const getLetterTypeLabel = (type) => {
   return LETTER_TYPES.ALL.find((t) => t.value == type)?.label;
 };
+export const getMessageNotificationTypeLabel = (type) => {
+  return MSG_NOTIF_TYPES.ALL.find((t) => t.value == type)?.label;
+};
+
 
 const intlNumFmt = new Intl.NumberFormat('fr-FR', {
   style: 'currency',

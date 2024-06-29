@@ -279,3 +279,30 @@ export const LEAVE_TYPE_CHOICES = {
     { value: 'ABSENCE', label: 'Absence' },
   ],
 };
+
+export const MSG_NOTIF_TYPES = {
+  SYSTEM: 'SYSTEM',
+  REMINDER: 'REMINDER',
+  MESSAGE: 'MESSAGE',
+  TASK: 'TASK',
+  EVENT: 'EVENT',
+  NEWS: 'NEWS',
+  WARNING: 'WARNING',
+  PROMOTION: 'PROMOTION',
+  UPDATE: 'UPDATE',
+  FEEDBACK: 'FEEDBACK',
+  ERROR: 'ERROR',
+  ALL: [
+    { value: 'SYSTEM', label: 'Système' },
+    { value: 'REMINDER', label: 'Rappel' },
+    { value: 'MESSAGE', label: 'Message' },
+    { value: 'TASK', label: 'Tâche' },
+    { value: 'EVENT', label: 'Événement' },
+    { value: 'NEWS', label: 'Actualités' },
+    { value: 'WARNING', label: 'Avertissement' },
+    { value: 'PROMOTION', label: 'Promotion' },
+    { value: 'UPDATE', label: 'Mise à jour' },
+    { value: 'FEEDBACK', label: 'Commentaires' },
+    { value: 'ERROR', label: 'Erreur' },
+  ],
+};
