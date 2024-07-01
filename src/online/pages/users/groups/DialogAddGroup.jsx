@@ -149,14 +149,14 @@ export default function DialogAddGroup({ open, onClose, groupToEdit }) {
 
   const [groupPermissions, setGroupPermissions] = React.useState([]);
   const [permissions, setPermissions] = React.useState([]);
-  const [getPermissions, { loadingPermissions }] = useLazyQuery(
-    GET_PERMISSIONS,
-    {
-      fetchPolicy: 'network-only',
-      onCompleted: (data) => setPermissions(data.permissions),
-      onError: (err) => console.log(err),
-    },
-  );
+  // const [getPermissions, { loadingPermissions }] = useLazyQuery(
+  //   GET_PERMISSIONS,
+  //   {
+  //     fetchPolicy: 'network-only',
+  //     onCompleted: (data) => setPermissions(data.permissions),
+  //     onError: (err) => console.log(err),
+  //   },
+  // );
 
   return (
     <div>

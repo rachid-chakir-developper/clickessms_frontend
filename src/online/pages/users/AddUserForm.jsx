@@ -243,10 +243,10 @@ export default function AddUserForm({ idUser, title }) {
   });
   const [userPermissions, setUserPermissions] = React.useState([]);
   const [permissions, setPermissions] = React.useState([]);
-  const { loadingPermissions } = useQuery(GET_PERMISSIONS, {
-    onCompleted: (data) => setPermissions(data.permissions),
-    onError: (err) => console.log(err),
-  });
+  // const { loadingPermissions } = useQuery(GET_PERMISSIONS, {
+  //   onCompleted: (data) => setPermissions(data.permissions),
+  //   onError: (err) => console.log(err),
+  // });
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">

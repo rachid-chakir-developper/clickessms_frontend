@@ -19,8 +19,6 @@ import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
   getFormatDate,
-  getStatusLabel,
-  getStatusLebelColor,
 } from '../../../../_shared/tools/functions';
 import {
   Article,

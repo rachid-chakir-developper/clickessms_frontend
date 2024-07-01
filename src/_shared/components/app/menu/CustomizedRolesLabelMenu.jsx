@@ -51,10 +51,15 @@ const ROLES = [
   { value: 'ADMIN', label: 'Administrateur', icon: <Person />, color: 'default'},
   { value: 'MANAGER', label: 'Manager', icon: <Person />, color: 'default'},
   { value: 'QUALITY_MANAGER', label: 'Responsable Qualité', icon: <Person />, color: 'default'},
+  { value: 'ACTIVITY_MANAGER', label: 'Responsable Activité', icon: <Person />, color: 'default'},
+  { value: 'ADMINISTRATIVE_MANAGER', label: 'Responsable Administratif', icon: <Person />, color: 'default'},
+  { value: 'HR_MANAGER', label: 'Responsable RH', icon: <Person />, color: 'default'},
+  { value: 'FINANCE_MANAGER', label: 'Responsable Finance', icon: <Person />, color: 'default'},
   { value: 'FACILITY_MANAGER', label: 'Responsable Services Généraux', icon: <Person />, color: 'default'},
   { value: 'EMPLOYEE', label: 'Employé', icon: <Person />, color: 'default'},
-  { value: 'MECHANIC', label: 'Garagiste', icon: <Person />, color: 'default'},
+  { value: 'MECHANIC', label: 'Garagiste', icon: <Person />, color: 'default'}, 
 ];
+
 
 export default function CustomizedRolesLabelMenu({roles, loading=false, onChange}) {
   const [anchorEl, setAnchorEl] = useState(null);

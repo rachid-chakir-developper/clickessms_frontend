@@ -15,6 +15,7 @@ import SearchPanel from './_shared/components/search/SearchPanel';
 import AccountPopover from './_shared/components/accounts/AccountPopover';
 import Logo from '../_shared/components/app/Logo';
 import { useTheme } from '@emotion/react';
+import MessageNotificationPanel from './_shared/components/feedBacks/message-notifications/MessageNotificationPanel';
 
 const drawerWidth = 280;
 
@@ -104,6 +105,10 @@ export default function AppBarHeader({ open, handleDrawerToggle }) {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
+        <MessageNotificationPanel />
+        <p>New</p>
+      </MenuItem>
+      <MenuItem>
         <ChatPanel />
         <p>Messages</p>
       </MenuItem>
@@ -154,6 +159,9 @@ export default function AppBarHeader({ open, handleDrawerToggle }) {
           <SearchPanel />
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <Box>
+              <MessageNotificationPanel />
+            </Box>
             <ChatPanel />
             <Box sx={{ mr: 2 }}>
               <NotificationPanel />

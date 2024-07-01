@@ -65,7 +65,7 @@ export function AuthorizationSystemProvider({ children }) {
   const rolesRepository = buildRolesRepository(entityChainRepository, {
     company() {
       // Use role of user in here
-      return ['admin'];
+      return user?.roles;
     },
   });
 

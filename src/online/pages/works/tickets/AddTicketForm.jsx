@@ -41,8 +41,8 @@ export default function AddTicketForm({ idTicket, title }) {
   const navigate = useNavigate();
   const validationSchema = yup.object({
     title: yup
-      .string("Entrez l'objet de l'ticket")
-      .required("L'objet de l'ticket est obligatoire"),
+      .string("Entrez l'objet de le ticket")
+      .required("L'objet de le ticket est obligatoire"),
   });
   const formik = useFormik({
     initialValues: {
@@ -274,7 +274,7 @@ export default function AddTicketForm({ idTicket, title }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
-        {title} {formik.values.number}
+        {title}: <em>{formik.values.title}</em>
       </Typography>
       {loadingTicket && <ProgressService type="form" />}
       {!loadingTicket && (

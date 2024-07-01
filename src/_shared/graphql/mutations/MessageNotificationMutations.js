@@ -51,3 +51,13 @@ export const DELETE_MSG_NOTIFICATION = gql`
     }
   }
 `;
+
+export const MARK_MSG_NOTIFICATIONS_AS_SEEN = gql`
+  mutation markMessageNotificationsAsSeen($ids: [ID]!) {
+    markMessageNotificationsAsSeen(ids: $ids) {
+      success
+      done
+      message
+    }
+  }
+`;

@@ -29,11 +29,11 @@ export const GET_MSG_NOTIFICATIONS = gql`
     ) {
       totalCount
       nodes {
-        ...MessageNotificationBasicInfosFragment
+        ...MessageNotificationRecapDetailsFragment
       }
     }
   }
-  ${MSG_NOTIFICATION_BASIC_INFOS}
+  ${MSG_NOTIFICATION_RECAP_DETAILS}
 `;
 
 

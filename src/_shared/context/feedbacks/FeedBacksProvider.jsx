@@ -3,6 +3,7 @@ import AlertService from '../../services/feedbacks/AlertService';
 import ConfirmDialogService from '../../services/feedbacks/ConfirmDialogService';
 import DialogListLibrary from '../../../online/_shared/components/library/DialogListLibrary';
 import PrintingModal from '../../../online/_shared/components/printing/PrintingModal';
+import MessageNotificationModal from '../../../online/_shared/components/feedBacks/message-notifications/MessageNotificationModal';
 
 const initializerArg = {
   confirmDialog: {
@@ -22,6 +23,7 @@ const initializerArg = {
     folderParent: null,
   },
   printingModal: { isOpen: false, onClose: () => {}, type: null, data: null },
+  messageNotificationModal: { isOpen: false, onClose: () => {}, type: null, data: [] },
 };
 
 const FeedBacksContext = createContext(initializerArg);
@@ -48,6 +50,11 @@ const FeedBacksReducer = (state, action) => {
         ...state,
         printingModal: action.payload.printingModal,
       };
+    case 'MSG_NOTIFY':
+      return {
+        ...state,
+        messageNotificationModal: action.payload.messageNotificationModal,
+      };
     default:
       throw new Error(`Unknown action type: ${action.type}`);
   }
@@ -70,6 +77,10 @@ export const FeedBacksProvider = ({ children }) => {
   const setPrintingModal = (printingModal) => {
     dispatch({ type: 'PRINTING_MODAL', payload: { printingModal } });
   };
+
+  const setMessageNotificationModal = (messageNotificationModal) => {
+    dispatch({ type: 'MSG_NOTIFY', payload: { messageNotificationModal } });
+  };
   return (
     <FeedBacksContext.Provider
       value={{
@@ -77,6 +88,7 @@ export const FeedBacksProvider = ({ children }) => {
         setConfirmDialog,
         setDialogListLibrary,
         setPrintingModal,
+        setMessageNotificationModal,
       }}
     >
       {children}
@@ -92,6 +104,10 @@ export const FeedBacksProvider = ({ children }) => {
       <PrintingModal
         printingModal={state?.printingModal}
         setPrintingModal={setPrintingModal}
+      />
+      <MessageNotificationModal
+        messageNotificationModal={state?.messageNotificationModal}
+        setMessageNotificationModal={setMessageNotificationModal}
       />
     </FeedBacksContext.Provider>
   );

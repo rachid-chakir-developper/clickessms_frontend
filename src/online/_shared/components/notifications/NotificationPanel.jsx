@@ -15,6 +15,9 @@ export default function NotificationPanel() {
       onCompleted: (datas) => {
         if (datas.markNotificationsAsSeen.done) {
           console.log('Lues avec succès');
+          getNotifications({
+            fetchPolicy: 'network-only',
+          });
         } else {
           console.warn(`Non lues ! ${datas.markNotificationsAsSeen.message}.`);
         }
@@ -117,6 +120,7 @@ export default function NotificationPanel() {
   React.useEffect(() => {
     getNotifications();
   }, []);
+  
 
   return (
     <NotificationsPopover

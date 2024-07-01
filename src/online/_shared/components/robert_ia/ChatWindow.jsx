@@ -109,7 +109,7 @@ const ChatWindow = ({ open, onClose, }) => {
             }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, borderBottom: '1px solid #ccc' }}>
                 <Tooltip title="ROBERP IA peut faire des erreurs. Envisagez de vérifier les informations importantes!">
-                    <Typography variant="h6">Robert IA</Typography>
+                    <Typography variant="h6">ROBERP IA</Typography>
                 </Tooltip>
                 <Tooltip title="Nombre d'utilisations restante avant d'être temporairement bloqué">
                     <Typography variant="body2" sx={{ mr: 2 }}>

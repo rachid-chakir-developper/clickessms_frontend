@@ -340,14 +340,14 @@ export default function TableListMessageNotifications({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan="8">
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan="8">
                     <Alert severity="warning">
                       Aucun message notification trouvé.
                     </Alert>

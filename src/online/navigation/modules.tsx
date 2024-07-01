@@ -410,7 +410,7 @@ export const modules: Module[] = [
         name: 'Parc automobile',
         icon: <AirportShuttleIcon />,
         disabled(authorizationSystem) {
-          return !authorizationSystem.requestAuthorization({
+          return authorizationSystem.requestAuthorization({
             type: 'getVehicles',
           }).authorized;
         },

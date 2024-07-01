@@ -10,7 +10,7 @@ export default function AddTicket() {
       idUndesirableEvent={idUndesirableEvent}
       title={
         idTicket && idTicket > 0
-          ? `Modifier l'ticket`
+          ? `Modifier le ticket`
           : `Ajouter un ticket`
       }
     />

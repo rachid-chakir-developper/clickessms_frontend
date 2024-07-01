@@ -23,6 +23,7 @@ const wss = envProd
 
 let httpLink = createUploadLink({
   uri: uri,
+  credentials: 'include'
 });
 
 const authLink = setContext((_, { headers }) => {
