@@ -50,6 +50,7 @@ const EmployeeDetailsPage = ({ employee }) => {
     number,
     firstName,
     lastName,
+    socialSecurityNumber,
     birthDate,
     position,
     hiringDate,
@@ -139,6 +140,9 @@ const EmployeeDetailsPage = ({ employee }) => {
               )}
               <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
                 {email}
+              </Typography>
+              <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+                N°SS: <b>{socialSecurityNumber}</b>
               </Typography>
               {mobile && mobile !== '' && (
                 <Typography variant="body2" sx={{ fontStyle: 'italic' }}>

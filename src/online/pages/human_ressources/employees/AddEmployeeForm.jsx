@@ -66,6 +66,7 @@ export default function AddEmployeeForm({ idEmployee, title }) {
       fix: '',
       fax: '',
       email: '',
+      socialSecurityNumber : '',
       webSite: '',
       otherContacts: '',
       iban: '',
@@ -281,6 +282,17 @@ export default function AddEmployeeForm({ idEmployee, title }) {
                   label="Date de naissance"
                   value={formik.values.birthDate}
                   onChange={(date) => formik.setFieldValue('birthDate', date)}
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Numéro de sécurité sociale (N°SS)"
+                  value={formik.values.socialSecurityNumber}
+                  onChange={(e) =>
+                    formik.setFieldValue('socialSecurityNumber', e.target.value)
+                  }
                   disabled={loadingPost || loadingPut}
                 />
               </Item>

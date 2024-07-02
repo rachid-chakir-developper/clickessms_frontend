@@ -15,7 +15,7 @@ export default function AppChart({ data = [] }) {
 
   return (
     <React.Fragment>
-      <Title>Nombre d'événements indésirables</Title>
+      <Title>Les événements indésirables cette semaine</Title>
       <ResponsiveContainer>
         <LineChart
           data={data}

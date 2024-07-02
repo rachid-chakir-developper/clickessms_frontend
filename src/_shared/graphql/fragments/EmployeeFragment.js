@@ -10,6 +10,7 @@ export const EMPLOYEE_PHONE_INFOS = gql`
     lastName
     position
     email
+    socialSecurityNumber
     mobile
     fix
     photo
@@ -25,6 +26,7 @@ export const EMPLOYEE_MINI_INFOS = gql`
     lastName
     position
     email
+    socialSecurityNumber
     photo
     coverImage
     isActive
