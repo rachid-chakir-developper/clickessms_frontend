@@ -5,6 +5,11 @@ export const actionsModel = defineActionsModel(
   entitiesModel,
   ({ params, id, privilege }) => {
     return {
+      manageSettings: privilege('settings:edit'),
+      manageActivity: privilege('activity:edit'),
+      getEstablishments: privilege('establishment:edit'),
+      getTasks: privilege('task:edit'),
+      getBankAccounts: privilege('bankAccount:edit'),
       getVehicle: params({
         vehicleId: id('vehicle').privilege('vehicle:view'),
       }),

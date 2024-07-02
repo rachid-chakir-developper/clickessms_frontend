@@ -9,7 +9,6 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 
 export default function TextMobileStepper({messageNotifications = []}) {
-  console.log('messageNotifications', messageNotifications)
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
   const maxSteps = messageNotifications?.length ;

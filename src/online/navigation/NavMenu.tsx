@@ -20,6 +20,7 @@ import {
 import NavEntry from './NavEntry';
 import SearchEntry from './SearchEntry';
 import { filterMap } from '../../_shared/tools/functions';
+import { useAuthorizationSystem } from '../../_shared/context/AuthorizationSystemProvider';
 
 export default function NavMenu() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -263,6 +264,7 @@ function NavMenuHeader({
 }
 
 function NavMenuFooter() {
+  const authorizationSystem = useAuthorizationSystem();
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const dispatch = useSessionDispatch();
@@ -308,12 +310,20 @@ function NavMenuFooter() {
         key="users"
         name="Utilisateurs"
         icon={<PersonIcon />}
+        disabled={()=> !authorizationSystem.requestAuthorization({
+            type: 'manageSettings',
+          }).authorized
+        }
       />
       <NavEntry
         path="/online/parametres"
         key="settings"
         name="Paramètres"
         icon={<SettingsIcon />}
+        disabled={()=> !authorizationSystem.requestAuthorization({
+            type: 'manageSettings',
+          }).authorized
+        }
       />
       <NavEntry
         key="logout"

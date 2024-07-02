@@ -83,11 +83,7 @@ export default function NavEntry(props: NavEntryProps) {
     }
   }, [props.animateExpand]);
 
-  const disabled =
-    typeof props.disabled === 'function'
-      ? props.disabled(authorizationSystem)
-      : props.disabled;
-
+  const disabled = typeof props.disabled === 'function' ? props.disabled(authorizationSystem) : props.disabled;
   const button = (
     <ListItemButton
       sx={{ px: 2.5 }}

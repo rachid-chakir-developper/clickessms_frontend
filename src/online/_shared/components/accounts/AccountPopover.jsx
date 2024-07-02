@@ -36,11 +36,11 @@ const MENU_OPTIONS = [
     icon: 'eva:person-fill',
     route: '/online/travaux/actions/',
   },
-  {
-    label: 'Paramètres',
-    icon: 'eva:settings-2-fill',
-    route: '/online/parametres',
-  },
+  // {
+  //   label: 'Paramètres',
+  //   icon: 'eva:settings-2-fill',
+  //   route: '/online/parametres',
+  // },
 ];
 
 // ----------------------------------------------------------------------

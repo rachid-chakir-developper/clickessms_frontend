@@ -201,6 +201,11 @@ export const modules: Module[] = [
         name: 'Tableau de bord',
         path: '/online/activites/dashboard',
         icon: <DashboardIcon />,
+        disabled(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageActivity',
+          }).authorized;
+        },
       },
       {
         id: 'personalized-projects',
@@ -323,48 +328,88 @@ export const modules: Module[] = [
         name: 'Structures',
         path: '/online/associations/structures',
         icon: <ApartmentIcon />,
+        disabled(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'getEstablishments',
+          }).authorized;
+        },
       },
       {
         id: 'beneficiaries',
         name: 'Bénéficiaires',
         path: '/online/ressources-humaines/beneficiaires',
         icon: <AssignmentIndIcon />,
+        disabled(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'getEstablishments',
+          }).authorized;
+        },
       },
       {
         id: 'employees',
         name: 'Salariés',
         path: '/online/ressources-humaines/employes',
         icon: <WalletIcon />,
+        disabled(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'getEstablishments',
+          }).authorized;
+        },
       },
       {
         id: 'financers',
         name: 'Financeur',
         path: '/online/partenariats/financeurs',
         icon: <Diversity3Icon />,
+        disabled(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'getEstablishments',
+          }).authorized;
+        },
       },
       {
         id: 'partners',
         name: 'Partenaires',
         path: '/online/partenariats/partenaires',
         icon: <HandshakeIcon />,
+        disabled(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'getEstablishments',
+          }).authorized;
+        },
       },
       {
         id: 'suppliers',
         name: 'Fournisseurs',
         path: '/online/achats/fournisseurs',
         icon: <WarehouseIcon />,
+        disabled(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'getEstablishments',
+          }).authorized;
+        },
       },
       {
         id: 'calls',
         name: 'Suivi appels',
         path: '/online/administratif/appels',
         icon: <SupportAgentIcon />,
+        disabled(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'getEstablishments',
+          }).authorized;
+        },
       },
       {
         id: 'mails',
         name: 'Suivi courriers',
         path: '/online/administratif/courriers',
         icon: <MarkEmailReadIcon />,
+        disabled(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'getEstablishments',
+          }).authorized;
+        },
       },
       {
         id: 'meetings',
@@ -404,13 +449,18 @@ export const modules: Module[] = [
         name: 'Interventions',
         path: '/online/travaux/interventions',
         icon: <EngineeringIcon />,
+        disabled(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'getTasks',
+          }).authorized;
+        },
       },
       {
         id: 'car-fleet',
         name: 'Parc automobile',
         icon: <AirportShuttleIcon />,
         disabled(authorizationSystem) {
-          return authorizationSystem.requestAuthorization({
+          return !authorizationSystem.requestAuthorization({
             type: 'getVehicles',
           }).authorized;
         },
@@ -460,6 +510,11 @@ export const modules: Module[] = [
         name: 'Suivi des clés',
         path: '/online/recuperations/objets',
         icon: <KeyIcon />,
+        disabled(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'getTasks',
+          }).authorized;
+        }
       },
     ],
   },
@@ -493,6 +548,11 @@ export const modules: Module[] = [
         id: 'cash-flow',
         name: 'Trésorerie',
         icon: <SavingsIcon />,
+        disabled(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'getBankAccounts',
+          }).authorized;
+        },
         pages: [
           {
             id: 'bank-accounts',
@@ -548,6 +608,11 @@ export const modules: Module[] = [
         name: 'Tarification',
         path: '/online/finance/decisions',
         icon: <RateReviewIcon />,
+        disabled(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'getBankAccounts',
+          }).authorized;
+        },
       },
     ],
   },
