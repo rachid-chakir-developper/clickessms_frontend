@@ -57,8 +57,8 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
   const navigate = useNavigate();
   const validationSchema = yup.object({
     title: yup
-      .string("Entrez le titre d'événement indésirable")
-      .required("Le titre d'événement indésirable est obligatoire"),
+      .string("Entrez le libellé de l'événement indésirable")
+      .required("Le libellé de l'événement indésirable est obligatoire"),
   });
   const formik = useFormik({
     initialValues: {
@@ -77,6 +77,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
       courseFactsDateTime: dayjs(new Date()),
       courseFactsPlace: '',
       circumstanceEventText: '',
+      concernedFamilies: '',
       isActive: true,
       establishments: [],
       employees: [],
@@ -309,7 +310,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if(activeStep >= 2) navigate('/online/qualites/evenements-indesirables/liste');
+    if(activeStep >= 3) navigate('/online/qualites/evenements-indesirables/liste');
     else if (formik.values.id)
       setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });
@@ -335,7 +336,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5" sx={{ marginBottom: 4 }}>
-        {title} {formik.values.number}
+        {title}: <em>{formik.values.title}</em>
       </Typography>
       {loadingUndesirableEvent && <ProgressService type="form" />}
       {!loadingUndesirableEvent && (
@@ -349,10 +350,10 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
               <StepLabel
                 onClick={() => onGoToStep(0)}
                 optional={
-                  <Typography variant="caption">Première étape</Typography>
+                  <Typography variant="caption">Informations générales</Typography>
                 }
               >
-                Étape 1
+                Informations générales
               </StepLabel>
               <StepContent>
                 <Grid
@@ -360,11 +361,11 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
-                  <Grid xs={4} sm={8} md={8}>
+                  <Grid xs={4} sm={4} md={4}>
                     <Item>
                       <TheTextField
                         variant="outlined"
-                        label="Titre"
+                        label="Libellé de l'EI"
                         id="title"
                         value={formik.values.title}
                         required
@@ -383,7 +384,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                   <Grid xs={2} sm={4} md={4}>
                     <Item>
                       <TheDateTimePicker
-                        label="Date et heure de début"
+                        label="Date et heure du signalement"
                         value={formik.values.startingDateTime}
                         onChange={(date) =>
                           formik.setFieldValue('startingDateTime', date)
@@ -391,21 +392,13 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                         disabled={loadingPost || loadingPut}
                       />
                     </Item>
-                    {/* <Item>
-                                            <TheDateTimePicker
-                                                label="Date de fin"
-                                                value={formik.values.endingDateTime}
-                                                onChange={(date) => formik.setFieldValue('endingDateTime', date)}
-                                                disabled={loadingPost || loadingPut}
-                                            />
-                                        </Item> */}
                   </Grid>
                   <Grid xs={2} sm={4} md={4}>
                     <Item>
                       <TheAutocomplete
                         options={establishmentsData?.establishments?.nodes}
-                        label="Établissements / Services"
-                        placeholder="Ajouter un établissement ou un service"
+                        label="Structure(s) concernée(s)"
+                        placeholder="Ajouter une structure"
                         limitTags={3}
                         value={formik.values.establishments}
                         onChange={(e, newValue) =>
@@ -413,14 +406,15 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                         }
                       />
                     </Item>
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4}>
                     <Item>
                       <TheAutocomplete
                         options={employeesData?.employees?.nodes}
-                        label="Pour quel employé ?"
-                        placeholder="Choisissez un employé ?"
+                        label="Décalarant"
+                        placeholder="Décalarant"
                         multiple={false}
                         value={formik.values.employee}
-                        helperText="Si c'est pour vous. laissez ce champ vide."
                         onChange={(e, newValue) =>
                           formik.setFieldValue('employee', newValue)
                         }
@@ -456,6 +450,8 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                         </Select>
                       </FormControl>
                     </Item>
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4}>
                     {formik.values.undesirableEventType ===
                       UNDESIRABLE_EVENT_TYPES.NORMAL && (
                       <Item>
@@ -487,11 +483,29 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                       </Item>
                     )}
                   </Grid>
+                </Grid>
+              </StepContent>
+            </Step>
+            <Step>
+              <StepLabel
+                onClick={() => onGoToStep(1)}
+                optional={
+                  <Typography variant="caption">Personne(s) concernée(s)</Typography>
+                }
+              >
+                Personne(s) concernée(s)
+              </StepLabel>
+              <StepContent>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
                   <Grid xs={2} sm={4} md={4} item="true">
                     <Item>
                       <TheAutocomplete
                         options={employeesData?.employees?.nodes}
-                        label="Professionnels"
+                        label="Professionnel(s) concerné(s)"
                         placeholder="Ajouter un professionnel"
                         limitTags={3}
                         value={formik.values.employees}
@@ -500,10 +514,12 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                         }
                       />
                     </Item>
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4}>
                     <Item>
                       <TheAutocomplete
                         options={beneficiariesData?.beneficiaries?.nodes}
-                        label="Bénificiaires"
+                        label="Bénificiaire(s) concerné(s)"
                         placeholder="Ajouter un bénificiaire"
                         limitTags={3}
                         value={formik.values.beneficiaries}
@@ -513,17 +529,30 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                       />
                     </Item>
                   </Grid>
+                  <Grid xs={4} sm={4} md={4}>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Famille(s) concernée(s)"
+                        value={formik.values.concernedFamilies}
+                        onChange={(e) =>
+                          formik.setFieldValue('concernedFamilies', e.target.value)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
                 </Grid>
               </StepContent>
             </Step>
             <Step>
               <StepLabel
-                onClick={() => onGoToStep(1)}
+                onClick={() => onGoToStep(2)}
                 optional={
-                  <Typography variant="caption">Deuxième étape</Typography>
+                  <Typography variant="caption">Déroulement des faits</Typography>
                 }
               >
-                Étape 2
+                Déroulement des faits
               </StepLabel>
               <StepContent>
                 <Grid
@@ -580,12 +609,12 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
             </Step>
             <Step>
               <StepLabel
-                onClick={() => onGoToStep(2)}
+                onClick={() => onGoToStep(3)}
                 optional={
-                  <Typography variant="caption">Dernière étape </Typography>
+                  <Typography variant="caption">Informations complémentaires</Typography>
                 }
               >
-                Étape 3
+                Informations complémentaires
               </StepLabel>
               <StepContent>
                 <Grid
@@ -667,7 +696,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                     <Item>
                       <TheTextField
                         variant="outlined"
-                        label="Autres Personnes"
+                        label="Autres, préciser"
                         value={formik.values.otherNotifiedPersons}
                         onChange={(e) =>
                           formik.setFieldValue(
@@ -675,7 +704,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                             e.target.value,
                           )
                         }
-                        helperText="Si vous ne trouvez pas la personne dans la liste dessus."
+                        helperText="Si vous ne trouvez pas la personne dans la liste ci-dessus."
                         disabled={loadingPost || loadingPut}
                       />
                     </Item>

@@ -210,8 +210,8 @@ export default function AddMessageNotificationForm({ idMessageNotification, titl
               <Item>
                 <TheAutocomplete
                   options={establishmentsData?.establishments?.nodes}
-                  label="Établissements / Services"
-                  placeholder="Ajouter un établissement ou un service"
+                  label="Structure(s) concernée(s)"
+                  placeholder="Ajouter une structure"
                   limitTags={3}
                   value={formik.values.establishments}
                   onChange={(e, newValue) =>

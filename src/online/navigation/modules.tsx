@@ -94,41 +94,10 @@ export const modules: Module[] = [
     icon: <WorkspacePremiumIcon />,
     entries: [
       {
-        id: 'events',
-        name: 'Évènements',
+        id: 'undesirable-events',
+        name: 'Évènements indésirables',
+        path: '/online/qualites/evenements-indesirables',
         icon: <NotificationsActiveIcon />,
-        pages: [
-          {
-            id: 'undesirable-events',
-            name: 'Évènements indésirables',
-            path: '/online/qualites/evenements-indesirables',
-            icon: <WarningIcon />,
-          },
-          {
-            id: 'violence',
-            name: 'Maltraitance et violence',
-            path: '/online/qualities/évènements/maltraitance-violence',
-            icon: <DoNotDisturbOnIcon />,
-            disabled: true,
-            hidden(authorizationSystem) {
-              return !authorizationSystem.requestAuthorization({
-                type: 'manageQuality',
-              }).authorized;
-            },
-          },
-          {
-            id: 'complaints',
-            name: 'Plaintes et réclamation',
-            path: '/online/qualities/évènements/plaintes-réclamation',
-            icon: <SentimentVeryDissatisfiedIcon />,
-            disabled: true,
-            hidden(authorizationSystem) {
-              return !authorizationSystem.requestAuthorization({
-                type: 'manageQuality',
-              }).authorized;
-            },
-          },
-        ],
       },
       {
         id: 'task-plan',

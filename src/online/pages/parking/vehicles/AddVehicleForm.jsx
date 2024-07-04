@@ -602,7 +602,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                             <Item>
                               <TheAutocomplete
                                 options={establishmentsData?.establishments?.nodes}
-                                label="Établissements / Services"
+                                label="Structure(s) concernée(s)"
                                 placeholder="Ajouter un établissement ou service"
                                 limitTags={3}
                                 value={item.establishments}

@@ -100,6 +100,7 @@ export const UNDESIRABLE_EVENT_DETAILS = gql`
     employees{
       ...UndesirableEventEmployeeTypeFragment
     }
+    concernedFamilies
     notifiedPersons{
       ...UndesirableEventNotifiedPersonTypeFragment
     }
@@ -132,6 +133,7 @@ export const UNDESIRABLE_EVENT_RECAP_DETAILS = gql`
     courseFactsPlace
     circumstanceEventText
     observation
+    concernedFamilies
     beneficiaries{
       ...UndesirableEventBeneficiaryTypeFragment
     }

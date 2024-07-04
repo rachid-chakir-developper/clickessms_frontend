@@ -318,7 +318,7 @@ function NavMenuFooter() {
         key="users"
         name="Utilisateurs"
         icon={<PersonIcon />}
-        hidden={()=> authorizationSystem.requestAuthorization({
+        hidden={()=> !authorizationSystem.requestAuthorization({
             type: 'manageSettings',
           }).authorized
         }
