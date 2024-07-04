@@ -475,17 +475,17 @@ export default function AddVehicleForm({ idVehicle, title }) {
                     <Item>
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
-                          Model
+                          Modèle
                         </InputLabel>
                         <Select
-                          label="Marque"
+                          label="Modèle"
                           value={formik.values.vehicleModel}
                           onChange={(e) =>
                             formik.setFieldValue('vehicleModel', e.target.value)
                           }
                         >
                           <MenuItem value="">
-                            <em>Choisissez une model</em>
+                            <em>Choisissez un modèle</em>
                           </MenuItem>
                           {dataData?.vehicleModels?.map((data, index) => {
                             return (

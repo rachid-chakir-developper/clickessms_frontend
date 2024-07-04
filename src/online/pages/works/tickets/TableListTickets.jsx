@@ -130,7 +130,7 @@ const headCells = [
         id: 'completionPercentage',
         numeric: false,
         disablePadding: false,
-        label: 'Avancement',
+        label: 'Progression',
     },
     {
         id: 'action',

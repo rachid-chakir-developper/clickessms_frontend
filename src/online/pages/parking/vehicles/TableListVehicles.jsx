@@ -99,7 +99,7 @@ const headCells = [
         id: 'brand',
         numeric: false,
         disablePadding: false,
-        label: 'Marque et Model',
+        label: 'Marque et Modèle',
     },
     {
         id: 'registrationNumber',

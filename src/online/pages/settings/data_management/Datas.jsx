@@ -28,7 +28,7 @@ const modulesToManage = [
   {
     title: 'Ressources humaines',
     datas: [
-      { name: "Genre de l'Homme", description: '', type: 'HumanGender' },
+      { name: "Genre", description: '', type: 'HumanGender' },
     ],
   },
   {
@@ -56,17 +56,17 @@ const modulesToManage = [
     title: 'Qualités',
     datas: [
       {
-        name: 'Types des événements indésirables normaux',
+        name: "Types d'événement indésirable",
         description: '',
         type: 'UndesirableEventNormalType',
       },
       {
-        name: 'Types des événement indésirables graves',
+        name: "Types d'événement indésirable grave",
         description: '',
         type: 'UndesirableEventSeriousType',
       },
       {
-        name: 'Fréquences des événement indésirables',
+        name: "Fréquences d'événement indésirable",
         description: '',
         type: 'UndesirableEventFrequency',
       },
@@ -85,7 +85,7 @@ const modulesToManage = [
     title: 'Services généraux',
     datas: [
       { name: 'Les marques des véhicules', description: '', type: 'VehicleBrand' },
-      { name: 'Les models des véhicules', description: '', type: 'VehicleModel' },
+      { name: 'Les modèles des véhicules', description: '', type: 'VehicleModel' },
     ],
   },
 ];

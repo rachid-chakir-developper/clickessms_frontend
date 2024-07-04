@@ -120,7 +120,7 @@ export default function DialogListDatas({ open, onClose, data }) {
         onClose={onClose}
         aria-labelledby="customized-dialog-title"
         open={open}
-        maxWidth={'xs'}
+        maxWidth="md"
         fullWidth
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">

@@ -113,6 +113,7 @@ export const UNDESIRABLE_EVENT_DETAILS = gql`
       id
       name
     }
+    otherTypes
     frequency{
       id
       name
@@ -152,6 +153,7 @@ export const UNDESIRABLE_EVENT_RECAP_DETAILS = gql`
       id
       name
     }
+    otherTypes
     frequency{
       id
       name

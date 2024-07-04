@@ -71,6 +71,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
       undesirableEventType: UNDESIRABLE_EVENT_TYPES.NORMAL,
       normalTypes: [],
       seriousTypes: [],
+      otherTypes: '',
       frequency: null,
       severity: UNDESIRABLE_EVENT_SEVERITY.MEDIUM,
       actionsTakenText: '',
@@ -482,6 +483,17 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                         />
                       </Item>
                     )}
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Autre(s) type(s), préciser"
+                        value={formik.values.otherTypes}
+                        onChange={(e) =>
+                          formik.setFieldValue('otherTypes', e.target.value)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
                   </Grid>
                 </Grid>
               </StepContent>

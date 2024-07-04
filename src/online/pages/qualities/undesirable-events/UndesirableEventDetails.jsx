@@ -219,7 +219,7 @@ function UndesirableEventMiniInfos({ undesirableEvent }) {
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Pourcentage de complétion: </b>
+                <b>Progression: </b>
                 <CircularProgressWithLabel value={undesirableEvent?.completionPercentage}/>
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
