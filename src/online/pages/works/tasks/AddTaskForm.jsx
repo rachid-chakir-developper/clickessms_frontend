@@ -36,6 +36,7 @@ import CardDisplayMap from '../../../../_shared/components/helpers/CardDisplayMa
 import { Close } from '@mui/icons-material';
 import { TASK_STATUS, PRIORITIES } from '../../../../_shared/tools/constants';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -46,8 +47,12 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function AddTaskForm({ idTask, title }) {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageFacility = authorizationSystem.requestAuthorization({
+    type: 'manageFacility',
+  }).authorized;
   const [searchParams, setSearchParams] = useSearchParams();
-  const [isRequestType, setIsRequestType] = React.useState(false);
+  const [isRequestType, setIsRequestType] = React.useState(!canManageFacility);
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({
@@ -260,9 +265,12 @@ export default function AddTaskForm({ idTask, title }) {
     });
   };
   React.useEffect(() => {
-    if (searchParams.get('type') && searchParams.get('type') === 'REQUEST' && !idTask) {
+    if ((searchParams.get('type') && searchParams.get('type') === 'REQUEST' && !idTask) || (!canManageFacility && !idTask)) {
         formik.setFieldValue('status', TASK_STATUS.PENDING)
         setIsRequestType(true)
+    }
+    else if(!canManageFacility){
+      setIsRequestType(true)
     }
   }, []);
   return (

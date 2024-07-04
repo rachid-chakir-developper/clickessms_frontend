@@ -42,6 +42,7 @@ function PageNavEntry(props: PageViewModel) {
       name={props.name}
       path={props.path}
       disabled={props.disabled}
+      hidden={props.hidden}
       highlighted={props.highlighted}
       indented
     />
@@ -60,6 +61,7 @@ function SubmoduleNavEntry(props: SubmoduleNavEntryProps) {
       name={props.name}
       highlighted={props.highlighted}
       disabled={props.disabled}
+      hidden={props.hidden}
       indented
       onClick={() => {
         props.onToggleExpand(props.id, Boolean(props.expanded));
@@ -76,6 +78,7 @@ function SubmoduleNavEntry(props: SubmoduleNavEntryProps) {
             path={page.path}
             icon={page.icon}
             disabled={page.disabled}
+            hidden={page.hidden}
             highlighted={page.highlighted}
           />
         ))}
@@ -107,6 +110,7 @@ function ModuleNavEntry(props: ModuleNavEntryProps) {
       expandable
       expanded={props.expanded}
       animateExpand={props.animateExpand}
+      hidden={props.hidden}
     >
       <List disablePadding>
         {props.entries.map((entry) => {
@@ -127,6 +131,7 @@ function ModuleNavEntry(props: ModuleNavEntryProps) {
                   );
                 }}
                 disabled={entry.disabled}
+                hidden={entry.hidden}
                 expanded={entry.expanded}
                 animateExpand={props.animateExpand}
               />
@@ -140,6 +145,7 @@ function ModuleNavEntry(props: ModuleNavEntryProps) {
               name={entry.name}
               icon={entry.icon}
               disabled={entry.disabled}
+              hidden={entry.hidden}
               highlighted={entry.highlighted}
             />
           );
@@ -237,6 +243,8 @@ function NavMenuMain({ searchTerm }: { searchTerm: string }) {
           onSubmoduleToggleExpand={onSubmoduleToggleExpand}
           expanded={module.expanded}
           animateExpand={!searchTerm}
+          disabled={module.disabled}
+          hidden={module.hidden}
         />
       ))}
     </List>
@@ -310,7 +318,7 @@ function NavMenuFooter() {
         key="users"
         name="Utilisateurs"
         icon={<PersonIcon />}
-        disabled={()=> !authorizationSystem.requestAuthorization({
+        hidden={()=> authorizationSystem.requestAuthorization({
             type: 'manageSettings',
           }).authorized
         }
@@ -320,7 +328,7 @@ function NavMenuFooter() {
         key="settings"
         name="Paramètres"
         icon={<SettingsIcon />}
-        disabled={()=> !authorizationSystem.requestAuthorization({
+        hidden={()=> !authorizationSystem.requestAuthorization({
             type: 'manageSettings',
           }).authorized
         }

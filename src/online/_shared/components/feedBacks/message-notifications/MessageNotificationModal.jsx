@@ -21,10 +21,13 @@ export default function MessageNotificationModal({
   setMessageNotificationModal,
 }) {
   let { isOpen, onClose, type, data } = messageNotificationModal;
+  const [title, setTitle] = React.useState('Bienvenue sur ROBERP');
   const handleClose = () => {
     onClose();
   };
-
+const onSlideChange = (message)=>{
+  setTitle(message?.title)
+}
 return (
     <>
       <BootstrapDialog
@@ -35,7 +38,7 @@ return (
         maxWidth="sm"
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Bienvenue sur ROBERPP
+          {title}
         </DialogTitle>
         <IconButton
           aria-label="close"
@@ -52,7 +55,7 @@ return (
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
-          <TextMobileStepper messageNotifications={data} />
+          <TextMobileStepper messageNotifications={data} onSlideChange={onSlideChange} />
         </DialogContent>
       </BootstrapDialog>
     </>

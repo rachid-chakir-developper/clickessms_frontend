@@ -8,7 +8,27 @@ export const entitiesModel = defineEntitiesModel({
     ownedBy: 'company',
     privileges: ['edit', 'view'],
   },
+  quality: {
+    ownedBy: 'company',
+    privileges: ['edit', 'view'],
+  },
   activity: {
+    ownedBy: 'company',
+    privileges: ['edit', 'view'],
+  },
+  administrative: {
+    ownedBy: 'company',
+    privileges: ['edit', 'view'],
+  },
+  humanRessources: {
+    ownedBy: 'company',
+    privileges: ['edit', 'view'],
+  },
+  finance: {
+    ownedBy: 'company',
+    privileges: ['edit', 'view'],
+  },
+  facility: {
     ownedBy: 'company',
     privileges: ['edit', 'view'],
   },

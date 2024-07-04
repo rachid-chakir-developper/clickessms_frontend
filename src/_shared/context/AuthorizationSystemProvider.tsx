@@ -40,7 +40,52 @@ export function AuthorizationSystemProvider({ children }) {
 
   const entityChainRepository = buildEntityChainRepository({
     company: {},
-    users: {
+    settings: {
+      company() {
+        return user.company.id;
+      },
+    },
+    quality: {
+      company() {
+        return user.company.id;
+      },
+    },
+    activity: {
+      company() {
+        return user.company.id;
+      },
+    },
+    administrative: {
+      company() {
+        return user.company.id;
+      },
+    },
+    humanRessources: {
+      company() {
+        return user.company.id;
+      },
+    },
+    finance: {
+      company() {
+        return user.company.id;
+      },
+    },
+    facility: {
+      company() {
+        return user.company.id;
+      },
+    },
+    establishment: {
+      company() {
+        return user.company.id;
+      },
+    },
+    task: {
+      company() {
+        return user.company.id;
+      },
+    },
+    bankAccount: {
       company() {
         return user.company.id;
       },

@@ -20,6 +20,7 @@ import { Done, Edit } from '@mui/icons-material';
 import UndesirableEventTabs from './undesirable-events-tabs/UndesirableEventTabs';
 import { POST_UNDESIRABLE_EVENT_TICKET } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import UndesirableEventStatusLabelMenu from './UndesirableEventStatusLabelMenu';
 import CircularProgressWithLabel from '../../../../_shared/components/feedbacks/CircularProgressWithLabel';
 
@@ -32,6 +33,10 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function UndesirableEventDetails() {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageQuality = authorizationSystem.requestAuthorization({
+    type: 'manageQuality',
+  }).authorized;
   const navigate = useNavigate();
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   let { idUndesirableEvent } = useParams();
@@ -90,13 +95,13 @@ export default function UndesirableEventDetails() {
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1}}>
-        <Button variant="contained" endIcon={<Done />}
+        {canManageQuality && <Button variant="contained" endIcon={<Done />}
         sx={{mx: 2}}
         onClick={() => {
           onCreateUndesirableEventTicket(undesirableEventData?.undesirableEvent?.id);
         }}>
           Analyser
-        </Button>
+        </Button>}
         <Link
           to={`/online/qualites/evenements-indesirables/modifier/${undesirableEventData?.undesirableEvent?.id}`}
           className="no_style"

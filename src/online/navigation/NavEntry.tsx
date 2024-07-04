@@ -45,6 +45,12 @@ export interface NavEntryProps {
     | boolean
     | ((authorizationSystem: CurrentAuthorizationSystem) => boolean);
   /**
+   * If `true`, entry is hidden.
+   */
+  hidden?:
+    | boolean
+    | ((authorizationSystem: CurrentAuthorizationSystem) => boolean);
+  /**
    * Adds padding to the left of the entry, to indicate a hierarchy.
    */
   indented?: boolean;
@@ -84,6 +90,7 @@ export default function NavEntry(props: NavEntryProps) {
   }, [props.animateExpand]);
 
   const disabled = typeof props.disabled === 'function' ? props.disabled(authorizationSystem) : props.disabled;
+  const hidden = typeof props.hidden === 'function' ? props.hidden(authorizationSystem) : props.hidden;
   const button = (
     <ListItemButton
       sx={{ px: 2.5 }}
@@ -119,8 +126,8 @@ export default function NavEntry(props: NavEntryProps) {
   ) : (
     props.children
   );
-
-  const item = (
+  
+  const item = !hidden && (
     <ListItem disablePadding sx={{ display: 'block' }}>
       {maybeLink}
       {children}

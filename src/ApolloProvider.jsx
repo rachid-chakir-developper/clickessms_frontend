@@ -45,7 +45,7 @@ const wsLink = new WebSocketLink({
   options: {
     reconnect: true,
     connectionParams: {
-      Authorization: `JWT ${JSON.parse(localStorage.getItem('token')) || ''}`,
+      JWT: `${JSON.parse(localStorage.getItem('token')) || ''}`,
     },
   },
 });

@@ -8,18 +8,23 @@ import Button from '@mui/material/Button';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 
-export default function TextMobileStepper({messageNotifications = []}) {
+export default function TextMobileStepper({messageNotifications = [], onSlideChange}) {
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
   const maxSteps = messageNotifications?.length ;
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    onSlideChange(messageNotifications[activeStep])
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    onSlideChange(messageNotifications[activeStep])
   };
+  React.useEffect(()=>{
+    onSlideChange(messageNotifications[activeStep])
+  }, [])
 
   return (
     <Box sx={{
@@ -29,7 +34,7 @@ export default function TextMobileStepper({messageNotifications = []}) {
       backgroundPosition: 'center',
     }}>
       <Box sx={{flexGrow: 1, height: 300}} >
-        {messageNotifications[activeStep]?.title && messageNotifications[activeStep]?.title !=='' && <Box
+        {/* {messageNotifications[activeStep]?.title && messageNotifications[activeStep]?.title !=='' && <Box
           elevation={0}
           sx={{
             display: 'flex',
@@ -41,8 +46,8 @@ export default function TextMobileStepper({messageNotifications = []}) {
           }}
         >
           <Typography variant="h6" component="h6">{messageNotifications[activeStep]?.title}</Typography>
-        </Box>}
-        {messageNotifications[activeStep]?.message && messageNotifications[activeStep]?.message !=='' && <Box sx={{ height: 255, width: '100%', p: 2,
+        </Box>} */}
+        {messageNotifications[activeStep]?.message && messageNotifications[activeStep]?.message !=='' && <Box sx={{ height: 300, width: '100%', p: 2,
             color: messageNotifications[activeStep]?.image ? '#ffffff' : 'initial',
             bgcolor: messageNotifications[activeStep]?.image ? 'rgba(0, 0, 0, 0.5)'  : 'initial',
             }}>

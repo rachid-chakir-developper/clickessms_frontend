@@ -45,34 +45,34 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-// Options with icons for each status
+// MenuOptions with icons for each status
 const STATUS = [
     { value: 'NEW', label: 'Nouveau', icon: <HourglassEmpty />, color: 'default'},
     { value: "IN_PROGRESS", label: "En cours de traitement", icon: <Pending />, color: 'info'},
     { value: "DONE", label: "Traité", icon: <TaskAlt />, color: 'success'},
   ];
 
-  // Options with icons for each status
+  // MenuOptions with icons for each status
   const EI_STATUS = [
       { value: 'NEW', label: 'Déclaré', icon: <HourglassEmpty />, color: 'default'},
       { value: "IN_PROGRESS", label: "En cours de traitement", icon: <Pending />, color: 'info'},
       { value: "DONE", label: "Traité", icon: <TaskAlt />, color: 'success'},
     ];
-  // Options with icons for each status
+  // MenuOptions with icons for each status
   const TICKET_STATUS = [
       { value: 'NEW', label: 'Nouveau', icon: <HourglassEmpty />, color: 'default'},
       { value: "IN_PROGRESS", label: "En cours de traitement", icon: <Pending />, color: 'info'},
       { value: "COMPLETED", label: "Terminée", icon: <TaskAlt />, color: 'success'},
     ];
 
-  // Options with icons for each status
+  // MenuOptions with icons for each status
   const ABSENCE_STATUS = [
       { value: 'PENDING', label: 'En Attente', icon: <Pending />, color: 'default'},
       { value: "APPROVED", label: "Approuvé", icon: <Done />, color: 'success'},
       { value: "REJECTED", label: "Rejeté", icon: <Cancel />, color: 'warning'},
     ];
   
-    // Options with icons for each status
+    // MenuOptions with icons for each status
   const TASK_STATUS = [
     { value: 'NEW', label: 'Nouveau', icon: <HourglassEmpty />, color: 'default'},
     { value: 'PENDING', label: 'En attente', icon: <HourglassTop />, color: 'default'},
@@ -83,61 +83,65 @@ const STATUS = [
     { value: "COMPLETED", label: "Terminée", icon: <TaskAlt />, color: 'success'},
   ];
 
-  // Options with icons for each status
+  // MenuOptions with icons for each status
   const ACTION_STATUS = [
     { value: "TO_DO", label: "À traiter", icon: <HourglassEmpty />, color: 'default'},
     { value: "IN_PROGRESS", label: "En cours", icon: <Pending />, color: 'info'},
     { value: "DONE", label: "Traité", icon: <TaskAlt />, color: 'success'},
   ];
 
-export default function CustomizedStatusLabelMenu({status, type=null, loading=false, onChange}) {
+export default function CustomizedStatusLabelMenu({status, type=null, loading=false, onChange, disabled, options=null}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [options, setOptions] = React.useState(STATUS);
+  const [menuOptions, setMenuOptions] = React.useState(STATUS);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = (option) => {
+  const handleClose = (menuOption) => {
     setAnchorEl(null);
-    if(option && option?.value) onChange(option?.value)
+    if(menuOption && menuOption?.value && !disabled) onChange(menuOption?.value)
   };
   const handleDelete = (event) => {
     handleClick(event)
   };
   const getStatusLabel = (status) => {
-    return options?.find((s) => s.value == status)?.label;
+    return menuOptions?.find((s) => s.value == status)?.label;
   };
   const getStatusIcon = (status) => {
-    return options?.find((s) => s.value == status)?.icon;
+    return menuOptions?.find((s) => s.value == status)?.icon;
   };
   const getStatusColor = (status) => {
-    return options?.find((s) => s.value == status)?.color;
+    return menuOptions?.find((s) => s.value == status)?.color;
   };
   React.useEffect(()=>{
-    switch (type) {
-      case 'undesirableEvent':
-        setOptions(EI_STATUS)
-        break;
-      case 'task':
-        setOptions(TASK_STATUS)
-        break;
-      case 'action':
-        setOptions(ACTION_STATUS)
-        break;
-      case 'ticket':
-        setOptions(TICKET_STATUS)
-        break;
-      case 'absence':
-        setOptions(ABSENCE_STATUS)
-        break;
-    
-      default:
-        setOptions(STATUS)
-        break;
+    if(options){
+      setMenuOptions(options)
+    }else{
+      switch (type) {
+        case 'undesirableEvent':
+          setMenuOptions(EI_STATUS)
+          break;
+        case 'task':
+          setMenuOptions(TASK_STATUS)
+          break;
+        case 'action':
+          setMenuOptions(ACTION_STATUS)
+          break;
+        case 'ticket':
+          setMenuOptions(TICKET_STATUS)
+          break;
+        case 'absence':
+          setMenuOptions(ABSENCE_STATUS)
+          break;
+      
+        default:
+          setMenuOptions(STATUS)
+          break;
+      }
     }
-  }, [type])
-  return (
-    <Box>
+  }, [type, options])
+  return (<>
+    {!disabled ? <Box>
       <Chip
         icon={loading ? <CircularProgress size={20} /> : getStatusIcon(status)}
         label={getStatusLabel(status)}
@@ -155,20 +159,28 @@ export default function CustomizedStatusLabelMenu({status, type=null, loading=fa
         open={open}
         onClose={handleClose}
       >
-        {options.map((option, index) => (
+        {menuOptions?.filter((o)=> !o?.hidden)?.map((menuOption, index) => (
           <MenuItem
             key={index}
-            onClick={() => handleClose(option)}
-            selected={status === option.value}
+            onClick={() => handleClose(menuOption)}
+            selected={status === menuOption.value}
           >
-            {option.icon}
+            {menuOption.icon}
             <Typography variant="inherit">
-              {option.label}
+              {menuOption.label}
             </Typography>
-            {status === option.value && <Done sx={{marginLeft: 3}} />}
+            {status === menuOption.value && <Done sx={{marginLeft: 3}} />}
           </MenuItem>
         ))}
       </StyledMenu>
+    </Box> :
+    <Box>
+      <Chip
+        label={getStatusLabel(status)}
+        color={getStatusColor(status)}
+      />
     </Box>
+  }
+  </>
   );
 }

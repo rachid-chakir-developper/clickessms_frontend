@@ -9,9 +9,9 @@ import { Add } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import { DELETE_TICKET } from '../../../../_shared/graphql/mutations/TicketMutations';
 import { GET_TICKETS } from '../../../../_shared/graphql/queries/TicketQueries';
-import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TicketFilter from './TicketFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
 import TableListTickets from './TableListTickets';

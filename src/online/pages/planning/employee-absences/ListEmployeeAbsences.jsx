@@ -9,6 +9,7 @@ import { Add } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import { DELETE_EMPLOYEE_ABSENCE } from '../../../../_shared/graphql/mutations/EmployeeAbsenceMutations';
 import { GET_EMPLOYEE_ABSENCES } from '../../../../_shared/graphql/queries/EmployeeAbsenceQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
@@ -25,6 +26,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListEmployeeAbsences() {
+  const authorizationSystem = useAuthorizationSystem();
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
   const [employeeAbsenceFilter, setEmployeeAbsenceFilter] =
     React.useState(null);
@@ -140,14 +142,16 @@ export default function ListEmployeeAbsences() {
               Demander un congé
             </Button>
           </Link>
-          <Link
+          {authorizationSystem.requestAuthorization({
+            type: 'manageHumanRessources',
+          }).authorized && <Link
             to="/online/planning/absences-employes/ajouter"
             className="no_style"
           >
             <Button variant="contained" endIcon={<Add />}>
               Ajouter une absence
             </Button>
-          </Link>
+          </Link>}
         </Box>
       </Grid>
       <Grid item="true" xs={12}>

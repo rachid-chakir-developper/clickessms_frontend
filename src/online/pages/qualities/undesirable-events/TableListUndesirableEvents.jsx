@@ -31,6 +31,7 @@ import {
 import { Alert, Avatar, Button, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import CircularProgressWithLabel from '../../../../_shared/components/feedbacks/CircularProgressWithLabel';
 import UndesirableEventStatusLabelMenu from './UndesirableEventStatusLabelMenu';
@@ -254,6 +255,10 @@ export default function TableListUndesirableEvents({
   rows,
   onDeleteUndesirableEvent,
 }) {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageQuality = authorizationSystem.requestAuthorization({
+    type: 'manageQuality',
+  }).authorized;
   const navigate = useNavigate();
   const { setNotifyAlert, setConfirmDialog, setDialogListLibrary } = useFeedBacks();
   const [order, setOrder] = React.useState('asc');
@@ -492,13 +497,16 @@ export default function TableListUndesirableEvents({
                       <UndesirableEventStatusLabelMenu  undesirableEvent={row}/>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      {row?.ticket ? <CircularProgressWithLabel value={row?.completionPercentage}/> :
-                      <Button variant="text" size="small" endIcon={<Done />} 
-                        onClick={() => {
-                          onCreateUndesirableEventTicket(row?.id);
-                        }}>
-                        Analyser
-                      </Button>}
+                      <>
+                        {row?.ticket && <CircularProgressWithLabel value={row?.completionPercentage}/>}
+                        {!row?.ticket && canManageQuality && <Button variant="text" size="small" endIcon={<Done />} 
+                                          onClick={() => {
+                                            onCreateUndesirableEventTicket(row?.id);
+                                          }}>
+                                          Analyser
+                                        </Button>}
+                        {!row?.ticket && !canManageQuality && `En attente d'analyse`}
+                      </>
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
@@ -535,7 +543,7 @@ export default function TableListUndesirableEvents({
                           <Folder sx={{ mr: 2 }} />
                           Bibliothèque
                         </MenuItem>
-                        <MenuItem
+                        {canManageQuality && <MenuItem
                           onClick={() => {
                             onCreateUndesirableEventTicket(row?.id);
                             handleCloseMenu();
@@ -543,7 +551,7 @@ export default function TableListUndesirableEvents({
                         >
                           <Done sx={{ mr: 2 }} />
                           Analyser
-                        </MenuItem>
+                        </MenuItem>}
                         <Link
                           to={`/online/qualites/evenements-indesirables/modifier/${row?.id}`}
                           className="no_style"

@@ -110,6 +110,11 @@ export const modules: Module[] = [
             path: '/online/qualities/évènements/maltraitance-violence',
             icon: <DoNotDisturbOnIcon />,
             disabled: true,
+            hidden(authorizationSystem) {
+              return !authorizationSystem.requestAuthorization({
+                type: 'manageQuality',
+              }).authorized;
+            },
           },
           {
             id: 'complaints',
@@ -117,6 +122,11 @@ export const modules: Module[] = [
             path: '/online/qualities/évènements/plaintes-réclamation',
             icon: <SentimentVeryDissatisfiedIcon />,
             disabled: true,
+            hidden(authorizationSystem) {
+              return !authorizationSystem.requestAuthorization({
+                type: 'manageQuality',
+              }).authorized;
+            },
           },
         ],
       },
@@ -130,6 +140,11 @@ export const modules: Module[] = [
         id: 'audits',
         name: 'Audits',
         icon: <NoteAltIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageQuality',
+          }).authorized;
+        },
         pages: [
           {
             id: 'has-evaluation',
@@ -160,6 +175,11 @@ export const modules: Module[] = [
         path: '/online/audits/gestion-risques',
         icon: <SdCardAlertIcon />,
         disabled: true,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageQuality',
+          }).authorized;
+        },
       },
       {
         id: 'surveys-results',
@@ -167,6 +187,11 @@ export const modules: Module[] = [
         path: '/online/audits/enquêtes-résultats',
         icon: <QuestionAnswerIcon />,
         disabled: true,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageQuality',
+          }).authorized;
+        },
       },
       {
         id: 'procedures',
@@ -174,6 +199,11 @@ export const modules: Module[] = [
         path: '/online/audits/procédures',
         icon: <LibraryAddCheckIcon />,
         disabled: true,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageQuality',
+          }).authorized;
+        },
       },
       {
         id: 'qvct',
@@ -181,6 +211,11 @@ export const modules: Module[] = [
         path: '/online/audits/qvct',
         icon: <Diversity1Icon />,
         disabled: true,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageQuality',
+          }).authorized;
+        },
       },
       {
         id: 'idea-box',
@@ -188,6 +223,11 @@ export const modules: Module[] = [
         path: '/online/audits/boîte-idées',
         icon: <BatchPredictionIcon />,
         disabled: true,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageQuality',
+          }).authorized;
+        },
       },
     ],
   },
@@ -201,7 +241,7 @@ export const modules: Module[] = [
         name: 'Tableau de bord',
         path: '/online/activites/dashboard',
         icon: <DashboardIcon />,
-        disabled(authorizationSystem) {
+        hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageActivity',
           }).authorized;
@@ -213,6 +253,11 @@ export const modules: Module[] = [
         path: '/online/activité/projet-personnalisé',
         icon: <RecentActorsIcon />,
         disabled: true,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageActivity',
+          }).authorized;
+        },
       },
       {
         id: 'events-transmissions',
@@ -226,6 +271,11 @@ export const modules: Module[] = [
         path: '/online/activité/malette-loi-2002-2',
         icon: <LocalPoliceIcon />,
         disabled: true,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageActivity',
+          }).authorized;
+        },
       },
       {
         id: 'presence-absence',
@@ -239,6 +289,11 @@ export const modules: Module[] = [
         path: '/online/activité/prestations',
         icon: <TaskIcon />,
         disabled: true,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageActivity',
+          }).authorized;
+        },
       },
       {
         id: 'serafin-ph',
@@ -246,6 +301,11 @@ export const modules: Module[] = [
         path: '/online/activité/Serafin-ph',
         icon: <AccessibleIcon />,
         disabled: true,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageActivity',
+          }).authorized;
+        },
       },
     ],
   },
@@ -328,9 +388,9 @@ export const modules: Module[] = [
         name: 'Structures',
         path: '/online/associations/structures',
         icon: <ApartmentIcon />,
-        disabled(authorizationSystem) {
+        hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'getEstablishments',
+            type: 'manageAdministrative',
           }).authorized;
         },
       },
@@ -339,9 +399,9 @@ export const modules: Module[] = [
         name: 'Bénéficiaires',
         path: '/online/ressources-humaines/beneficiaires',
         icon: <AssignmentIndIcon />,
-        disabled(authorizationSystem) {
+        hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'getEstablishments',
+            type: 'manageAdministrative',
           }).authorized;
         },
       },
@@ -350,9 +410,9 @@ export const modules: Module[] = [
         name: 'Salariés',
         path: '/online/ressources-humaines/employes',
         icon: <WalletIcon />,
-        disabled(authorizationSystem) {
+        hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'getEstablishments',
+            type: 'manageAdministrative',
           }).authorized;
         },
       },
@@ -361,9 +421,9 @@ export const modules: Module[] = [
         name: 'Financeur',
         path: '/online/partenariats/financeurs',
         icon: <Diversity3Icon />,
-        disabled(authorizationSystem) {
+        hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'getEstablishments',
+            type: 'manageAdministrative',
           }).authorized;
         },
       },
@@ -372,9 +432,9 @@ export const modules: Module[] = [
         name: 'Partenaires',
         path: '/online/partenariats/partenaires',
         icon: <HandshakeIcon />,
-        disabled(authorizationSystem) {
+        hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'getEstablishments',
+            type: 'manageAdministrative',
           }).authorized;
         },
       },
@@ -383,9 +443,9 @@ export const modules: Module[] = [
         name: 'Fournisseurs',
         path: '/online/achats/fournisseurs',
         icon: <WarehouseIcon />,
-        disabled(authorizationSystem) {
+        hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'getEstablishments',
+            type: 'manageAdministrative',
           }).authorized;
         },
       },
@@ -394,9 +454,9 @@ export const modules: Module[] = [
         name: 'Suivi appels',
         path: '/online/administratif/appels',
         icon: <SupportAgentIcon />,
-        disabled(authorizationSystem) {
+        hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'getEstablishments',
+            type: 'manageAdministrative',
           }).authorized;
         },
       },
@@ -405,9 +465,9 @@ export const modules: Module[] = [
         name: 'Suivi courriers',
         path: '/online/administratif/courriers',
         icon: <MarkEmailReadIcon />,
-        disabled(authorizationSystem) {
+        hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'getEstablishments',
+            type: 'manageAdministrative',
           }).authorized;
         },
       },
@@ -449,17 +509,12 @@ export const modules: Module[] = [
         name: 'Interventions',
         path: '/online/travaux/interventions',
         icon: <EngineeringIcon />,
-        disabled(authorizationSystem) {
-          return !authorizationSystem.requestAuthorization({
-            type: 'getTasks',
-          }).authorized;
-        },
       },
       {
         id: 'car-fleet',
         name: 'Parc automobile',
         icon: <AirportShuttleIcon />,
-        disabled(authorizationSystem) {
+        hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'getVehicles',
           }).authorized;
@@ -510,11 +565,6 @@ export const modules: Module[] = [
         name: 'Suivi des clés',
         path: '/online/recuperations/objets',
         icon: <KeyIcon />,
-        disabled(authorizationSystem) {
-          return !authorizationSystem.requestAuthorization({
-            type: 'getTasks',
-          }).authorized;
-        }
       },
     ],
   },
@@ -522,6 +572,11 @@ export const modules: Module[] = [
     id: 'finance',
     name: 'Finance',
     icon: <CurrencyExchangeIcon />,
+    hidden(authorizationSystem) {
+      return !authorizationSystem.requestAuthorization({
+        type: 'manageFinance',
+      }).authorized;
+    },
     entries: [
       {
         id: 'spending-commitments',
@@ -621,6 +676,11 @@ export const modules: Module[] = [
     id: 'information-technology',
     name: 'Informatique',
     icon: <ComputerIcon />,
+    hidden(authorizationSystem) {
+      return !authorizationSystem.requestAuthorization({
+        type: 'manageFinance',
+      }).authorized;
+    },
     entries: [
       {
         id: 'hardware',
@@ -662,6 +722,11 @@ export const modules: Module[] = [
     id: 'procurement',
     name: 'Achat',
     icon: <ShoppingCartIcon />,
+    hidden(authorizationSystem) {
+      return !authorizationSystem.requestAuthorization({
+        type: 'manageFinance',
+      }).authorized;
+    },
     entries: [
       {
         id: 'purchase-request-investment',
@@ -697,6 +762,11 @@ export const modules: Module[] = [
     id: 'governance',
     name: 'Gouvernance',
     icon: <TableBarIcon />,
+    hidden(authorizationSystem) {
+      return !authorizationSystem.requestAuthorization({
+        type: 'manageAdministrative',
+      }).authorized;
+    },
     entries: [
       {
         id: 'members',
@@ -716,6 +786,11 @@ export const modules: Module[] = [
     id: 'cse',
     name: 'CSE',
     icon: <AccountBalanceIcon />,
+    hidden(authorizationSystem) {
+      return !authorizationSystem.requestAuthorization({
+        type: 'manageAdministrative',
+      }).authorized;
+    },
     entries: [
       {
         id: 'members',
@@ -813,6 +888,9 @@ export interface Module {
   disabled?:
     | boolean
     | ((authorizationSystem: CurrentAuthorizationSystem) => boolean);
+  hidden?:
+    | boolean
+    | ((authorizationSystem: CurrentAuthorizationSystem) => boolean);
 }
 
 export interface Submodule {
@@ -823,6 +901,9 @@ export interface Submodule {
   disabled?:
     | boolean
     | ((authorizationSystem: CurrentAuthorizationSystem) => boolean);
+  hidden?:
+    | boolean
+    | ((authorizationSystem: CurrentAuthorizationSystem) => boolean);
 }
 
 export interface Page {
@@ -831,6 +912,9 @@ export interface Page {
   path: string;
   icon: ReactElement;
   disabled?:
+    | boolean
+    | ((authorizationSystem: CurrentAuthorizationSystem) => boolean);
+  hidden?:
     | boolean
     | ((authorizationSystem: CurrentAuthorizationSystem) => boolean);
 }

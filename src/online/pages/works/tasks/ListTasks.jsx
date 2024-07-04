@@ -9,6 +9,7 @@ import { Add } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import {
   DELETE_TASK,
   PUT_TASK_STATE,
@@ -28,6 +29,10 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListTasks() {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageFacility = authorizationSystem.requestAuthorization({
+    type: 'manageFacility',
+  }).authorized;
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
   const [taskFilter, setTaskFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
@@ -167,11 +172,12 @@ export default function ListTasks() {
               Demander une intervention
             </Button>
           </Link>
-          <Link to="/online/travaux/interventions/ajouter" className="no_style">
+          {
+          canManageFacility && <Link to="/online/travaux/interventions/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
               Ajouter une intervention
             </Button>
-          </Link>
+          </Link>}
         </Box>
       </Grid>
       <Grid item="true" xs={12}>

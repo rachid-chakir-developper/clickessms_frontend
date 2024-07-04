@@ -11,13 +11,12 @@ import * as yup from 'yup';
 
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import { GET_EMPLOYEE_ABSENCE } from '../../../../_shared/graphql/queries/EmployeeAbsenceQueries';
 import {
   POST_EMPLOYEE_ABSENCE,
   PUT_EMPLOYEE_ABSENCE,
 } from '../../../../_shared/graphql/mutations/EmployeeAbsenceMutations';
-import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import SelectCheckmarks from '../../../../_shared/components/form-fields/SelectCheckmarks';
@@ -26,6 +25,7 @@ import { LEAVE_TYPE_CHOICES } from '../../../../_shared/tools/constants';
 import { useSession } from '../../../../_shared/context/SessionProvider';
 import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
+import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -39,9 +39,13 @@ export default function AddEmployeeAbsenceForm({
   idEmployeeAbsence,
   title,
 }) {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageHumanRessources = authorizationSystem.requestAuthorization({
+    type: 'manageHumanRessources',
+  }).authorized;
   const { user } = useSession();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [isLeaveType, setIsLeaveType] = React.useState(false);
+  const [isLeaveType, setIsLeaveType] = React.useState(!canManageHumanRessources);
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({});
@@ -234,8 +238,11 @@ export default function AddEmployeeAbsenceForm({
   }, [idEmployeeAbsence]);
 
   React.useEffect(() => {
-    if (searchParams.get('type') && searchParams.get('type') !== LEAVE_TYPE_CHOICES.ABSENCE && !idEmployeeAbsence) {
+    if ((searchParams.get('type') && searchParams.get('type') !== LEAVE_TYPE_CHOICES.ABSENCE && !idEmployeeAbsence) || (!canManageHumanRessources && !idEmployeeAbsence)) {
       formik.setFieldValue('leaveType', LEAVE_TYPE_CHOICES.PAID)
+      setIsLeaveType(true)
+    }
+    else if(!canManageHumanRessources){
       setIsLeaveType(true)
     }
   }, []);
