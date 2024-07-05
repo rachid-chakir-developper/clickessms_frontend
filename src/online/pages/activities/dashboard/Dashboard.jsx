@@ -58,15 +58,15 @@ export default function Dashboard() {
       {loadingDashboard && <ProgressService type="dashboard" />}
       {!loadingDashboard && (
         <Grid container spacing={3}>
-          <Grid item="true" xs={12}>
+          <Grid item xs={12}>
             <DashboardFilter onFilterChange={handleFilterChange} />
           </Grid>
-          <Grid item="true" xs={12} md={8} lg={8}>
+          <Grid item xs={12} md={8} lg={8}>
             <Item>
               <SecondSimpleLineChart />
             </Item>
           </Grid>
-          <Grid item="true" xs={12} md={4} lg={4}>
+          <Grid item xs={12} md={4} lg={4}>
             <Item>
               <Deposits title="Valorisation (Cumul à fin)" data={dashboardData?.dashboard?.budgetMonth} />
             </Item>
@@ -74,12 +74,12 @@ export default function Dashboard() {
               <Deposits title="Valorisation de l'écart (Cumul à fin)" data={dashboardData?.dashboard?.budgetMonth} />
             </Item>
           </Grid>
-          <Grid item="true" xs={12} md={8} lg={8}>
+          <Grid item xs={12} md={8} lg={8}>
             <Item>
               <SimpleLineChart />
             </Item>
           </Grid>
-          <Grid item="true" xs={12} md={4} lg={4}>
+          <Grid item xs={12} md={4} lg={4}>
             <Item>
               <Deposits title="Valorisation (Cumul à fin)" data={dashboardData?.dashboard?.budgetMonth} />
             </Item>
@@ -87,12 +87,12 @@ export default function Dashboard() {
               <Deposits title="Valorisation de l'écart (Cumul à fin)" data={dashboardData?.dashboard?.budgetMonth} />
             </Item>
           </Grid>
-          <Grid item="true" xs={12} md={8} lg={8}>
+          <Grid item xs={12} md={8} lg={8}>
             <Item>
               <MixedBarChart />
             </Item>
           </Grid>
-          <Grid item="true" xs={12} md={4} lg={4}>
+          <Grid item xs={12} md={4} lg={4}>
             <Item>
               <Deposits title="Valorisation (Cumul à fin)" data={dashboardData?.dashboard?.budgetMonth} />
             </Item>

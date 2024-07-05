@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import UserItemCard from './UserItemCard';
 import { useFeedBacks } from '../../../_shared/context/feedbacks/FeedBacksProvider';
@@ -175,7 +175,7 @@ export default function ListUsers() {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item="true" xs={12}>
+        <Grid item xs={12}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
             <Button
               variant="contained"
@@ -204,17 +204,17 @@ export default function ListUsers() {
             </Link>
           </Box>
         </Grid>
-        <Grid item="true" xs={12}>
+        <Grid item xs={12}>
           <UserFilter onFilterChange={handleFilterChange} />
         </Grid>
-        <Grid item="true" xs={12}>
+        <Grid item xs={12}>
           <TableListUsers
             loading={loadingUsers}
             rows={usersData?.users?.nodes || []}
             onDeleteUser={onDeleteUser}
           />
         </Grid>
-        <Grid item="true" xs={12}>
+        <Grid item xs={12}>
           <PaginationControlled
             totalItems={usersData?.users?.totalCount} // Nombre total d'éléments
             itemsPerPage={paginator.limit} // Nombre d'éléments par page

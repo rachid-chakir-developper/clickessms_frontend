@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import VehicleItemCard from './VehicleItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -159,7 +159,7 @@ export default function ListVehicles() {
   };
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link to="/online/parc-automobile/vehicules/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
@@ -168,10 +168,10 @@ export default function ListVehicles() {
           </Link>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <VehicleFilter onFilterChange={handleFilterChange} />
       </Grid>
-      {/* <Grid item="true" xs={12}>
+      {/* <Grid item xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -179,7 +179,7 @@ export default function ListVehicles() {
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
             {loadingVehicles && (
-              <Grid key={'pgrs'} item="true" xs={12} sm={6} md={4}>
+              <Grid key={'pgrs'} item xs={12} sm={6} md={4}>
                 <ProgressService type="mediaCard" />
               </Grid>
             )}
@@ -187,7 +187,7 @@ export default function ListVehicles() {
               <Alert severity="warning">Aucun véhicule trouvé.</Alert>
             )}
             {vehiclesData?.vehicles?.nodes?.map((vehicle, index) => (
-              <Grid xs={12} sm={6} md={4} key={index}>
+              <Grid item xs={12} sm={6} md={4} key={index}>
                 <Item>
                   <VehicleItemCard
                     vehicle={vehicle}
@@ -200,14 +200,14 @@ export default function ListVehicles() {
           </Grid>
         </Box>
       </Grid> */}
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListVehicles
           loading={loadingVehicles}
           rows={vehiclesData?.vehicles?.nodes || []}
           onDeleteVehicle={onDeleteVehicle}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={vehiclesData?.vehicles?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

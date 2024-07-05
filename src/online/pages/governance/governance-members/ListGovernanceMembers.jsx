@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import GovernanceMemberItemCard from './GovernanceMemberItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -160,7 +160,7 @@ export default function ListGovernanceMembers() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
             to="/online/gouvernance/membres/ajouter"
@@ -172,10 +172,10 @@ export default function ListGovernanceMembers() {
           </Link>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <GovernanceMemberFilter onFilterChange={handleFilterChange} />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -183,7 +183,7 @@ export default function ListGovernanceMembers() {
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
             {loadingGovernanceMembers && (
-              <Grid key={'pgrs'} item="true" xs={12} sm={6} md={4}>
+              <Grid key={'pgrs'} item xs={12} sm={6} md={4}>
                 <ProgressService type="mediaCard" />
               </Grid>
             )}
@@ -192,7 +192,7 @@ export default function ListGovernanceMembers() {
                 <Alert severity="warning">Aucun membre trouvé.</Alert>
               )}
             {governanceMembersData?.governanceMembers?.nodes?.map((governanceMember, index) => (
-              <Grid xs={12} sm={6} md={4} key={index}>
+              <Grid item xs={12} sm={6} md={4} key={index}>
                 <Item>
                   <GovernanceMemberItemCard
                     governanceMember={governanceMember}
@@ -205,7 +205,7 @@ export default function ListGovernanceMembers() {
           </Grid>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={governanceMembersData?.governanceMembers?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

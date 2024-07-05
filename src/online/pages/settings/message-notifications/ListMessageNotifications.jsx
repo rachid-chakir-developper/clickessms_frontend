@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import MessageNotificationItemCard from './MessageNotificationItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -159,7 +159,7 @@ export default function ListMessageNotifications() {
   };
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link to="/online/parametres/message-notifications/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
@@ -168,17 +168,17 @@ export default function ListMessageNotifications() {
           </Link>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <MessageNotificationFilter onFilterChange={handleFilterChange} />
       </Grid>
-      {/* <Grid item="true" xs={12}>
+      {/* <Grid item xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}
           >
             {loadingMessageNotifications && (
-              <Grid key={'pgrs'} item="true" xs={12} sm={6} md={4}>
+              <Grid key={'pgrs'} item xs={12} sm={6} md={4}>
                 <ProgressService type="mediaCard" />
               </Grid>
             )}
@@ -186,7 +186,7 @@ export default function ListMessageNotifications() {
               <Alert severity="warning">Aucun message trouvé.</Alert>
             )}
             {messageNotificationsData?.messageNotifications?.nodes?.map((messageNotification, index) => (
-              <Grid item="true" xs={12} sm={6} md={4} key={index}>
+              <Grid item xs={12} sm={6} md={4} key={index}>
                 <Item>
                   <MessageNotificationItemCard
                     messageNotification={messageNotification}
@@ -199,7 +199,7 @@ export default function ListMessageNotifications() {
           </Grid>
         </Box>
       </Grid> */}
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListMessageNotifications
           loading={loadingMessageNotifications}
           rows={messageNotificationsData?.messageNotifications?.nodes || []}
@@ -207,7 +207,7 @@ export default function ListMessageNotifications() {
           onUpdateMessageNotificationState={onUpdateMessageNotificationState}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={messageNotificationsData?.messageNotifications?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

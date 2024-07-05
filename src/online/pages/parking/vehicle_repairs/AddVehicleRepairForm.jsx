@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Stack, Box, Typography, Button, Divider, InputAdornment, FormLabel, RadioGroup, FormControlLabel, Radio, FormControl, Stepper, Step, StepLabel, StepContent, IconButton, InputLabel, Select, MenuItem } from '@mui/material';
 import dayjs from 'dayjs';
 
@@ -351,7 +351,7 @@ export default function AddVehicleRepairForm({
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
-                  <Grid xs={12} sm={6} md={4} item="true">
+                  <Grid item xs={12} sm={6} md={4} >
                     <Item>
                       <TheFileField
                         variant="outlined"
@@ -362,7 +362,7 @@ export default function AddVehicleRepairForm({
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={2} sm={4} md={4}>
+                  <Grid item xs={2} sm={4} md={4}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -373,7 +373,7 @@ export default function AddVehicleRepairForm({
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={4}>
+                  <Grid item xs={12} sm={6} md={4}>
                     <Item>
                       <TheDateTimePicker
                         label="Date et heure de réparation"
@@ -385,7 +385,7 @@ export default function AddVehicleRepairForm({
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={4} item="true">
+                  <Grid item xs={12} sm={6} md={4} >
                     <Item>
                       <TheAutocomplete
                         options={vehiclesData?.vehicles?.nodes}
@@ -399,7 +399,7 @@ export default function AddVehicleRepairForm({
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={4} item="true">
+                  <Grid item xs={12} sm={6} md={4} >
                     <Item>
                       <TheAutocomplete
                         options={partnersData?.partners?.nodes}
@@ -413,7 +413,7 @@ export default function AddVehicleRepairForm({
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={2} sm={4} md={4}>
+                  <Grid item xs={2} sm={4} md={4}>
                     <Item>
                       <FormControl fullWidth>
                         <InputLabel>État </InputLabel>
@@ -435,7 +435,7 @@ export default function AddVehicleRepairForm({
                       </FormControl>
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={12} md={12}>
+                  <Grid item xs={12} sm={12} md={12}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -450,7 +450,7 @@ export default function AddVehicleRepairForm({
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={12} md={12}>
+                  <Grid item xs={12} sm={12} md={12}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -484,7 +484,7 @@ export default function AddVehicleRepairForm({
                   columns={{ xs: 4, sm: 8, md: 12 }}
                   sx={{marginY: 5}}
                 >
-                  <Grid xs={12} sm={12} md={6} item="true"> 
+                  <Grid item xs={12} sm={12} md={6} > 
                     <Typography variant="h6">Les réparations menées</Typography> 
                     {formik.values?.repairs?.map((item, index) => (
                       <Grid
@@ -493,7 +493,7 @@ export default function AddVehicleRepairForm({
                         columns={{ xs: 4, sm: 8, md: 12 }}
                         key={index}
                       >
-                        <Grid xs={12} sm={12} md={12} item="true">
+                        <Grid item xs={12} sm={12} md={12} >
                           <Item sx={{position: 'relative'}}>
                             <TheTextField
                               variant="outlined"
@@ -524,7 +524,7 @@ export default function AddVehicleRepairForm({
                       xs={12}
                       sm={12}
                       md={12}
-                      item="true"
+                      item
                       sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom:4 }}
                     >
                       <Button
@@ -538,7 +538,7 @@ export default function AddVehicleRepairForm({
                     </Grid>
                   </Grid>
                   
-                  <Grid xs={12} sm={12} md={6} item="true" sx={{background: '#f9f9f9'}}>
+                  <Grid item xs={12} sm={12} md={6} item sx={{background: '#f9f9f9'}}>
                     <Typography variant="h6">Les points de vigilance</Typography>  
                     {formik.values?.vigilantPoints?.map((item, index) => (
                       <Grid
@@ -547,7 +547,7 @@ export default function AddVehicleRepairForm({
                         columns={{ xs: 4, sm: 8, md: 12 }}
                         key={index}
                       >
-                        <Grid xs={12} sm={12} md={12} item="true">
+                        <Grid item xs={12} sm={12} md={12} >
                           <Item sx={{position: 'relative'}}>
                             <TheTextField
                               variant="outlined"
@@ -578,7 +578,7 @@ export default function AddVehicleRepairForm({
                       xs={12}
                       sm={12}
                       md={12}
-                      item="true"
+                      item
                       sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom:4 }}
                     >
                       <Button
@@ -600,7 +600,7 @@ export default function AddVehicleRepairForm({
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link to="/online/parc-automobile/reparations/liste" className="no_style">
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>

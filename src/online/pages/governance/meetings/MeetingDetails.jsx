@@ -47,10 +47,10 @@ export default function MeetingDetails() {
           </Link>
         </Box>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid item="true" xs={7}>
+          <Grid item xs={7}>
             <MeetingMiniInfos meeting={meetingData?.meeting} />
           </Grid>
-          <Grid item="true" xs={5}>
+          <Grid item xs={5}>
               <Paper
                 variant="outlined"
                 sx={{
@@ -75,10 +75,10 @@ export default function MeetingDetails() {
                 ))}
               </Paper>
           </Grid>
-          <Grid item="true" xs={12} sx={{ marginY: 3 }}>
+          <Grid item xs={12} sx={{ marginY: 3 }}>
             <Divider />
           </Grid>
-          <Grid item="true" xs={6}>
+          <Grid item xs={6}>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Description
@@ -88,7 +88,7 @@ export default function MeetingDetails() {
               </Typography>
             </Paper>
           </Grid>
-          <Grid item="true" xs={6}>
+          <Grid item xs={6}>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Observation
@@ -98,22 +98,22 @@ export default function MeetingDetails() {
               </Typography>
             </Paper>
           </Grid>
-          <Grid item="true" xs={12} sx={{ marginY: 3 }}>
+          <Grid item xs={12} sx={{ marginY: 3 }}>
             <Divider />
           </Grid>
-          <Grid item="true" xs={6}>
+          <Grid item xs={6}>
             <MeetingParticipantsInfos meeting={meetingData?.meeting} />
           </Grid>
-          <Grid item="true" xs={6}>
+          <Grid item xs={6}>
             <MeetingOtherInfos meeting={meetingData?.meeting} />
           </Grid>
-          <Grid item="true" xs={12} sx={{ marginY: 3 }}>
+          <Grid item xs={12} sx={{ marginY: 3 }}>
             <Divider sx={{ marginY: 3 }}/>
             <Typography gutterBottom variant="subtitle3" component="h1">
               Le compte rendu
             </Typography>
           </Grid>
-          <Grid item="true" xs={12}>
+          <Grid item xs={12}>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Les notes prises
@@ -123,13 +123,13 @@ export default function MeetingDetails() {
               </Typography>
             </Paper>
           </Grid>
-          <Grid item="true" xs={6}>
+          <Grid item xs={6}>
             <MeetingDecisions meeting={meetingData?.meeting} />
           </Grid>
-          <Grid item="true" xs={6}>
+          <Grid item xs={6}>
             <MeetingReviewPoints meeting={meetingData?.meeting} />
           </Grid>
-          <Grid item="true" xs={12} sx={{ marginY: 3 }}>
+          <Grid item xs={12} sx={{ marginY: 3 }}>
             <Divider />
           </Grid>
         </Grid>
@@ -160,9 +160,9 @@ function MeetingMiniInfos({ meeting }) {
         }}
       >
         <Grid container spacing={2}>
-          <Grid item="true" xs={12} sm container>
-            <Grid item="true" xs container direction="column" spacing={2}>
-              <Grid item="true" xs>
+          <Grid item xs={12} sm container>
+            <Grid item xs container direction="column" spacing={2}>
+              <Grid item xs>
                 <Typography gutterBottom variant="subtitle1" component="div">
                   Réference : <b>{meeting?.number}</b>
                 </Typography>
@@ -212,7 +212,7 @@ function MeetingParticipantsInfos({ meeting }) {
             </Typography>
               <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
                 {meeting?.participants?.map((participant, index) => (
-                  <Grid xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
+                  <Grid item xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
                     <Item>
                       <EmployeeItemCard employee={participant.employee} />
                     </Item>
@@ -228,7 +228,7 @@ function MeetingParticipantsInfos({ meeting }) {
             </Typography>
             <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
               {meeting?.absentParticipants?.map((participant, index) => (
-                <Grid xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
+                <Grid item xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
                   <Item>
                     <EmployeeItemCard employee={participant} />
                   </Item>
@@ -261,7 +261,7 @@ function MeetingOtherInfos({ meeting }) {
             </Typography>
               <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
                 {meeting?.establishments?.map((establishment, index) => (
-                  <Grid xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
+                  <Grid item xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
                     <Item>
                       <EstablishmentItemCard establishment={establishment.establishment} />
                     </Item>
@@ -277,7 +277,7 @@ function MeetingOtherInfos({ meeting }) {
             </Typography>
             <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
               {meeting?.beneficiaries?.map((beneficiary, index) => (
-                <Grid xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
+                <Grid item xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
                   <Item>
                     <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
                   </Item>

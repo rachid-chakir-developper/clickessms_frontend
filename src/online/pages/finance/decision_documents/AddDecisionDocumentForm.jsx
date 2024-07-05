@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Stack, Box, Typography, Button, Stepper, Step, StepLabel, StepContent, RadioGroup, FormControlLabel, Radio, FormLabel, FormControl, IconButton, InputLabel, Select, MenuItem, InputAdornment } from '@mui/material';
 import dayjs from 'dayjs';
 
@@ -315,7 +315,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
                   
-                  <Grid xs={12} sm={6} md={3} item="true">
+                  <Grid item xs={12} sm={6} md={3} >
                     <Item>
                       <TheFileField variant="outlined" label="Document d'admission"
                         fileValue={formik.values.document}
@@ -324,7 +324,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                         />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={3}>
+                  <Grid item xs={12} sm={6} md={3}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -337,7 +337,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={3}>
+                  <Grid item xs={12} sm={6} md={3}>
                     <Item>
                       <TheDesktopDatePicker
                         label="Date de décision / notification"
@@ -347,7 +347,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={3}>
+                  <Grid item xs={12} sm={6} md={3}>
                     <Item>
                       <TheDesktopDatePicker
                         label="Date de récéption"
@@ -357,7 +357,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={3}>
+                  <Grid item xs={12} sm={6} md={3}>
                     <Item>
                       <TheAutocomplete
                         options={financiersData?.financiers?.nodes}
@@ -389,7 +389,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
-                  <Grid xs={12} sm={12} md={12} item="true">
+                  <Grid item xs={12} sm={12} md={12} >
                       {formik.values?.decisionDocumentItems?.map((item, index) => (
                         <Grid
                           container
@@ -397,7 +397,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                           columns={{ xs: 4, sm: 8, md: 12 }}
                           key={index}
                         >
-                          <Grid xs={12} sm={6} md={2} item="true">
+                          <Grid item xs={12} sm={6} md={2} >
                             <Item>
                               <TheAutocomplete
                                 options={establishmentsData?.establishments?.nodes}
@@ -411,7 +411,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={2} item="true">
+                          <Grid item xs={12} sm={6} md={2} >
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -424,7 +424,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={2} item="true">
+                          <Grid item xs={12} sm={6} md={2} >
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -437,7 +437,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={1.5}>
+                          <Grid item xs={12} sm={6} md={1.5}>
                             <Item>
                               <TheTextField
                                 variant="outlined"
@@ -454,7 +454,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={1.5}>
+                          <Grid item xs={12} sm={6} md={1.5}>
                             <Item>
                               <TheTextField
                                 variant="outlined"
@@ -468,7 +468,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={1.5}>
+                          <Grid item xs={12} sm={6} md={1.5}>
                             <Item>
                               <TheTextField
                                 variant="outlined"
@@ -485,7 +485,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={1.5}>
+                          <Grid item xs={12} sm={6} md={1.5}>
                             <Item sx={{position: 'relative'}}>
                               <TheTextField
                                 variant="outlined"
@@ -513,7 +513,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
                     xs={12}
                     sm={12}
                     md={12}
-                    item="true"
+                    item
                     sx={{ display: 'flex', justifyContent: 'flex-end' }}
                   >
                     <Button
@@ -534,7 +534,7 @@ export default function AddDecisionDocumentForm({ idDecisionDocument, title }) {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid xs={12} sm={12} md={12} item="true">
+            <Grid item xs={12} sm={12} md={12} >
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
                   to="/online/finance/decisions/liste"

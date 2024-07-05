@@ -81,27 +81,27 @@ export default function VehicleTechnicalInspectionDetails() {
               </Typography>
             </Paper>
           </Grid>
-          <Grid item="true" xs={12} sx={{ marginY: 3 }}>
+          <Grid item xs={12} sx={{ marginY: 3 }}>
             <Divider />
           </Grid>
-          <Grid item="true" xs={12}>
+          <Grid item xs={12}>
             <Typography gutterBottom variant="subtitle3" component="h3">
               Les défaillances
             </Typography>
           </Grid>
-          <Grid item="true" xs={12} sm={12} md={4}>
+          <Grid item xs={12} sm={12} md={4}>
             <Failures title={'Les défaillances mineurs'} 
               failures={vehicleTechnicalInspectionData?.vehicleTechnicalInspection?.failures?.filter((f)=> f?.failureType === INSPECTION_FAILURE_TYPES.MINOR)} />
           </Grid>
-          <Grid item="true" xs={12} sm={12} md={4}>
+          <Grid item xs={12} sm={12} md={4}>
             <Failures title={'Les défaillances majeurs'} 
               failures={vehicleTechnicalInspectionData?.vehicleTechnicalInspection?.failures?.filter((f)=> f?.failureType === INSPECTION_FAILURE_TYPES.MAJOR)} />
           </Grid>
-          <Grid item="true" xs={12} sm={12} md={4}>
+          <Grid item xs={12} sm={12} md={4}>
             <Failures title={'Les défaillances critiques'} 
               failures={vehicleTechnicalInspectionData?.vehicleTechnicalInspection?.failures?.filter((f)=> f?.failureType ===INSPECTION_FAILURE_TYPES.CRITICAL)} />
           </Grid>
-          <Grid item="true" xs={12} sx={{ marginY: 3 }}>
+          <Grid item xs={12} sx={{ marginY: 3 }}>
             <Divider />
           </Grid>
         </Grid>

@@ -19,6 +19,7 @@ import {
   CALL_TYPES,
   LETTER_TYPES,
   MSG_NOTIF_TYPES,
+  FEEDBACK_MODULES,
 } from './constants';
 
 export const getStatusColor = (status) => {
@@ -145,6 +146,9 @@ export const getLetterTypeLabel = (type) => {
 };
 export const getMessageNotificationTypeLabel = (type) => {
   return MSG_NOTIF_TYPES.ALL.find((t) => t.value == type)?.label;
+};
+export const getFeedbackModuleLabel = (module) => {
+  return FEEDBACK_MODULES.ALL.find((t) => t.value == module)?.label;
 };
 
 

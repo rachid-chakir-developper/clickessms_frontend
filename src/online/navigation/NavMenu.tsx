@@ -3,6 +3,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import { useNavigate } from 'react-router-dom';
 import { modules } from './modules';
 import Divider from '@mui/material/Divider';
@@ -332,6 +333,12 @@ function NavMenuFooter() {
             type: 'manageSettings',
           }).authorized
         }
+      />
+      <NavEntry
+        path="/online/roberp"
+        key="roberp"
+        name="Retours et bogues"
+        icon={<ReportProblemIcon />}
       />
       <NavEntry
         key="logout"

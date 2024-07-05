@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import SupplierItemCard from './SupplierItemCard';
 import { useMutation } from '@apollo/client';
@@ -162,7 +162,7 @@ export default function ListSuppliers() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link to="/online/achats/fournisseurs/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
@@ -171,10 +171,10 @@ export default function ListSuppliers() {
           </Link>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <SupplierFilter onFilterChange={handleFilterChange} />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -191,7 +191,7 @@ export default function ListSuppliers() {
                 <Alert severity="warning">Aucun fournisseur trouvé.</Alert>
               )}
             {suppliersData?.suppliers?.nodes?.map((supplier, index) => (
-              <Grid xs={2} sm={4} md={3} key={index}>
+              <Grid item xs={2} sm={4} md={3} key={index}>
                 <Item>
                   <SupplierItemCard
                     supplier={supplier}
@@ -204,7 +204,7 @@ export default function ListSuppliers() {
           </Grid>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={suppliersData?.suppliers?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

@@ -43,7 +43,7 @@ const EstablishmentDetailsPage = ({ establishment }) => {
                     <Paper sx={{ padding: 2 }} variant="outlined">
                     <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
                         {managers?.map((manager, index) => (
-                        <Grid xs={12} sm={12} md={12} key={index}>
+                        <Grid item xs={12} sm={12} md={12} key={index}>
                             <Item>
                             <EmployeeItemCard employee={manager?.employee} />
                             </Item>
@@ -76,7 +76,7 @@ const EstablishmentDetailsPage = ({ establishment }) => {
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
                 {establishmentChilds?.map((establishment, index) => (
-                  <Grid xs={12} sm={6} md={4} key={index}>
+                  <Grid item xs={12} sm={6} md={4} key={index}>
                     <Item>
                       <EstablishmentItemCard establishment={establishment} />
                     </Item>

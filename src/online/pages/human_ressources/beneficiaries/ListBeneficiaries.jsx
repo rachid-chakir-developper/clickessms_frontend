@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import BeneficiaryItemCard from './BeneficiaryItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -166,7 +166,7 @@ export default function ListBeneficiaries() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
             to="/online/ressources-humaines/beneficiaires/ajouter"
@@ -178,10 +178,10 @@ export default function ListBeneficiaries() {
           </Link>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <BeneficiaryFilter onFilterChange={handleFilterChange} />
       </Grid>
-      {/* <Grid item="true" xs={12}>
+      {/* <Grid item xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -189,7 +189,7 @@ export default function ListBeneficiaries() {
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
             {loadingBeneficiaries && (
-              <Grid key={'pgrs'} item="true" xs={12} sm={6} md={4}>
+              <Grid key={'pgrs'} item xs={12} sm={6} md={4}>
                 <ProgressService type="mediaCard" />
               </Grid>
             )}
@@ -199,7 +199,7 @@ export default function ListBeneficiaries() {
               )}
             {beneficiariesData?.beneficiaries?.nodes?.map(
               (beneficiary, index) => (
-                <Grid xs={12} sm={6} md={4} key={index}>
+                <Grid item xs={12} sm={6} md={4} key={index}>
                   <Item>
                     <BeneficiaryItemCard
                       beneficiary={beneficiary}
@@ -213,14 +213,14 @@ export default function ListBeneficiaries() {
           </Grid>
         </Box>
       </Grid> */}
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListBeneficiaries
           loading={loadingBeneficiaries}
           rows={beneficiariesData?.beneficiaries?.nodes || []}
           onDeleteBeneficiary={onDeleteBeneficiary}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={beneficiariesData?.beneficiaries?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

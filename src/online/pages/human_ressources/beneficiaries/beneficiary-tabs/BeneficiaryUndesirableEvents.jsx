@@ -1,7 +1,7 @@
 
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Stack } from '@mui/material';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { DELETE_UNDESIRABLE_EVENT } from '../../../../../_shared/graphql/mutations/UndesirableEventMutations';
@@ -122,14 +122,14 @@ export default function BeneficiaryUndesirableEvents({beneficiary}) {
 
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListUndesirableEvents
           loading={loadingUndesirableEvents}
           rows={undesirableEventsData?.undesirableEvents?.nodes || []}
           onDeleteUndesirableEvent={onDeleteUndesirableEvent}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={undesirableEventsData?.undesirableEvents?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

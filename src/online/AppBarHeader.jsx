@@ -16,6 +16,9 @@ import AccountPopover from './_shared/components/accounts/AccountPopover';
 import Logo from '../_shared/components/app/Logo';
 import { useTheme } from '@emotion/react';
 import MessageNotificationPanel from './_shared/components/feedBacks/message-notifications/MessageNotificationPanel';
+import { Link } from 'react-router-dom';
+import { Button, Tooltip } from '@mui/material';
+import { SupportAgent } from '@mui/icons-material';
 
 const drawerWidth = 280;
 
@@ -147,18 +150,19 @@ export default function AppBarHeader({ open, handleDrawerToggle }) {
               <MenuIcon />
             </IconButton>
           )}
-          {/* <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
-          >
-            SGI
-          </Typography> */}
           {!open && <Logo color={PRIMARY_LIGHT} />}
           <SearchPanel />
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <Box>
+              <Link to="/online/roberp/feedbacks/liste" className="no_style">
+                <Tooltip title="Aidez-nous à améliorer l'application en partageant vos retours, suggestions ou en signalant des corrections.">
+                  <Button size="small" variant="outlined" color="inherit" endIcon={<SupportAgent />}>
+                    Contactez le support
+                  </Button>
+                </Tooltip>
+              </Link>
+            </Box>
             <Box>
               <MessageNotificationPanel />
             </Box>

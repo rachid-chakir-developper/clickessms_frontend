@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import EstablishmentItemCard from './EstablishmentItemCard';
 import { useMutation } from '@apollo/client';
@@ -171,7 +171,7 @@ export default function ListEstablishments() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
             to="/online/associations/structures/ajouter"
@@ -183,10 +183,10 @@ export default function ListEstablishments() {
           </Link>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <EstablishmentFilter onFilterChange={handleFilterChange} />
       </Grid>
-      {/* <Grid item="true" xs={12}>
+      {/* <Grid item xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -204,7 +204,7 @@ export default function ListEstablishments() {
               )}
             {establishmentsData?.establishments?.nodes?.map(
               (establishment, index) => (
-                <Grid xs={12} sm={6} md={4} key={index}>
+                <Grid item xs={12} sm={6} md={4} key={index}>
                   <Item>
                     <EstablishmentItemCard
                       establishment={establishment}
@@ -218,7 +218,7 @@ export default function ListEstablishments() {
           </Grid>
         </Box>
       </Grid> */}
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListEstablishments
           loading={loadingEstablishments}
           rows={establishmentsData?.establishments?.nodes || []}
@@ -226,7 +226,7 @@ export default function ListEstablishments() {
           onUpdateEstablishmentState={onUpdateEstablishmentState}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={establishmentsData?.establishments?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

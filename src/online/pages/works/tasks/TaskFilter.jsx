@@ -68,12 +68,12 @@ const TaskFilter = ({ onFilterChange }) => {
   
   return (
     <Grid container spacing={2}>
-        <Grid item="true" xs={12} md={12}>
+        <Grid item xs={12} md={12}>
             <Typography component="div" variant="h5">
                 {filterValues?.startingDateTime ? `Les intérventions de ${filterValues?.startingDateTime.format('DD/MM/YYYY')} ` : 'Toutes les intérventions'}
             </Typography>
         </Grid>
-        <Grid item="true" xs={12} md={4}>
+        <Grid item xs={12} md={4}>
             <Item>
                 <TheTextField variant="outlined"
                     label="Recherche"
@@ -84,7 +84,7 @@ const TaskFilter = ({ onFilterChange }) => {
                 />
             </Item>
         </Grid>
-        <Grid item="true" xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
             <Item>
                 <TheDesktopDatePicker
                     type="date"
@@ -94,7 +94,7 @@ const TaskFilter = ({ onFilterChange }) => {
                 />
             </Item>
         </Grid>
-        {/* <Grid item="true" xs={12} sm={6} md={2}>
+        {/* <Grid item xs={12} sm={6} md={2}>
             <Item>
                 <TheDesktopDatePicker
                     label="À"
@@ -104,7 +104,7 @@ const TaskFilter = ({ onFilterChange }) => {
                 />
             </Item>
         </Grid> */}
-        <Grid item="true" xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
             <Item>
                 <Autocomplete
                     multiple
@@ -134,7 +134,7 @@ const TaskFilter = ({ onFilterChange }) => {
                 />
             </Item>
         </Grid>
-        <Grid item="true" xs={12} md={2} sx={{ display : 'flex', alignItems : 'center'}}>
+        <Grid item xs={12} md={2} sx={{ display : 'flex', alignItems : 'center'}}>
             <Item  sx={{height: '100%', justifyContent: 'center'}}>
                 <Button variant="outlined" color="info" onClick={handleFilterSubmit}>
                     Chercher

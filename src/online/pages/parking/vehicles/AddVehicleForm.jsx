@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Stack, Box, Typography, Button, Divider, Stepper, Step, StepLabel, StepContent, IconButton, FormControl, InputLabel, Select, MenuItem, InputAdornment } from '@mui/material';
 import dayjs from 'dayjs';
 
@@ -404,7 +404,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
-                  <Grid xs={12} sm={6} md={3}>
+                  <Grid item xs={12} sm={6} md={3}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -420,7 +420,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={3}>
+                  <Grid item xs={12} sm={6} md={3}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -444,7 +444,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={3} item="true">
+                  <Grid item xs={12} sm={6} md={3} >
                     <Item>
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
@@ -471,7 +471,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                       </FormControl>
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={3} item="true">
+                  <Grid item xs={12} sm={6} md={3} >
                     <Item>
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
@@ -498,7 +498,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                       </FormControl>
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={3}>
+                  <Grid item xs={12} sm={6} md={3}>
                     <Item>
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
@@ -557,7 +557,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                       </FormControl>
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={12} md={9}>
+                  <Grid item xs={12} sm={12} md={9}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -590,7 +590,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
-                  <Grid xs={12} sm={12} md={12} item="true">
+                  <Grid item xs={12} sm={12} md={12} >
                       {formik.values?.vehicleEstablishments?.map((item, index) => (
                         <Grid
                           container
@@ -598,7 +598,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                           columns={{ xs: 4, sm: 8, md: 12 }}
                           key={index}
                         >
-                          <Grid xs={12} sm={6} md={6} item="true">
+                          <Grid item xs={12} sm={6} md={6} >
                             <Item>
                               <TheAutocomplete
                                 options={establishmentsData?.establishments?.nodes}
@@ -612,7 +612,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={3} item="true">
+                          <Grid item xs={12} sm={6} md={3} >
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -625,7 +625,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={3} item="true">
+                          <Grid item xs={12} sm={6} md={3} >
                             <Item sx={{position: 'relative'}}>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -652,7 +652,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                     xs={12}
                     sm={12}
                     md={12}
-                    item="true"
+                    item
                     sx={{ display: 'flex', justifyContent: 'flex-end' }}
                   >
                     <Button
@@ -682,7 +682,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
-                  <Grid xs={12} sm={12} md={12} item="true">
+                  <Grid item xs={12} sm={12} md={12} >
                       {formik.values?.vehicleEmployees?.map((item, index) => (
                         <Grid
                           container
@@ -690,7 +690,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                           columns={{ xs: 4, sm: 8, md: 12 }}
                           key={index}
                         >
-                          <Grid xs={12} sm={6} md={6} item="true">
+                          <Grid item xs={12} sm={6} md={6} >
                             <Item>
                               <TheAutocomplete
                                 options={employeesData?.employees?.nodes}
@@ -704,7 +704,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={3} item="true">
+                          <Grid item xs={12} sm={6} md={3} >
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -717,7 +717,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={3} item="true">
+                          <Grid item xs={12} sm={6} md={3} >
                             <Item sx={{position: 'relative'}}>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -744,7 +744,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                     xs={12}
                     sm={12}
                     md={12}
-                    item="true"
+                    item
                     sx={{ display: 'flex', justifyContent: 'flex-end' }}
                   >
                     <Button
@@ -774,7 +774,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
-                  <Grid xs={12} sm={12} md={12} item="true">
+                  <Grid item xs={12} sm={12} md={12} >
                       {formik.values?.vehicleOwnerships?.map((item, index) => (
                         <Grid
                           container
@@ -782,7 +782,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                           columns={{ xs: 4, sm: 8, md: 12 }}
                           key={index}
                         >
-                          <Grid xs={12} sm={6} md={3}>
+                          <Grid item xs={12} sm={6} md={3}>
                             <Item>
                               <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">
@@ -811,7 +811,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                               </FormControl>
                             </Item>
                           </Grid>
-                          {item.ownershipType === OWNERSHIP_TYPE_CHOICES.PURCHASE && <><Grid xs={12} sm={6} md={3} item="true">
+                          {item.ownershipType === OWNERSHIP_TYPE_CHOICES.PURCHASE && <><Grid item xs={12} sm={6} md={3} >
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -824,7 +824,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={3}>
+                          <Grid item xs={12} sm={6} md={3}>
                             <Item sx={{position: 'relative'}}>
                               <TheTextField
                                 variant="outlined"
@@ -848,7 +848,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                               </IconButton>
                             </Item>
                           </Grid></>}
-                          {item.ownershipType === OWNERSHIP_TYPE_CHOICES.SALE && <><Grid xs={12} sm={6} md={3} item="true">
+                          {item.ownershipType === OWNERSHIP_TYPE_CHOICES.SALE && <><Grid item xs={12} sm={6} md={3} >
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -861,7 +861,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={3}>
+                          <Grid item xs={12} sm={6} md={3}>
                             <Item sx={{position: 'relative'}}>
                               <TheTextField
                                 variant="outlined"
@@ -885,7 +885,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                               </IconButton>
                             </Item>
                           </Grid></>}
-                          {item.ownershipType === OWNERSHIP_TYPE_CHOICES.LEASE && <><Grid xs={12} sm={6} md={3} item="true">
+                          {item.ownershipType === OWNERSHIP_TYPE_CHOICES.LEASE && <><Grid item xs={12} sm={6} md={3} >
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -898,7 +898,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={3} item="true">
+                          <Grid item xs={12} sm={6} md={3} >
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -911,7 +911,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                               />
                             </Item>
                           </Grid>
-                          <Grid xs={12} sm={6} md={3}>
+                          <Grid item xs={12} sm={6} md={3}>
                             <Item sx={{position: 'relative'}}>
                               <TheTextField
                                 variant="outlined"
@@ -957,7 +957,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
                     xs={12}
                     sm={12}
                     md={12}
-                    item="true"
+                    item
                     sx={{ display: 'flex', justifyContent: 'flex-end' }}
                   >
                     <Button
@@ -978,7 +978,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link to="/online/parc-automobile/vehicules/liste" className="no_style">
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>

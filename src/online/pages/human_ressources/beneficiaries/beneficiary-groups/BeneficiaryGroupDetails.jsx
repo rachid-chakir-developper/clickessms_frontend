@@ -161,7 +161,7 @@ function BeneficiaryGroupOtherInfos({ beneficiaryGroup }) {
       </Typography>
       <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
         {beneficiaryGroup?.beneficiaries?.map((beneficiary, index) => (
-          <Grid xs={12} sm={12} md={12} key={index}>
+          <Grid item xs={12} sm={12} md={12} key={index}>
             <Item>
               <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
             </Item>

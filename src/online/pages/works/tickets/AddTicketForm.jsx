@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Stack, Box, Typography, Button, Divider, Stepper, Step, StepLabel, StepContent, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import dayjs from 'dayjs';
 
@@ -300,7 +300,7 @@ export default function AddTicketForm({ idTicket, title }) {
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
-                  <Grid xs={12} sm={6} md={5}>
+                  <Grid item xs={12} sm={6} md={5}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -318,7 +318,7 @@ export default function AddTicketForm({ idTicket, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={4}>
+                  <Grid item xs={12} sm={6} md={4}>
                     <Item>
                       <TheAutocomplete
                         options={establishmentsData?.establishments?.nodes}
@@ -332,7 +332,7 @@ export default function AddTicketForm({ idTicket, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={3}>
+                  <Grid item xs={12} sm={6} md={3}>
                     <Item>
                       <FormControl fullWidth>
                           <InputLabel>Priorité</InputLabel>
@@ -352,7 +352,7 @@ export default function AddTicketForm({ idTicket, title }) {
                       </FormControl>
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={12} md={12}>
+                  <Grid item xs={12} sm={12} md={12}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -385,7 +385,7 @@ export default function AddTicketForm({ idTicket, title }) {
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
-                  <Grid xs={12} sm={12} md={12} item="true">
+                  <Grid item xs={12} sm={12} md={12} >
                     {formik.values?.actions?.map((item, index) => (
                       <Grid
                         container
@@ -393,7 +393,7 @@ export default function AddTicketForm({ idTicket, title }) {
                         key={index}
                         sx={{background: index%2 === 0 ?  "#f2f2f2" : "#f9f9f9", padding: 3}}
                       >
-                        <Grid xs={12} sm={12} md={12} item="true">
+                        <Grid item xs={12} sm={12} md={12} >
                           <Item sx={{position: 'relative'}}>
                             <TheTextField
                               variant="outlined"
@@ -418,7 +418,7 @@ export default function AddTicketForm({ idTicket, title }) {
                             </IconButton>
                           </Item>
                         </Grid>
-                        <Grid xs={12} sm={6} md={4} item="true">
+                        <Grid item xs={12} sm={6} md={4} >
                           <Item>
                             <TheDesktopDatePicker
                               label="Échéance"
@@ -430,7 +430,7 @@ export default function AddTicketForm({ idTicket, title }) {
                             />
                           </Item>
                         </Grid>
-                        <Grid xs={12} sm={6} md={5} item="true">
+                        <Grid item xs={12} sm={6} md={5} >
                           <Item>
                             <TheAutocomplete
                               options={employeesData?.employees?.nodes}
@@ -444,7 +444,7 @@ export default function AddTicketForm({ idTicket, title }) {
                             />
                           </Item>
                         </Grid>
-                        <Grid xs={12} sm={6} md={3}>
+                        <Grid item xs={12} sm={6} md={3}>
                           <Item>
                             <FormControl fullWidth>
                                 <InputLabel>Statut</InputLabel>
@@ -470,7 +470,7 @@ export default function AddTicketForm({ idTicket, title }) {
                       xs={12}
                       sm={12}
                       md={12}
-                      item="true"
+                      item
                       sx={{ display: 'flex', justifyContent: 'flex-end', marginY:4 }}
                     >
                       <Button
@@ -492,7 +492,7 @@ export default function AddTicketForm({ idTicket, title }) {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid xs={12} sm={12} md={12} item="true">
+            <Grid item xs={12} sm={12} md={12} >
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
                   to="/online/qualites/plan-action/tickets/liste"

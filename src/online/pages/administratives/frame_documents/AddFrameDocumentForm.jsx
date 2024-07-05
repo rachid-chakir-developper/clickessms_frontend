@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Stack, Box, Typography, Button, InputAdornment, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import dayjs from 'dayjs';
 
@@ -185,7 +185,7 @@ export default function AddFrameDocumentForm({ idFrameDocument, title }) {
       {!loadingFrameDocument && (
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={{ xs: 2, md: 3 }}>
-            <Grid xs={12} sm={6} md={4} item="true">
+            <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <TheFileField
                   variant="outlined"
@@ -196,7 +196,7 @@ export default function AddFrameDocumentForm({ idFrameDocument, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4} item="true">
+            <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -207,7 +207,7 @@ export default function AddFrameDocumentForm({ idFrameDocument, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4} item="true">
+            <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">
@@ -236,7 +236,7 @@ export default function AddFrameDocumentForm({ idFrameDocument, title }) {
                 </FormControl>
               </Item>
             </Grid>
-            <Grid xs={12} sm={12} md={12} item="true">
+            <Grid item xs={12} sm={12} md={12} >
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -249,7 +249,7 @@ export default function AddFrameDocumentForm({ idFrameDocument, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
                   to="/online/administratif/documents-trames/liste"

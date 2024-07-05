@@ -37,6 +37,7 @@ import Parking from './pages/parking/Parking';
 import ChatbotButton from './_shared/components/robert_ia/ChatBotButton';
 import SpeedDialTooltipOpen from '../_shared/components/app/SpeedDialTooltipOpen';
 import { AuthorizationSystemProvider } from '../_shared/context/AuthorizationSystemProvider';
+import Roberp from './pages/roberp/Roberp';
 
 const drawerWidth = 280;
 
@@ -200,6 +201,7 @@ export default function Online() {
             <Route path={`chat/*`} element={<Chat />} />
             <Route path={`account/*`} element={<Account />} />
             <Route path={`planning/*`} element={<Planning />} />
+            <Route path={`roberp/*`} element={<Roberp />} />
           </Routes>
         </Box>
         <SpeedDialTooltipOpen />

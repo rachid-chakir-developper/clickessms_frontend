@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import EmployeeItemCard from './EmployeeItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -161,7 +161,7 @@ export default function ListEmployees() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
             to="/online/ressources-humaines/employes/groupes"
@@ -229,10 +229,10 @@ export default function ListEmployees() {
           </Link>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <EmployeeFilter onFilterChange={handleFilterChange} />
       </Grid>
-      {/* <Grid item="true" xs={12}>
+      {/* <Grid item xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -240,7 +240,7 @@ export default function ListEmployees() {
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
             {loadingEmployees && (
-              <Grid key={'pgrs'} item="true" xs={12} sm={6} md={4}>
+              <Grid key={'pgrs'} item xs={12} sm={6} md={4}>
                 <ProgressService type="mediaCard" />
               </Grid>
             )}
@@ -249,7 +249,7 @@ export default function ListEmployees() {
                 <Alert severity="warning">Aucun employé trouvé.</Alert>
               )}
             {employeesData?.employees?.nodes?.map((employee, index) => (
-              <Grid xs={12} sm={6} md={4} key={index}>
+              <Grid item xs={12} sm={6} md={4} key={index}>
                 <Item>
                   <EmployeeItemCard
                     employee={employee}
@@ -263,14 +263,14 @@ export default function ListEmployees() {
         </Box>
       </Grid> */}
       
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListEmployees
           loading={loadingEmployees}
           rows={employeesData?.employees?.nodes || []}
           onDeleteEmployee={onDeleteEmployee}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={employeesData?.employees?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

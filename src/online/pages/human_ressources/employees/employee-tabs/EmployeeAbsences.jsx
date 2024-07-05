@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { DELETE_EMPLOYEE_ABSENCE } from '../../../../../_shared/graphql/mutations/EmployeeAbsenceMutations';
@@ -121,14 +121,14 @@ export default function EmployeeAbsences({employee}) {
 
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListEmployeeAbsences
           loading={loadingEmployeeAbsences}
           rows={employeeAbsencesData?.employeeAbsences?.nodes || []}
           onDeleteEmployeeAbsence={onDeleteEmployeeAbsence}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={employeeAbsencesData?.employeeAbsences?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

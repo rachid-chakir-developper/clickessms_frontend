@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import MeetingItemCard from './MeetingItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -117,7 +117,7 @@ export default function ListMeetings() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
             to="/online/gouvernance/reunions/ajouter"
@@ -129,10 +129,10 @@ export default function ListMeetings() {
           </Link>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <MeetingFilter onFilterChange={handleFilterChange} />
       </Grid>
-      {/* <Grid item="true" xs={12}>
+      {/* <Grid item xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -148,7 +148,7 @@ export default function ListMeetings() {
               <Alert severity="warning">Aucun procès-verbal trouvé.</Alert>
             )}
             {meetingsData?.meetings?.nodes?.map((meeting, index) => (
-              <Grid xs={2} sm={4} md={3} key={index}>
+              <Grid item xs={2} sm={4} md={3} key={index}>
                 <Item>
                   <MeetingItemCard
                     meeting={meeting}
@@ -160,14 +160,14 @@ export default function ListMeetings() {
           </Grid>
         </Box>
       </Grid> */}
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListMeetings
           loading={loadingMeetings}
           rows={meetingsData?.meetings?.nodes || []}
           onDeleteMeeting={onDeleteMeeting}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={meetingsData?.meetings?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

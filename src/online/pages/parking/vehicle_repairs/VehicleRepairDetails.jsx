@@ -100,16 +100,16 @@ export default function VehicleRepairDetails() {
               </Typography>
             </Paper>
           </Grid>
-          <Grid item="true" xs={12} sx={{ marginY: 3 }}>
+          <Grid item xs={12} sx={{ marginY: 3 }}>
             <Divider />
           </Grid>
-          <Grid item="true" xs={6}>
+          <Grid item xs={6}>
             <Repairs vehicleRepair={vehicleRepairData?.vehicleRepair} />
           </Grid>
-          <Grid item="true" xs={6}>
+          <Grid item xs={6}>
             <VigilantPoints vehicleRepair={vehicleRepairData?.vehicleRepair} />
           </Grid>
-          <Grid item="true" xs={12} sx={{ marginY: 3 }}>
+          <Grid item xs={12} sx={{ marginY: 3 }}>
             <Divider />
           </Grid>
         </Grid>

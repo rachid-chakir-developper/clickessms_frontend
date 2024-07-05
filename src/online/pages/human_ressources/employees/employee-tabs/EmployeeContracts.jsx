@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { DELETE_EMPLOYEE_CONTRACT } from '../../../../../_shared/graphql/mutations/EmployeeContractMutations';
@@ -121,14 +121,14 @@ export default function EmployeeContracts({employee}) {
 
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListEmployeeContracts
           loading={loadingEmployeeContracts}
           rows={employeeContractsData?.employeeContracts?.nodes || []}
           onDeleteEmployeeContract={onDeleteEmployeeContract}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={employeeContractsData?.employeeContracts?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

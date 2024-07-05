@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import BankAccountItemCard from './BankAccountItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -158,7 +158,7 @@ export default function ListBankAccounts() {
   };
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link to="/online/finance/tresorerie/comptes-bancaires/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
@@ -167,17 +167,17 @@ export default function ListBankAccounts() {
           </Link>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <BankAccountFilter onFilterChange={handleFilterChange} />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}
           >
             {loadingBankAccounts && (
-              <Grid key={'pgrs'} item="true" xs={12} sm={6} md={4}>
+              <Grid key={'pgrs'} item xs={12} sm={6} md={4}>
                 <ProgressService type="mediaCard" />
               </Grid>
             )}
@@ -185,7 +185,7 @@ export default function ListBankAccounts() {
               <Alert severity="warning">Aucun compte bancaire trouvé.</Alert>
             )}
             {bankAccountsData?.bankAccounts?.nodes?.map((bankAccount, index) => (
-              <Grid item="true" xs={12} sm={6} md={4} key={index}>
+              <Grid item xs={12} sm={6} md={4} key={index}>
                 <Item>
                   <BankAccountItemCard
                     bankAccount={bankAccount}
@@ -198,7 +198,7 @@ export default function ListBankAccounts() {
           </Grid>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={bankAccountsData?.bankAccounts?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

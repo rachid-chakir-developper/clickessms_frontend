@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import TaskItemCard from './TaskItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -161,7 +161,7 @@ export default function ListTasks() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
             to="/online/travaux/interventions/ajouter?type=REQUEST"
@@ -180,17 +180,17 @@ export default function ListTasks() {
           </Link>}
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TaskFilter onFilterChange={handleFilterChange} />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListTasks
           loading={loadingTasks}
           rows={tasksData?.tasks?.nodes || []}
           onDeleteTask={onDeleteTask}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={tasksData?.tasks?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

@@ -184,7 +184,7 @@ function EmployeeAbsenceOtherInfos({ employeeAbsence }) {
       </Typography>
       <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
         {employeeAbsence?.employees?.map((employee, index) => (
-          <Grid xs={12} sm={12} md={12} key={index}>
+          <Grid item xs={12} sm={12} md={12} key={index}>
             <Item>
               <EmployeeItemCard employee={employee?.employee} />
             </Item>

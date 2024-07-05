@@ -306,3 +306,40 @@ export const MSG_NOTIF_TYPES = {
     { value: 'ERROR', label: 'Erreur' },
   ],
 };
+
+export const FEEDBACK_MODULES = {
+  APP: 'APP',
+  DASHBOARD: 'DASHBOARD',
+  QUALITY: 'QUALITY',
+  ACTIVITY: 'ACTIVITY',
+  HR: 'HR',
+  ADMINISTRATIF: 'ADMINISTRATIF',
+  FACILITY: 'FACILITY',
+  FINANCE: 'FINANCE',
+  IT: 'IT',
+  PURCHASE: 'PURCHASE',
+  GOVERNANCE: 'GOVERNANCE',
+  CSE: 'CSE',
+  LEGAL: 'LEGAL',
+  RESOURCES: 'RESOURCES',
+  USERS: 'USERS',
+  SETTINGS: 'SETTINGS',
+  ALL: [
+    { value: 'APP', label: 'Application' },
+    { value: 'DASHBOARD', label: 'Tableau de bord' },
+    { value: 'QUALITY', label: 'Qualité' },
+    { value: 'ACTIVITY', label: 'Activité' },
+    { value: 'HR', label: 'Ressources Humaines' },
+    { value: 'ADMINISTRATIF', label: 'Administratif' },
+    { value: 'FACILITY', label: 'Services Généraux' },
+    { value: 'FINANCE', label: 'Finance' },
+    { value: 'IT', label: 'Informatique' },
+    { value: 'PURCHASE', label: 'Achat' },
+    { value: 'GOVERNANCE', label: 'Gouvernance' },
+    { value: 'CSE', label: 'CSE' },
+    { value: 'LEGAL', label: 'Juridiques' },
+    { value: 'RESOURCES', label: 'Ressources' },
+    { value: 'USERS', label: 'Utilisateurs' },
+    { value: 'SETTINGS', label: 'Paramètres' }
+  ]
+};

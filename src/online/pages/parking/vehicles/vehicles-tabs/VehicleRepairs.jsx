@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { DELETE_VEHICLE_REPAIR } from '../../../../../_shared/graphql/mutations/VehicleRepairMutations';
@@ -121,14 +121,14 @@ export default function VehicleRepairs({vehicle}) {
 
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListVehicleRepairs
           loading={loadingVehicleRepairs}
           rows={vehicleRepairsData?.vehicleRepairs?.nodes || []}
           onDeleteVehicleRepair={onDeleteVehicleRepair}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={vehicleRepairsData?.vehicleRepairs?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

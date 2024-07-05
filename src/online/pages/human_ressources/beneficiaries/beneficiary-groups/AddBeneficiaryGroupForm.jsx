@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Stack, Box, Typography, Button, Divider } from '@mui/material';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -210,7 +210,7 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title }) {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid xs={2} sm={4} md={4}>
+            <Grid item xs={2} sm={4} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -220,7 +220,7 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4}>
+            <Grid item xs={2} sm={4} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -236,7 +236,7 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4}>
+            <Grid item xs={2} sm={4} md={4}>
               <Item>
                 <ImageFileField
                   variant="outlined"
@@ -249,7 +249,7 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={12} md={12} item>
+            <Grid item xs={12} sm={12} md={12} >
               <Item>
                 <TheAutocomplete
                   options={beneficiariesData?.beneficiaries?.nodes}
@@ -263,10 +263,10 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid xs={12} sm={6} md={6}>
+            <Grid item xs={12} sm={6} md={6}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -281,7 +281,7 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={6}>
+            <Grid item xs={12} sm={6} md={6}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -296,7 +296,7 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
                   to="/online/ressources-humaines/beneficiaires/groupes/liste"

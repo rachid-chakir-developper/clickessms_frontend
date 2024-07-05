@@ -48,7 +48,7 @@ const DashboardFilter = ({ onFilterChange }) => {
 
   return (
     <Grid container spacing={2} alignItems="center">
-        <Grid item="true" xs={2} sm={6} md={6}>
+        <Grid item xs={2} sm={6} md={6}>
             <Item>
                 <TheAutocomplete
                     options={establishmentsData?.establishments?.nodes}
@@ -61,7 +61,7 @@ const DashboardFilter = ({ onFilterChange }) => {
                 />
             </Item>
         </Grid>
-        <Grid item="true" xs={12} sm={6} md={2}>
+        <Grid item xs={12} sm={6} md={2}>
             <Item>
             <TheDesktopDatePicker
                 label="De"
@@ -74,7 +74,7 @@ const DashboardFilter = ({ onFilterChange }) => {
             />
             </Item>
       </Grid>
-      <Grid item="true" xs={12} sm={6} md={2}>
+      <Grid item xs={12} sm={6} md={2}>
         <Item>
           <TheDesktopDatePicker
             label="À"
@@ -86,7 +86,7 @@ const DashboardFilter = ({ onFilterChange }) => {
           />
         </Item>
       </Grid>
-      <Grid item="true" xs={12} md={2} sx={{ display: 'flex', alignItems: 'center' }}>
+      <Grid item xs={12} md={2} sx={{ display: 'flex', alignItems: 'center' }}>
         <Item sx={{ height: '100%', justifyContent: 'center' }}>
           <Button variant="outlined" color="info" onClick={handleFilterSubmit}>
             Appliquer

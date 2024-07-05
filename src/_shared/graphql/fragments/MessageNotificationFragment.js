@@ -25,7 +25,6 @@ export const MSG_NOTIFICATION_BASIC_INFOS = gql`
       ...MessageNotificationEstablishmentTypeFragment
     }
   }
-  ${ESTABLISHMENT_MINI_INFOS}
   ${MSG_NOTIFICATION_ESTABLISHMENT_DETAILS}
 `;
 

@@ -209,7 +209,7 @@ const ProfileDetailsPage = ({ user }) => {
             {openPwd && (
               <form onSubmit={formik.handleSubmit}>
                 <Grid container>
-                  <Grid xs={12} sm={4} md={4}>
+                  <Grid item xs={12} sm={4} md={4}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -252,7 +252,7 @@ const ProfileDetailsPage = ({ user }) => {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={4} md={4}>
+                  <Grid item xs={12} sm={4} md={4}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -295,7 +295,7 @@ const ProfileDetailsPage = ({ user }) => {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={4} md={4}>
+                  <Grid item xs={12} sm={4} md={4}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -338,7 +338,7 @@ const ProfileDetailsPage = ({ user }) => {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={12} md={12}>
+                  <Grid item xs={12} sm={12} md={12}>
                     {passwordChangeData?.passwordChange?.errors?.oldPassword?.map(
                       (error, index) => (
                         <Alert key={index} severity="error">

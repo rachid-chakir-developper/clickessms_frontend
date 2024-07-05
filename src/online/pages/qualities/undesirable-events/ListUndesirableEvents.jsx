@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Button, Stack } from '@mui/material';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Add } from '@mui/icons-material';
@@ -131,7 +131,7 @@ export default function ListUndesirableEvents() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
             to="/online/qualites/evenements-indesirables/ajouter"
@@ -143,16 +143,16 @@ export default function ListUndesirableEvents() {
           </Link>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <UndesirableEventFilter onFilterChange={handleFilterChange} />
       </Grid>
-      {/* <Grid item="true" xs={12}>
+      {/* <Grid item xs={12}>
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-              {loadingUndesirableEvents && <Grid key={'pgrs'}  item="true" xs={2} sm={4} md={3}><ProgressService type="mediaCard" /></Grid>}
+              {loadingUndesirableEvents && <Grid key={'pgrs'}  item xs={2} sm={4} md={3}><ProgressService type="mediaCard" /></Grid>}
               {undesirableEventsData?.undesirableEvents?.nodes?.length < 1 && !loadingUndesirableEvents && <Alert severity="warning">Aucun événement indésirable trouvé.</Alert>}
               {undesirableEventsData?.undesirableEvents?.nodes?.map((undesirableEvent, index) => (
-                <Grid xs={2} sm={4} md={3} key={index}>
+                <Grid item xs={2} sm={4} md={3} key={index}>
                   <Item>
                     <UndesirableEventItemCard 
                                         undesirableEvent={undesirableEvent}
@@ -165,14 +165,14 @@ export default function ListUndesirableEvents() {
             </Grid>
           </Box>
         </Grid> */}
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListUndesirableEvents
           loading={loadingUndesirableEvents}
           rows={undesirableEventsData?.undesirableEvents?.nodes || []}
           onDeleteUndesirableEvent={onDeleteUndesirableEvent}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={undesirableEventsData?.undesirableEvents?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Stack, Box, Typography, Button, Divider, FormControl, InputLabel, Select, MenuItem, InputAdornment } from '@mui/material';
 import dayjs from 'dayjs';
 
@@ -212,7 +212,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
             container
             spacing={{ xs: 2, md: 3 }}
           >
-            <Grid xs={12} sm={6} md={4} item="true">
+            <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <TheAutocomplete
                   options={employeesData?.employees?.nodes}
@@ -226,7 +226,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4} item="true">
+            <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -239,7 +239,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4} item="true">
+            <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">
@@ -266,7 +266,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                 </FormControl>
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4} item="true">
+            <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -283,7 +283,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4} item="true">
+            <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <TheDesktopDatePicker
                   label="Date de début"
@@ -295,7 +295,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4} item="true">
+            <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <TheDesktopDatePicker
                   label="Date de fin"
@@ -307,7 +307,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <TheAutocomplete
                   options={establishmentsData?.establishments?.nodes}
@@ -321,7 +321,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4} item="true">
+            <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <TheFileField variant="outlined" label="Document de contrat"
                   fileValue={formik.values.document}
@@ -330,7 +330,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                   />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4} item="true">
+            <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -377,10 +377,10 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid xs={12} sm={6} md={6}>
+            <Grid item xs={12} sm={6} md={6}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -395,7 +395,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={6}>
+            <Grid item xs={12} sm={6} md={6}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -410,7 +410,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
                   to="/online/ressources-humaines/employes/contrats/liste"

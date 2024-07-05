@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import TheObjectItemCard from './TheObjectItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -165,7 +165,7 @@ export default function ListTheObjects() {
   };
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link to="/online/recuperations/objets/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
@@ -174,10 +174,10 @@ export default function ListTheObjects() {
           </Link>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TheObjectFilter onFilterChange={handleFilterChange} />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -194,7 +194,7 @@ export default function ListTheObjects() {
                 <Alert severity="warning">Aucun objet trouvé.</Alert>
               )}
             {theObjectsData?.theObjects?.nodes?.map((theObject, index) => (
-              <Grid xs={2} sm={4} md={3} key={index}>
+              <Grid item xs={2} sm={4} md={3} key={index}>
                 <Item>
                   <TheObjectItemCard
                     theObject={theObject}
@@ -207,7 +207,7 @@ export default function ListTheObjects() {
           </Grid>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={theObjectsData?.theObjects?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

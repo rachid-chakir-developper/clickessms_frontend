@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, List, Stack } from '@mui/material';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Add } from '@mui/icons-material';
@@ -165,7 +165,7 @@ export default function ListEmployeeContracts() {
   };
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
             to="/online/ressources-humaines/employes/liste"
@@ -185,10 +185,10 @@ export default function ListEmployeeContracts() {
           </Link>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <EmployeeContractFilter onFilterChange={handleFilterChange} />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListEmployeeContracts
           loading={loadingEmployeeContracts}
           rows={employeeContractsData?.employeeContracts?.nodes || []}
@@ -196,7 +196,7 @@ export default function ListEmployeeContracts() {
           onUpdateEmployeeContractState={onUpdateEmployeeContractState}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={employeeContractsData?.employeeContracts?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

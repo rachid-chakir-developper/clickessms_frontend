@@ -84,12 +84,12 @@ const EstablishmentFilter = ({ onFilterChange }) => {
   
   return (
     <Grid container spacing={2}>
-        <Grid item="true" xs={12} md={12}>
+        <Grid item xs={12} md={12}>
             <Typography component="div" variant="h5">
               Les structures
             </Typography>
         </Grid>
-        <Grid item="true" xs={12} md={6}>
+        <Grid item xs={12} md={6}>
             <Item>
                 <TheTextField variant="outlined"
                     label="Recherche"
@@ -116,7 +116,7 @@ const EstablishmentFilter = ({ onFilterChange }) => {
                 />
             </Item>
         </Grid>
-        {/* <Grid item="true" xs={12} sm={6} md={2}>
+        {/* <Grid item xs={12} sm={6} md={2}>
             <Item>
                 <TheDesktopDatePicker
                     type="date"
@@ -126,7 +126,7 @@ const EstablishmentFilter = ({ onFilterChange }) => {
                 />
             </Item>
         </Grid> */}
-        <Grid item="true" xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
             <Item>
                 <Autocomplete
                     multiple
@@ -156,7 +156,7 @@ const EstablishmentFilter = ({ onFilterChange }) => {
                 />
             </Item>
         </Grid>
-        <Grid item="true" xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
             <Item>
                 <Autocomplete
                     multiple

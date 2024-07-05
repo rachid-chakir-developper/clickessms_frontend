@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Button, Stack } from '@mui/material';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Add } from '@mui/icons-material';
@@ -154,7 +154,7 @@ export default function ListTransmissionEvents() {
   };
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link to="/online/activites/evenements/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
@@ -163,10 +163,10 @@ export default function ListTransmissionEvents() {
           </Link>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TransmissionEventFilter onFilterChange={handleFilterChange} />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListTransmissionEvents
           loading={loadingTransmissionEvents}
           rows={transmissionEventsData?.transmissionEvents?.nodes || []}
@@ -174,7 +174,7 @@ export default function ListTransmissionEvents() {
           onUpdateTransmissionEventState={onUpdateTransmissionEventState}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={transmissionEventsData?.transmissionEvents?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

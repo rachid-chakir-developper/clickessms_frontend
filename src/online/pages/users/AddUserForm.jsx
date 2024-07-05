@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Stack, Box, Typography, Button, Divider } from '@mui/material';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -260,7 +260,7 @@ export default function AddUserForm({ idUser, title }) {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid xs={2} sm={4} md={4}>
+            <Grid item xs={2} sm={4} md={4}>
               <Item>
                 <ImageFileField
                   variant="outlined"
@@ -284,7 +284,7 @@ export default function AddUserForm({ idUser, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4}>
+            <Grid item xs={2} sm={4} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -358,7 +358,7 @@ export default function AddUserForm({ idUser, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={2} sm={4} md={4}>
+            <Grid item xs={2} sm={4} md={4}>
               <Item>
                 <TheAutocomplete
                   options={employeesData?.employees?.nodes}
@@ -412,10 +412,10 @@ export default function AddUserForm({ idUser, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid xs={12} sm={6} md={6}>
+            <Grid item xs={12} sm={6} md={6}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -430,7 +430,7 @@ export default function AddUserForm({ idUser, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={6}>
+            <Grid item xs={12} sm={6} md={6}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -445,10 +445,10 @@ export default function AddUserForm({ idUser, title }) {
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid xs={12} sm={12} md={6}>
+            <Grid item xs={12} sm={12} md={6}>
               <TransferList
                 left={permissions}
                 setLeft={setPermissions}
@@ -457,7 +457,7 @@ export default function AddUserForm({ idUser, title }) {
                 title="Permissions"
               />
             </Grid>
-            <Grid xs={12} sm={12} md={6}>
+            <Grid item xs={12} sm={12} md={6}>
               <TransferList
                 left={groups}
                 setLeft={setGroups}
@@ -466,10 +466,10 @@ export default function AddUserForm({ idUser, title }) {
                 title="Groups"
               />
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link to="/online/utilisateurs/liste" className="no_style">
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>

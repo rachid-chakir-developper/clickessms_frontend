@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import VehicleInspectionItemCard from './VehicleInspectionItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -129,7 +129,7 @@ export default function ListVehicleInspections() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
             to="/online/parc-automobile/controles-vehicules/ajouter"
@@ -141,10 +141,10 @@ export default function ListVehicleInspections() {
           </Link>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <VehicleInspectionFilter onFilterChange={handleFilterChange} />
       </Grid>
-      {/* <Grid item="true" xs={12}>
+      {/* <Grid item xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -162,7 +162,7 @@ export default function ListVehicleInspections() {
               )}
             {vehicleInspectionsData?.vehicleInspections?.nodes?.map(
               (vehicleInspection, index) => (
-                <Grid xs={2} sm={4} md={3} key={index}>
+                <Grid item xs={2} sm={4} md={3} key={index}>
                   <Item>
                     <VehicleInspectionItemCard
                       vehicleInspection={vehicleInspection}
@@ -175,14 +175,14 @@ export default function ListVehicleInspections() {
           </Grid>
         </Box>
       </Grid> */}
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListVehicleInspections
           loading={loadingVehicleInspections}
           rows={vehicleInspectionsData?.vehicleInspections?.nodes || []}
           onDeleteVehicleInspection={onDeleteVehicleInspection}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={vehicleInspectionsData?.vehicleInspections?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import EmployeeAbsenceItemCard from './EmployeeAbsenceItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -131,7 +131,7 @@ export default function ListEmployeeAbsences() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
             to="/online/planning/absences-employes/ajouter?type=LEAVE"
@@ -154,10 +154,10 @@ export default function ListEmployeeAbsences() {
           </Link>}
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <EmployeeAbsenceFilter onFilterChange={handleFilterChange} />
       </Grid>
-      {/* <Grid item="true" xs={12}>
+      {/* <Grid item xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -175,7 +175,7 @@ export default function ListEmployeeAbsences() {
               )}
             {employeeAbsencesData?.employeeAbsences?.nodes?.map(
               (employeeAbsence, index) => (
-                <Grid xs={2} sm={4} md={3} key={index}>
+                <Grid item xs={2} sm={4} md={3} key={index}>
                   <Item>
                     <EmployeeAbsenceItemCard
                       employeeAbsence={employeeAbsence}
@@ -188,14 +188,14 @@ export default function ListEmployeeAbsences() {
           </Grid>
         </Box>
       </Grid> */}
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListEmployeeAbsences
           loading={loadingEmployeeAbsences}
           rows={employeeAbsencesData?.employeeAbsences?.nodes || []}
           onDeleteEmployeeAbsence={onDeleteEmployeeAbsence}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={employeeAbsencesData?.employeeAbsences?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

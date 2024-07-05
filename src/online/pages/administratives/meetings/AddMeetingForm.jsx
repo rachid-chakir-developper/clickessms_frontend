@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Stack, Box, Typography, Button, Divider, Stepper, Step, StepLabel, StepContent, InputAdornment, IconButton } from '@mui/material';
 import dayjs from 'dayjs';
 
@@ -375,7 +375,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
-                  <Grid xs={12} sm={6} md={4}>
+                  <Grid item xs={12} sm={6} md={4}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -393,7 +393,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={4}>
+                  <Grid item xs={12} sm={6} md={4}>
                     <Item>
                       <TheDateTimePicker
                         label="Date et heure de début"
@@ -405,7 +405,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={4}>
+                  <Grid item xs={12} sm={6} md={4}>
                     <Item>
                       <TheDateTimePicker
                         label="Date de fin"
@@ -417,7 +417,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={4} item="true">
+                  <Grid item xs={12} sm={6} md={4} >
                     <Item>
                       <SelectCheckmarks
                         options={dataData?.meetingTypes}
@@ -431,7 +431,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={4}>
+                  <Grid item xs={12} sm={6} md={4}>
                     <Item>
                       <TheAutocomplete
                         options={establishmentsData?.establishments?.nodes}
@@ -457,7 +457,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={6} md={4} item="true">
+                  <Grid item xs={12} sm={6} md={4} >
                     <Item>
                       <TheAutocomplete
                         options={employeesData?.employees?.nodes}
@@ -502,7 +502,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
                   
-                  <Grid xs={12} sm={12} md={12}>
+                  <Grid item xs={12} sm={12} md={12}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -517,7 +517,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid xs={12} sm={12} md={6} item="true"> 
+                  <Grid item xs={12} sm={12} md={6} > 
                     <Typography variant="h6">Les décisions</Typography> 
                     {formik.values?.meetingDecisions?.map((item, index) => (
                       <Grid
@@ -526,7 +526,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
                         columns={{ xs: 4, sm: 8, md: 12 }}
                         key={index}
                       >
-                        <Grid xs={12} sm={12} md={12} item="true">
+                        <Grid item xs={12} sm={12} md={12} >
                           <Item sx={{position: 'relative'}}>
                             <TheTextField
                               variant="outlined"
@@ -551,7 +551,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
                             </IconButton>
                           </Item>
                         </Grid>
-                        <Grid xs={12} sm={6} md={5} item="true">
+                        <Grid item xs={12} sm={6} md={5} >
                           <Item>
                             <TheDesktopDatePicker
                               label="Échéance"
@@ -563,7 +563,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
                             />
                           </Item>
                         </Grid>
-                        <Grid xs={12} sm={6} md={7} item="true">
+                        <Grid item xs={12} sm={6} md={7} >
                           <Item>
                             <TheAutocomplete
                               options={employeesData?.employees?.nodes}
@@ -583,7 +583,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
                       xs={12}
                       sm={12}
                       md={12}
-                      item="true"
+                      item
                       sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom:4 }}
                     >
                       <Button
@@ -597,7 +597,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
                     </Grid>
                   </Grid>
                   
-                  <Grid xs={12} sm={12} md={6} item="true" sx={{background: '#f9f9f9'}}>
+                  <Grid item xs={12} sm={12} md={6} item sx={{background: '#f9f9f9'}}>
                     <Typography variant="h6">Les points à revoir</Typography>  
                     {formik.values?.meetingReviewPoints?.map((item, index) => (
                       <Grid
@@ -606,7 +606,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
                         columns={{ xs: 4, sm: 8, md: 12 }}
                         key={index}
                       >
-                        <Grid xs={12} sm={12} md={12} item="true">
+                        <Grid item xs={12} sm={12} md={12} >
                           <Item sx={{position: 'relative'}}>
                             <TheTextField
                               variant="outlined"
@@ -637,7 +637,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
                       xs={12}
                       sm={12}
                       md={12}
-                      item="true"
+                      item
                       sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom:4 }}
                     >
                       <Button
@@ -659,7 +659,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid xs={12} sm={12} md={12} item="true">
+            <Grid item xs={12} sm={12} md={12} >
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
                   to="/online/administratif/reunions/liste"

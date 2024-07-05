@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
 import DecisionDocumentItemCard from './DecisionDocumentItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -159,7 +159,7 @@ export default function ListDecisionDocuments() {
   };
   return (
     <Grid container spacing={2}>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link to="/online/finance/decisions/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
@@ -168,10 +168,10 @@ export default function ListDecisionDocuments() {
           </Link>
         </Box>
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <DecisionDocumentFilter onFilterChange={handleFilterChange} />
       </Grid>
-      {/* <Grid item="true" xs={12}>
+      {/* <Grid item xs={12}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -187,7 +187,7 @@ export default function ListDecisionDocuments() {
               <Alert severity="warning">Aucune décision trouvé.</Alert>
             )}
             {decisionDocumentsData?.decisionDocuments?.nodes?.map((decisionDocument, index) => (
-              <Grid xs={2} sm={4} md={3} key={index}>
+              <Grid item xs={2} sm={4} md={3} key={index}>
                 <Item>
                   <DecisionDocumentItemCard
                     decisionDocument={decisionDocument}
@@ -200,14 +200,14 @@ export default function ListDecisionDocuments() {
           </Grid>
         </Box>
       </Grid> */}
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <TableListDecisionDocuments
           loading={loadingDecisionDocuments}
           rows={decisionDocumentsData?.decisionDocuments?.nodes || []}
           onDeleteDecisionDocument={onDeleteDecisionDocument}
         />
       </Grid>
-      <Grid item="true" xs={12}>
+      <Grid item xs={12}>
         <PaginationControlled
           totalItems={decisionDocumentsData?.decisionDocuments?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page

@@ -48,10 +48,10 @@ export default function TicketDetails() {
           </Link>
         </Box>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid item="true" xs={6}>
+          <Grid item xs={6}>
             <TicketMiniInfos ticket={ticketData?.ticket} />
           </Grid>
-          <Grid item="true" xs={6}>
+          <Grid item xs={6}>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Description
@@ -61,7 +61,7 @@ export default function TicketDetails() {
               </Typography>
             </Paper>
           </Grid>
-          <Grid item="true" xs={12} sx={{ marginY: 3 }}>
+          <Grid item xs={12} sx={{ marginY: 3 }}>
             <Divider />
           </Grid>
           <Grid item xs={12} sm={12}>
@@ -97,9 +97,9 @@ function TicketMiniInfos({ ticket }) {
         }}
       >
         <Grid container spacing={2}>
-          <Grid item="true" xs={12} sm container>
-            <Grid item="true" xs container direction="column" spacing={2}>
-              <Grid item="true" xs>
+          <Grid item xs={12} sm container>
+            <Grid item xs container direction="column" spacing={2}>
+              <Grid item xs>
                 <Typography gutterBottom variant="subtitle1" component="div">
                   Réference : <b>{ticket?.number}</b>
                 </Typography>
@@ -155,7 +155,7 @@ function TicketOtherInfos({ ticket }) {
             </Typography>
               <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
                 {ticket?.establishments?.map((establishment, index) => (
-                  <Grid xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
+                  <Grid item xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
                     <Item>
                       <EstablishmentItemCard establishment={establishment} />
                     </Item>

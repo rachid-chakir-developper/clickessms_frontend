@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Stack, Box, Typography, Button, Divider, InputAdornment, FormLabel, RadioGroup, FormControlLabel, Radio, FormControl } from '@mui/material';
 import dayjs from 'dayjs';
 
@@ -256,7 +256,7 @@ export default function AddVehicleInspectionForm({
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <TheDateTimePicker
                   label="Date et heure du contrôle"
@@ -268,7 +268,7 @@ export default function AddVehicleInspectionForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4} item="true">
+            <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <TheAutocomplete
                   options={vehiclesData?.vehicles?.nodes}
@@ -282,7 +282,7 @@ export default function AddVehicleInspectionForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4} item="true">
+            <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <TheAutocomplete
                   options={employeesData?.employees?.nodes}
@@ -296,7 +296,7 @@ export default function AddVehicleInspectionForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4} item="true">
+            <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <TheAutocomplete
                   options={partnersData?.partners?.nodes}
@@ -310,7 +310,7 @@ export default function AddVehicleInspectionForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4} item="true">
+            <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -327,7 +327,7 @@ export default function AddVehicleInspectionForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <TheDesktopDatePicker
                   label="Date du prochain contrôle technique"
@@ -339,10 +339,10 @@ export default function AddVehicleInspectionForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" sx={{marginY: 5}} />
             </Grid>
-            <Grid xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={3}>
               <Item>
                 <FormControl>
                   <FormLabel id="demo-row-radio-buttons-group-label" sx={{textAlign: 'left'}}>Carte grise présente</FormLabel>
@@ -361,7 +361,7 @@ export default function AddVehicleInspectionForm({
                 </FormControl>
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={3}>
               <Item>
                 <FormControl>
                   <FormLabel id="demo-row-radio-buttons-group-label" sx={{textAlign: 'left'}}>Certificat d’assurance présent</FormLabel>
@@ -380,7 +380,7 @@ export default function AddVehicleInspectionForm({
                 </FormControl>
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={3}>
               <Item>
                 <FormControl>
                   <FormLabel id="demo-row-radio-buttons-group-label" sx={{textAlign: 'left'}}>Attestation d’assurance présente</FormLabel>
@@ -399,7 +399,7 @@ export default function AddVehicleInspectionForm({
                 </FormControl>
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={3}>
               <Item>
                 <FormControl>
                   <FormLabel id="demo-row-radio-buttons-group-label" sx={{textAlign: 'left'}}>Contrôle technique présent</FormLabel>
@@ -418,15 +418,15 @@ export default function AddVehicleInspectionForm({
                 </FormControl>
               </Item>
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" sx={{marginY: 5}} />
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Vérification du véhicule:
               </Typography>
             </Grid>
-            <Grid xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <TheSwitch
                   variant="outlined"
@@ -464,7 +464,7 @@ export default function AddVehicleInspectionForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <TheSwitch
                   variant="outlined"
@@ -490,7 +490,7 @@ export default function AddVehicleInspectionForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <TheSwitch
                   variant="outlined"
@@ -516,10 +516,10 @@ export default function AddVehicleInspectionForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" sx={{marginY: 5}} />
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Item>
                 <Typography gutterBottom variant="subtitle3" component="h3">
                   Galerie d'images:
@@ -530,10 +530,10 @@ export default function AddVehicleInspectionForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" sx={{marginY: 5}} />
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -548,7 +548,7 @@ export default function AddVehicleInspectionForm({
                 />
               </Item>
             </Grid>
-            <Grid xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
                   to="/online/parc-automobile/controles-vehicules/liste"
