@@ -22,8 +22,7 @@ const wss = envProd
   : `ws://${hostname}:8000/graphql`;
 
 let httpLink = createUploadLink({
-  uri: uri,
-  credentials: 'include'
+  uri: uri
 });
 
 const authLink = setContext((_, { headers }) => {

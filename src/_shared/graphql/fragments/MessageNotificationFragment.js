@@ -20,6 +20,7 @@ export const MSG_NOTIFICATION_BASIC_INFOS = gql`
     title
     messageNotificationType
     message
+    isRead
     isActive
     establishments {
       ...MessageNotificationEstablishmentTypeFragment

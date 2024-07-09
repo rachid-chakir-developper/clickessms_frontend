@@ -24,9 +24,9 @@ import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacks
 
 export default function MessageNotificationsPopover({
   messageNotifications = [],
-  notSeenCount = 0,
+  notReadCount = 0,
   loadMoreMessageNotification,
-  onMarkMessageNotificationsAsSeen,
+  onMarkMessageNotificationsAsRead,
 }) {
   const [open, setOpen] = useState(null);
 
@@ -45,7 +45,7 @@ export default function MessageNotificationsPopover({
         color={open ? 'default' : 'inherit'}
         onClick={handleOpen}
       >
-        <Badge badgeContent={notSeenCount} color="error">
+        <Badge badgeContent={notReadCount} color="error">
           <Announcement />
         </Badge>
       </IconButton>
@@ -88,21 +88,21 @@ export default function MessageNotificationsPopover({
           <Box sx={{ flexGrow: 1 }}>
             <Typography variant="subtitle1">Infos et messages</Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {notSeenCount < 1 && (
+              {notReadCount < 1 && (
                 <span>Vous n'avez aucune nouvelle infos</span>
               )}
-              {notSeenCount === 1 && (
+              {notReadCount === 1 && (
                 <span>Vous avez une nouvelle infos</span>
               )}
-              {notSeenCount > 1 && (
-                <span>Vous avez {notSeenCount} nouvelles infos</span>
+              {notReadCount > 1 && (
+                <span>Vous avez {notReadCount} nouvelles infos</span>
               )}
             </Typography>
           </Box>
 
-          {notSeenCount > 0 && (
+          {notReadCount > 0 && (
             <Tooltip title=" Mark all as read">
-              <IconButton color="primary" onClick={onMarkMessageNotificationsAsSeen}>
+              <IconButton color="primary" onClick={onMarkMessageNotificationsAsRead}>
                 <DoneAll />
               </IconButton>
             </Tooltip>
@@ -112,7 +112,7 @@ export default function MessageNotificationsPopover({
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack sx={{ height: { xs: 340, sm: 'auto' } }}>
-          {notSeenCount > 0 && (
+          {notReadCount > 0 && (
             <List
               disablePadding
               subheader={
@@ -125,7 +125,7 @@ export default function MessageNotificationsPopover({
               }
             >
               {messageNotifications
-                .filter((n) => !n?.isSeen)
+                .filter((n) => !n?.isRead)
                 .map((messageNotification) => (
                   <MessageNotificationItem
                     key={messageNotification?.id}
@@ -191,7 +191,7 @@ function MessageNotificationItem({ messageNotification, onClick }) {
       <ListItemButton
         alignItems="flex-start"
         sx={{
-          ...(!messageNotification?.isSeen && {
+          ...(!messageNotification?.isRead && {
             bgcolor: 'action.selected',
           }),
         }}

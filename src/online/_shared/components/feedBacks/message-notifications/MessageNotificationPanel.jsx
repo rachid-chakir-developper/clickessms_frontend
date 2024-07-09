@@ -3,20 +3,20 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { GET_MSG_NOTIFICATIONS } from '../../../../../_shared/graphql/queries/MessageNotificationQueries';
 import { ON_MSG_NOTIFICATION_ADDED } from '../../../../../_shared/graphql/subscriptions/MessageNotificationSubscriptions';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { MARK_MSG_NOTIFICATIONS_AS_SEEN } from '../../../../../_shared/graphql/mutations/MessageNotificationMutations';
+import { MARK_MSG_NOTIFICATIONS_AS_READ } from '../../../../../_shared/graphql/mutations/MessageNotificationMutations';
 import MessageNotificationsPopover from './MessageNotificationsPopover';
 
 export default function MessageNotificationPanel() {
   const { setNotifyAlert, setMessageNotificationModal } = useFeedBacks();
   const [page, setPage] = React.useState(1);
 
-  const [markMessageNotificationsAsSeen, { loading: loadingMarskAsSeen }] =
-    useMutation(MARK_MSG_NOTIFICATIONS_AS_SEEN, {
+  const [markMessageNotificationsAsRead, { loading: loadingMarskAsRead }] =
+    useMutation(MARK_MSG_NOTIFICATIONS_AS_READ, {
       onCompleted: (datas) => {
-        if (datas.markMessageNotificationsAsSeen.done) {
+        if (datas.markMessageNotificationsAsRead.done) {
           console.log('Lues avec succès');
         } else {
-          console.warn(`Non lues ! ${datas.markMessageNotificationsAsSeen.message}.`);
+          console.warn(`Non lues ! ${datas.markMessageNotificationsAsRead.message}.`);
         }
       },
       onError: (err) => {
@@ -38,7 +38,10 @@ export default function MessageNotificationPanel() {
       variables: { page, limit: 6 },
       onCompleted: (data) => {
         console.log(data);
-        onOpenMessageNotificationModal(data.messageNotifications.nodes)
+        const messageNotifications =  data?.messageNotifications?.nodes?.filter((messageNotification)=> !messageNotification?.isRead)
+        if(messageNotifications?.length > 0){
+          onOpenMessageNotificationModal(messageNotifications)
+        }
       }
     }
   );
@@ -67,7 +70,7 @@ export default function MessageNotificationPanel() {
           ...prev.messageNotifications,
           nodes: [newMessageNotificationItem, ...prev.messageNotifications.nodes],
           totalCount: prev.messageNotifications.totalCount + 1,
-          notSeenCount: prev.messageNotifications.notSeenCount + 1,
+          notReadCount: prev.messageNotifications.notReadCount + 1,
         },
       });
     },
@@ -101,22 +104,22 @@ export default function MessageNotificationPanel() {
                 ...fetchMoreResult?.messageNotifications?.nodes,
               ],
               totalCount: fetchMoreResult.messageNotifications.totalCount,
-              notSeenCount: fetchMoreResult.messageNotifications.notSeenCount,
+              notReadCount: fetchMoreResult.messageNotifications.notReadCount,
             },
           };
         },
-      }).then(() => onMarkMessageNotificationsAsSeen());
+      })
     }
   };
-  const onMarkMessageNotificationsAsSeen = () => {
+  const onMarkMessageNotificationsAsRead = () => {
     if (
-      messageNotificationsData?.messageNotifications?.nodes?.filter((n) => !n.isSeen).length >
+      messageNotificationsData?.messageNotifications?.nodes?.filter((n) => !n.isRead).length >
       0
     ) {
-      markMessageNotificationsAsSeen({
+      markMessageNotificationsAsRead({
         variables: {
           ids: messageNotificationsData?.messageNotifications?.nodes
-            ?.filter((n) => !n.isSeen)
+            ?.filter((n) => !n.isRead)
             .map((n) => n?.id),
         },
       });
@@ -128,6 +131,7 @@ export default function MessageNotificationPanel() {
       data,
       onClose: () => {
         setMessageNotificationModal({ isOpen: false });
+        onMarkMessageNotificationsAsRead()
       },
     });
   };
@@ -139,10 +143,10 @@ export default function MessageNotificationPanel() {
   return (
     <MessageNotificationsPopover
       messageNotifications={messageNotificationsData?.messageNotifications?.nodes}
-      notSeenCount={messageNotificationsData?.messageNotifications?.notSeenCount}
+      notReadCount={messageNotificationsData?.messageNotifications?.notReadCount}
       loading={loadingMessageNotifications}
       loadMoreMessageNotification={loadMoreMessageNotification}
-      onMarkMessageNotificationsAsSeen={onMarkMessageNotificationsAsSeen}
+      onMarkMessageNotificationsAsRead={onMarkMessageNotificationsAsRead}
     />
   );
 }

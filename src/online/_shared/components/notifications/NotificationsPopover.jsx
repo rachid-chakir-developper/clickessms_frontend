@@ -35,6 +35,7 @@ export default function NotificationsPopover({
   };
 
   const handleClose = () => {
+    onMarkNotificationsAsSeen()
     setOpen(null);
   };
 

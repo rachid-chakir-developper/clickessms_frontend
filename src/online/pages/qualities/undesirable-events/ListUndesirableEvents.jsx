@@ -70,16 +70,15 @@ export default function ListUndesirableEvents() {
         } else {
           setNotifyAlert({
             isOpen: true,
-            message: `Non Supprimé ! ${datas.deleteUndesirableEvent.message}.`,
+            message: `Non Supprimé ! ${datas.deleteUndesirableEvent.message}`,
             type: 'error',
           });
         }
       },
       update(cache, { data: { deleteUndesirableEvent } }) {
         console.log('Updating cache after deletion:', deleteUndesirableEvent);
-
+        if(!deleteUndesirableEvent?.deleted) return
         const deletedUndesirableEventId = deleteUndesirableEvent.id;
-
         cache.modify({
           fields: {
             undesirableEvents(

@@ -25,7 +25,9 @@ const authReducer = (state, action) => {
         user: action.payload.user,
       };
     case 'LOGOUT':
+      const savedEmail = localStorage.getItem('email');
       localStorage.clear();
+      if(savedEmail) localStorage.setItem('email', savedEmail);
       return {
         ...state,
         user: null,

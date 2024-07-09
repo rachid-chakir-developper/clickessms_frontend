@@ -157,7 +157,7 @@ export default function AddMessageNotificationForm({ idMessageNotification, titl
   const [getMessageNotification, { loading: loadingMessageNotification }] = useLazyQuery(GET_MSG_NOTIFICATION, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, ...messageNotificationCopy } = data.messageNotification;
+      let { __typename, isRead, ...messageNotificationCopy } = data.messageNotification;
       messageNotificationCopy.establishments =
         messageNotificationCopy.establishments
           ? messageNotificationCopy.establishments.map((i) => i?.establishment)

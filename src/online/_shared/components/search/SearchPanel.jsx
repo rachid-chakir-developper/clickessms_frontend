@@ -3,6 +3,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import React from 'react';
 import SearchDialog from './SearchDialog';
+import { Box } from '@mui/material';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -39,7 +40,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('md')]: {
-      width: '100ch',
+      width: '60ch',
     },
   },
 }));
@@ -56,7 +57,7 @@ const SearchPanel = () => {
   };
 
   return (
-    <div>
+    <Box>
       <Search onClick={handleOpenSearchDialog}>
         <SearchIconWrapper>
           <SearchIcon />
@@ -71,7 +72,7 @@ const SearchPanel = () => {
         open={isSearchDialogOpen}
         onClose={handleCloseSearchDialog}
       />
-    </div>
+    </Box>
   );
 };
 

@@ -54,7 +54,7 @@ export default function SignInSide() {
       if (data.tokenAuth.success) {
         console.log(data);
         dispatch({ type: 'LOGIN', payload: data.tokenAuth });
-        navigate('/');
+        // navigate('/');
         window.location.reload();
       } else {
         setErrors(data.tokenAuth.errors.nonFieldErrors);
@@ -147,11 +147,11 @@ export default function SignInSide() {
               autoComplete="current-password"
               disabled={loading}
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
-              label="Se sevenir de moi"
+              label="Se souvenir de moi"
               disabled={loading}
-            />
+            /> */}
             <Button
               type="submit"
               fullWidth

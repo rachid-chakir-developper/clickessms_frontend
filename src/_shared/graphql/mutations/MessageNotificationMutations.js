@@ -61,3 +61,13 @@ export const MARK_MSG_NOTIFICATIONS_AS_SEEN = gql`
     }
   }
 `;
+
+export const MARK_MSG_NOTIFICATIONS_AS_READ = gql`
+  mutation markMessageNotificationsAsRead($ids: [ID]!) {
+    markMessageNotificationsAsRead(ids: $ids) {
+      success
+      done
+      message
+    }
+  }
+`;

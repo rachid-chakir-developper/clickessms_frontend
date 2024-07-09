@@ -152,7 +152,7 @@ export default function AppBarHeader({ open, handleDrawerToggle }) {
           )}
           {!open && <Logo color={PRIMARY_LIGHT} />}
           <SearchPanel />
-          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ flexGrow: 1}} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <Box>
               <Link to="/online/roberp/feedbacks/liste" className="no_style">
