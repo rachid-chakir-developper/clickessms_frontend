@@ -336,7 +336,7 @@ export default function DialogListLibrary({
                   </ListItemIcon>
                   <ListItemText
                     primary={folderItem?.name}
-                    secondary={folderItem?.descreption}
+                    secondary={folderItem?.description}
                   />
                 </ListItem>
                 <Divider />
@@ -397,7 +397,7 @@ export default function DialogListLibrary({
                   </ListItemIcon>
                   <ListItemText
                     primary={file?.name}
-                    secondary={file?.descreption}
+                    secondary={file?.description}
                   />
                 </ListItem>
                 <Divider />

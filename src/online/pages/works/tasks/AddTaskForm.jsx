@@ -449,7 +449,7 @@ export default function AddTaskForm({ idTask, title }) {
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Descreption"
+                  label="Description"
                   multiline
                   rows={4}
                   value={formik.values.description}

@@ -6,7 +6,7 @@ import { PUT_TASK_ACTION } from '../../../../_shared/graphql/mutations/TaskActio
 import { GET_TICKETS } from '../../../../_shared/graphql/queries/TicketQueries';
 import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 
-export default function TaskActionStatusLabelMenu({taskAction}) {
+export default function TaskActionStatusLabelMenu({taskAction, disabled}) {
     const [updateTaskAction, { loading: loadingPut }] = useMutation(PUT_TASK_ACTION, {
       refetchQueries: [{ query: GET_UNDESIRABLE_EVENTS }, { query: GET_TICKETS }],
       update(cache, { data: { updateTaskAction } }) {
@@ -41,6 +41,7 @@ export default function TaskActionStatusLabelMenu({taskAction}) {
             type="action"
             loading={loadingPut}
             onChange={(status)=> {updateTaskAction({ variables: {id: taskAction?.id, taskActionData: {status}} })}}
+            disabled={disabled}
         />
     </Box>
   );

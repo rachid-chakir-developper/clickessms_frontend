@@ -38,7 +38,7 @@ export default function TicketActions({ taskActions }) {
                         secondary={ticketAction?.dueDate ? `Échéance: ${getFormatDate(ticketAction?.dueDate)}` : ''}
                       />
                       <ListItemIcon>
-                        <TaskActionStatusLabelMenu taskAction={ticketAction} />
+                        <TaskActionStatusLabelMenu taskAction={ticketAction} disabled={true}/>
                       </ListItemIcon>
                     </ListItem>
                     {ticketAction?.employees?.length > 0 && (

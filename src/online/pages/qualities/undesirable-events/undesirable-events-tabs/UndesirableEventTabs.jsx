@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Stack } from '@mui/material';
-import UndesirableEventReviews from './UndesirableEventReviews';
+import UndesirableEventTicket from './UndesirableEventTicket';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -87,9 +87,9 @@ export default function UndesirableEventTabs({undesirableEvent}) {
                 <LinkTab label="Analyse" href="/spam" />
             </Tabs>
         </Box>
-        <CustomTabPanel value={value} index={0}>
-            <UndesirableEventReviews undesirableEvent={undesirableEvent} />
-        </CustomTabPanel>
+        {undesirableEvent?.ticket && <CustomTabPanel value={value} index={0}>
+            <UndesirableEventTicket undesirableEvent={undesirableEvent} />
+        </CustomTabPanel>}
     </Box>
   );
 }

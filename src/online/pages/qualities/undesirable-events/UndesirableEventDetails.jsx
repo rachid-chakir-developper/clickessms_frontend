@@ -126,26 +126,6 @@ export default function UndesirableEventDetails() {
           <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
             <Divider />
           </Grid>
-          <Grid item xs={6}>
-            <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography gutterBottom variant="subtitle3" component="h3">
-                Description
-              </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {undesirableEventData?.undesirableEvent?.description}
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid item xs={6}>
-            <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography gutterBottom variant="subtitle3" component="h3">
-                Observation
-              </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {undesirableEventData?.undesirableEvent?.observation}
-              </Typography>
-            </Paper>
-          </Grid>
           <Grid item xs={12} sm={12}>
             <Paper sx={{ padding: 2 }}>
               <UndesirableEventTabs undesirableEvent={undesirableEventData?.undesirableEvent}/>
@@ -211,14 +191,6 @@ function UndesirableEventMiniInfos({ undesirableEvent }) {
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Type d'événement: </b>
-                {`${undesirableEvent?.undesirableEventType}`}
-                <br />
-                <b>Sévérité: </b>
-                {`${undesirableEvent?.severity}`}
-              </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
                 <b>Progression: </b>
                 <CircularProgressWithLabel value={undesirableEvent?.completionPercentage}/>
               </Typography>
@@ -264,6 +236,8 @@ function UndesirableEventOtherInfos({ undesirableEvent }) {
         Informations Supplémentaires
       </Typography>
       <Typography variant="body2" color="text.secondary">
+        <b>Type d'événement:: </b>{undesirableEvent?.undesirableEventType}<br />
+        <b>Sévérité: </b>{undesirableEvent?.severity}<br />
         <b>Fréquence: </b>{undesirableEvent?.frequency?.name}<br />
         <b>Actions prises: </b>{undesirableEvent?.actionsTakenText}<br />
         <b>Date des faits: </b>{getFormatDateTime(undesirableEvent?.courseFactsDateTime)}<br />

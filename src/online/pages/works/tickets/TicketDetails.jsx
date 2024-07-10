@@ -12,6 +12,7 @@ import { AssignmentInd, Check, Edit } from '@mui/icons-material';
 import TicketStatusLabelMenu from './TicketStatusLabelMenu';
 import TaskActionStatusLabelMenu from '../actions/TaskActionStatusLabelMenu';
 import TicketTabs from './tickets-tabs/TicketTabs';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -21,7 +22,11 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function TicketDetails() {
+export default function TicketDetails({ticketId}) {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageQuality = authorizationSystem.requestAuthorization({
+    type: 'manageQuality',
+  }).authorized;
   let { idTicket } = useParams();
   const [
     getTicket,
@@ -31,13 +36,16 @@ export default function TicketDetails() {
     if (idTicket) {
       getTicket({ variables: { id: idTicket } });
     }
-  }, [idTicket]);
+    else if(ticketId){
+      getTicket({ variables: { id: ticketId } });
+    }
+  }, [idTicket, ticketId]);
 
   if (loadingTicket) return <ProgressService type="form" />;
   return (
     <>
       <Stack>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+        {canManageQuality && <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
           <Link
             to={`/online/qualites/plan-action/tickets/modifier/${ticketData?.ticket?.id}`}
             className="no_style"
@@ -46,7 +54,7 @@ export default function TicketDetails() {
               Modifier
             </Button>
           </Link>
-        </Box>
+        </Box>}
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={6}>
             <TicketMiniInfos ticket={ticketData?.ticket} />
@@ -54,7 +62,7 @@ export default function TicketDetails() {
           <Grid item xs={6}>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
-                Description
+                Analyse
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
                 {ticketData?.ticket?.description}
