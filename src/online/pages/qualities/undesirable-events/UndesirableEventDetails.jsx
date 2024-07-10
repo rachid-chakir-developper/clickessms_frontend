@@ -264,7 +264,7 @@ function UndesirableEventOtherInfos({ undesirableEvent }) {
         Informations Supplémentaires
       </Typography>
       <Typography variant="body2" color="text.secondary">
-        <b>Fréquence: </b>{undesirableEvent?.frequency}<br />
+        <b>Fréquence: </b>{undesirableEvent?.frequency?.name}<br />
         <b>Actions prises: </b>{undesirableEvent?.actionsTakenText}<br />
         <b>Date des faits: </b>{getFormatDateTime(undesirableEvent?.courseFactsDateTime)}<br />
         <b>Lieu des faits: </b>{undesirableEvent?.courseFactsPlace}<br />

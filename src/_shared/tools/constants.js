@@ -78,6 +78,20 @@ export const TASK_STATUS = {
   ],
 };
 
+
+export const EI_STATUS = {
+  DRAFT : "DRAFT",
+  NEW : "NEW",
+  IN_PROGRESS : "IN_PROGRESS",
+  DONE : "DONE",
+  ALL: [
+    { value: "DRAFT", label: "Brouillon"},
+    { value: "NEW", label: "Déclaré"},
+    { value: "IN_PROGRESS", label: "En cours de traitement"},
+    { value: "DONE", label: "Traité"},
+  ],
+};
+
 export const ACTION_STATUS = {
   TO_DO : "TO_DO",
   IN_PROGRESS : "IN_PROGRESS",

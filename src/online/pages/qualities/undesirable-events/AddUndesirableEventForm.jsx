@@ -15,6 +15,7 @@ import {
   Step,
   StepLabel,
   StepContent,
+  FormHelperText,
 } from '@mui/material';
 import dayjs from 'dayjs';
 
@@ -55,11 +56,14 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
-  const validationSchema = yup.object({
-    title: yup
-      .string("Entrez le libellé de l'événement indésirable")
-      .required("Le libellé de l'événement indésirable est obligatoire"),
+  const validationSchema = yup.object().shape({
+    title: yup.string().required("Le libellé de l'événement indésirable est obligatoire"),
+    frequency: yup.string().nullable().when('$activeStep', {
+      is: 3,
+      then: yup.string().nonNullable().required('La fréquence de l’événement est obligatoire à cette étape'),
+    }),
   });
+  
   const formik = useFormik({
     initialValues: {
       id: null,
@@ -636,18 +640,19 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                 >
                   <Grid item xs={2} sm={4} md={4}>
                     <Item>
-                      <FormControl fullWidth>
+                      <FormControl fullWidth error={Boolean(formik.errors.frequency)} required>
                         <InputLabel id="demo-simple-select-label">
                           Fréquence de l’événement
                         </InputLabel>
                         <Select
                           labelId="demo-simple-select-label"
-                          id="demo-simple-select"
+                          id="frequency"
                           label="Fréquence de l’événement"
                           value={formik.values.frequency}
                           onChange={(e) =>
                             formik.setFieldValue('frequency', e.target.value)
                           }
+                          onBlur={formik.handleBlur}
                         >
                           <MenuItem value={null}>
                             <em>Choisissez une fréquence</em>
@@ -660,24 +665,28 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                             );
                           })}
                         </Select>
+                        <FormHelperText>{formik.errors.frequency}</FormHelperText>
                       </FormControl>
                     </Item>
                   </Grid>
                   <Grid item xs={2} sm={4} md={4}>
                     <Item>
-                      <FormControl fullWidth>
+                      <FormControl fullWidth required>
                         <InputLabel id="demo-simple-select-label">
                           Gravité de l’événement
                         </InputLabel>
                         <Select
                           labelId="demo-simple-select-label"
-                          id="demo-simple-select"
+                          id="severity"
                           label="Gravité de l’événement"
                           value={formik.values.severity}
                           required
                           onChange={(e) =>
                             formik.setFieldValue('severity', e.target.value)
                           }
+                          onBlur={formik.handleBlur}
+                          error={formik.touched.severity && Boolean(formik.errors.severity)}
+                          helperText={formik.touched.severity && formik.errors.severity}
                         >
                           {UNDESIRABLE_EVENT_SEVERITY?.ALL?.map(
                             (type, index) => {
@@ -695,6 +704,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                   <Grid item xs={2} sm={4} md={4} >
                     <Item>
                       <TheAutocomplete
+                        required
                         options={employeesData?.employees?.nodes}
                         label="Personne(s) immédiatement prévenue(s)"
                         placeholder="Ajouter une personne"

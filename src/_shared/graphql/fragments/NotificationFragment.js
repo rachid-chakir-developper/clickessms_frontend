@@ -21,6 +21,18 @@ export const NOTIFICATION_BASIC_INFOS = gql`
     task {
       ...TaskMiniBasicInfosFragment
     }
+    undesirableEvent{
+      id
+    }
+    taskAction{
+      id
+    }
+    meetingDecision{
+      id
+    }
+    employeeAbsence{
+      id
+    }
     createdAt
   }
   ${USER_BASIC_INFOS}

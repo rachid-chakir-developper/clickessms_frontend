@@ -15,7 +15,8 @@ export default function TheAutocomplete({
   onChange,
   multiple = true,
   helperText = null,
-  disabled=false
+  disabled=false,
+  required=false
 }) {
   const getPhoto = (option) => {
     if (option?.photo) return option?.photo;

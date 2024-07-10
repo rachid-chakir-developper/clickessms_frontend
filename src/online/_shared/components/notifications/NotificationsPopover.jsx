@@ -176,10 +176,18 @@ export default function NotificationsPopover({
 
 function NotificationItem({ notification, onClick }) {
   const { avatar, title } = renderContent(notification);
-
+  const getNotificationPath = ()=>{
+    const {task, undesirableEvent, taskAction, meetingDecision, employeeAbsence} = notification
+    if(task) return `/online/travaux/interventions/details/${task?.id}`
+    if(undesirableEvent) return `/online/qualites/evenements-indesirables/details/${undesirableEvent?.id}`
+    if(taskAction) return `/online/travaux/actions/details/${taskAction?.id}`
+    if(meetingDecision) return `/online/administratif/reunion-decisions/details/${meetingDecision?.id}`
+    if(employeeAbsence) return`/online/planning/absences-employes/details/${employeeAbsence?.id}`
+    return '#';
+  }
   return (
     <Link
-      to={`/online/travaux/interventions/details/${notification?.task?.id}`}
+      to={getNotificationPath()}
       className="no_style"
       onClick={onClick}
     >

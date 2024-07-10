@@ -38,6 +38,7 @@ import UndesirableEventStatusLabelMenu from './UndesirableEventStatusLabelMenu';
 import { POST_UNDESIRABLE_EVENT_TICKET } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
 import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 import { useMutation } from '@apollo/client';
+import { EI_STATUS } from '../../../../_shared/tools/constants';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -497,7 +498,7 @@ export default function TableListUndesirableEvents({
                       <UndesirableEventStatusLabelMenu  undesirableEvent={row}/>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <>
+                      {row?.status !== EI_STATUS.DRAFT && <>
                         {row?.ticket && <CircularProgressWithLabel value={row?.completionPercentage}/>}
                         {!row?.ticket && canManageQuality && <Button variant="text" size="small" endIcon={<Done />} 
                                           onClick={() => {
@@ -506,7 +507,7 @@ export default function TableListUndesirableEvents({
                                           Analyser
                                         </Button>}
                         {!row?.ticket && !canManageQuality && `En attente d'analyse`}
-                      </>
+                      </>}
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
