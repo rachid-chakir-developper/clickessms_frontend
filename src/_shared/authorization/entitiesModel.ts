@@ -32,6 +32,10 @@ export const entitiesModel = defineEntitiesModel({
     ownedBy: 'company',
     privileges: ['edit', 'view'],
   },
+  parking: {
+    ownedBy: 'company',
+    privileges: ['edit', 'view'],
+  },
   establishment: {
     ownedBy: 'company',
     privileges: ['edit', 'view'],

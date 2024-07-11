@@ -75,6 +75,11 @@ export function AuthorizationSystemProvider({ children }) {
         return user.company.id;
       },
     },
+    parking: {
+      company() {
+        return user.company.id;
+      },
+    },
     establishment: {
       company() {
         return user.company.id;

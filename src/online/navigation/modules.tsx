@@ -487,7 +487,7 @@ export const modules: Module[] = [
         icon: <AirportShuttleIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'getVehicles',
+            type: 'manageParking',
           }).authorized;
         },
         pages: [

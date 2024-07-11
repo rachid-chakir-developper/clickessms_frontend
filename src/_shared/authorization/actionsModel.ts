@@ -12,6 +12,7 @@ export const actionsModel = defineActionsModel(
       manageHumanRessources: privilege('humanRessources:edit'),
       manageFinance: privilege('finance:edit'),
       manageFacility: privilege('facility:edit'),
+      manageParking: privilege('parking:edit'),
       getEstablishments: privilege('establishment:edit'),
       getTasks: privilege('task:edit'),
       getBankAccounts: privilege('bankAccount:edit'),
