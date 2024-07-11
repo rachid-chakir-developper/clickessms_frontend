@@ -4,8 +4,13 @@ import { Box, Paper, Typography, Chip, Stack, ListItem, ListItemIcon, ListItemTe
 import { getFormatDate } from '../../../../../_shared/tools/functions';
 import { AssignmentInd } from '@mui/icons-material';
 import TaskActionStatusLabelMenu from '../../actions/TaskActionStatusLabelMenu';
+import { useAuthorizationSystem } from '../../../../../_shared/context/AuthorizationSystemProvider';
 
 export default function TicketActions({ taskActions }) {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageQuality = authorizationSystem.requestAuthorization({
+    type: 'manageQuality',
+  }).authorized;
     return (
       <Paper
         variant="outlined"
@@ -21,7 +26,7 @@ export default function TicketActions({ taskActions }) {
       <Typography variant="h6" gutterBottom>
         Les actions
       </Typography>
-        {taskActions.length > 0 && (
+        {taskActions?.length > 0 && (
             <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
                 <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                   {taskActions?.map((ticketAction, index) => (
@@ -38,7 +43,7 @@ export default function TicketActions({ taskActions }) {
                         secondary={ticketAction?.dueDate ? `Échéance: ${getFormatDate(ticketAction?.dueDate)}` : ''}
                       />
                       <ListItemIcon>
-                        <TaskActionStatusLabelMenu taskAction={ticketAction} disabled={true}/>
+                        <TaskActionStatusLabelMenu taskAction={ticketAction} disabled={!canManageQuality}/>
                       </ListItemIcon>
                     </ListItem>
                     {ticketAction?.employees?.length > 0 && (

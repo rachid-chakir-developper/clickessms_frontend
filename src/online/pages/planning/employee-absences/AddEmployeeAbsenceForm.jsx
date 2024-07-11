@@ -312,7 +312,7 @@ export default function AddEmployeeAbsenceForm({
                 />
               </Item>
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={4} md={4}>
               <Item>
                 <FormControl fullWidth>
                   <InputLabel>Type</InputLabel>

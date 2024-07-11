@@ -386,7 +386,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
+                  <Grid item xs={12} sm={4} md={4}>
                     <Item>
                       <TheDateTimePicker
                         label="Date et heure du signalement"
@@ -398,7 +398,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
+                  <Grid item xs={12} sm={4} md={4}>
                     <Item>
                       <TheAutocomplete
                         options={establishmentsData?.establishments?.nodes}
@@ -412,7 +412,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
+                  <Grid item xs={12} sm={4} md={4}>
                     <Item>
                       <TheAutocomplete
                         options={employeesData?.employees?.nodes}
@@ -426,7 +426,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
+                  <Grid item xs={12} sm={4} md={4}>
                     <Item>
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
@@ -456,7 +456,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                       </FormControl>
                     </Item>
                   </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
+                  <Grid item xs={12} sm={4} md={4}>
                     {formik.values.undesirableEventType ===
                       UNDESIRABLE_EVENT_TYPES.NORMAL && (
                       <Item>
@@ -517,7 +517,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
-                  <Grid item xs={2} sm={4} md={4} >
+                  <Grid item xs={12} sm={4} md={4} >
                     <Item>
                       <TheAutocomplete
                         options={employeesData?.employees?.nodes}
@@ -531,7 +531,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
+                  <Grid item xs={12} sm={4} md={4}>
                     <Item>
                       <TheAutocomplete
                         options={beneficiariesData?.beneficiaries?.nodes}
@@ -638,7 +638,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
-                  <Grid item xs={2} sm={4} md={4}>
+                  <Grid item xs={12} sm={4} md={4}>
                     <Item>
                       <FormControl fullWidth error={Boolean(formik.errors.frequency)} required>
                         <InputLabel id="demo-simple-select-label">
@@ -669,7 +669,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                       </FormControl>
                     </Item>
                   </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
+                  <Grid item xs={12} sm={4} md={4}>
                     <Item>
                       <FormControl fullWidth required>
                         <InputLabel id="demo-simple-select-label">
@@ -701,7 +701,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                       </FormControl>
                     </Item>
                   </Grid>
-                  <Grid item xs={2} sm={4} md={4} >
+                  <Grid item xs={12} sm={4} md={4} >
                     <Item>
                       <TheAutocomplete
                         required

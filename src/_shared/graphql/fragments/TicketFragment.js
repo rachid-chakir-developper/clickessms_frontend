@@ -32,9 +32,13 @@ export const TICKET_BASIC_INFOS = gql`
       number
       name
     }
+    actions{
+      ...TaskActionDetailsFragment
+    }
   }
   ${TICKET_MINI_INFOS}
   ${ESTABLISHMENT_MINI_INFOS}
+  ${TASK_ACTION_DETAILS}
 `;
 
 
@@ -45,13 +49,9 @@ export const TICKET_DETAILS = gql`
     employee{
       ...EmployeeMiniInfosFragment
     }
-    actions{
-      ...TaskActionDetailsFragment
-    }
   }
   ${TICKET_BASIC_INFOS}
   ${EMPLOYEE_MINI_INFOS}
-  ${TASK_ACTION_DETAILS}
 `;
 
 export const TICKET_RECAP_DETAILS = gql`
@@ -61,13 +61,9 @@ export const TICKET_RECAP_DETAILS = gql`
     employee{
       ...EmployeeMiniInfosFragment
     }
-    actions{
-      ...TaskActionDetailsFragment
-    }
     createdAt
     updatedAt
   }
   ${TICKET_BASIC_INFOS}
   ${EMPLOYEE_MINI_INFOS}
-  ${TASK_ACTION_DETAILS}
 `;

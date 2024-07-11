@@ -361,7 +361,7 @@ export const modules: Module[] = [
         icon: <ApartmentIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'manageAdministrative',
+            type: 'getEstablishments',
           }).authorized;
         },
       },

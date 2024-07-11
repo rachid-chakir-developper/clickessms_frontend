@@ -29,14 +29,17 @@ import {
   Done,
   Edit,
   Folder,
+  KeyboardArrowDown,
+  KeyboardArrowUp,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
+import { Alert, Avatar, Chip, Collapse, MenuItem, Popover, Stack } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import CircularProgressWithLabel from '../../../../_shared/components/feedbacks/CircularProgressWithLabel';
 import TicketStatusLabelMenu from './TicketStatusLabelMenu';
+import TaskActionStatusLabelMenu from '../actions/TaskActionStatusLabelMenu';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -97,12 +100,6 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
-      id: 'title',
-      numeric: false,
-      disablePadding: true,
-      label: 'Libellé',
-    },
-    {
         id: 'establishments',
         numeric: false,
         disablePadding: false,
@@ -113,6 +110,12 @@ const headCells = [
         numeric: false,
         disablePadding: false,
         label: 'Source',
+    },
+    {
+      id: 'title',
+      numeric: false,
+      disablePadding: true,
+      label: 'Libellé',
     },
     {
         id: 'priority',
@@ -228,7 +231,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les tickets
+          Plan d’amélioration continue de la qualité et de la gestion des risques
         </Typography>
       )}
 
@@ -323,6 +326,7 @@ export default function TableListTickets({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
+  const [anchorElRowList, setAnchorElRowList] = React.useState([]);
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -353,7 +357,7 @@ export default function TableListTickets({
                 <StyledTableRow>
                   <StyledTableCell colSpan="8">
                     <Alert severity="warning">
-                      Aucun ticket trouvé.
+                      Aucun objectif trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -383,139 +387,175 @@ export default function TableListTickets({
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
+                if (!anchorElRowList[index]) {
+                  anchorElRowList[index] = null;
+                }
+                
+                const handleOpenRow = (event) => {
+                  // Utilisez l'index de la ligne pour mettre à jour l'état d'ancrage correspondant
+                  if(!openRow){
+                    const newAnchorElRowList = [...anchorElRowList];
+                    newAnchorElRowList[index] = event.currentTarget;
+                    setAnchorElRowList(newAnchorElRowList);
+                  }else{
+                    handleCloseRow()
+                  }
+                };
+                
+                const handleCloseRow = () => {
+                  // Réinitialisez l'état d'ancrage de la ligne correspondante à null
+                  const newAnchorElRowList = [...anchorElRowList];
+                  newAnchorElRowList[index] = null;
+                  setAnchorElRowList(newAnchorElRowList);
+                };
+                
+                const openRow = Boolean(anchorElRowList[index]);
+
                 return (
-                  <StyledTableRow
-                    hover
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                    sx={{ cursor: 'pointer' }}
-                  >
-                    <StyledTableCell padding="checkbox">
-                      <Checkbox
-                        onClick={(event) => handleClick(event, row.id)}
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          'aria-labelledby': labelId,
-                        }}
-                      />
-                    </StyledTableCell>
-                    <StyledTableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                      onClick={()=> navigate(`/online/qualites/plan-action/tickets/details/${row?.id}`)}
+                  <>
+                    <StyledTableRow
+                      hover
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isItemSelected}
+                      sx={{ cursor: 'pointer' }}
                     >
-                    {row.title}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.establishments?.map((establishment, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={establishment?.name}
-                                  src={
-                                    establishment?.logo
-                                      ? establishment?.logo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={establishment?.name}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.undesirableEvent && <Chip
-                          label={`EI: ${row?.undesirableEvent?.title}`}
-                          variant="filled"
-                          clickable
-                          onClick={()=> navigate(`/online/qualites/evenements-indesirables/details/${row?.undesirableEvent?.id}`)}
-                        />}
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <Chip
-                          label={getPriorityLabel(row?.priority)}
-                          variant="filled"
-                        />
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <TicketStatusLabelMenu ticket={row} />
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <CircularProgressWithLabel value={row?.completionPercentage}/>
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      <IconButton
-                        aria-describedby={id}
-                        onClick={handleOpenMenu}
+                      <StyledTableCell padding="checkbox">
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                          <Checkbox
+                            onClick={(event) => handleClick(event, row.id)}
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{
+                              'aria-labelledby': labelId,
+                            }}
+                          />
+                          {row?.actions && row?.actions?.length > 0 && <IconButton
+                            aria-label="expand row"
+                            size="small"
+                            onClick={handleOpenRow}
+                          >
+                            {openRow ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                          </IconButton>}
+                        </Stack>
+                      </StyledTableCell>
+                      <StyledTableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
                       >
-                        <MoreVert />
-                      </IconButton>
-                      <Popover
-                        open={open}
-                        anchorEl={anchorElList[index]}
-                        onClose={handleCloseMenu}
-                        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-                        transformOrigin={{
-                          vertical: 'top',
-                          horizontal: 'right',
-                        }}
-                      >
-                        <Link
-                          to={`/online/qualites/plan-action/tickets/details/${row?.id}`}
-                          className="no_style"
+                        <Stack direction="row" flexWrap='wrap' spacing={1}>
+                          {row?.establishments?.map((establishment, index) => {
+                            return (
+                              <Chip
+                                key={index}
+                                avatar={
+                                  <Avatar
+                                    alt={establishment?.name}
+                                    src={
+                                      establishment?.logo
+                                        ? establishment?.logo
+                                        : '/default-placeholder.jpg'
+                                    }
+                                  />
+                                }
+                                label={establishment?.name}
+                                variant="outlined"
+                              />
+                            );
+                          })}
+                        </Stack>
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        <Stack direction="row" flexWrap='wrap' spacing={1}>
+                          {row?.undesirableEvent && <Chip
+                            label={`EI: ${row?.undesirableEvent?.title}`}
+                            variant="filled"
+                            clickable
+                            onClick={()=> navigate(`/online/qualites/evenements-indesirables/details/${row?.undesirableEvent?.id}`)}
+                          />}
+                        </Stack>
+                      </StyledTableCell>
+                      <StyledTableCell align="left"
+                        onClick={()=> navigate(`/online/qualites/plan-action/tickets/details/${row?.id}`)}>
+                        {row.title}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        <Stack direction="row" flexWrap='wrap' spacing={1}>
+                          <Chip
+                            label={getPriorityLabel(row?.priority)}
+                            variant="filled"
+                          />
+                        </Stack>
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        <TicketStatusLabelMenu ticket={row} />
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        <CircularProgressWithLabel value={row?.completionPercentage}/>
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        <IconButton
+                          aria-describedby={id}
+                          onClick={handleOpenMenu}
                         >
-                          <MenuItem onClick={handleCloseMenu}>
-                            <Article sx={{ mr: 2 }} />
-                            Détails
-                          </MenuItem>
-                        </Link>
-                        <MenuItem
-                          onClick={() => {
-                            onOpenDialogListLibrary(row?.folder);
-                            handleCloseMenu();
+                          <MoreVert />
+                        </IconButton>
+                        <Popover
+                          open={open}
+                          anchorEl={anchorElList[index]}
+                          onClose={handleCloseMenu}
+                          anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                          transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
                           }}
                         >
-                          <Folder sx={{ mr: 2 }} />
-                          Bibliothèque
-                        </MenuItem>
-                        <Link
-                          to={`/online/qualites/plan-action/tickets/modifier/${row?.id}`}
-                          className="no_style"
-                        >
-                          <MenuItem onClick={handleCloseMenu}>
-                            <Edit sx={{ mr: 2 }} />
-                            Modifier
+                          <Link
+                            to={`/online/qualites/plan-action/tickets/details/${row?.id}`}
+                            className="no_style"
+                          >
+                            <MenuItem onClick={handleCloseMenu}>
+                              <Article sx={{ mr: 2 }} />
+                              Détails
+                            </MenuItem>
+                          </Link>
+                          <MenuItem
+                            onClick={() => {
+                              onOpenDialogListLibrary(row?.folder);
+                              handleCloseMenu();
+                            }}
+                          >
+                            <Folder sx={{ mr: 2 }} />
+                            Bibliothèque
                           </MenuItem>
-                        </Link>
-                        <MenuItem
-                          onClick={() => {
-                            onDeleteTicket(row?.id);
-                            handleCloseMenu();
-                          }}
-                          sx={{ color: 'error.main' }}
-                        >
-                          <Delete sx={{ mr: 2 }} />
-                          Supprimer
-                        </MenuItem>
-                      </Popover>
-                    </StyledTableCell>
-                  </StyledTableRow>
+                          <Link
+                            to={`/online/qualites/plan-action/tickets/modifier/${row?.id}`}
+                            className="no_style"
+                          >
+                            <MenuItem onClick={handleCloseMenu}>
+                              <Edit sx={{ mr: 2 }} />
+                              Modifier
+                            </MenuItem>
+                          </Link>
+                          <MenuItem
+                            onClick={() => {
+                              onDeleteTicket(row?.id);
+                              handleCloseMenu();
+                            }}
+                            sx={{ color: 'error.main' }}
+                          >
+                            <Delete sx={{ mr: 2 }} />
+                            Supprimer
+                          </MenuItem>
+                        </Popover>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                    {row?.actions && row?.actions?.length > 0 && <CollapsibleRow rows={row?.actions} open={openRow}/>}
+                  </>
                 );
               })}
               {emptyRows > 0 && (
@@ -534,3 +574,68 @@ export default function TableListTickets({
     </Box>
   );
 }
+
+
+
+function CollapsibleRow({rows, open}) {
+  return (
+    <StyledTableRow>
+      <StyledTableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <Box sx={{ margin: 1 }}>
+            <Typography variant="h6" gutterBottom component="div">
+              Les actions
+            </Typography>
+            <Table size="small" aria-label="purchases">
+              <TableHead>
+                <StyledTableRow>
+                  <StyledTableCell>Description</StyledTableCell>
+                  <StyledTableCell>Échéance</StyledTableCell>
+                  <StyledTableCell>Responsables</StyledTableCell>
+                  <StyledTableCell>Statut</StyledTableCell>
+                </StyledTableRow>
+              </TableHead>
+              <TableBody>
+                {rows?.map((row, index) => (
+                  <StyledTableRow key={index}>
+                    <StyledTableCell component="th" scope="row">
+                      {row.description}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">{`${getFormatDate(row?.dueDate)}`}</StyledTableCell>
+                    <StyledTableCell align="left">
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
+                        {row?.employees?.map((employee, index) => {
+                          return (
+                            <Chip
+                              key={index}
+                              avatar={
+                                <Avatar
+                                  alt={employee?.firstName}
+                                  src={
+                                    employee?.photo
+                                      ? employee?.photo
+                                      : '/default-placeholder.jpg'
+                                  }
+                                />
+                              }
+                              label={employee?.firstName}
+                              variant="outlined"
+                            />
+                          );
+                        })}
+                      </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <TaskActionStatusLabelMenu taskAction={row} />
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Box>
+        </Collapse>
+      </StyledTableCell>
+    </StyledTableRow>
+  );
+}
+

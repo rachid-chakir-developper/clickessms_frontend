@@ -38,7 +38,6 @@ export const rolesModel = defineRolesModel(entitiesModel, {
       humanRessources: 'edit',
       finance: 'edit',
       facility: 'edit',
-      establishment: 'edit',
       task: 'edit',
       bankAccount: 'edit',
     },

@@ -85,15 +85,15 @@ export default function TicketTabs({ticket}) {
                 aria-label="nav tabs example"
                 role="navigation"
             >
-                <LinkTab label="Discussion" href="/spam" />
                 <LinkTab label="Les actions" href="/spam" />
+                <LinkTab label="Discussion" href="/spam" />
             </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          <TicketChat ticket={ticket}/>
+        <TicketActions taskActions={ticket?.actions}/>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          <TicketActions taskActions={ticket?.actions}/>
+        <TicketChat ticket={ticket}/>
         </CustomTabPanel>
     </Box>
   );

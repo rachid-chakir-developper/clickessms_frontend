@@ -124,7 +124,7 @@ export default function ListTickets() {
             className="no_style"
           >
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter un ticket
+              Ajouter un objectif
             </Button>
           </Link>
         </Box>

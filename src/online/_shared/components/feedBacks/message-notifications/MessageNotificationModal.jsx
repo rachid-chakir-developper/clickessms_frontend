@@ -42,9 +42,7 @@ return (
         </DialogTitle>
         <IconButton
           aria-label="close"
-          onClick={() =>
-            setMessageNotificationModal({ ...messageNotificationModal, isOpen: false })
-          }
+          onClick={handleClose}
           sx={{
             position: 'absolute',
             right: 8,

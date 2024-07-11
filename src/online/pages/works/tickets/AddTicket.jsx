@@ -10,8 +10,8 @@ export default function AddTicket() {
       idUndesirableEvent={idUndesirableEvent}
       title={
         idTicket && idTicket > 0
-          ? `Modifier le ticket`
-          : `Ajouter un ticket`
+          ? `Modifier l'objectif`
+          : `Ajouter un objectif`
       }
     />
   );
