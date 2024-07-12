@@ -54,19 +54,6 @@ const UndesirableEventFilter = ({ onFilterChange }) => {
     setFilterValues(filterValuesInit)
     onFilterChange(filterValuesInit);
   };
-  const handleDateChange = (selectedDate) => {
-    if (selectedDate && selectedDate !== undefined) {
-        console.log('selectedDate', selectedDate)
-      let startingDateTime = dayjs(new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), 0, 0, 0))
-      let endingDateTime = dayjs(new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), 23, 59, 59))
-      setFilterValues({
-         ...filterValues,
-         startingDateTime, endingDateTime
-        })
-    }else{
-      setFilterValues({ ...filterValues, startingDateTime: null, endingDateTime: null  })
-    }
-  };
 
   const {
     loading: loadingEstablishments,
@@ -80,7 +67,35 @@ const UndesirableEventFilter = ({ onFilterChange }) => {
   
   return (
     <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} sm={6} md={2}>
+            <Item>
+                <TheDesktopDatePicker
+                    label="De"
+                    type="date"
+                    name="startingDateTime"
+                    value={filterValues.startingDateTime}
+                    onChange={(e) => {
+                      setFilterValues({ ...filterValues, startingDateTime: e })
+                      onFilterChange({ ...filterValues, startingDateTime: e })
+                    }}
+                />
+            </Item>
+        </Grid>
+        <Grid item xs={12} sm={6} md={2}>
+            <Item>
+                <TheDesktopDatePicker
+                    label="À"
+                    type="date"
+                    name="endingDateTime"
+                    value={filterValues.endingDateTime}
+                    onChange={(e) => {
+                      setFilterValues({ ...filterValues, endingDateTime: e })
+                      onFilterChange({ ...filterValues, endingDateTime: e })
+                    }}
+                />
+            </Item>
+        </Grid>
+        <Grid item xs={12} md={4}>
             <Item>
                 <TheTextField variant="outlined"
                     label="Recherche"
@@ -107,17 +122,7 @@ const UndesirableEventFilter = ({ onFilterChange }) => {
                 />
             </Item>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-            <Item>
-                <TheDesktopDatePicker
-                    type="date"
-                    name="startingDateTime"
-                    value={filterValues.startingDateTime}
-                    onChange={(e) => handleDateChange(e)}
-                />
-            </Item>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={4}>
             <Item>
                 <TheAutocomplete
                         options={establishmentsData?.establishments?.nodes}
@@ -127,6 +132,7 @@ const UndesirableEventFilter = ({ onFilterChange }) => {
                         onChange={(event, newValue) => {
                             setFilterSelectedEstablishments(newValue)
                             setFilterValues({ ...filterValues, establishments: newValue.map((v) => v.id) })
+                            onFilterChange({ ...filterValues, establishments: newValue.map((v) => v.id) })
                         }}
                       />
             </Item>

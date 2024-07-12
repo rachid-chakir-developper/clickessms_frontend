@@ -30,7 +30,7 @@ import {
   MoreVert,
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TaskActionStatusLabelMenu from './TaskActionStatusLabelMenu';
@@ -94,9 +94,15 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
+      id: 'source',
+      numeric: false,
+      disablePadding: false,
+      label: 'Source',
+  },
+  {
     id: 'description',
     numeric: false,
-    disablePadding: true,
+    disablePadding: false,
     label: 'Description',
   },,
   {
@@ -240,6 +246,7 @@ export default function TableListTaskActions({
   onDeleteTaskAction,
   onUpdateTaskActionState,
 }) {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -395,6 +402,17 @@ export default function TableListTaskActions({
                       scope="row"
                       padding="none"
                     >
+                      <Stack direction="row" flexWrap='wrap' spacing={1}>
+                        {row?.ticket?.undesirableEvent && <Chip
+                          label={`EI: ${row?.ticket?.undesirableEvent?.title}`}
+                          variant="filled"
+                          clickable
+                          onClick={()=> navigate(`/online/qualites/evenements-indesirables/details/${row?.ticket?.undesirableEvent?.id}`)}
+                        />}
+                      </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell align="left"
+                    onClick={()=> navigate(`/online/travaux/actions/details/${row?.id}`)}>
                       {row.description}
                     </StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.dueDate)}`}</StyledTableCell>

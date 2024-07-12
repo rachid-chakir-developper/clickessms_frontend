@@ -3,8 +3,8 @@
 import { gql } from '@apollo/client';
 import { EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
 
-export const TASK_ACTION_BASIC_INFOS = gql`
-  fragment TaskActionBasicInfosFragment on TaskActionType {
+export const TASK_ACTION_MINI_INFOS = gql`
+  fragment TaskActionMiniInfosFragment on TaskActionType {
     id
     description
     dueDate
@@ -14,6 +14,21 @@ export const TASK_ACTION_BASIC_INFOS = gql`
     }
   }
   ${EMPLOYEE_MINI_INFOS}
+`;
+
+export const TASK_ACTION_BASIC_INFOS = gql`
+  fragment TaskActionBasicInfosFragment on TaskActionType {
+    ...TaskActionMiniInfosFragment
+    ticket{
+      id
+      title
+      undesirableEvent{
+        id
+        title
+      }
+    }
+  }
+  ${TASK_ACTION_MINI_INFOS}
 `;
 
 export const TASK_ACTION_DETAILS = gql`

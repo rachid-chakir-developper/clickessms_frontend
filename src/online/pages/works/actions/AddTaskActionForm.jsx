@@ -160,7 +160,7 @@ export default function AddTaskActionForm({ idTaskAction, title }) {
   const [getTaskAction, { loading: loadingTaskAction }] = useLazyQuery(GET_TASK_ACTION, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, folder, ...taskActionCopy } = data.taskAction;
+      let { __typename, folder, ticket, ...taskActionCopy } = data.taskAction;
       taskActionCopy.dueDate = taskActionCopy.dueDate ? dayjs(taskActionCopy.dueDate) : null;
       formik.setValues(taskActionCopy);
     },

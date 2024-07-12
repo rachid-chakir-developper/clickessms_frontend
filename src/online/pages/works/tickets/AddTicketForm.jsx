@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import { Stack, Box, Typography, Button, Divider, Stepper, Step, StepLabel, StepContent, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Stack, Box, Typography, Button, Divider, Stepper, Step, StepLabel, StepContent, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem, FormControlLabel, Checkbox } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -26,6 +26,7 @@ import TheDesktopDatePicker from '../../../../_shared/components/form-fields/The
 import { ACTION_STATUS, PRIORITIES } from '../../../../_shared/tools/constants';
 import { GET_TASK_ACTIONS } from '../../../../_shared/graphql/queries/TaskActionQueries';
 import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
+import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -44,6 +45,7 @@ export default function AddTicketForm({ idTicket, title }) {
       .string("Entrez l'objet de le ticket")
       .required("L'objet de le ticket est obligatoire"),
   });
+  const efcReportsInitValue = { title: '', efcDate: null, document: undefined, declarationDate: null, employees:[]}
   const formik = useFormik({
     initialValues: {
       number: '',
@@ -51,6 +53,8 @@ export default function AddTicketForm({ idTicket, title }) {
       description: '',
       establishments: [],
       priority: 'LOW',
+      isHaveEfcReport: false,
+      efcReports: [efcReportsInitValue],
       actions: [],
     },
     validationSchema: validationSchema,
@@ -60,6 +64,14 @@ export default function AddTicketForm({ idTicket, title }) {
       ticketCopy.employee = ticketCopy.employee ? ticketCopy.employee.id : null;
       if (!ticketCopy?.actions) ticketCopy['actions'] = [];
       let items = [];
+      ticketCopy.efcReports.forEach((item) => {
+        let { __typename, ...itemCopy } = item;
+        itemCopy.employees = itemCopy.employees.map((i) => i?.id);
+        items.push(itemCopy);
+      });
+      ticketCopy.efcReports = items;
+      
+      items = [];
       ticketCopy.actions.forEach((item) => {
         let { __typename, ...itemCopy } = item;
         itemCopy.employees = itemCopy.employees.map((i) => i?.id);
@@ -198,14 +210,24 @@ export default function AddTicketForm({ idTicket, title }) {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       let { __typename, folder, completionPercentage, undesirableEvent, ...ticketCopy } = data.ticket;
-        if (!ticketCopy?.actions) ticketCopy['actions'] = [];
-        let items = [];
-        ticketCopy.actions.forEach((item) => {
-          let { __typename, ...itemCopy } = item;
-          itemCopy.dueDate = itemCopy.dueDate ? dayjs(itemCopy.dueDate): null;
-          items.push(itemCopy);
-        });
-        ticketCopy.actions = items;
+      if (!ticketCopy?.efcReports) ticketCopy['efcReports'] = [];
+      let items = [];
+      ticketCopy.efcReports.forEach((item) => {
+        let { __typename, ...itemCopy } = item;
+        itemCopy.efcDate = itemCopy.efcDate ? dayjs(itemCopy.efcDate) : null
+        itemCopy.declarationDate = itemCopy.declarationDate ? dayjs(itemCopy.declarationDate) : null
+        items.push(itemCopy);
+      });
+      if(items?.length < 1) items = [efcReportsInitValue];
+      ticketCopy.efcReports = items;
+      if (!ticketCopy?.actions) ticketCopy['actions'] = [];
+      items = [];
+      ticketCopy.actions.forEach((item) => {
+        let { __typename, ...itemCopy } = item;
+        itemCopy.dueDate = itemCopy.dueDate ? dayjs(itemCopy.dueDate): null;
+        items.push(itemCopy);
+      });
+      ticketCopy.actions = items;
       formik.setValues(ticketCopy);
     },
     onError: (err) => console.log(err),
@@ -352,11 +374,98 @@ export default function AddTicketForm({ idTicket, title }) {
                       </FormControl>
                     </Item>
                   </Grid>
+                  <Grid item xs={12} sm={12} md={12} >
+                    <Item>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            value={formik.values.isHaveEfcReport}
+                            checked={formik.values.isHaveEfcReport}
+                            onChange={(e) =>
+                              formik.setFieldValue('isHaveEfcReport', e.target.checked)
+                            }
+                            name="isHaveEfcReport"
+                            color="primary"
+                          />
+                        }
+                        label="CREX + déclaration aux autorités compétentes"
+                      />
+                    </Item>
+                    {formik.values?.isHaveEfcReport && <>
+                      {formik.values?.efcReports?.map((item, index) => (
+                        <Grid
+                          container
+                          spacing={{ xs: 2, md: 3 }}
+                          columns={{ xs: 4, sm: 8, md: 12 }}
+                          key={index}
+                        >
+                          <Grid item xs={12} sm={6} md={4} >
+                            <Item>
+                              <TheFileField variant="outlined" label="Document CREX"
+                                fileValue={item.document}
+                                onChange={(file) => formik.setFieldValue(`efcReports.${index}.document`, file)}
+                                disabled={loadingPost || loadingPut}
+                                />
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={4} >
+                            <Item>
+                              <TheTextField
+                                variant="outlined"
+                                label="Intitulé CREX"
+                                value={item.title}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`efcReports.${index}.title`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                            <Item>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Date"
+                                value={item.efcDate}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`efcReports.${index}.efcDate`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={4} >
+                            <Item>
+                              <TheAutocomplete
+                                options={employeesData?.employees?.nodes}
+                                label="Participants"
+                                placeholder="Ajouter un participant"
+                                limitTags={3}
+                                value={item.internalReferents}
+                                onChange={(e, newValue) =>
+                                  formik.setFieldValue(`efcReports.${index}.employees`, newValue)
+                                }
+                              />
+                            </Item>
+                            <Item>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Date de déclaration aux autorités compétentes"
+                                value={item.declarationDate}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`efcReports.${index}.declarationDate`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                        </Grid>
+                      ))}
+                    </>}
+                  </Grid>
                   <Grid item xs={12} sm={12} md={12}>
                     <Item>
                       <TheTextField
                         variant="outlined"
-                        label="Description"
+                        label="Analyse"
                         multiline
                         minRows={6}
                         value={formik.values.description}

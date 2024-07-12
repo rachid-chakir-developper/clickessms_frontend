@@ -432,13 +432,13 @@ export default function TableListTickets({
                               'aria-labelledby': labelId,
                             }}
                           />
-                          {row?.actions && row?.actions?.length > 0 && <IconButton
+                          {row?.actions && row?.actions?.length > 0 && <Tooltip title={`${openRow ? 'Cacher' : 'Afficher'} les actions`}><IconButton
                             aria-label="expand row"
                             size="small"
                             onClick={handleOpenRow}
                           >
                             {openRow ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-                          </IconButton>}
+                          </IconButton></Tooltip>}
                         </Stack>
                       </StyledTableCell>
                       <StyledTableCell
