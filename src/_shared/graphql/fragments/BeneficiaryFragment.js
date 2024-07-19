@@ -55,6 +55,7 @@ export const BENEFICIARY_ENTRY_DETAILS = gql`
 export const BENEFICIARY_BASIC_INFOS = gql`
   fragment BeneficiaryBasicInfosFragment on BeneficiaryType {
     ...BeneficiaryMiniInfosFragment
+    birthDate
     beneficiaryEntries{
       ...BeneficiaryEntryFragment
     }
@@ -89,7 +90,6 @@ export const BENEFICIARY_ADMISSION_DETAILS = gql`
 export const BENEFICIARY_DETAILS = gql`
   fragment BeneficiaryDetailsFragment on BeneficiaryType {
     ...BeneficiaryBasicInfosFragment
-    birthDate
     admissionDate
     description
     latitude
@@ -118,7 +118,6 @@ export const BENEFICIARY_DETAILS = gql`
 export const BENEFICIARY_RECAP_DETAILS = gql`
   fragment BeneficiaryRecapDetailsFragment on BeneficiaryType {
     ...BeneficiaryBasicInfosFragment
-    birthDate
     admissionDate
     description
     latitude

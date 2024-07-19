@@ -77,14 +77,17 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
         });
     },
   });
-  const {
+const [getEmployees, {
     loading: loadingEmployees,
     data: employeesData,
     error: employeesError,
     fetchMore: fetchMoreEmployees,
-  } = useQuery(GET_EMPLOYEES, {
-    fetchPolicy: 'network-only',
-  }); 
+  }] = useLazyQuery(GET_EMPLOYEES, { variables: { employeeFilter : null, page: 1, limit: 10 } });
+  
+  const onGetEmployees = (keyword)=>{
+    getEmployees({ variables: { employeeFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+  }
+ 
   
   const {
     loading: loadingEstablishments,
@@ -216,6 +219,10 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
               <Item>
                 <TheAutocomplete
                   options={employeesData?.employees?.nodes}
+onInput={(e) => {
+                          onGetEmployees(e.target.value)
+                        }}
+
                   label="Employé"
                   placeholder="Choisissez un employé ?"
                   multiple={false}

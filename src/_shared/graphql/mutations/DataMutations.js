@@ -43,3 +43,13 @@ export const DELETE_DATA = gql`
     }
   }
 `;
+
+export const IMPORT_DATAS = gql`
+  mutation importData($entity: String!, $file : Upload!, $fields: [String!]!){
+    importData(entity: $entity, file: $file, fields: $fields) {
+      success
+      done
+      count
+    }
+  }
+`;

@@ -6,11 +6,12 @@ import { EMPLOYEE_CONTRACT_MINI_INFOS } from './EmployeeContractFragment';
 export const EMPLOYEE_PHONE_INFOS = gql`
   fragment EmployeePhoneInfosFragment on EmployeeType {
     id
+    registrationNumber
     firstName
     lastName
+    preferredName
     position
     email
-    socialSecurityNumber
     mobile
     fix
     photo
@@ -22,11 +23,12 @@ export const EMPLOYEE_PHONE_INFOS = gql`
 export const EMPLOYEE_MINI_INFOS = gql`
   fragment EmployeeMiniInfosFragment on EmployeeType {
     id
+    registrationNumber
     firstName
     lastName
+    preferredName
     position
     email
-    socialSecurityNumber
     photo
     coverImage
     isActive
@@ -36,6 +38,7 @@ export const EMPLOYEE_MINI_INFOS = gql`
 export const EMPLOYEE_BASIC_INFOS = gql`
   fragment EmployeeBasicInfosFragment on EmployeeType {
     ...EmployeeMiniInfosFragment
+    socialSecurityNumber
     birthDate
     currentContract{
       ...EmployeeContractMiniInfosFragment

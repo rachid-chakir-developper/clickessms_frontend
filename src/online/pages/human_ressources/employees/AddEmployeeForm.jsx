@@ -49,8 +49,10 @@ export default function AddEmployeeForm({ idEmployee, title }) {
       photo: undefined,
       coverImage: undefined,
       number: '',
+      registrationNumber: '',
       firstName: '',
       lastName: '',
+      preferredName: '',
       birthDate: null,
       hiringDate: null,
       probationEndDate: null,
@@ -235,6 +237,17 @@ export default function AddEmployeeForm({ idEmployee, title }) {
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Matricule"
+                  value={formik.values.registrationNumber}
+                  onChange={(e) =>
+                    formik.setFieldValue('registrationNumber', e.target.value)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
             </Grid>
             <Grid item xs={2} sm={4} md={4}>
               <Item>
@@ -260,7 +273,7 @@ export default function AddEmployeeForm({ idEmployee, title }) {
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Nom"
+                  label="Nom de naissance"
                   id="lastName"
                   value={formik.values.lastName}
                   required
@@ -273,6 +286,17 @@ export default function AddEmployeeForm({ idEmployee, title }) {
                   }
                   helperText={formik.touched.lastName && formik.errors.lastName}
                   disabled={loadingPost || loadingPut}
+                />
+              </Item>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Nom d’usage"
+                  id="preferredName"
+                  value={formik.values.preferredName}
+                  onChange={(e) =>
+                    formik.setFieldValue('preferredName', e.target.value)
+                  }
                 />
               </Item>
             </Grid>

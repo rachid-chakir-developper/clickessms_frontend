@@ -66,14 +66,16 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title }) {
         });
     },
   });
-  const {
+   const [getBeneficiaries, {
     loading: loadingBeneficiaries,
     data: beneficiariesData,
     error: beneficiariesError,
     fetchMore: fetchMoreBeneficiaries,
-  } = useQuery(GET_BENEFICIARIES, {
-    fetchPolicy: 'network-only',
-  });
+  }] = useLazyQuery(GET_BENEFICIARIES, { variables: { beneficiaryFilter : null, page: 1, limit: 10 } });
+
+  const onGetBeneficiaries = (keyword)=>{
+    getBeneficiaries({ variables: { beneficiaryFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+  }
 
   const [createBeneficiaryGroup, { loading: loadingPost }] = useMutation(
     POST_BENEFICIARY_GROUP,
@@ -253,6 +255,9 @@ export default function AddBeneficiaryGroupForm({ idBeneficiaryGroup, title }) {
               <Item>
                 <TheAutocomplete
                   options={beneficiariesData?.beneficiaries?.nodes}
+                        onInput={(e) => {
+                          onGetBeneficiaries(e.target.value)
+                        }}
                   label="Bénificiaires"
                   placeholder="Ajouter un bénificiaire"
                   limitTags={3}

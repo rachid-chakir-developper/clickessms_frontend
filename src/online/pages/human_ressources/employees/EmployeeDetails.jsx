@@ -50,6 +50,7 @@ const EmployeeDetailsPage = ({ employee }) => {
     number,
     firstName,
     lastName,
+    preferredName,
     socialSecurityNumber,
     birthDate,
     position,
@@ -130,8 +131,9 @@ const EmployeeDetailsPage = ({ employee }) => {
               }}
             >
               <Typography variant="h5" gutterBottom>
-                {`${firstName} ${lastName}`}
+                {`${firstName} ${preferredName && preferredName !== '' ? preferredName : lastName}`}
               </Typography>
+              <Typography variant="body2">{`Nom de naissance: ${lastName}`}</Typography>
               {address && address !== '' && (
                 <Typography variant="body2">{address}</Typography>
               )}

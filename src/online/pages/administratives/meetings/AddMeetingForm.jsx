@@ -103,22 +103,27 @@ export default function AddMeetingForm({ idMeeting, title }) {
         });
     },
   });
-  const {
+   const [getBeneficiaries, {
     loading: loadingBeneficiaries,
     data: beneficiariesData,
     error: beneficiariesError,
     fetchMore: fetchMoreBeneficiaries,
-  } = useQuery(GET_BENEFICIARIES, {
-    fetchPolicy: 'network-only',
-  });
-  const {
+  }] = useLazyQuery(GET_BENEFICIARIES, { variables: { beneficiaryFilter : null, page: 1, limit: 10 } });
+
+  const onGetBeneficiaries = (keyword)=>{
+    getBeneficiaries({ variables: { beneficiaryFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+  }
+const [getEmployees, {
     loading: loadingEmployees,
     data: employeesData,
     error: employeesError,
     fetchMore: fetchMoreEmployees,
-  } = useQuery(GET_EMPLOYEES, {
-    fetchPolicy: 'network-only',
-  });
+  }] = useLazyQuery(GET_EMPLOYEES, { variables: { employeeFilter : null, page: 1, limit: 10 } });
+  
+  const onGetEmployees = (keyword)=>{
+    getEmployees({ variables: { employeeFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+  }
+
   const {
     loading: loadingDatas,
     data: dataData,
@@ -447,6 +452,9 @@ export default function AddMeetingForm({ idMeeting, title }) {
                     <Item>
                       <TheAutocomplete
                         options={beneficiariesData?.beneficiaries?.nodes}
+                        onInput={(e) => {
+                          onGetBeneficiaries(e.target.value)
+                        }}
                         label="Bénificiaires concernés"
                         placeholder="Ajouter un bénificiaire"
                         limitTags={3}
@@ -461,6 +469,10 @@ export default function AddMeetingForm({ idMeeting, title }) {
                     <Item>
                       <TheAutocomplete
                         options={employeesData?.employees?.nodes}
+onInput={(e) => {
+                          onGetEmployees(e.target.value)
+                        }}
+
                         label="Personnes invités"
                         placeholder="Ajouter une personne"
                         limitTags={3}
@@ -473,6 +485,10 @@ export default function AddMeetingForm({ idMeeting, title }) {
                     <Item>
                       <TheAutocomplete
                         options={employeesData?.employees?.nodes}
+onInput={(e) => {
+                          onGetEmployees(e.target.value)
+                        }}
+
                         label="Personnes absentes"
                         placeholder="Ajouter une personne"
                         limitTags={3}
@@ -567,6 +583,10 @@ export default function AddMeetingForm({ idMeeting, title }) {
                           <Item>
                             <TheAutocomplete
                               options={employeesData?.employees?.nodes}
+onInput={(e) => {
+                          onGetEmployees(e.target.value)
+                        }}
+
                               label="Personnes concernées"
                               placeholder="Ajouter une personne"
                               limitTags={3}
@@ -597,7 +617,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
                     </Grid>
                   </Grid>
                   
-                  <Grid item xs={12} sm={12} md={6} item sx={{background: '#f9f9f9'}}>
+                  <Grid item xs={12} sm={12} md={6}sx={{background: '#f9f9f9'}}>
                     <Typography variant="h6">Les points à revoir</Typography>  
                     {formik.values?.meetingReviewPoints?.map((item, index) => (
                       <Grid

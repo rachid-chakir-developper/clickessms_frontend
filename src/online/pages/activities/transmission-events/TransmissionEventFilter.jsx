@@ -16,7 +16,7 @@ import dayjs from 'dayjs';
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { CheckBox, CheckBoxOutlineBlank, Close, Search } from '@mui/icons-material';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 
@@ -68,14 +68,16 @@ const TransmissionEventFilter = ({ onFilterChange }) => {
     }
   };
 
-  const {
+   const [getBeneficiaries, {
     loading: loadingBeneficiaries,
     data: beneficiariesData,
     error: beneficiariesError,
     fetchMore: fetchMoreBeneficiaries,
-  } = useQuery(GET_BENEFICIARIES, {
-    fetchPolicy: 'network-only',
-  });
+  }] = useLazyQuery(GET_BENEFICIARIES, { variables: { beneficiaryFilter : null, page: 1, limit: 10 } });
+
+  const onGetBeneficiaries = (keyword)=>{
+    getBeneficiaries({ variables: { beneficiaryFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+  }
 
   
   return (
@@ -121,6 +123,9 @@ const TransmissionEventFilter = ({ onFilterChange }) => {
             <Item>
                 <TheAutocomplete
                         options={beneficiariesData?.beneficiaries?.nodes}
+                        onInput={(e) => {
+                          onGetBeneficiaries(e.target.value)
+                        }}
                         label="Bénéficiaires"
                         limitTags={3}
                         value={selectedBeneficiaries}

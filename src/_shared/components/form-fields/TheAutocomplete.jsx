@@ -13,6 +13,8 @@ export default function TheAutocomplete({
   placeholder,
   value,
   onChange,
+  onInputChange,
+  onInput,
   multiple = true,
   helperText = null,
   disabled=false,
@@ -41,6 +43,7 @@ export default function TheAutocomplete({
       }
       filterSelectedOptions
       value={value}
+      onInputChange={onInputChange}
       onChange={onChange}
       renderOption={(props, option, { selected }) =>
         multiple ? (
@@ -119,6 +122,7 @@ export default function TheAutocomplete({
           label={label}
           placeholder={placeholder}
           helperText={helperText}
+          onInput={onInput}
         />
       )}
     />

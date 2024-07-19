@@ -97,6 +97,12 @@ const headCells = [
       label: 'Photo',
     },
     {
+      id: 'registrationNumber',
+      numeric: false,
+      disablePadding: false,
+      label: 'Matricule',
+    },
+    {
       id: 'firstName',
       numeric: false,
       disablePadding: false,
@@ -106,13 +112,13 @@ const headCells = [
         id: 'lastName',
         numeric: false,
         disablePadding: false,
-        label: 'Nom',
+        label: 'Nom de naissance',
     },
     {
-        id: 'birthDate',
+        id: 'preferredName',
         numeric: false,
         disablePadding: false,
-        label: 'Date de naissance',
+        label: 'Nom d’usage',
     },
     {
         id: 'position',
@@ -206,7 +212,7 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, totalCount } = props;
 
   return (
     <Toolbar
@@ -240,7 +246,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les employés
+          Les employés {totalCount && <>({totalCount})</>}
         </Typography>
       )}
 
@@ -264,6 +270,7 @@ function EnhancedTableToolbar(props) {
 export default function TableListEmployees({
   loading,
   rows,
+  totalCount = null,
   onDeleteEmployee,
   onUpdateEmployeeState,
 }) {
@@ -273,7 +280,7 @@ export default function TableListEmployees({
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(20);
 
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -338,7 +345,7 @@ export default function TableListEmployees({
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} totalCount={totalCount} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -356,14 +363,14 @@ export default function TableListEmployees({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="11">
+                  <StyledTableCell colSpan="12">
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="11">
+                  <StyledTableCell colSpan="12">
                     <Alert severity="warning">
                       Aucun employé trouvé.
                     </Alert>
@@ -436,6 +443,10 @@ export default function TableListEmployees({
                     </StyledTableCell>
                     <StyledTableCell align="left"
                       onClick={()=> navigate(`/online/ressources-humaines/employes/details/${row?.id}`)}>
+                      {row?.registrationNumber}
+                    </StyledTableCell>
+                    <StyledTableCell align="left"
+                      onClick={()=> navigate(`/online/ressources-humaines/employes/details/${row?.id}`)}>
                       {row?.firstName}
                     </StyledTableCell>
                     <StyledTableCell align="left"
@@ -443,8 +454,8 @@ export default function TableListEmployees({
                       {row?.lastName}
                     </StyledTableCell>
                     <StyledTableCell align="left"
-                      onClick={()=> navigate(`/online/ressources-humaines/employes/details/${row?.id}`)}>
-                        {getFormatDate(row?.birthDate)}
+                      onClick={()=> navigate(`/online/ressources-humaines/beneficiaires/details/${row?.id}`)}>
+                      {row?.preferredName}
                     </StyledTableCell>
                     <StyledTableCell align="left"
                       onClick={()=> navigate(`/online/ressources-humaines/employes/details/${row?.id}`)}>

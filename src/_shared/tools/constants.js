@@ -154,9 +154,25 @@ export const LETTER_TYPES = {
 export const CONTRACT_TYPES = {
   CDI: 'CDI',
   CDD: 'CDD',
+  APPRENTICESHIP_CONTRACT: 'APPRENTICESHIP_CONTRACT',
+  SINGLE_INTEGRATION_CONTRACT: 'SINGLE_INTEGRATION_CONTRACT',
+  PROFESSIONALIZATION_CONTRACT: 'PROFESSIONALIZATION_CONTRACT',
+  SEASONAL_CONTRACT: 'SEASONAL_CONTRACT',
+  TEMPORARY_CONTRACT: 'TEMPORARY_CONTRACT',
+  PART_TIME_CONTRACT: 'PART_TIME_CONTRACT',
+  FULL_TIME_CONTRACT: 'FULL_TIME_CONTRACT',
+  INTERNSHIP_CONTRACT: 'INTERNSHIP_CONTRACT',
   ALL: [
     { value: 'CDI', label: 'CDI' },
     { value: 'CDD', label: 'CDD' },
+    { value: 'APPRENTICESHIP_CONTRACT', label: "Contrat d'apprentissage" },
+    { value: 'SINGLE_INTEGRATION_CONTRACT', label: "Contrat Unique d'Insertion (CUI)" },
+    { value: 'PROFESSIONALIZATION_CONTRACT', label: 'Contrat de professionnalisation' },
+    { value: 'SEASONAL_CONTRACT', label: 'Contrat saisonnier' },
+    { value: 'TEMPORARY_CONTRACT', label: 'Contrat intérimaire' },
+    { value: 'PART_TIME_CONTRACT', label: 'Contrat à temps partiel' },
+    { value: 'FULL_TIME_CONTRACT', label: 'Contrat à temps plein' },
+    { value: 'INTERNSHIP_CONTRACT', label: 'Contrat de stage' },
   ],
 };
 

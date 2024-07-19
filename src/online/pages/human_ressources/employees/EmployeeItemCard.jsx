@@ -43,7 +43,7 @@ export default function EmployeeItemCard({
     });
   };
   const onGoToDetails = ()=>{
-    navigate(`/online/ressources-humaines/employes/details/${employee?.id}`);
+    // navigate(`/online/ressources-humaines/employes/details/${employee?.id}`);
   }
   return (
     <Card
@@ -91,7 +91,7 @@ export default function EmployeeItemCard({
           </Stack>
         </Stack>
       </Tooltip>
-      <Stack direction="row" alignItems="start" spacing={1.5} sx={{position: 'absolute', top: 0, right: 0, zIndex: 10}}>
+      {/* <Stack direction="row" alignItems="start" spacing={1.5} sx={{position: 'absolute', top: 0, right: 0, zIndex: 10}}>
           <IconButton onClick={handleOpenMenu}>
               <MoreVert />
           </IconButton>
@@ -162,7 +162,7 @@ export default function EmployeeItemCard({
               </Link>
             </Tooltip>
           </Popover>
-      </Stack>
+      </Stack> */}
     </Card>
   );
 }

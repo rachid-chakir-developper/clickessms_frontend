@@ -109,14 +109,17 @@ export default function AddTaskForm({ idTask, title }) {
         });
     },
   });
-  const {
+const [getEmployees, {
     loading: loadingEmployees,
     data: employeesData,
     error: employeesError,
     fetchMore: fetchMoreEmployees,
-  } = useQuery(GET_EMPLOYEES, {
-    fetchPolicy: 'network-only',
-  });
+  }] = useLazyQuery(GET_EMPLOYEES, { variables: { employeeFilter : null, page: 1, limit: 10 } });
+  
+  const onGetEmployees = (keyword)=>{
+    getEmployees({ variables: { employeeFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+  }
+
   const {
     loading: loadingEstablishments,
     data: establishmentsData,
@@ -417,8 +420,12 @@ export default function AddTaskForm({ idTask, title }) {
               {!isRequestType && <><Item>
                 <TheAutocomplete
                   options={employeesData?.employees?.nodes}
-                  label="Intérvenants"
-                  placeholder="Ajouter un intérvenant"
+onInput={(e) => {
+                          onGetEmployees(e.target.value)
+                        }}
+
+                  label="Intervenants"
+                  placeholder="Ajouter un intervenant"
                   limitTags={2}
                   value={formik.values.workers}
                   onChange={(e, newValue) =>

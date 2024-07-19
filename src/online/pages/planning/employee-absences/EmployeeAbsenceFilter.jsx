@@ -16,7 +16,7 @@ import dayjs from 'dayjs';
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { CheckBox, CheckBoxOutlineBlank, Close, Search } from '@mui/icons-material';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 
@@ -68,14 +68,17 @@ const EmployeeAbsenceFilter = ({ onFilterChange }) => {
     }
   };
 
-  const {
+const [getEmployees, {
     loading: loadingEmployees,
     data: employeesData,
     error: employeesError,
     fetchMore: fetchMoreEmployees,
-  } = useQuery(GET_EMPLOYEES, {
-    fetchPolicy: 'network-only',
-  });
+  }] = useLazyQuery(GET_EMPLOYEES, { variables: { employeeFilter : null, page: 1, limit: 10 } });
+  
+  const onGetEmployees = (keyword)=>{
+    getEmployees({ variables: { employeeFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+  }
+
 
   
   return (
@@ -121,6 +124,10 @@ const EmployeeAbsenceFilter = ({ onFilterChange }) => {
             <Item>
                 <TheAutocomplete
                         options={employeesData?.employees?.nodes}
+onInput={(e) => {
+                          onGetEmployees(e.target.value)
+                        }}
+
                         label="Employés"
                         limitTags={3}
                         value={selectedEmployees}

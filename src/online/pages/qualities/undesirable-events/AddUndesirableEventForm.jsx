@@ -135,22 +135,28 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
     fetchPolicy: 'network-only',
   });
 
-  const {
+  const [getBeneficiaries, {
     loading: loadingBeneficiaries,
     data: beneficiariesData,
     error: beneficiariesError,
     fetchMore: fetchMoreBeneficiaries,
-  } = useQuery(GET_BENEFICIARIES, {
-    fetchPolicy: 'network-only',
-  });
-  const {
+  }] = useLazyQuery(GET_BENEFICIARIES, { variables: { beneficiaryFilter : null, page: 1, limit: 10 } });
+
+  const onGetBeneficiaries = (keyword)=>{
+    getBeneficiaries({ variables: { beneficiaryFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+  }
+  
+  const [getEmployees, {
     loading: loadingEmployees,
     data: employeesData,
     error: employeesError,
     fetchMore: fetchMoreEmployees,
-  } = useQuery(GET_EMPLOYEES, {
-    fetchPolicy: 'network-only',
-  });
+  }] = useLazyQuery(GET_EMPLOYEES, { variables: { employeeFilter : null, page: 1, limit: 10 } });
+  
+  const onGetEmployees = (keyword)=>{
+    getEmployees({ variables: { employeeFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+  }
+
   const {
     loading: loadingDatas,
     data: dataData,
@@ -416,6 +422,9 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                     <Item>
                       <TheAutocomplete
                         options={employeesData?.employees?.nodes}
+                        onInput={(e) => {
+                          onGetEmployees(e.target.value)
+                        }}
                         label="Décalarant"
                         placeholder="Décalarant"
                         multiple={false}
@@ -521,6 +530,10 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                     <Item>
                       <TheAutocomplete
                         options={employeesData?.employees?.nodes}
+onInput={(e) => {
+                          onGetEmployees(e.target.value)
+                        }}
+
                         label="Professionnel(s) concerné(s)"
                         placeholder="Ajouter un professionnel"
                         limitTags={3}
@@ -535,6 +548,9 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                     <Item>
                       <TheAutocomplete
                         options={beneficiariesData?.beneficiaries?.nodes}
+                        onInput={(e) => {
+                          onGetBeneficiaries(e.target.value)
+                        }}
                         label="Bénificiaire(s) concerné(s)"
                         placeholder="Ajouter un bénificiaire"
                         limitTags={3}
@@ -706,6 +722,10 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                       <TheAutocomplete
                         required
                         options={employeesData?.employees?.nodes}
+onInput={(e) => {
+                          onGetEmployees(e.target.value)
+                        }}
+
                         label="Personne(s) immédiatement prévenue(s)"
                         placeholder="Ajouter une personne"
                         limitTags={3}

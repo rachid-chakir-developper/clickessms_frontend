@@ -372,7 +372,7 @@ export const modules: Module[] = [
         icon: <AssignmentIndIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'manageAdministrative',
+            type: 'getEstablishments',
           }).authorized;
         },
       },
@@ -383,7 +383,7 @@ export const modules: Module[] = [
         icon: <WalletIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'manageAdministrative',
+            type: 'getEstablishments',
           }).authorized;
         },
       },

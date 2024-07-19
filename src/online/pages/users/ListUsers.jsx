@@ -177,7 +177,7 @@ export default function ListUsers() {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
-            <Button
+            {/* <Button
               variant="contained"
               disableElevation
               color="inherit"
@@ -196,7 +196,7 @@ export default function ListUsers() {
               onClick={() => handleClickAdd()}
             >
               Ajouter un groupe
-            </Button>
+            </Button> */}
             <Link to="/online/utilisateurs/ajouter" className="no_style">
               <Button variant="contained" endIcon={<Add />}>
                 Ajouter un utilisateur

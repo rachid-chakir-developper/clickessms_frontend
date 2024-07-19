@@ -72,7 +72,7 @@ export default function SignInSide() {
     });
     loginUser({
       variables: {
-        email: data.get('email'),
+        email: data.get('email').trim(),
         password: data.get('password'),
       },
     });

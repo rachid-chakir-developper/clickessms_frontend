@@ -206,7 +206,7 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, totalCount } = props;
 
   return (
     <Toolbar
@@ -240,7 +240,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les bénéficiaires
+          Les bénéficiaires {totalCount && <>({totalCount})</>}
         </Typography>
       )}
 
@@ -264,6 +264,7 @@ function EnhancedTableToolbar(props) {
 export default function TableListBeneficiaries({
   loading,
   rows,
+  totalCount = null,
   onDeleteBeneficiary,
   onUpdateBeneficiaryState,
 }) {
@@ -273,7 +274,7 @@ export default function TableListBeneficiaries({
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(20);
 
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -338,7 +339,7 @@ export default function TableListBeneficiaries({
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} totalCount={totalCount}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}

@@ -16,6 +16,8 @@ export const TASK_WORKER_DETAILS = gql`
     employee {
       ...EmployeeBasicInfosFragment
     }
+    createdAt
+    updatedAt
   }
   ${EMPLOYEE_BASIC_INFOS}
 `;
@@ -228,6 +230,8 @@ export const TASK_RECAP = gql`
     taskChecklist {
       ...TaskChecklistItemFragment
     }
+    createdAt
+    updatedAt
   }
   ${TASK_BASIC_INFOS}
   ${TASK_VEHICLE_DETAILS}

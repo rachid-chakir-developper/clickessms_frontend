@@ -18,6 +18,8 @@ import ProgressService from '../../../../_shared/services/feedbacks/ProgressServ
 import BeneficiaryFilter from './BeneficiaryFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
 import TableListBeneficiaries from './TableListBeneficiaries';
+import { IMPORT_DATAS } from '../../../../_shared/graphql/mutations/DataMutations';
+import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -28,7 +30,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListBeneficiaries() {
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [beneficiaryFilter, setBeneficiaryrFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
@@ -163,11 +165,63 @@ export default function ListBeneficiaries() {
       },
     });
   };
+  const [importData, { loading: loadingImport }] = useMutation(
+    IMPORT_DATAS,
+      {
+        onCompleted: (datas) => {
+          if (datas.importData.done) {
+            setNotifyAlert({
+              isOpen: true,
+              message: 'Importé avec succès',
+              type: 'success',
+            });
+          } else {
+            setNotifyAlert({
+              isOpen: true,
+              message: `Non importé ! ${datas.importData.message}.`,
+              type: 'error',
+            });
+          }
+        },
+        refetchQueries: [{ query: GET_BENEFICIARIES }],
+        onError: (err) => {
+          console.log(err);
+          setNotifyAlert({
+            isOpen: true,
+            message: 'Non importé ! Veuillez réessayer.',
+            type: 'error',
+          });
+        },
+      },
+    );
+  const [file, setFile] = React.useState(null);
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
+          {/* <Item>
+            <TheFileField variant="outlined" label="Import"
+              fileValue={file}
+              onChange={(file) => {
+                setFile(file)
+                alert()
+                importData({
+                  variables: { 
+                              entity: 'Beneficiary',
+                              file: file,
+                              fields:[
+                                'name',
+                                'address',
+                                'zip_code',
+                                'city',
+                                'birth_date',
+                              ]
+                            }
+                          });
+              }}
+              />
+          </Item> */}
           <Link
             to="/online/ressources-humaines/beneficiaires/ajouter"
             className="no_style"
@@ -217,6 +271,7 @@ export default function ListBeneficiaries() {
         <TableListBeneficiaries
           loading={loadingBeneficiaries}
           rows={beneficiariesData?.beneficiaries?.nodes || []}
+          totalCount={beneficiariesData?.beneficiaries?.totalCount}
           onDeleteBeneficiary={onDeleteBeneficiary}
         />
       </Grid>

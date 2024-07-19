@@ -69,7 +69,7 @@ export default function TaskStatusLabelMenu({task}) {
             type="task"
             loading={loadingPut}
             onChange={(status)=> {updateTaskFields({ variables: {id: task?.id, taskData: {status}} })}}
-            disabled={!canChangeStatus}
+            disabled={!canManageFacility}
         />
     </Box>
   );

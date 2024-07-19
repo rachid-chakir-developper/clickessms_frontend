@@ -134,7 +134,7 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
             >
               <Typography variant="body2">{gender?.name}</Typography>
               <Typography variant="h5" gutterBottom>
-                {`${firstName} ${preferredName}`}
+                {`${firstName} ${preferredName && preferredName !== '' ? preferredName : lastName}`}
               </Typography>
               <Typography variant="body2">{`Nom de naissance: ${lastName}`}</Typography>
               <Typography variant="body2" sx={{ fontStyle: 'italic' }}>{getFormatDate(birthDate)}</Typography>

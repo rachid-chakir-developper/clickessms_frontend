@@ -86,14 +86,16 @@ export default function AddLetterForm({ idLetter, title }) {
         });
     },
   });
-  const {
+   const [getBeneficiaries, {
     loading: loadingBeneficiaries,
     data: beneficiariesData,
     error: beneficiariesError,
     fetchMore: fetchMoreBeneficiaries,
-  } = useQuery(GET_BENEFICIARIES, {
-    fetchPolicy: 'network-only',
-  });
+  }] = useLazyQuery(GET_BENEFICIARIES, { variables: { beneficiaryFilter : null, page: 1, limit: 10 } });
+
+  const onGetBeneficiaries = (keyword)=>{
+    getBeneficiaries({ variables: { beneficiaryFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+  }
   const {
     loading: loadingEstablishments,
     data: establishmentsData,
@@ -103,14 +105,17 @@ export default function AddLetterForm({ idLetter, title }) {
     fetchPolicy: 'network-only',
   });
 
-  const {
+const [getEmployees, {
     loading: loadingEmployees,
     data: employeesData,
     error: employeesError,
     fetchMore: fetchMoreEmployees,
-  } = useQuery(GET_EMPLOYEES, {
-    fetchPolicy: 'network-only',
-  });
+  }] = useLazyQuery(GET_EMPLOYEES, { variables: { employeeFilter : null, page: 1, limit: 10 } });
+  
+  const onGetEmployees = (keyword)=>{
+    getEmployees({ variables: { employeeFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+  }
+
 
   const [createLetter, { loading: loadingPost }] = useMutation(POST_LETTER, {
     onCompleted: (data) => {
@@ -310,6 +315,10 @@ export default function AddLetterForm({ idLetter, title }) {
               <Item>
                 <TheAutocomplete
                   options={employeesData?.employees?.nodes}
+onInput={(e) => {
+                          onGetEmployees(e.target.value)
+                        }}
+
                   label="Employées concernées"
                   placeholder="Ajouter un employé"
                   value={formik.values.employees}
@@ -323,6 +332,9 @@ export default function AddLetterForm({ idLetter, title }) {
               <Item>
                 <TheAutocomplete
                   options={beneficiariesData?.beneficiaries?.nodes}
+                        onInput={(e) => {
+                          onGetBeneficiaries(e.target.value)
+                        }}
                   label="Bénificiaires"
                   placeholder="Ajouter un bénificiaire"
                   limitTags={3}

@@ -538,7 +538,7 @@ export default function AddVehicleRepairForm({
                     </Grid>
                   </Grid>
                   
-                  <Grid item xs={12} sm={12} md={6} item sx={{background: '#f9f9f9'}}>
+                  <Grid item xs={12} sm={12} md={6}sx={{background: '#f9f9f9'}}>
                     <Typography variant="h6">Les points de vigilance</Typography>  
                     {formik.values?.vigilantPoints?.map((item, index) => (
                       <Grid
