@@ -15,7 +15,7 @@ export default function TaskStatusLabelMenu({task}) {
   }).authorized;
 
   const canChangeStatus = ()=>{
-    return task?.status === 'APPROVED' || task?.status === 'TO_DO' || task?.status === 'IN_PROGRESS' || task?.status === 'COMPLETED'
+    return task?.status === 'TO_DO' || task?.status === 'IN_PROGRESS' || task?.status === 'COMPLETED'
   }
   const ALL_TASK_STATUS = [
     { value: 'NEW', label: 'Nouveau', icon: <HourglassEmpty />, color: 'default'},
@@ -69,7 +69,7 @@ export default function TaskStatusLabelMenu({task}) {
             type="task"
             loading={loadingPut}
             onChange={(status)=> {updateTaskFields({ variables: {id: task?.id, taskData: {status}} })}}
-            disabled={!canManageFacility}
+            disabled={!canManageFacility && !canChangeStatus()}
         />
     </Box>
   );

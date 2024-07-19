@@ -46,7 +46,7 @@ const TaskFilter = ({ onFilterChange }) => {
     MY_TASKS : 'MY_TASKS',
     MY_TASK_REQUESTS : 'MY_TASK_REQUESTS',
     ALL : 'ALL',
-    ALL: [
+    ALL_: [
       {value: 'ALL', label: 'Tous', hidden: !canManageFacility},
       {value: 'MY_TASKS', label: 'Mes interventions', hidden: false},
       {value: 'MY_TASK_REQUESTS', label: 'Mes demandes', hidden: canManageFacility},
@@ -209,7 +209,7 @@ const TaskFilter = ({ onFilterChange }) => {
                   }
                 }
               >
-                {LIST_TYPES_ITEMS?.ALL?.map((item, index) => {
+                {LIST_TYPES_ITEMS?.ALL_?.map((item, index) => {
                   return (<>
                       {!item.hidden && <FormControlLabel key={index} value={item.value} control={<Radio />} label={item.label} />}
                     </>

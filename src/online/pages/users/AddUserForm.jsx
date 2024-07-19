@@ -43,7 +43,7 @@ export default function AddUserForm({ idUser, title }) {
     username: yup
       .string('Entrez votre username')
       .required(`L'username est obligatoire`),
-    lastName: yup.string('Entrez votre nom').required('Le nom est obligatoire'),
+      firstName: yup.string('Entrez votre prénom').required('Le prénom est obligatoire'),
     lastName: yup.string('Entrez votre nom').required('Le nom est obligatoire'),
     email: yup
       .string('Entrez votre email')

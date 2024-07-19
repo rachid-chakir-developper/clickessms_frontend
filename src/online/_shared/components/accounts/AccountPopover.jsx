@@ -36,6 +36,11 @@ const MENU_OPTIONS = [
     icon: 'eva:person-fill',
     route: '/online/travaux/actions/',
   },
+  {
+    label: 'Interventions',
+    icon: 'eva:person-fill',
+    route: '/online/travaux/interventions/',
+  },
   // {
   //   label: 'Paramètres',
   //   icon: 'eva:settings-2-fill',
