@@ -45,6 +45,11 @@ export function AuthorizationSystemProvider({ children }) {
         return user.company.id;
       },
     },
+    sce: {
+      company() {
+        return user.company.id;
+      },
+    },
     quality: {
       company() {
         return user.company.id;
