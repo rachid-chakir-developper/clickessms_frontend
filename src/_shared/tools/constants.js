@@ -315,6 +315,7 @@ export const MSG_NOTIF_TYPES = {
   REMINDER: 'REMINDER',
   MESSAGE: 'MESSAGE',
   TASK: 'TASK',
+  SCE: 'SCE',
   EVENT: 'EVENT',
   NEWS: 'NEWS',
   WARNING: 'WARNING',
@@ -326,7 +327,7 @@ export const MSG_NOTIF_TYPES = {
     { value: 'SYSTEM', label: 'Système' },
     { value: 'REMINDER', label: 'Rappel' },
     { value: 'MESSAGE', label: 'Message' },
-    { value: 'TASK', label: 'Tâche' },
+    { value: 'SCE', label: 'Cse' },
     { value: 'EVENT', label: 'Événement' },
     { value: 'NEWS', label: 'Actualités' },
     { value: 'WARNING', label: 'Avertissement' },
@@ -373,3 +374,19 @@ export const FEEDBACK_MODULES = {
     { value: 'SETTINGS', label: 'Paramètres' }
   ]
 };
+
+export const CSE_ROLE_CHOICES = {
+  PRESIDENT: 'PRESIDENT',
+  TRESORIER: 'TRESORIER',
+  SECRETAIRE: 'SECRETAIRE',
+  MEMBRE: 'MEMBRE',
+  SUPPLEANT: 'SUPPLEANT',
+  ALL: [
+    { value: 'PRESIDENT', label: 'Président' },
+    { value: 'TRESORIER', label: 'Trésorier' },
+    { value: 'SECRETAIRE', label: 'Secrétaire' },
+    { value: 'MEMBRE', label: 'Membre' },
+    { value: 'SUPPLEANT', label: 'Suppléant' },
+  ],
+};
+

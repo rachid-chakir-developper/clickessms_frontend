@@ -8,6 +8,10 @@ export const entitiesModel = defineEntitiesModel({
     ownedBy: 'company',
     privileges: ['edit', 'view'],
   },
+  sce: {
+    ownedBy: 'company',
+    privileges: ['edit', 'view'],
+  },
   quality: {
     ownedBy: 'company',
     privileges: ['edit', 'view'],

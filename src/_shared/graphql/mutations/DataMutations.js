@@ -53,3 +53,11 @@ export const IMPORT_DATAS = gql`
     }
   }
 `;
+
+const EXPORT_DATA_MUTATION = gql`
+  mutation exportData($entityName: String!, $fields: [String!]!) {
+    exportData(entityName: $entityName, fields: $fields) {
+      fileUrl
+    }
+  }
+`;

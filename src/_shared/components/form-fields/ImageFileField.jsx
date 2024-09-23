@@ -46,7 +46,7 @@ export default function ImageFileField(props) {
             />
           </CardContent>
         </Box>
-        <CardMedia
+        {((uploadedImage?.localUrl && uploadedImage?.localUrl !== "") || (uploadedImage?.path && uploadedImage?.path !=="")) && <CardMedia
           onClick={handleOpenModal}
           component="img"
           sx={{ width: 151 }}
@@ -56,7 +56,7 @@ export default function ImageFileField(props) {
               : uploadedImage?.path
           }
           alt={props?.label}
-        />
+        />}
       </Card>
 
       <MediaModal

@@ -20,6 +20,7 @@ import {
   LETTER_TYPES,
   MSG_NOTIF_TYPES,
   FEEDBACK_MODULES,
+  CSE_ROLE_CHOICES,
 } from './constants';
 
 export const getStatusColor = (status) => {
@@ -149,6 +150,10 @@ export const getMessageNotificationTypeLabel = (type) => {
 };
 export const getFeedbackModuleLabel = (module) => {
   return FEEDBACK_MODULES.ALL.find((t) => t.value == module)?.label;
+};
+
+export const getCSERoleLabel = (role) => {
+  return CSE_ROLE_CHOICES.ALL.find((t) => t.value === role)?.label;
 };
 
 

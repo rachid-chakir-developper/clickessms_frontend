@@ -42,6 +42,7 @@ function PageNavEntry(props: PageViewModel) {
       icon={props.icon}
       name={props.name}
       path={props.path}
+      target={props.target}
       disabled={props.disabled}
       hidden={props.hidden}
       highlighted={props.highlighted}
@@ -59,6 +60,7 @@ function SubmoduleNavEntry(props: SubmoduleNavEntryProps) {
   return (
     <NavEntry
       icon={props.icon}
+      target={props.target}
       name={props.name}
       highlighted={props.highlighted}
       disabled={props.disabled}
@@ -77,6 +79,7 @@ function SubmoduleNavEntry(props: SubmoduleNavEntryProps) {
             id={page.id}
             name={page.name}
             path={page.path}
+            target={page.target}
             icon={page.icon}
             disabled={page.disabled}
             hidden={page.hidden}
@@ -103,6 +106,7 @@ function ModuleNavEntry(props: ModuleNavEntryProps) {
     <NavEntry
       icon={props.icon}
       name={props.name}
+      target={props.target}
       highlighted={props.highlighted}
       disabled={props.disabled}
       onClick={() => {
@@ -122,6 +126,7 @@ function ModuleNavEntry(props: ModuleNavEntryProps) {
                 id={entry.id}
                 name={entry.name}
                 icon={entry.icon}
+                target={entry.target}
                 pages={entry.pages}
                 highlighted={entry.highlighted}
                 onToggleExpand={() => {
@@ -145,6 +150,7 @@ function ModuleNavEntry(props: ModuleNavEntryProps) {
               id={entry.id}
               name={entry.name}
               icon={entry.icon}
+              target={entry.target}
               disabled={entry.disabled}
               hidden={entry.hidden}
               highlighted={entry.highlighted}

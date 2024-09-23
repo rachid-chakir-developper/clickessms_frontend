@@ -43,6 +43,7 @@ export default function AddCompanyForm({ idCompany = null, title = '' }) {
       fax: '',
       email: '',
       webSite: '',
+      sceShopUrl: '',
       otherContacts: '',
       iban: '',
       bic: '',
@@ -198,9 +199,9 @@ export default function AddCompanyForm({ idCompany = null, title = '' }) {
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Fax"
-                  value={formik.values.fax}
-                  onChange={(e) => formik.setFieldValue('fax', e.target.value)}
+                  label="Lien boutique cse"
+                  value={formik.values.sceShopUrl}
+                  onChange={(e) => formik.setFieldValue('sceShopUrl', e.target.value)}
                   disabled={loadingPut}
                 />
               </Item>

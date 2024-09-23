@@ -82,6 +82,10 @@ import GarageIcon from '@mui/icons-material/Garage';
 import CarRepairIcon from '@mui/icons-material/CarRepair';
 import MoneyIcon from '@mui/icons-material/Money';
 import SaveIcon from '@mui/icons-material/Save';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import FeedIcon from '@mui/icons-material/Feed';
 import { CurrentAuthorizationSystem } from '../../_shared/context/AuthorizationSystemProvider';
 
 export const modules: Module[] = [
@@ -768,14 +772,40 @@ export const modules: Module[] = [
         name: 'Membres',
         path: '/online/cse/membres',
         icon: <GroupIcon />,
-        disabled: true,
       },
       {
         id: 'minutes',
         name: 'Procès-verbal',
-        path: '/online/cse/procès-verbal',
+        path: '/online/cse/reunions',
         icon: <TaskIcon />,
-        disabled: true,
+      },
+      {
+        id: 'message-notifications',
+        name: 'Annonces',
+        path: '/online/cse/message-notifications/',
+        icon: <CampaignIcon />,
+      },
+      {
+        id: 'shop',
+        name: 'Boutique',
+        path(session) {
+          const {user}= session
+          return user?.company?.sceShopUrl
+        },
+        target: '_blank',
+        icon: <StorefrontIcon />,
+      },
+      {
+        id: 'benefit',
+        name: 'Avantages',
+        path: '/online/cse/avantages',
+        icon: <AutoFixHighIcon />,
+      },
+      {
+        id: 'blog',
+        name: 'Blog',
+        path: '/online/cse/articles',
+        icon: <FeedIcon />,
       },
       {
         id: 'bdes',
@@ -855,6 +885,7 @@ export interface Module {
   id: string;
   name: string;
   icon: ReactElement;
+  target?: string;
   entries: (Submodule | Page)[];
   disabled?:
     | boolean
@@ -868,6 +899,7 @@ export interface Submodule {
   id: string;
   name: string;
   icon: ReactElement;
+  target?: string;
   pages: Page[];
   disabled?:
     | boolean
@@ -880,7 +912,8 @@ export interface Submodule {
 export interface Page {
   id: string;
   name: string;
-  path: string;
+  path: string | ((session: any) => string);
+  target?: string;
   icon: ReactElement;
   disabled?:
     | boolean

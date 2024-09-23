@@ -163,7 +163,7 @@ export default function ListTasks() {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
-          <Link
+          {!canManageFacility && <Link
             to="/online/travaux/interventions/ajouter?type=REQUEST"
             className="no_style"
           >
@@ -171,7 +171,7 @@ export default function ListTasks() {
             sx={{ mx: 3 }}>
               Demander une intervention
             </Button>
-          </Link>
+          </Link>}
           {
           canManageFacility && <Link to="/online/travaux/interventions/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>

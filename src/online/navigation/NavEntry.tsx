@@ -13,11 +13,15 @@ import {
   useAuthorizationSystem,
 } from '../../_shared/context/AuthorizationSystemProvider';
 
+import { useSession } from '../../_shared/context/SessionProvider';
+
 export interface NavEntryProps {
   icon: React.ReactNode;
   name: string;
   /** If a path is provided, the entry is wrapped in a link */
-  path?: string;
+  path?: string | ((session: any) => string);
+  /** If a path is provided, the entry is wrapped in a link */
+  target?: string;
   /**
    * Adds an arrow at the end, to implement entries with collapsible
    * sub-entries. The component does not handle the expansion logic itself.
@@ -71,6 +75,7 @@ export interface NavEntryProps {
  */
 export default function NavEntry(props: NavEntryProps) {
   const authorizationSystem = useAuthorizationSystem();
+  const session = useSession();
 
   const [animateExpand, setAnimateExpand] = useState(props.animateExpand);
 
@@ -91,6 +96,7 @@ export default function NavEntry(props: NavEntryProps) {
 
   const disabled = typeof props.disabled === 'function' ? props.disabled(authorizationSystem) : props.disabled;
   const hidden = typeof props.hidden === 'function' ? props.hidden(authorizationSystem) : props.hidden;
+  const path = typeof props.path === 'function' ? props.path(session) : props.path;
   const button = (
     <ListItemButton
       sx={{ px: 2.5 }}
@@ -109,8 +115,8 @@ export default function NavEntry(props: NavEntryProps) {
   );
 
   const maybeLink =
-    !disabled && props.path ? (
-      <StyledNavLink to={props.path}>{button}</StyledNavLink>
+    !disabled && path ? (
+      <StyledNavLink to={path} target={props.target}>{button}</StyledNavLink>
     ) : (
       button
     );

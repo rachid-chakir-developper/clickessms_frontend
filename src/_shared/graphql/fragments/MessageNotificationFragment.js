@@ -19,6 +19,7 @@ export const MSG_NOTIFICATION_BASIC_INFOS = gql`
     image
     title
     messageNotificationType
+    primaryColor
     message
     isRead
     isActive

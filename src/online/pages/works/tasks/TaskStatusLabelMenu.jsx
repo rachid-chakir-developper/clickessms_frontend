@@ -5,16 +5,19 @@ import { useMutation } from '@apollo/client';
 import CustomizedStatusLabelMenu from '../../../../_shared/components/app/menu/CustomizedStatusLabelMenu';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import { PUT_TASK_FIELDS } from '../../../../_shared/graphql/mutations/TaskMutations';
+import { useSession } from '../../../../_shared/context/SessionProvider';
 
 
 export default function TaskStatusLabelMenu({task}) {
-  
+  const { user } = useSession();
   const authorizationSystem = useAuthorizationSystem();
   const canManageFacility = authorizationSystem.requestAuthorization({
     type: 'manageFacility',
   }).authorized;
 
   const canChangeStatus = ()=>{
+    const workerIds = task?.workers?.map(w => w?.employee?.id)
+    if(!workerIds?.includes(user?.employee?.id)) return false
     return task?.status === 'TO_DO' || task?.status === 'IN_PROGRESS' || task?.status === 'COMPLETED'
   }
   const ALL_TASK_STATUS = [

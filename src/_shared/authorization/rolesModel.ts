@@ -4,6 +4,7 @@ import { defineRolesModel } from './lib/rolesModelEngine';
 export const rolesModel = defineRolesModel(entitiesModel, {
   company: {
     SUPER_ADMIN: { // Super admin'
+      sce: 'edit',
       settings: 'edit',
       quality: 'edit',
       activity: 'edit',
@@ -19,6 +20,7 @@ export const rolesModel = defineRolesModel(entitiesModel, {
       vehicleInspection: 'edit',
     },
     ADMIN: { // Admin
+      sce: 'edit',
       settings: 'edit',
       quality: 'edit',
       activity: 'edit',
@@ -43,6 +45,9 @@ export const rolesModel = defineRolesModel(entitiesModel, {
       parking: 'edit',
       task: 'edit',
       bankAccount: 'edit',
+    },
+    SCE_MANAGER: { // Responsable strcuture,
+      sce: 'edit',
     },
     QUALITY_MANAGER: { // Responsable Qualité,
       quality: 'edit',

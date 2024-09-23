@@ -117,28 +117,12 @@ function TaskActionMiniInfos({ taskAction }) {
               <Typography gutterBottom variant="subtitle1" component="div">
                 {taskAction?.name}
               </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                Montant : {formatCurrencyAmount(taskAction?.amount)}
-              </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                IBAN : <b>{taskAction?.iban}</b>
-              </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                BIC : <b>{taskAction?.bic}</b>
-              </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
                 <b>Crée le: </b> {`${getFormatDateTime(taskAction?.createdAt)}`}{' '}
                 <br />
                 <b>Dernière modification: </b>
                 {`${getFormatDateTime(taskAction?.updatedAt)}`}
-              </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Date début prévue: </b>{' '}
-                {`${getFormatDateTime(taskAction?.startingDateTime)}`} <br />
-                <b>Date fin prévue: </b>{' '}
-                {`${getFormatDateTime(taskAction?.endingDateTime)}`}
               </Typography>
             </Grid>
           </Grid>

@@ -30,6 +30,7 @@ import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import ExportButtonIcon from '../../../_shared/components/data_tools/export/ExportButtonIcon';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -218,7 +219,10 @@ function EnhancedTableToolbar(props) {
           Les véhicules
         </Typography>
       )}
-
+      <ExportButtonIcon 
+        entity={'Vehicle'} 
+        fields={['name', ['vehicle_brand__id', 'vehicle_brand__name'], ['vehicle_employees__employees__first_name', 'vehicle_employees__employees__last_name'], 'vehicle_model__name']}
+        titles={['nom']} />
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>

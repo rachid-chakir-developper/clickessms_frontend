@@ -19,6 +19,7 @@ export const USER_BASIC_INFOS = gql`
     currentLongitude
     isActive
     roles
+    cseRoles
     employee {
       ...EmployeeMiniInfosFragment
     }

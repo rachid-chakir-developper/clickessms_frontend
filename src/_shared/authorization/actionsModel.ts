@@ -6,6 +6,7 @@ export const actionsModel = defineActionsModel(
   ({ params, id, privilege }) => {
     return {
       manageSettings: privilege('settings:edit'),
+      manageSce: privilege('sce:edit'),
       manageQuality: privilege('quality:edit'),
       manageActivity: privilege('activity:edit'),
       manageAdministrative: privilege('administrative:edit'),
