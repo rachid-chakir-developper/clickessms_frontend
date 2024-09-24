@@ -164,19 +164,6 @@ export default function PostItemCard({
               </MenuItem>
             </Link>
           </Tooltip>
-          {post?.folder && (
-            <Tooltip title="Pièces jointes">
-              <MenuItem
-                onClick={() => {
-                  onOpenDialogListLibrary(post?.folder);
-                  handleCloseMenu();
-                }}
-              >
-                <Folder fontSize="small" />
-                Pièces jointes
-              </MenuItem>
-            </Tooltip>
-          )}
           <Tooltip title="Détails">
             <Link
               to={`/online/cse/articles/details/${post?.id}`}

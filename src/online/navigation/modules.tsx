@@ -751,7 +751,7 @@ export const modules: Module[] = [
       },
       {
         id: 'minutes',
-        name: 'Procès-verbal',
+        name: 'Procès-verbaux',
         path: '/online/gouvernance/reunions',
         icon: <TaskIcon />,
       },
@@ -775,7 +775,7 @@ export const modules: Module[] = [
       },
       {
         id: 'minutes',
-        name: 'Procès-verbal',
+        name: 'Procès-verbaux',
         path: '/online/cse/reunions',
         icon: <TaskIcon />,
       },

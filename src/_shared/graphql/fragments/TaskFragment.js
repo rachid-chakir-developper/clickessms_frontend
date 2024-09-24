@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import { USER_BASIC_INFOS } from './UserFragment';
 import { CLIENT_BASIC_INFOS } from './ClientFragment';
 import { EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
-import { VEHICLE_BASIC_INFOS } from './VehicleFragment';
+import { VEHICLE_MINI_INFOS } from './VehicleFragment';
 import { MATERIAL_BASIC_INFOS } from './MaterialFragment';
 import { COMMENT_BASIC_INFOS } from './CommentFragment';
 import { FOLDER_MINI_INFOS } from './MediaFragment';
@@ -36,10 +36,10 @@ export const TASK_VEHICLE_DETAILS = gql`
   fragment TaskVehicleTypeFragment on TaskVehicleType {
     id
     vehicle {
-      ...VehicleBasicInfosFragment
+      ...VehicleMiniInfosFragment
     }
   }
-  ${VEHICLE_BASIC_INFOS}
+  ${VEHICLE_MINI_INFOS}
 `;
 
 export const TASK_MATERIAL_DETAILS = gql`

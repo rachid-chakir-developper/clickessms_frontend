@@ -169,7 +169,7 @@ export default function ListVehicles() {
         </Box>
       </Grid>
       <Grid item xs={12}>
-        <VehicleFilter onFilterChange={handleFilterChange} />
+        <VehicleFilter onFilterChange={(newFilter)=> handleFilterChange({newFilter, ...vehicleFilter})} />
       </Grid>
       {/* <Grid item xs={12}>
         <Box sx={{ flexGrow: 1 }}>
@@ -205,6 +205,7 @@ export default function ListVehicles() {
           loading={loadingVehicles}
           rows={vehiclesData?.vehicles?.nodes || []}
           onDeleteVehicle={onDeleteVehicle}
+          onFilterChange={handleFilterChange}
         />
       </Grid>
       <Grid item xs={12}>

@@ -220,7 +220,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les procès-verbal
+          Les procès-verbaux
         </Typography>
       )}
 

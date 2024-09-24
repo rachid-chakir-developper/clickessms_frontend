@@ -25,12 +25,16 @@ import {
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
+import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Stack } from '@mui/material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import ExportButtonIcon from '../../../_shared/components/data_tools/export/ExportButtonIcon';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import { render } from 'react-dom';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import { getCritAirVignetteLabel, getVehicleStateLabel } from '../../../../_shared/tools/functions';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -92,33 +96,124 @@ function stableSort(array, comparator) {
 const headCells = [
     {
       id: 'name',
+      property: 'name',
+      exportField: 'name',
       numeric: false,
       disablePadding: true,
       label: 'Nom',
     },
     {
-        id: 'brand',
-        numeric: false,
-        disablePadding: false,
-        label: 'Marque et Modèle',
-    },
-    {
         id: 'registrationNumber',
+        property: 'registration_number',
+        exportField: 'registration_number',
         numeric: false,
         disablePadding: false,
         label: 'Matricule',
     },
     {
-        id: 'establishments',
+        id: 'vehicleBrand',
+        property: 'vehicle_brand__name',
+        exportField: 'vehicle_brand__name',
         numeric: false,
         disablePadding: false,
-        label: 'Structures actuelles',
+        label: 'Marque',
+        render: (data) => data?.name,
     },
     {
-        id: 'employees',
+        id: 'vehicleModel',
+        property: 'vehicle_model__name',
+        exportField: 'vehicle_model__name',
         numeric: false,
         disablePadding: false,
+        label: 'Modèle',
+        render: (data) => data?.name,
+    },
+    {
+        id: 'vehicleEstablishments',
+        property: 'vehicle_establishments__establishments__name',
+        exportField: ['vehicle_establishments__establishments__name'],
+        numeric: false,
+        disablePadding: false,
+        sortDisabled: true,
+        label: 'Structures actuelles',
+        render: (data) => data && data.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+        {data[data?.length - 1]?.establishments?.map((establishment, index) => {
+          return (
+            <EstablishmentChip
+              key={index}
+              establishment={establishment}
+            />
+          );
+        })}
+      </Stack>
+    },
+    {
+        id: 'vehicleEmployees',
+        property: 'vehicle_employees__employees__first_name',
+        exportField: ['vehicle_employees__employees__first_name'],
+        numeric: false,
+        disablePadding: false,
+        sortDisabled: true,
         label: 'Employées actuels',
+        render: (data) => data && data.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+        {data[data?.length - 1]?.employees?.map((employee, index) => {
+          return (
+            <EmployeeChip
+              key={index}
+              employee={employee}
+            />
+          );
+        })}
+      </Stack>
+    },
+    {
+        id: 'state',
+        property: 'state',
+        exportField: 'state',
+        numeric: false,
+        disablePadding: false,
+        label: 'Etats',
+        render: (data) => getVehicleStateLabel(data),
+    },
+    {
+        id: 'critAirVignette',
+        property: 'crit_air_vignette',
+        exportField: 'crit_air_vignette',
+        numeric: false,
+        disablePadding: false,
+        label: 'Vignette Crit’Air',
+        render: (data) => getCritAirVignetteLabel(data),
+    },
+    {
+        id: 'vehicleOwnerships',
+        property: 'vehicle_ownerships__ownership_type',
+        exportField: ['vehicle_ownerships__ownership_type'],
+        numeric: false,
+        disablePadding: false,
+        sortDisabled: true,
+        label: 'Status de détention',
+        render: (data) => data && data?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+                  <Chip
+                    label={data[data?.length - 1]?.ownershipType}
+                    variant="outlined"
+                  />
+            </Stack>,
+    },
+    {
+        id: 'description',
+        property: 'description',
+        exportField: 'description',
+        numeric: false,
+        disablePadding: false,
+        label: 'Description',
+    },
+    {
+        id: 'observation',
+        property: 'observation',
+        exportField: 'observation',
+        numeric: false,
+        disablePadding: false,
+        label: 'Observation',
     },
     {
         id: 'action',
@@ -136,9 +231,10 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    selectedColumns = []
   } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property, sortDisabled=false) => (event) => {
+    if(!sortDisabled) onRequestSort(event, property);
   };
 
   return (
@@ -155,7 +251,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </StyledTableCell>
-        {headCells.map((headCell) => (
+        {selectedColumns.map((headCell) => (
           <StyledTableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -163,9 +259,10 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+              hideSortIcon={headCell.sortDisabled}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.property, headCell?.sortDisabled)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -182,7 +279,32 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onFilterChange } = props;
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const [selectedColumns, setSelectedColumns] = React.useState(
+    headCells.map((column) => column.id) // Tous les colonnes sélectionnées par défaut
+  );
+
+  // Fonction pour gérer la sélection/déselection des colonnes
+  const handleColumnToggle = (columnId) => {
+    setSelectedColumns((prevSelected) =>
+      {
+        let currentColumns = prevSelected.includes(columnId)
+        ? prevSelected.filter((id) => id !== columnId) // Si déjà sélectionné, retirer
+        : [...prevSelected, columnId] // Sinon, ajouter
+        onFilterChange(headCells?.filter(c=> currentColumns?.includes(c.id)))
+        return currentColumns
+      }
+    );
+    
+  };
 
   return (
     <Toolbar
@@ -221,8 +343,8 @@ function EnhancedTableToolbar(props) {
       )}
       <ExportButtonIcon 
         entity={'Vehicle'} 
-        fields={['name', ['vehicle_brand__id', 'vehicle_brand__name'], ['vehicle_employees__employees__first_name', 'vehicle_employees__employees__last_name'], 'vehicle_model__name']}
-        titles={['nom']} />
+        fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
+        titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>
@@ -230,12 +352,56 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
+        <Tooltip title="Filtre">
+          <IconButton 
+              aria-label="filter"
+              id="long-button"
+              onClick={handleClick}>
             <FilterListIcon />
           </IconButton>
         </Tooltip>
       )}
+      <Menu
+          id="long-menu"
+          MenuListProps={{
+            'aria-labelledby': 'long-button',
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          // Positionnement pour le menu
+          anchorOrigin={{
+            vertical: 'bottom',    // Positionner sous le bouton
+            horizontal: 'left',    // Aligné à gauche du bouton
+          }}
+          transformOrigin={{
+            vertical: 'top',       // L'ancre de transformation commence en haut
+            horizontal: 'left',    // Aligné à gauche
+          }}
+          slotProps={{
+            paper: {
+              style: {
+                minHeight: 40,
+                width: '30ch',
+              },
+            },
+          }}
+        >
+        {headCells.filter(c=>c?.id !== 'action').map((column, index) => (
+          <MenuItem key={index} selected={selectedColumns.includes(column.id)}>
+            <FormControlLabel
+              key={index}
+              control={
+                <Checkbox
+                  checked={selectedColumns.includes(column.id)}
+                  onChange={() => handleColumnToggle(column.id)}
+                />
+              }
+              label={column.label}
+            />
+          </MenuItem>
+        ))}
+      </Menu>
     </Toolbar>
   );
 }
@@ -244,7 +410,7 @@ export default function TableListVehicles({
   loading,
   rows,
   onDeleteVehicle,
-  onUpdateVehicleState,
+  onFilterChange,
 }) {
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
@@ -269,6 +435,7 @@ export default function TableListVehicles({
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    onFilterChange({orderBy: `${isAsc ? '-' : ''}${property}`})
   };
 
   const handleSelectAllClick = (event) => {
@@ -314,10 +481,11 @@ export default function TableListVehicles({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
+  const [selectedColumns, setSelectedColumns] = React.useState(headCells);
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -325,6 +493,7 @@ export default function TableListVehicles({
             size="medium"
           >
             <EnhancedTableHead
+              selectedColumns={selectedColumns}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -335,14 +504,14 @@ export default function TableListVehicles({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan={headCells.length + 1}>
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan={headCells.length + 1}>
                     <Alert severity="warning">
                       Aucun véhicule trouvé.
                     </Alert>
@@ -394,67 +563,20 @@ export default function TableListVehicles({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                      onClick={()=> navigate(`/online/parc-automobile/vehicules/details/${row?.id}`)}
-                    >
-                    {row?.name}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      {`${row?.vehicleBrand ? row?.vehicleBrand?.name : ''} ${row?.vehicleModel ? row?.vehicleModel?.name : ''}`}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      {row?.registrationNumber}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      {row?.vehicleEstablishments && row?.vehicleEstablishments?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.vehicleEstablishments[row?.vehicleEstablishments?.length - 1]?.establishments?.map((establishment, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={establishment?.name}
-                                  src={
-                                    establishment?.logo
-                                      ? establishment?.logo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={establishment?.name}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      {row?.vehicleEmployees && row?.vehicleEmployees?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.vehicleEmployees[row?.vehicleEmployees?.length - 1]?.employees?.map((employee, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={`${employee?.firstName} ${employee?.lastName}`}
-                                  src={
-                                    employee?.photo
-                                      ? employee?.photo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={`${employee?.firstName} ${employee?.lastName}`}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>}
-                    </StyledTableCell>
+                    {
+                      selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
+                        return <StyledTableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding={column?.disablePadding ? "none" : "normal"}
+                          key={index}
+                          onClick={()=> navigate(`/online/parc-automobile/vehicules/details/${row?.id}`)}
+                        >
+                        {column?.render ? column?.render(row[column?.id]) : row[column?.id]}
+                        </StyledTableCell>
+                      })
+                    }
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -520,7 +642,7 @@ export default function TableListVehicles({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={6} />
+                  <StyledTableCell colSpan={headCells.length + 1} />
                 </StyledTableRow>
               )}
             </TableBody>

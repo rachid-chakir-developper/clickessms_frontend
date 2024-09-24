@@ -58,17 +58,6 @@ export const VEHICLE_MINI_INFOS = gql`
   ${VEHICLE_EMPLOYEE_DETAILS}
 `;
 
-export const VEHICLE_BASIC_INFOS = gql`
-  fragment VehicleBasicInfosFragment on VehicleType {
-    ...VehicleMiniInfosFragment
-    folder {
-      ...FolderMiniInfosFragment
-    }
-  }
-  ${FOLDER_MINI_INFOS}
-  ${VEHICLE_MINI_INFOS}
-`;
-
 export const VEHICLE_OWNERSHIP_DETAILS = gql`
   fragment VehicleOwnershipFragment on VehicleOwnershipType {
     id
@@ -85,10 +74,9 @@ export const VEHICLE_OWNERSHIP_DETAILS = gql`
 `;
 
 
-
-export const VEHICLE_DETAILS = gql`
-  fragment VehicleDetailsFragment on VehicleType {
-    ...VehicleBasicInfosFragment
+export const VEHICLE_BASIC_INFOS = gql`
+  fragment VehicleBasicInfosFragment on VehicleType {
+    ...VehicleMiniInfosFragment
     state
     critAirVignette
     vehicleOwnerships{
@@ -96,9 +84,21 @@ export const VEHICLE_DETAILS = gql`
     }
     description
     observation
+    folder {
+      ...FolderMiniInfosFragment
+    }
+  }
+  ${FOLDER_MINI_INFOS}
+  ${VEHICLE_MINI_INFOS}
+  ${VEHICLE_OWNERSHIP_DETAILS}
+`;
+
+
+export const VEHICLE_DETAILS = gql`
+  fragment VehicleDetailsFragment on VehicleType {
+    ...VehicleBasicInfosFragment
   }
   ${VEHICLE_BASIC_INFOS}
-  ${VEHICLE_OWNERSHIP_DETAILS}
 `;
 
 export const VEHICLE_RECAP_DETAILS = gql`

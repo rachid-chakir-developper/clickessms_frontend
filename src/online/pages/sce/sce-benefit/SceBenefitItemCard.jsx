@@ -121,24 +121,6 @@ export default function SceBenefitItemCard({
               </MenuItem>
             </Tooltip>
           )}
-          {onUpdateSceBenefitState && (
-            <Tooltip title={!sceBenefit?.isActive ? 'Activer' : 'Désactiver'}>
-              <MenuItem
-                aria-label={!sceBenefit?.isActive ? 'play' : 'pause'}
-                onClick={() => {
-                  onUpdateSceBenefitState(sceBenefit?.id);
-                  handleCloseMenu();
-                }}
-              >
-                {!sceBenefit?.isActive ? (
-                  <PlayArrowRounded />
-                ) : (
-                  <PauseRounded />
-                )}
-                {!sceBenefit?.isActive ? 'Activer' : 'Désactiver'}
-              </MenuItem>
-            </Tooltip>
-          )}
           <Tooltip title="Modifier">
             <Link
               to={`/online/cse/avantages/modifier/${sceBenefit?.id}`}
@@ -150,19 +132,6 @@ export default function SceBenefitItemCard({
               </MenuItem>
             </Link>
           </Tooltip>
-          {sceBenefit?.folder && (
-            <Tooltip title="Pièces jointes">
-              <MenuItem
-                onClick={() => {
-                  onOpenDialogListLibrary(sceBenefit?.folder);
-                  handleCloseMenu();
-                }}
-              >
-                <Folder fontSize="small" />
-                Pièces jointes
-              </MenuItem>
-            </Tooltip>
-          )}
           <Tooltip title="Détails">
             <Link
               to={`/online/cse/avantages/details/${sceBenefit?.id}`}

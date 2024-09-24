@@ -42,7 +42,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
   const validationSchema = yup.object({
     title: yup
       .string("Entrez l'objet de le procès-verbal")
-      .required("L'objet de le procès-verbal est obligatoire"),
+      .required("L'ordre du jour est obligatoire"),
   });
   const formik = useFormik({
     initialValues: {
@@ -386,7 +386,7 @@ const [getEmployees, {
                     <Item>
                       <TheTextField
                         variant="outlined"
-                        label="Libellé"
+                        label="Ordre du jour"
                         id="title"
                         value={formik.values.title}
                         required

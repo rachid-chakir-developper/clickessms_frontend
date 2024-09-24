@@ -49,7 +49,7 @@ export default function AddSceMemberForm({ idSceMember, title }) {
   const formik = useFormik({
     initialValues: {
       employee: null,
-      role: 'MEMBRE',
+      role: 'MEMBER',
       description: '',
       observation: '',
       isActive: true,
