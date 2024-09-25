@@ -34,7 +34,7 @@ import ExportButtonIcon from '../../../_shared/components/data_tools/export/Expo
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import { render } from 'react-dom';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
-import { getCritAirVignetteLabel, getVehicleStateLabel } from '../../../../_shared/tools/functions';
+import { getCritAirVignetteLabel, getOwnershipTypeLabel, getVehicleStateLabel } from '../../../../_shared/tools/functions';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -129,13 +129,22 @@ const headCells = [
         render: (data) => data?.name,
     },
     {
+        id: 'mileage',
+        property: 'mileage',
+        exportField: 'current_vehicle_inspection__mileage',
+        numeric: false,
+        disablePadding: false,
+        label: 'Kilomètres',
+        render: (data) => data ? `${data} Km` : '',
+    },
+    {
         id: 'vehicleEstablishments',
         property: 'vehicle_establishments__establishments__name',
         exportField: ['vehicle_establishments__establishments__name'],
         numeric: false,
         disablePadding: false,
         sortDisabled: true,
-        label: 'Structures actuelles',
+        label: 'Structure(s)',
         render: (data) => data && data.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
         {data[data?.length - 1]?.establishments?.map((establishment, index) => {
           return (
@@ -154,7 +163,7 @@ const headCells = [
         numeric: false,
         disablePadding: false,
         sortDisabled: true,
-        label: 'Employées actuels',
+        label: 'Employée(s)',
         render: (data) => data && data.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
         {data[data?.length - 1]?.employees?.map((employee, index) => {
           return (
@@ -191,10 +200,10 @@ const headCells = [
         numeric: false,
         disablePadding: false,
         sortDisabled: true,
-        label: 'Status de détention',
+        label: 'Statut de détention',
         render: (data) => data && data?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
                   <Chip
-                    label={data[data?.length - 1]?.ownershipType}
+                    label={getOwnershipTypeLabel(data[data?.length - 1]?.ownershipType)}
                     variant="outlined"
                   />
             </Stack>,
@@ -342,7 +351,8 @@ function EnhancedTableToolbar(props) {
         </Typography>
       )}
       <ExportButtonIcon 
-        entity={'Vehicle'} 
+        entity={'Vehicle'}
+        fileName={'Vehicule'}
         fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
         titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
@@ -484,7 +494,7 @@ export default function TableListVehicles({
   const [selectedColumns, setSelectedColumns] = React.useState(headCells);
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
+      <Paper sx={{ width: '100%', mb: 2 }} >
         <EnhancedTableToolbar numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table

@@ -283,6 +283,8 @@ function VehicleInspectionMiniInfos({ vehicleInspection }) {
                   {`${getFormatDate(vehicleInspection?.nextInspectionDate)}`}<br />
                   <b>Date et heure de prochain contrôle technique: </b>
                   {`${getFormatDate(vehicleInspection?.nextTechnicalInspectionDate)}`}
+                  <b>Nombre de kilomètres: </b>
+                  {vehicleInspection?.mileage} km
                 </Typography>
               </Grid>
             </Grid>

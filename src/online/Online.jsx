@@ -173,7 +173,7 @@ export default function Online() {
           sx={{
             flexGrow: 1,
             p: 3,
-            width: '100%',
+            width: `calc(100% - ${open ? drawerWidth : 20}px)`,
             height: '100%',
             paddingBottom: 20,
           }}

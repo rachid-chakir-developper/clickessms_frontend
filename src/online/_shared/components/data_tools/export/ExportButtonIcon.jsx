@@ -4,7 +4,7 @@ import { FileDownload } from '@mui/icons-material';
 import { END_POINT } from '../../../../../ApolloProvider';
 
 export default function ExportButtonIcon(props) {
-  const {title = 'Exporter', entity, fields, titles} = props
+  const {title = 'Exporter', entity, fileName, fields, titles} = props
   const exportData = async () => {
   
     try {
@@ -15,6 +15,7 @@ export default function ExportButtonIcon(props) {
         },
         body: JSON.stringify({
           entity: entity,
+          file_name: fileName,
           fields: fields,
           titles: titles,
         }),
@@ -29,7 +30,7 @@ export default function ExportButtonIcon(props) {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `${entity}_data.xlsx`); // Nom du fichier
+      link.setAttribute('download', `${fileName ? fileName : entity}_data.xlsx`); // Nom du fichier
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

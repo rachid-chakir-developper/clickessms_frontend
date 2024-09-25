@@ -62,6 +62,7 @@ const VehicleDetailsPage = ({ vehicle }) => {
     isActive,
     folder,
     state,
+    mileage,
     critAirVignette,
     vehicleEstablishments,
     vehicleEmployees,
@@ -134,11 +135,14 @@ const VehicleDetailsPage = ({ vehicle }) => {
               <Typography variant="h6" sx={{ fontStyle: 'italic' }}>
                 {vehicle?.registrationNumber}
               </Typography>
+              {<Typography variant="body2">
+                Kilomètres : <b>{vehicle?.mileage} km</b>
+              </Typography>}
               {vehicle?.state && <Typography variant="body2">
-              État : <b>{getVehicleStateLabel(vehicle?.state)}</b>
+                État : <b>{getVehicleStateLabel(vehicle?.state)}</b>
               </Typography>}
               {vehicle?.critAirVignette && <Typography variant="body2">
-              Vignette Crit’Air : <b>{getCritAirVignetteLabel(vehicle?.critAirVignette)}</b>
+                Vignette Crit’Air : <b>{getCritAirVignetteLabel(vehicle?.critAirVignette)}</b>
               </Typography>}
             </Box>
           </Box>

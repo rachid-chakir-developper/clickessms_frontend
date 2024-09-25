@@ -77,6 +77,7 @@ export const VEHICLE_OWNERSHIP_DETAILS = gql`
 export const VEHICLE_BASIC_INFOS = gql`
   fragment VehicleBasicInfosFragment on VehicleType {
     ...VehicleMiniInfosFragment
+    mileage
     state
     critAirVignette
     vehicleOwnerships{
