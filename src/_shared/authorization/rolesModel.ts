@@ -81,5 +81,8 @@ export const rolesModel = defineRolesModel(entitiesModel, {
       vehicle: 'view',
       vehicleInspection: 'edit',
     },
+    MEMBER_IN_SCE: { // membre du cse
+      sceModules: 'edit',
+    },
   },
 });

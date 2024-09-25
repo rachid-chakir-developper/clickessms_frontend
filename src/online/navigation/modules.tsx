@@ -778,12 +778,22 @@ export const modules: Module[] = [
         name: 'Procès-verbaux',
         path: '/online/cse/reunions',
         icon: <TaskIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageSceModules',
+          }).authorized;
+        },
       },
       {
         id: 'message-notifications',
         name: 'Annonces',
         path: '/online/cse/message-notifications/',
         icon: <CampaignIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageSceModules',
+          }).authorized;
+        },
       },
       {
         id: 'shop',

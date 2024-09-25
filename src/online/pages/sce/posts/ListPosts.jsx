@@ -9,6 +9,7 @@ import { Add } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import {
   DELETE_POST,
   PUT_POST_STATE,
@@ -28,6 +29,10 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListPosts() {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageSceModules = authorizationSystem.requestAuthorization({
+    type: 'manageSceModules',
+  }).authorized;
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
   
   const [postFilter, setPostFilter] = React.useState(null);
@@ -160,7 +165,7 @@ export default function ListPosts() {
   };
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      {canManageSceModules && <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link to="/online/cse/articles/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
@@ -168,7 +173,7 @@ export default function ListPosts() {
             </Button>
           </Link>
         </Box>
-      </Grid>
+      </Grid>}
       <Grid item xs={12}>
         <PostFilter onFilterChange={handleFilterChange} />
       </Grid>

@@ -33,6 +33,7 @@ export default function ListVehicles() {
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
     setVehicleFilter(newFilter);
+    setPaginator({ ...paginator, page: 1 });
   };
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
@@ -50,7 +51,8 @@ export default function ListVehicles() {
 
   React.useEffect(() => {
     getVehicles();
-  }, [vehicleFilter, paginator]);
+  }, [paginator]);
+  
   const [deleteVehicle, { loading: loadingDelete }] = useMutation(
     DELETE_VEHICLE,
     {
@@ -169,7 +171,7 @@ export default function ListVehicles() {
         </Box>
       </Grid>
       <Grid item xs={12}>
-        <VehicleFilter onFilterChange={(newFilter)=> handleFilterChange({newFilter, ...vehicleFilter})} />
+        <VehicleFilter onFilterChange={handleFilterChange} />
       </Grid>
       {/* <Grid item xs={12}>
         <Box sx={{ flexGrow: 1 }}>
@@ -205,7 +207,7 @@ export default function ListVehicles() {
           loading={loadingVehicles}
           rows={vehiclesData?.vehicles?.nodes || []}
           onDeleteVehicle={onDeleteVehicle}
-          onFilterChange={handleFilterChange}
+          onFilterChange={(newFilter) => handleFilterChange({ ...vehicleFilter, ...newFilter })}
         />
       </Grid>
       <Grid item xs={12}>

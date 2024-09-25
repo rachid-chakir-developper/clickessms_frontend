@@ -9,6 +9,7 @@ import { Add } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import {
   DELETE_SCE_BENEFIT,
   PUT_SCE_BENEFIT_STATE,
@@ -28,6 +29,12 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListSceBenefits() {
+  
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageSceModules = authorizationSystem.requestAuthorization({
+    type: 'manageSceModules',
+  }).authorized;
+
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
   
   const [sceBenefitFilter, setSceBenefitFilter] = React.useState(null);
@@ -160,7 +167,7 @@ export default function ListSceBenefits() {
   };
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      {canManageSceModules && <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link to="/online/cse/avantages/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
@@ -168,7 +175,7 @@ export default function ListSceBenefits() {
             </Button>
           </Link>
         </Box>
-      </Grid>
+      </Grid>}
       <Grid item xs={12}>
         <SceBenefitFilter onFilterChange={handleFilterChange} />
       </Grid>

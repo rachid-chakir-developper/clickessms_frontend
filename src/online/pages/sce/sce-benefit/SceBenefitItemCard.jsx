@@ -16,16 +16,17 @@ import {
 } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import {
-  getaccountTypeLabel,
-  formatCurrencyAmount,
-} from '../../../../_shared/tools/functions';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 export default function SceBenefitItemCard({
   sceBenefit,
   onDeleteSceBenefit,
   onUpdateSceBenefitState,
 }) {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageSceModules = authorizationSystem.requestAuthorization({
+    type: 'manageSceModules',
+  }).authorized;
   //   const theme = useTheme();
   const stripHtml = (html) => {
     const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -92,7 +93,7 @@ export default function SceBenefitItemCard({
           </Stack>
         </Stack>
       </Tooltip>
-      <Stack
+      {canManageSceModules && <Stack
         direction="row"
         alignItems="start"
         spacing={1.5}
@@ -144,7 +145,7 @@ export default function SceBenefitItemCard({
             </Link>
           </Tooltip>
         </Popover>
-      </Stack>
+      </Stack>}
     </Card>
   );
 }

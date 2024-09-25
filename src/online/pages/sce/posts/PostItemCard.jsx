@@ -16,16 +16,17 @@ import {
 } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import {
-  getaccountTypeLabel,
-  formatCurrencyAmount,
-} from '../../../../_shared/tools/functions';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 export default function PostItemCard({
   post,
   onDeletePost,
   onUpdatePostState,
 }) {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageSceModules = authorizationSystem.requestAuthorization({
+    type: 'manageSceModules',
+  }).authorized;
   //   const theme = useTheme();
   // Function to strip HTML tags
   const stripHtml = (html) => {
@@ -106,7 +107,7 @@ export default function PostItemCard({
           </Stack>
         </Stack>
       </Tooltip>
-      <Stack
+      {canManageSceModules && <Stack
         direction="row"
         alignItems="start"
         spacing={1.5}
@@ -176,7 +177,7 @@ export default function PostItemCard({
             </Link>
           </Tooltip>
         </Popover>
-      </Stack>
+      </Stack>}
     </Card>
   );
 }

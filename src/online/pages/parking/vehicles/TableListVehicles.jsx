@@ -150,7 +150,7 @@ const headCells = [
     {
         id: 'vehicleEmployees',
         property: 'vehicle_employees__employees__first_name',
-        exportField: ['vehicle_employees__employees__first_name'],
+        exportField: ['vehicle_employees__employees__first_name', 'vehicle_employees__employees__last_name'],
         numeric: false,
         disablePadding: false,
         sortDisabled: true,

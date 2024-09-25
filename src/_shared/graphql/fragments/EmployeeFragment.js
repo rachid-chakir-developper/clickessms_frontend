@@ -28,6 +28,7 @@ export const EMPLOYEE_MINI_INFOS = gql`
     lastName
     preferredName
     position
+    sceRoles
     email
     photo
     coverImage

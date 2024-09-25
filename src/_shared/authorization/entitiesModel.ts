@@ -12,6 +12,10 @@ export const entitiesModel = defineEntitiesModel({
     ownedBy: 'company',
     privileges: ['edit', 'view'],
   },
+  sceModules: {
+    ownedBy: 'company',
+    privileges: ['edit', 'view'],
+  },
   quality: {
     ownedBy: 'company',
     privileges: ['edit', 'view'],

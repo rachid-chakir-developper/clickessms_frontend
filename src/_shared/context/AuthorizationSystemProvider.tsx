@@ -50,6 +50,11 @@ export function AuthorizationSystemProvider({ children }) {
         return user.company.id;
       },
     },
+    sceModules: {
+      company() {
+        return user.company.id;
+      },
+    },
     quality: {
       company() {
         return user.company.id;
@@ -125,7 +130,10 @@ export function AuthorizationSystemProvider({ children }) {
   const rolesRepository = buildRolesRepository(entityChainRepository, {
     company() {
       // Use role of user in here
-      return user?.roles;
+      let roles: any[] = user?.roles
+      let sceRoles: any[] = user?.employee && user?.employee?.sceRoles ? user?.employee?.sceRoles : []
+      roles = [...roles, ...sceRoles];
+      return roles;
     },
   });
 

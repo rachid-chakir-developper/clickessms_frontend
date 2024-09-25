@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { IconButton, Tooltip } from '@mui/material';
 import { FileDownload } from '@mui/icons-material';
+import { END_POINT } from '../../../../../ApolloProvider';
 
 export default function ExportButtonIcon(props) {
   const {title = 'Exporter', entity, fields, titles} = props
   const exportData = async () => {
   
     try {
-      const response = await fetch('http://localhost:8000/export-data/', {
+      const response = await fetch(`${END_POINT}/export-data/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

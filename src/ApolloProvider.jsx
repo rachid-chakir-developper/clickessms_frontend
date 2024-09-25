@@ -13,7 +13,10 @@ import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 
 const { hostname } = window.location;
 
-const envProd = false;
+const envProd = true;
+export const END_POINT = envProd
+? 'https://api.roberp.fr'
+: `http://${hostname}:8000`;
 const uri = envProd
   ? 'https://api.roberp.fr/graphql'
   : `http://${hostname}:8000/graphql`;
