@@ -40,7 +40,11 @@ export default function AddVehicleRepairForm({
   const [searchParams, setSearchParams] = useSearchParams();
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
-  const validationSchema = yup.object({});
+  const validationSchema = yup.object({
+    vehicle: yup
+      .mixed() // mixed est utilisé pour des valeurs non primitives comme des objets.
+      .required('Le véhicule est obligatoire') // Message d'erreur si ce champ est vide
+  });
   const formik = useFormik({
     initialValues: {
       number: '',
@@ -351,28 +355,6 @@ export default function AddVehicleRepairForm({
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
-                  <Grid item xs={12} sm={6} md={4} >
-                    <Item>
-                      <TheFileField
-                        variant="outlined"
-                        label="Document Compte-rendu"
-                        fileValue={formik.values.document}
-                        onChange={(file) => formik.setFieldValue('document', file)}
-                        disabled={loadingPost || loadingPut}
-                      />
-                    </Item>
-                  </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
-                    <Item>
-                      <TheTextField
-                        variant="outlined"
-                        label="Libellé"
-                        value={formik.values.label}
-                        onChange={(e) => formik.setFieldValue('label', e.target.value)}
-                        disabled={loadingPost || loadingPut}
-                      />
-                    </Item>
-                  </Grid>
                   <Grid item xs={12} sm={6} md={4}>
                     <Item>
                       <TheDateTimePicker
@@ -388,6 +370,7 @@ export default function AddVehicleRepairForm({
                   <Grid item xs={12} sm={6} md={4} >
                     <Item>
                       <TheAutocomplete
+                        id="vehicle"
                         options={vehiclesData?.vehicles?.nodes}
                         label="Véhicule concerné"
                         placeholder="Ajouter un véhicule"
@@ -396,6 +379,10 @@ export default function AddVehicleRepairForm({
                         onChange={(e, newValue) =>
                           formik.setFieldValue('vehicle', newValue)
                         }
+                        
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.vehicle && Boolean(formik.errors.vehicle)} // Affiche l'erreur si touché et invalide
+                        helperText={formik.touched.vehicle && formik.errors.vehicle}
                       />
                     </Item>
                   </Grid>
@@ -433,6 +420,17 @@ export default function AddVehicleRepairForm({
                           })}
                         </Select>
                       </FormControl>
+                    </Item>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} >
+                    <Item>
+                      <TheFileField
+                        variant="outlined"
+                        label="Document Compte-rendu"
+                        fileValue={formik.values.document}
+                        onChange={(file) => formik.setFieldValue('document', file)}
+                        disabled={loadingPost || loadingPut}
+                      />
                     </Item>
                   </Grid>
                   <Grid item xs={12} sm={12} md={12}>

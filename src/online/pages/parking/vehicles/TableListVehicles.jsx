@@ -130,7 +130,7 @@ const headCells = [
     },
     {
         id: 'mileage',
-        property: 'mileage',
+        property: 'current_vehicle_inspection__mileage',
         exportField: 'current_vehicle_inspection__mileage',
         numeric: false,
         disablePadding: false,
@@ -500,6 +500,7 @@ export default function TableListVehicles({
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
+            border="0"
             size="medium"
           >
             <EnhancedTableHead

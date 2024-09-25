@@ -188,15 +188,18 @@ export const MEASUREMENT_ACTIVITY_UNITS = {
 };
 
 export const VEHICLE_STATES = {
-  NEW: 'NEW',
   GOOD: 'GOOD',
-  BAD: 'BAD',
+  TO_REVIEW: 'TO_REVIEW',
+  IN_REPAIR: 'IN_REPAIR',
+  OUT_OF_SERVICE: 'OUT_OF_SERVICE',
   ALL: [
-    { value: 'NEW', label: 'Neuf' },
-    { value: 'GOOD', label: 'Correct' },
-    { value: 'BAD', label: 'Mauvais' },
+    { value: 'GOOD', label: 'En bon état' },
+    { value: 'TO_REVIEW', label: 'À réviser' },
+    { value: 'IN_REPAIR', label: 'En réparation' },
+    { value: 'OUT_OF_SERVICE', label: 'Hors service' },
   ],
 };
+
 
 export const CRIT_AIR_CHOICES = {
   ZERO: 'ZERO',
@@ -221,9 +224,9 @@ export const OWNERSHIP_TYPE_CHOICES = {
   PURCHASE: 'PURCHASE',
   SALE: 'SALE',
   ALL: [
-    { value: 'LEASE', label: 'Location' },
+    { value: 'LEASE', label: 'Location Longue Durée' },
     { value: 'PURCHASE', label: 'Achat' },
-    { value: 'SALE', label: 'Vente' },
+    { value: 'SALE', label: 'Vendu' },
   ],
 };
 

@@ -16,7 +16,10 @@ export default function TheAutocomplete({
   onInputChange,
   onInput,
   multiple = true,
+  id="TheAutocomplete",
   helperText = null,
+  onBlur,
+  error = false,
   disabled=false,
   required=false
 }) {
@@ -30,9 +33,10 @@ export default function TheAutocomplete({
     <Autocomplete
       multiple={multiple}
       disabled={disabled}
+      onBlur={onBlur}
       fullWidth
       noOptionsText="Pas de résultat"
-      id="multiple-limit-tags"
+      id={id}
       limitTags={limitTags}
       options={options}
       disableCloseOnSelect={multiple}
@@ -118,10 +122,12 @@ export default function TheAutocomplete({
       renderInput={(params) => (
         <TextField
           {...params}
+          id={id}
           variant="outlined"
           label={label}
           placeholder={placeholder}
           helperText={helperText}
+          error={error}
           onInput={onInput}
         />
       )}
