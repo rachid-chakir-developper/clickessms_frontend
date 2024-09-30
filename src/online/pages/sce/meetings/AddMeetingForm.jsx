@@ -90,7 +90,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
         items.push(itemCopy);
       });
       meetingCopy.meetingReviewPoints = items;
-      if (idMeeting && idMeeting != '') {
+      if (meetingCopy?.id && meetingCopy?.id != '') {
         onUpdateMeeting({
           id: meetingCopy.id,
           meetingData: meetingCopy,
@@ -226,7 +226,7 @@ const [getEmployees, {
       });
       let { __typename, ...meetingCopy } = data.updateMeeting.meeting;
       //   formik.setValues(meetingCopy);
-      // handleNext();
+      handleNext();
     },
     update(cache, { data: { updateMeeting } }) {
       const updatedMeeting = updateMeeting.meeting;
@@ -334,6 +334,7 @@ const [getEmployees, {
       setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });
   };
+  
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);

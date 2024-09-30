@@ -127,6 +127,8 @@ export default function EmployeeUndesirableEvents({employee}) {
           loading={loadingUndesirableEvents}
           rows={undesirableEventsData?.undesirableEvents?.nodes || []}
           onDeleteUndesirableEvent={onDeleteUndesirableEvent}
+          onFilterChange={(newFilter) => handleFilterChange({ ...undesirableEventFilter, ...newFilter })}
+          paginator={paginator}
         />
       </Grid>
       <Grid item xs={12}>

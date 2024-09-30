@@ -69,7 +69,9 @@ export const VEHICLE_OWNERSHIP_DETAILS = gql`
     rentalStartingDate
     rentalEndingDate
     rentalPrice
+    rentPurchasePrice
     expectedMileage
+    loanDetails
   }
 `;
 

@@ -21,6 +21,8 @@ import {
   MSG_NOTIF_TYPES,
   FEEDBACK_MODULES,
   CSE_ROLE_CHOICES,
+  UNDESIRABLE_EVENT_TYPES,
+  UNDESIRABLE_EVENT_SEVERITY,
 } from './constants';
 
 export const getStatusColor = (status) => {
@@ -154,6 +156,17 @@ export const getFeedbackModuleLabel = (module) => {
 
 export const getCSERoleLabel = (role) => {
   return CSE_ROLE_CHOICES.ALL.find((t) => t.value === role)?.label;
+};
+
+export const getUndesirableEventTypeLabel = (eventType) => {
+  return UNDESIRABLE_EVENT_TYPES.ALL.find((type) => type.value === eventType)?.label;
+};
+export const getUndesirableEventTypeMiniLabel = (eventType) => {
+  return UNDESIRABLE_EVENT_TYPES.ALL.find((type) => type.value === eventType)?.miniLabel;
+};
+
+export const getUndesirableEventSeverityLabel = (severity) => {
+  return UNDESIRABLE_EVENT_SEVERITY.ALL.find((level) => level.value === severity)?.label;
 };
 
 

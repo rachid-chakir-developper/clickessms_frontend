@@ -3,10 +3,10 @@ import { POST_BASIC_INFOS } from '../fragments/PostFragment';
 
 export const POST_POST = gql`
   mutation CreatePost(
-    $postData: PostInput!, $image: Upload
+    $postData: PostInput!, $image: Upload, $files : [MediaInput]
   ) {
     createPost(
-      postData: $postData, image: $image
+      postData: $postData, image: $image, files: $files
     ) {
       post {
         ...PostBasicInfosFragment
@@ -19,11 +19,11 @@ export const POST_POST = gql`
 export const PUT_POST = gql`
   mutation UpdatePost(
     $id: ID!
-    $postData: PostInput!, $image: Upload
+    $postData: PostInput!, $image: Upload, $files : [MediaInput]
   ) {
     updatePost(
       id: $id
-      postData: $postData, image: $image
+      postData: $postData, image: $image, files: $files
     ) {
       post {
         ...PostBasicInfosFragment

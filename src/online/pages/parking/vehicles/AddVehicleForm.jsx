@@ -321,7 +321,9 @@ const [getEmployees, {
           rentalStartingDate: dayjs(new Date()),
           rentalEndingDate: null,
           rentalPrice: null,
-          expectedMileage: null
+          rentPurchasePrice: null,
+          expectedMileage: null,
+          loanDetails: null,
         },
       ],
     });
@@ -793,12 +795,12 @@ onInput={(e) => {
                             <Item>
                               <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">
-                                  Type 
+                                  Statut 
                                 </InputLabel>
                                 <Select
                                   labelId="demo-simple-select-label"
                                   id="demo-simple-select"
-                                  label="Type "
+                                  label="Statut"
                                   value={item.ownershipType}
                                   onChange={(e) =>
                                     formik.setFieldValue(
@@ -892,7 +894,7 @@ onInput={(e) => {
                               </IconButton>
                             </Item>
                           </Grid></>}
-                          {item.ownershipType === OWNERSHIP_TYPE_CHOICES.LEASE && <><Grid item xs={12} sm={6} md={3} >
+                          {[OWNERSHIP_TYPE_CHOICES.LEASE, OWNERSHIP_TYPE_CHOICES.LEASE_PURCHASE_OPTION].includes(item.ownershipType) && <><Grid item xs={12} sm={6} md={3} >
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -904,8 +906,6 @@ onInput={(e) => {
                                 disabled={loadingPost || loadingPut}
                               />
                             </Item>
-                          </Grid>
-                          <Grid item xs={12} sm={6} md={3} >
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -918,8 +918,8 @@ onInput={(e) => {
                               />
                             </Item>
                           </Grid>
-                          <Grid item xs={12} sm={6} md={3}>
-                            <Item sx={{position: 'relative'}}>
+                          <Grid item xs={12} sm={6} md={3} >
+                            <Item>
                               <TheTextField
                                 variant="outlined"
                                 label="Prix de location"
@@ -933,15 +933,25 @@ onInput={(e) => {
                                 }
                                 disabled={loadingPost || loadingPut}
                               />
-                              <IconButton sx={{position: 'absolute', top: -3, right: -2}}
-                                onClick={() => removeVehicleOwnership(index)}
-                                edge="end"
-                                color="error"
-                              >
-                                <Close />
-                              </IconButton>
                             </Item>
-                            <Item>
+                            { item.ownershipType === OWNERSHIP_TYPE_CHOICES.LEASE_PURCHASE_OPTION && <Item>
+                              <TheTextField
+                                variant="outlined"
+                                label="Option d'achat"
+                                type="number"
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                }}
+                                value={item.rentPurchasePrice}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`vehicleOwnerships.${index}.rentPurchasePrice`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>}
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={3}>
+                            <Item sx={{position: 'relative'}}>
                               <TheTextField
                                 variant="outlined"
                                 label="Kilométrage prévisionnel"
@@ -955,6 +965,34 @@ onInput={(e) => {
                                 }
                                 disabled={loadingPost || loadingPut}
                               />
+                              <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                                onClick={() => removeVehicleOwnership(index)}
+                                edge="end"
+                                color="error"
+                              >
+                                <Close />
+                              </IconButton>
+                            </Item>
+                          </Grid></>}
+                          {item.ownershipType === OWNERSHIP_TYPE_CHOICES.LOAN && <>
+                          <Grid item xs={12} sm={6} md={9}>
+                            <Item sx={{position: 'relative'}}>
+                              <TheTextField
+                                variant="outlined"
+                                label="Détails"
+                                value={item.loanDetails}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`vehicleOwnerships.${index}.loanDetails`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                              <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                                onClick={() => removeVehicleOwnership(index)}
+                                edge="end"
+                                color="error"
+                              >
+                                <Close />
+                              </IconButton>
                             </Item>
                           </Grid></>}
                         </Grid>

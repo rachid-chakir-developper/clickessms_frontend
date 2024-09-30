@@ -28,7 +28,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListVehicles() {
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 12 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
   const [vehicleFilter, setVehicleFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
@@ -208,6 +208,7 @@ export default function ListVehicles() {
           rows={vehiclesData?.vehicles?.nodes || []}
           onDeleteVehicle={onDeleteVehicle}
           onFilterChange={(newFilter) => handleFilterChange({ ...vehicleFilter, ...newFilter })}
+          paginator={paginator}
         />
       </Grid>
       <Grid item xs={12}>

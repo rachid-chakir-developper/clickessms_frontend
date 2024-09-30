@@ -136,7 +136,7 @@ const VehicleDetailsPage = ({ vehicle }) => {
                 {vehicle?.registrationNumber}
               </Typography>
               {<Typography variant="body2">
-                Kilomètres : <b>{vehicle?.mileage} km</b>
+                Kilomètrage : <b>{vehicle?.mileage} km</b>
               </Typography>}
               {vehicle?.state && <Typography variant="body2">
                 État : <b>{getVehicleStateLabel(vehicle?.state)}</b>

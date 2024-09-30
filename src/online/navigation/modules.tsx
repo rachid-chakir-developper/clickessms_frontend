@@ -761,11 +761,6 @@ export const modules: Module[] = [
     id: 'cse',
     name: 'CSE',
     icon: <AccountBalanceIcon />,
-    hidden(authorizationSystem) {
-      return !authorizationSystem.requestAuthorization({
-        type: 'manageAdministrative',
-      }).authorized;
-    },
     entries: [
       {
         id: 'members',

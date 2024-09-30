@@ -13,6 +13,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Alert,
 } from '@mui/material';
 import dayjs from 'dayjs';
 
@@ -51,6 +52,7 @@ export default function AddTaskForm({ idTask, title }) {
   const canManageFacility = authorizationSystem.requestAuthorization({
     type: 'manageFacility',
   }).authorized;
+  const [isNotEditable, setIsNotEditable] = React.useState(false)
   const [searchParams, setSearchParams] = useSearchParams();
   const [isRequestType, setIsRequestType] = React.useState(!canManageFacility);
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
@@ -91,6 +93,7 @@ export default function AddTaskForm({ idTask, title }) {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
+      if(isNotEditable) return
       let taskCopy = {...values};
       taskCopy.establishments = taskCopy.establishments.map((i) => i?.id);
       taskCopy.workers = taskCopy.workers.map((i) => i?.id);
@@ -240,6 +243,7 @@ const [getEmployees, {
       });
       taskCopy.taskChecklist = items;
       formik.setValues(taskCopy);
+      if(!canManageFacility && taskCopy.status !== TASK_STATUS.PENDING) setIsNotEditable(true)
     },
     onError: (err) => console.log(err),
   });
@@ -284,6 +288,7 @@ const [getEmployees, {
       {loadingTask && <ProgressService type="form" />}
       {!loadingTask && (
         <form onSubmit={formik.handleSubmit}>
+          {isNotEditable && <Alert severity="warning">Pour modifier cette intervention, contactez le responsable des services généraux</Alert>}
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}
@@ -296,7 +301,7 @@ const [getEmployees, {
                   label="Titre"
                   value={formik.values.name}
                   onChange={(e) => formik.setFieldValue('name', e.target.value)}
-                  disabled={loadingPost || loadingPut}
+                  disabled={loadingPost || loadingPut || isNotEditable}
                 />
               </Item>
             </Grid>
@@ -308,7 +313,7 @@ const [getEmployees, {
                   onChange={(date) =>
                     formik.setFieldValue('startingDateTime', date)
                   }
-                  disabled={loadingPost || loadingPut}
+                  disabled={loadingPost || loadingPut || isNotEditable}
                 />
               </Item>
             </Grid>
@@ -319,7 +324,7 @@ const [getEmployees, {
                     <Select
                         value={formik.values.priority}
                         onChange={(e) => formik.setFieldValue('priority', e.target.value)}
-                        disabled={loadingPost || loadingPut}
+                        disabled={loadingPost || loadingPut || isNotEditable}
                     >
                     {PRIORITIES?.ALL?.map((type, index) => {
                       return (
@@ -356,7 +361,7 @@ const [getEmployees, {
                       onChange={(e) =>
                         formik.setFieldValue('address', e.target.value)
                       }
-                      disabled={loadingPost || loadingPut}
+                      disabled={loadingPost || loadingPut || isNotEditable}
                     />
                   </Item>
                 </Grid>
@@ -372,7 +377,7 @@ const [getEmployees, {
                           e.target.value,
                         )
                       }
-                      disabled={loadingPost || loadingPut}
+                      disabled={loadingPost || loadingPut || isNotEditable}
                     />
                   </Item>
                 </Grid>
@@ -385,7 +390,7 @@ const [getEmployees, {
                       onChange={(e) =>
                         formik.setFieldValue('zipCode', e.target.value)
                       }
-                      disabled={loadingPost || loadingPut}
+                      disabled={loadingPost || loadingPut || isNotEditable}
                     />
                   </Item>
                 </Grid>
@@ -398,7 +403,7 @@ const [getEmployees, {
                       onChange={(e) =>
                         formik.setFieldValue('city', e.target.value)
                       }
-                      disabled={loadingPost || loadingPut}
+                      disabled={loadingPost || loadingPut || isNotEditable}
                     />
                   </Item>
                 </Grid>
@@ -415,6 +420,7 @@ const [getEmployees, {
                   onChange={(e, newValue) =>
                     formik.setFieldValue('establishments', newValue)
                   }
+                  disabled={loadingPost || loadingPut || isNotEditable}
                 />
               </Item>
               {!isRequestType && <><Item>
@@ -439,7 +445,7 @@ onInput={(e) => {
                     <Select
                         value={formik.values.status}
                         onChange={(e) => formik.setFieldValue('status', e.target.value)}
-                        disabled={loadingPost || loadingPut}
+                        disabled={loadingPost || loadingPut || isNotEditable}
                     >
                     {TASK_STATUS?.ALL?.map((type, index) => {
                       return (
@@ -461,7 +467,7 @@ onInput={(e) => {
                   rows={4}
                   value={formik.values.description}
                   onChange={(e) => formik.setFieldValue('description', e.target.value)}
-                  disabled={loadingPost || loadingPut}
+                  disabled={loadingPost || loadingPut || isNotEditable}
                 />
               </Item>
             </Grid>
@@ -491,7 +497,7 @@ onInput={(e) => {
                             e.target.value,
                           )
                         }
-                        disabled={loadingPost || loadingPut}
+                        disabled={loadingPost || loadingPut || isNotEditable}
                       />
                     </Item>
                   </Grid>
@@ -509,7 +515,7 @@ onInput={(e) => {
                             e.target.value,
                           )
                         }
-                        disabled={loadingPost || loadingPut}
+                        disabled={loadingPost || loadingPut || isNotEditable}
                       />
                     </Item>
                   </Grid>
@@ -527,7 +533,7 @@ onInput={(e) => {
                             e.target.value,
                           )
                         }
-                        disabled={loadingPost || loadingPut}
+                        disabled={loadingPost || loadingPut || isNotEditable}
                         InputProps={{
                           endAdornment: (
                             <InputAdornment position="end">
@@ -557,7 +563,7 @@ onInput={(e) => {
                 variant="outlined"
                 size="small"
                 onClick={addChecklistItem}
-                disabled={loadingPost || loadingPut}
+                disabled={loadingPost || loadingPut || isNotEditable}
               >
                 Ajouter un élément
               </Button>
@@ -575,7 +581,7 @@ onInput={(e) => {
                 <Button
                   type="submit"
                   variant="contained"
-                  disabled={!formik.isValid || loadingPost || loadingPut}
+                  disabled={!formik.isValid || loadingPost || loadingPut || isNotEditable}
                 >
                   Valider
                 </Button>

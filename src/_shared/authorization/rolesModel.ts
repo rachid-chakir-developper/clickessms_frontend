@@ -5,6 +5,7 @@ export const rolesModel = defineRolesModel(entitiesModel, {
   company: {
     SUPER_ADMIN: { // Super admin'
       sce: 'edit',
+      sceModules: 'edit',
       settings: 'edit',
       quality: 'edit',
       activity: 'edit',
@@ -21,6 +22,7 @@ export const rolesModel = defineRolesModel(entitiesModel, {
     },
     ADMIN: { // Admin
       sce: 'edit',
+      sceModules: 'edit',
       settings: 'edit',
       quality: 'edit',
       activity: 'edit',
@@ -48,6 +50,7 @@ export const rolesModel = defineRolesModel(entitiesModel, {
     },
     SCE_MANAGER: { // Responsable strcuture,
       sce: 'edit',
+      sceModules: 'edit',
     },
     QUALITY_MANAGER: { // Responsable Qualité,
       quality: 'edit',

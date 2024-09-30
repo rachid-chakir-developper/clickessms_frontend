@@ -188,6 +188,8 @@ export default function ListTasks() {
           loading={loadingTasks}
           rows={tasksData?.tasks?.nodes || []}
           onDeleteTask={onDeleteTask}
+          onFilterChange={(newFilter) => handleFilterChange({ ...taskFilter, ...newFilter })}
+          paginator={paginator}
         />
       </Grid>
       <Grid item xs={12}>

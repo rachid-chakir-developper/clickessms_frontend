@@ -31,30 +31,6 @@ export const UNDESIRABLE_EVENT_MINI_INFOS = gql`
   }
 `;
 
-export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
-  fragment UndesirableEventBasicInfosFragment on UndesirableEventType{
-    ...UndesirableEventBasicMiniFragment
-    establishments{
-      ...UndesirableEventEstablishmentTypeFragment
-    }
-    employee{
-      ...EmployeeBasicInfosFragment
-    } 
-    ticket {
-      ...TicketMiniInfosFragment
-    }
-    folder{
-      id
-      number
-      name
-    }
-  }
-  ${UNDESIRABLE_EVENT_MINI_INFOS}
-  ${UNDESIRABLE_EVENT_ESTABLISHMENT_DETAILS}
-  ${EMPLOYEE_BASIC_INFOS}
-  ${TICKET_MINI_INFOS}
-`;
-
 export const UNDESIRABLE_EVENT_BENEFICIARY_DETAILS = gql`
   fragment UndesirableEventBeneficiaryTypeFragment on UndesirableEventBeneficiaryType{
     id
@@ -85,9 +61,23 @@ export const UNDESIRABLE_EVENT_PERSON_NOTIFIED_DETAILS = gql`
   ${EMPLOYEE_BASIC_INFOS}
 `;
 
-export const UNDESIRABLE_EVENT_DETAILS = gql`
-  fragment UndesirableEventDetailsFragment on UndesirableEventType{
-    ...UndesirableEventBasicInfosFragment
+export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
+  fragment UndesirableEventBasicInfosFragment on UndesirableEventType{
+    ...UndesirableEventBasicMiniFragment
+    establishments{
+      ...UndesirableEventEstablishmentTypeFragment
+    }
+    employee{
+      ...EmployeeBasicInfosFragment
+    } 
+    ticket {
+      ...TicketMiniInfosFragment
+    }
+    folder{
+      id
+      number
+      name
+    }
     severity
     actionsTakenText
     courseFactsDateTime
@@ -119,10 +109,20 @@ export const UNDESIRABLE_EVENT_DETAILS = gql`
       name
     }
   }
-  ${UNDESIRABLE_EVENT_BASIC_INFOS}
+  ${UNDESIRABLE_EVENT_MINI_INFOS}
+  ${UNDESIRABLE_EVENT_ESTABLISHMENT_DETAILS}
+  ${EMPLOYEE_BASIC_INFOS}
+  ${TICKET_MINI_INFOS}
   ${UNDESIRABLE_EVENT_EMPLOYEE_DETAILS}
   ${UNDESIRABLE_EVENT_PERSON_NOTIFIED_DETAILS}
   ${UNDESIRABLE_EVENT_BENEFICIARY_DETAILS}
+`;
+
+export const UNDESIRABLE_EVENT_DETAILS = gql`
+  fragment UndesirableEventDetailsFragment on UndesirableEventType{
+    ...UndesirableEventBasicInfosFragment
+  }
+  ${UNDESIRABLE_EVENT_BASIC_INFOS}
 `;
 
 export const UNDESIRABLE_EVENT_RECAP_DETAILS = gql`

@@ -22,6 +22,8 @@ import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/Establis
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import { MSG_NOTIF_TYPES } from '../../../../_shared/tools/constants';
 import TextEditorField from '../../../../_shared/components/form-fields/TextEditorField';
+import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
+import MultiFileField from '../../../../_shared/components/form-fields/MultiFileField';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -40,21 +42,25 @@ export default function AddPostForm({ idPost, title }) {
       image: undefined,
       title: '',
       content: '',
+      files: [],
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let {image, ...postCopy} = values;
+      let {image, files, ...postCopy} = values;
+      files = files?.map((f)=>({id: f?.id, file: f.file || f.path,  caption: f?.caption}))
       if (idPost && idPost != '') {
         onUpdatePost({
           id: postCopy.id,
           postData: postCopy,
           image: image,
+          files: files
         });
       } else
         createPost({
           variables: {
             postData: postCopy,
             image: image,
+            files: files
           },
         });
     },
@@ -177,19 +183,6 @@ export default function AddPostForm({ idPost, title }) {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-          <Grid item xs={12} sm={4} md={4}>
-            <Item>
-              <ImageFileField
-                variant="outlined"
-                label="Image"
-                imageValue={formik.values.image}
-                onChange={(imageFile) =>
-                  formik.setFieldValue('image', imageFile)
-                }
-                disabled={loadingPost || loadingPut}
-              />
-            </Item>
-          </Grid>
             <Grid item xs={12} sm={8} md={8}>
               <Item>
                 <TheTextField
@@ -200,9 +193,7 @@ export default function AddPostForm({ idPost, title }) {
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
-            </Grid>
-            <Grid item xs={12} sm={12} md={12}>
-              <Item>
+              <Item  sx={{ minHeight: '400px', height: 'calc(100% - 190px);' }}>
                 <TextEditorField
                   variant="outlined"
                   label="Détail"
@@ -212,6 +203,30 @@ export default function AddPostForm({ idPost, title }) {
                   value={formik.values.content}
                   onChange={(value) =>
                     formik.setFieldValue('content', value)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={4} md={4}>
+              <Item>
+                <ImageFileField
+                  variant="outlined"
+                  label="Image de mise en avant"
+                  imageValue={formik.values.image}
+                  onChange={(imageFile) =>
+                    formik.setFieldValue('image', imageFile)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+              <Item>
+                <MultiFileField
+                  variant="outlined"
+                  label="Pièces jointes"
+                  fileValue={formik.values.files}
+                  onChange={(files) =>
+                    formik.setFieldValue('files', files)
                   }
                   disabled={loadingPost || loadingPut}
                 />

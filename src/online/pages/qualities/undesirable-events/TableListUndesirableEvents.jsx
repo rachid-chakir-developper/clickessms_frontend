@@ -18,9 +18,6 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
-  getFormatDate,
-} from '../../../../_shared/tools/functions';
-import {
   Article,
   Delete,
   Done,
@@ -28,13 +25,20 @@ import {
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Button, Chip, MenuItem, Popover, Stack } from '@mui/material';
+import { Alert, Avatar, Button, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Stack, TablePagination } from '@mui/material';
+import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import CircularProgressWithLabel from '../../../../_shared/components/feedbacks/CircularProgressWithLabel';
+import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
+import { getFormatDate, getFormatDateTime, getPriorityLabel, getUndesirableEventSeverityLabel, getUndesirableEventTypeMiniLabel } from '../../../../_shared/tools/functions';
 import UndesirableEventStatusLabelMenu from './UndesirableEventStatusLabelMenu';
+import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 import { POST_UNDESIRABLE_EVENT_TICKET } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
 import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 import { useMutation } from '@apollo/client';
@@ -98,48 +102,263 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  {
-    id: 'title',
-    numeric: false,
-    disablePadding: true,
-    label: 'Titre',
-  },
-  {
-    id: 'startingDateTime',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date',
-  },
-  {
-    id: 'establishments',
-    numeric: false,
-    disablePadding: false,
-    label: 'Structures',
-  },
-  {
-    id: 'employee',
-    numeric: false,
-    disablePadding: false,
-    label: 'Déclaré par',
-  },
-  {
-    id: 'status',
-    numeric: false,
-    disablePadding: false,
-    label: 'Status',
-  },
-  {
-      id: 'completionPercentage',
+    {
+      id: 'title',
+      property: 'title',
+      exportField: 'title',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Titre',
+    },
+    {
+        id: 'startingDateTime',
+        property: 'starting_date_time',
+        exportField: 'starting_date_time',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Date',
+        render: ({startingDateTime})=> getFormatDate(startingDateTime)
+    },
+    {
+        id: 'establishments',
+        property: 'establishments__establishment__name',
+        exportField: ['establishments__establishment__name'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Structure(s)',
+        render: ({establishments}) => establishments && establishments.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+        {establishments?.map((establishment, index) => {
+          return (
+            <EstablishmentChip
+              key={index}
+              establishment={establishment.establishment}
+            />
+          );
+        })}
+      </Stack>
+    },
+    {
+        id: 'employee',
+        property: 'employee__first_name',
+        exportField: ['employee__first_name', 'employee__last_name'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Déclaré par',
+        render: ({employee}) => <EmployeeChip employee={employee} />
+    },
+    {
+        id: 'undesirableEventType',
+        property: 'undesirable_event_type',
+        exportField: 'undesirable_event_type',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Type',
+        render: ({undesirableEventType})=> 
+        <Chip variant="outlined" 
+              color={undesirableEventType === 'NORMAL' ? 'secondary' : 'warning'}
+              label={getUndesirableEventTypeMiniLabel(undesirableEventType)}
+        />
+    },
+    {
+        id: 'normalTypes',
+        property: 'normal_types',
+        exportField: 'normal_types',
+        numeric: false,
+        disablePadding: false,
+        label: 'Types normal',
+        render: ({normalTypes})=> normalTypes?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+              {normalTypes?.map((t, i)=> <Chip key={i} label={t?.name} />)}
+        </Stack>
+    },
+    {
+        id: 'seriousTypes',
+        property: 'serious_types',
+        exportField: 'serious_types',
+        numeric: false,
+        disablePadding: false,
+        label: 'Types grave',
+        render: ({seriousTypes})=> seriousTypes?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+              {seriousTypes?.map((t, i)=> <Chip key={i} label={t?.name} />)}
+        </Stack>
+    },
+    {
+        id: 'otherTypes',
+        property: 'other_types',
+        exportField: 'other_types',
+        numeric: false,
+        disablePadding: false,
+        label: 'Autres type',
+    },
+    {
+      id: 'employees',
+      property: 'employees__employee__first_name',
+      exportField: ['employees__employee__first_name', 'employees__employee__last_name'],
       numeric: false,
       disablePadding: false,
-      label: 'Progression',
-  },
-  {
-    id: 'action',
-    numeric: true,
-    disablePadding: false,
-    label: 'Actions',
-  },
+      disableClickDetail: true,
+      sortDisabled: true,
+      label: 'Professionnel(s)',
+      render: ({employees}) => employees && employees?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+        <ChipGroupWithPopover people={employees?.map((employee)=>employee.employee)} />
+    </Stack>
+    },
+    {
+      id: 'beneficiaries',
+      property: 'beneficiaries__beneficiary__first_name',
+      exportField: ['beneficiaries__beneficiary__first_name', 'beneficiaries__beneficiary__last_name'],
+      numeric: false,
+      disablePadding: false,
+      disableClickDetail: true,
+      sortDisabled: true,
+      label: 'Bénificiaire(s)',
+      render: ({beneficiaries}) => beneficiaries && beneficiaries?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+        <ChipGroupWithPopover people={beneficiaries?.map((beneficiarie)=>beneficiarie?.beneficiary)} />
+    </Stack>
+    },
+    {
+        id: 'concernedFamilies',
+        property: 'concerned_families',
+        exportField: 'concerned_families',
+        numeric: false,
+        disablePadding: false,
+        label: 'Famille(s)',
+    },
+    {
+        id: 'courseFactsDateTime',
+        property: 'course_facts_date_time',
+        exportField: 'course_facts_date_time',
+        numeric: false,
+        disablePadding: false,
+        label: 'Date et heure des faits',
+        render: ({courseFactsDateTime})=> getFormatDateTime(courseFactsDateTime)
+    },
+    {
+        id: 'courseFactsPlace',
+        property: 'course_facts_place',
+        exportField: 'course_facts_place',
+        numeric: false,
+        disablePadding: false,
+        label: 'Lieu des faits',
+    },
+    {
+        id: 'circumstanceEventText',
+        property: 'circumstance_event_text',
+        exportField: 'circumstance_event_text',
+        numeric: false,
+        disablePadding: false,
+        label: 'Circonstance de l’événement',
+    },
+    {
+        id: 'frequency',
+        property: 'frequency',
+        exportField: 'frequency',
+        numeric: false,
+        disablePadding: false,
+        label: 'Fréquence',
+        render: ({frequency})=> frequency?.name
+    },
+    {
+        id: 'severity',
+        property: 'severity',
+        exportField: 'severity',
+        numeric: false,
+        disablePadding: false,
+        label: 'Gravité',
+        render: ({severity})=> getUndesirableEventSeverityLabel(severity)
+    },
+    {
+      id: 'notifiedPersons',
+      property: 'notified_persons__employee__first_name',
+      exportField: ['notified_persons__employee__first_name', 'notified_persons__employee__last_name'],
+      numeric: false,
+      disablePadding: false,
+      disableClickDetail: true,
+      sortDisabled: true,
+      label: 'Notifié(s)',
+      render: ({notifiedPersons}) => notifiedPersons && notifiedPersons?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+        <ChipGroupWithPopover people={notifiedPersons?.map((notifiedPerson)=>notifiedPerson.employee)} />
+    </Stack>
+    },
+    {
+        id: 'otherNotifiedPersons',
+        property: 'other_notified_persons',
+        exportField: 'other_notified_persons',
+        numeric: false,
+        disablePadding: false,
+        label: 'Autres notifié(s)',
+    },
+    {
+        id: 'actionsTakenText',
+        property: 'actions_taken_text',
+        exportField: 'actions_taken_text',
+        numeric: false,
+        disablePadding: false,
+        label: 'Mesure(s) prise(s)',
+    },
+    {
+        id: 'description',
+        property: 'description',
+        exportField: 'description',
+        numeric: false,
+        disablePadding: false,
+        label: 'Description',
+    },
+    {
+        id: 'observation',
+        property: 'observation',
+        exportField: 'observation',
+        numeric: false,
+        disablePadding: false,
+        label: 'Observation',
+    },
+    {
+        id: 'completionPercentage',
+        property: 'completion_percentage',
+        exportField: 'completion_percentage',
+        numeric: false,
+        disablePadding: false,
+        disableClickDetail: true,
+        isDefault: true,
+        label: 'Progression',
+        render: ({id, status, completionPercentage, ticket}, canManageQuality, onCreateUndesirableEventTicket)=> {
+          return (status !== EI_STATUS.DRAFT && <>
+          {ticket && <CircularProgressWithLabel value={completionPercentage}/>}
+          {!ticket && canManageQuality && <Button variant="text" size="small" endIcon={<Done />} 
+                            onClick={() => {
+                              onCreateUndesirableEventTicket(id);
+                            }}>
+                            Analyser
+                          </Button>}
+          {!ticket && !canManageQuality && `En attente d'analyse`}
+        </>)}
+    },
+    {
+        id: 'status',
+        property: 'status',
+        exportField: 'status',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        label: 'Status',
+        render: (data)=> <UndesirableEventStatusLabelMenu undesirableEvent={data} />
+    },
+    {
+        id: 'action',
+        numeric: true,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Actions',
+    },
 ];
 
 function EnhancedTableHead(props) {
@@ -150,9 +369,10 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    selectedColumns = []
   } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property, sortDisabled=false) => (event) => {
+    if(!sortDisabled) onRequestSort(event, property);
   };
 
   return (
@@ -169,7 +389,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </StyledTableCell>
-        {headCells.map((headCell) => (
+        {selectedColumns.map((headCell) => (
           <StyledTableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -177,9 +397,10 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+              hideSortIcon={headCell.sortDisabled}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.property, headCell?.sortDisabled)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -196,7 +417,10 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onFilterChange } = props;
+  const [selectedColumns, setSelectedColumns] = React.useState(
+    headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
+  );
 
   return (
     <Toolbar
@@ -233,7 +457,11 @@ function EnhancedTableToolbar(props) {
           Les événements indésirables
         </Typography>
       )}
-
+      <TableExportButton 
+        entity={'UndesirableEvent'}
+        fileName={'Evenements-indesirables'}
+        fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
+        titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>
@@ -241,11 +469,12 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <TableFilterButton headCells={headCells} 
+          onFilterChange={(currentColumns)=>{
+            setSelectedColumns(currentColumns);
+            onFilterChange(headCells?.filter(c=> currentColumns?.includes(c.id)))
+          }
+        }/>
       )}
     </Toolbar>
   );
@@ -255,19 +484,20 @@ export default function TableListUndesirableEvents({
   loading,
   rows,
   onDeleteUndesirableEvent,
+  onFilterChange,
+  paginator,
 }) {
   const authorizationSystem = useAuthorizationSystem();
   const canManageQuality = authorizationSystem.requestAuthorization({
     type: 'manageQuality',
   }).authorized;
   const navigate = useNavigate();
-  const { setNotifyAlert, setConfirmDialog, setDialogListLibrary } = useFeedBacks();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
   const [createUndesirableEventTicket, { loading: loadingPostTicket }] =
     useMutation(POST_UNDESIRABLE_EVENT_TICKET, {
       onCompleted: (datas) => {
@@ -304,6 +534,8 @@ export default function TableListUndesirableEvents({
       },
     });
   };
+
+  const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
     setDialogListLibrary({
       isOpen: true,
@@ -318,6 +550,7 @@ export default function TableListUndesirableEvents({
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    onFilterChange({orderBy: `${isAsc ? '-' : ''}${property}`})
   };
 
   const handleSelectAllClick = (event) => {
@@ -363,17 +596,20 @@ export default function TableListUndesirableEvents({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
+  const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+      <Paper sx={{ width: '100%', mb: 2 }} >
+        <EnhancedTableToolbar numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
+            border="0"
             size="medium"
           >
             <EnhancedTableHead
+              selectedColumns={selectedColumns}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -384,14 +620,14 @@ export default function TableListUndesirableEvents({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="8">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="8">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
                       Aucun événement indésirable trouvé.
                     </Alert>
@@ -443,72 +679,20 @@ export default function TableListUndesirableEvents({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                      onClick={()=> navigate(`/online/qualites/evenements-indesirables/details/${row?.id}`)}
-                    >
-                      {row.title}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.establishments?.map((establishment, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={establishment?.establishment?.name}
-                                  src={
-                                    establishment?.establishment?.logo
-                                      ? establishment?.establishment?.logo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={establishment?.establishment?.name}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left"> 
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
-                              src={
-                                row?.employee?.photo
-                                  ? row?.employee?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
-                          variant="outlined"
-                        />
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <UndesirableEventStatusLabelMenu  undesirableEvent={row}/>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      {row?.status !== EI_STATUS.DRAFT && <>
-                        {row?.ticket && <CircularProgressWithLabel value={row?.completionPercentage}/>}
-                        {!row?.ticket && canManageQuality && <Button variant="text" size="small" endIcon={<Done />} 
-                                          onClick={() => {
-                                            onCreateUndesirableEventTicket(row?.id);
-                                          }}>
-                                          Analyser
-                                        </Button>}
-                        {!row?.ticket && !canManageQuality && `En attente d'analyse`}
-                      </>}
-                    </StyledTableCell>
+                    {
+                      selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
+                        return <StyledTableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding={column?.disablePadding ? "none" : "normal"}
+                          key={index}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/qualites/evenements-indesirables/details/${row?.id}`)}}
+                        >
+                        {column?.render ? column?.render(row, canManageQuality, onCreateUndesirableEventTicket) : row[column?.id]}
+                        </StyledTableCell>
+                      })
+                    }
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -562,7 +746,7 @@ export default function TableListUndesirableEvents({
                             Modifier
                           </MenuItem>
                         </Link>
-                        {onDeleteUndesirableEvent && <MenuItem
+                        <MenuItem
                           onClick={() => {
                             onDeleteUndesirableEvent(row?.id);
                             handleCloseMenu();
@@ -571,7 +755,7 @@ export default function TableListUndesirableEvents({
                         >
                           <Delete sx={{ mr: 2 }} />
                           Supprimer
-                        </MenuItem>}
+                        </MenuItem>
                       </Popover>
                     </StyledTableCell>
                   </StyledTableRow>
@@ -583,7 +767,7 @@ export default function TableListUndesirableEvents({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={6} />
+                  <StyledTableCell colSpan={selectedColumns.length + 1} />
                 </StyledTableRow>
               )}
             </TableBody>

@@ -210,9 +210,9 @@ const TaskFilter = ({ onFilterChange }) => {
                 }
               >
                 {LIST_TYPES_ITEMS?.ALL_?.map((item, index) => {
-                  return (<>
-                      {!item.hidden && <FormControlLabel key={index} value={item.value} control={<Radio />} label={item.label} />}
-                    </>
+                  return (
+                      !item.hidden && <FormControlLabel key={index} value={item.value} control={<Radio />} label={item.label} />
+                    
                   );
                 })}
               </RadioGroup>

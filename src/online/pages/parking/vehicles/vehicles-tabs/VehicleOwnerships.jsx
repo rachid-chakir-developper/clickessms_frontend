@@ -30,11 +30,17 @@ export default function VehicleOwnerships({vehicleOwnerships}) {
                 <b>Date de vente :</b> {getFormatDate(vehicleOwnership?.saleDate)} <br />
                 <b>Prix de vente :</b> {vehicleOwnership?.salePrice}€<br />
             </>}
-            {vehicleOwnership?.ownershipType === OWNERSHIP_TYPE_CHOICES.LEASE && <>
+            {[OWNERSHIP_TYPE_CHOICES.LEASE, OWNERSHIP_TYPE_CHOICES.LEASE_PURCHASE_OPTION].includes(vehicleOwnership?.ownershipType) && <>
                 <b>Date de location :</b> {getFormatDate(vehicleOwnership?.rentalStartingDate)} <br />
                 <b>Date de fin de location :</b> {getFormatDate(vehicleOwnership?.rentalEndingDate)}<br />
                 <b>Prix de location :</b> {vehicleOwnership?.rentalPrice} €<br />
+                {vehicleOwnership?.ownershipType === OWNERSHIP_TYPE_CHOICES.LEASE_PURCHASE_OPTION && <>
+                  <b>Option d'achat :</b> {vehicleOwnership?.rentPurchasePrice} €<br /></>
+                }
                 <b>Kilométrage prévisionnel :</b> {vehicleOwnership?.expectedMileage} Km
+            </>}
+            {vehicleOwnership?.ownershipType === OWNERSHIP_TYPE_CHOICES.LOAN && <>
+                {vehicleOwnership?.loanDetails}
             </>}
 
           </TimelineOppositeContent>

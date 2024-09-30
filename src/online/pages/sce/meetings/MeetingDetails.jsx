@@ -11,6 +11,9 @@ import BeneficiaryItemCard from '../../human_ressources/beneficiaries/Beneficiar
 import EstablishmentItemCard from '../../companies/establishments/EstablishmentItemCard';
 import { Check, CheckBoxOutlineBlank, Done, Edit, Note } from '@mui/icons-material';
 import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -74,29 +77,6 @@ export default function MeetingDetails() {
                   />
                 ))}
               </Paper>
-          </Grid>
-          <Grid item xs={12} sx={{ marginY: 3 }}>
-            <Divider />
-          </Grid>
-          <Grid item xs={6}>
-            <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography gutterBottom variant="subtitle3" component="h3">
-                Description
-              </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {meetingData?.meeting?.description}
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid item xs={6}>
-            <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography gutterBottom variant="subtitle3" component="h3">
-                Observation
-              </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {meetingData?.meeting?.observation}
-              </Typography>
-            </Paper>
           </Grid>
           <Grid item xs={12} sx={{ marginY: 3 }}>
             <Divider />
@@ -205,38 +185,30 @@ function MeetingParticipantsInfos({ meeting }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#f1f1f1',
       }}
     >
-      {meeting?.participants.length > 0 && (
-          <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
-            <Typography variant="h6" gutterBottom>
-              Personnes concernées
-            </Typography>
-              <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-                {meeting?.participants?.map((participant, index) => (
-                  <Grid item xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
-                    <Item>
-                      <EmployeeItemCard employee={participant.employee} />
-                    </Item>
-                  </Grid>
-                ))}
-              </Grid>
-          </Paper>
-      )}
-      {meeting?.absentParticipants?.length > 0 && (
-          <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
-            <Typography variant="h6" gutterBottom>
-              Personnes absentes
-            </Typography>
-            <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
-              {meeting?.absentParticipants?.map((participant, index) => (
-                <Grid item xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
-                  <Item>
-                    <EmployeeItemCard employee={participant} />
-                  </Item>
-                </Grid>
-              ))}
-            </Grid>
-          </Paper>
-      )}
+    {meeting?.participants.length > 0 && (
+        <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
+          <Typography variant="h6" gutterBottom>
+          Personnes invités
+          </Typography>
+          <Stack direction="row" flexWrap='wrap' spacing={1}>
+            {meeting?.participants?.map((participant, index) => (
+              <EmployeeChip key={index} employee={participant.employee} />
+            ))}
+          </Stack>
+        </Paper>
+    )}
+    {meeting?.absentParticipants?.length > 0 && (
+        <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
+          <Typography variant="h6" gutterBottom>
+            Personnes absentes
+          </Typography>
+          <Stack direction="row" flexWrap='wrap' spacing={1}>
+            {meeting?.absentParticipants?.map((participant, index) => (
+              <EmployeeChip key={index} employee={participant} />
+            ))}
+          </Stack>
+        </Paper>
+    )}
     </Paper>
   );
 }
@@ -259,15 +231,11 @@ function MeetingOtherInfos({ meeting }) {
             <Typography variant="h6" gutterBottom>
               Les structures concernées
             </Typography>
-              <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-                {meeting?.establishments?.map((establishment, index) => (
-                  <Grid item xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
-                    <Item>
-                      <EstablishmentItemCard establishment={establishment.establishment} />
-                    </Item>
-                  </Grid>
-                ))}
-              </Grid>
+            <Stack direction="row" flexWrap='wrap' spacing={1}>
+              {meeting?.establishments?.map((establishment, index) => (
+                <EstablishmentChip key={index} establishment={establishment.establishment} />
+              ))}
+            </Stack>
           </Paper>
       )}
       {meeting?.beneficiaries?.length > 0 && (
@@ -275,15 +243,11 @@ function MeetingOtherInfos({ meeting }) {
             <Typography variant="h6" gutterBottom>
               Bénificiaires concernés
             </Typography>
-            <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
+            <Stack direction="row" flexWrap='wrap' spacing={1}>
               {meeting?.beneficiaries?.map((beneficiary, index) => (
-                <Grid item xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
-                  <Item>
-                    <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
-                  </Item>
-                </Grid>
+                <BeneficiaryChip key={index} beneficiary={beneficiary?.beneficiary} />
               ))}
-            </Grid>
+            </Stack>
           </Paper>
       )}
     </Paper>
@@ -329,21 +293,7 @@ function MeetingDecisions({ meeting }) {
                         </Typography>
                         <Stack direction="row" flexWrap='wrap' spacing={1}>
                           {meetingDecision?.employees?.map((employee, index) => (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={`${employee?.firstName} ${employee?.lastName}`}
-                                  src={
-                                    employee?.photo
-                                      ? employee?.photo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={`${employee?.firstName} ${employee?.lastName}`}
-                              variant="outlined"
-                            />
+                            <EmployeeChip key={index} employee={employee} />
                           ))}
                         </Stack>
                       </>

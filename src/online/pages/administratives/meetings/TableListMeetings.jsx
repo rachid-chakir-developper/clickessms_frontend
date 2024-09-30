@@ -35,6 +35,7 @@ import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -122,7 +123,7 @@ const headCells = [
         id: 'participants',
         numeric: false,
         disablePadding: false,
-        label: 'Participants',
+        label: 'Invités',
     },
     {
         id: 'action',
@@ -439,25 +440,7 @@ export default function TableListMeetings({
                     </StyledTableCell>
                     <StyledTableCell align="left">
                       <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.participants?.map((participant, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={participant?.employee?.firstName}
-                                  src={
-                                    participant?.employee?.photo
-                                      ? participant?.employee?.photo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={participant?.employee?.firstName}
-                              variant="outlined"
-                            />
-                          );
-                        })}
+                        <ChipGroupWithPopover people={row?.participants?.map((participant) =>participant?.employee)} />
                       </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="right">

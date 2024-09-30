@@ -31,6 +31,13 @@ export const POST_BASIC_INFOS = gql`
 export const POST_DETAILS = gql`
   fragment PostDetailsFragment on PostType {
     ...PostBasicInfosFragment
+    files {
+      id
+      caption
+      file
+      createdAt
+      updatedAt
+    }
     description
     observation
   }
@@ -41,6 +48,13 @@ export const POST_DETAILS = gql`
 export const POST_RECAP = gql`
   fragment PostRecapDetailsFragment on PostType {
     ...PostBasicInfosFragment
+    files {
+      id
+      caption
+      file
+      createdAt
+      updatedAt
+    }
     description
     observation
   }

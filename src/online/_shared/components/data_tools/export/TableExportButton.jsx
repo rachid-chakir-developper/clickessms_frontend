@@ -3,7 +3,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import { FileDownload } from '@mui/icons-material';
 import { END_POINT } from '../../../../../ApolloProvider';
 
-export default function ExportButtonIcon(props) {
+export default function TableExportButton(props) {
   const {title = 'Exporter', entity, fileName, fields, titles} = props
   const exportData = async () => {
   
@@ -47,7 +47,7 @@ export default function ExportButtonIcon(props) {
   
   return (
     <Tooltip title={title}>
-      <IconButton {...props} onClick={exportData}>
+      <IconButton onClick={exportData}>
         <FileDownload/>
       </IconButton>
     </Tooltip>
