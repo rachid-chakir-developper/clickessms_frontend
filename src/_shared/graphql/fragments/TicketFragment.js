@@ -17,6 +17,21 @@ export const TICKET_MINI_INFOS = gql`
   }
 `;
 
+export const EFC_REPORT_DETAILS = gql`
+  fragment EfcReportDetailsFragment on EfcReportType {
+    id
+    title
+    description
+    efcDate
+    document
+    declarationDate
+    employees{
+      ...EmployeeMiniInfosFragment
+    }
+  }
+  ${EMPLOYEE_MINI_INFOS}
+`;
+
 export const TICKET_BASIC_INFOS = gql`
   fragment TicketBasicInfosFragment on TicketType{
     ...TicketMiniInfosFragment
@@ -35,30 +50,6 @@ export const TICKET_BASIC_INFOS = gql`
     actions{
       ...TaskActionMiniInfosFragment
     }
-  }
-  ${TICKET_MINI_INFOS}
-  ${ESTABLISHMENT_MINI_INFOS}
-  ${TASK_ACTION_MINI_INFOS}
-`;
-
-export const EFC_REPORT_DETAILS = gql`
-  fragment EfcReportDetailsFragment on EfcReportType {
-    id
-    title
-    description
-    efcDate
-    document
-    declarationDate
-    employees{
-      ...EmployeeMiniInfosFragment
-    }
-  }
-  ${EMPLOYEE_MINI_INFOS}
-`;
-
-export const TICKET_DETAILS = gql`
-  fragment TicketDetailsFragment on TicketType{
-    ...TicketBasicInfosFragment
     description
     employee{
       ...EmployeeMiniInfosFragment
@@ -68,9 +59,18 @@ export const TICKET_DETAILS = gql`
       ...EfcReportDetailsFragment
     }
   }
-  ${TICKET_BASIC_INFOS}
+  ${TICKET_MINI_INFOS}
+  ${ESTABLISHMENT_MINI_INFOS}
+  ${TASK_ACTION_MINI_INFOS}
   ${EMPLOYEE_MINI_INFOS}
   ${EFC_REPORT_DETAILS}
+`;
+
+export const TICKET_DETAILS = gql`
+  fragment TicketDetailsFragment on TicketType{
+    ...TicketBasicInfosFragment
+  }
+  ${TICKET_BASIC_INFOS}
 `;
 
 export const TICKET_RECAP_DETAILS = gql`

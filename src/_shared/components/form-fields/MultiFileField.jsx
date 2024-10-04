@@ -15,7 +15,8 @@ const FileCard = ({ file, onDelete, onClick }) => {
           marginBottom: '10px', 
           border: '1px solid #ccc', 
           padding: '10px', 
-          borderRadius: '4px' 
+          borderRadius: '4px',
+          background: "#f1f1f1"
       }}
       >
       <a href={file?.localUrl ? file?.localUrl : file?.path} target="_blank">
@@ -118,7 +119,7 @@ export default function MultiFileField(props) {
             </Button>}
             </label>
         </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', marginY: 4 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'start', flexWrap: 'wrap', marginY: 4 }}>
         {uploadedFiles.map((file, index) => (
           <Box key={index} sx={{padding: 2}}>
             <FileCard

@@ -17,6 +17,7 @@ import { GET_POST_RECAP } from '../../../../_shared/graphql/queries/PostQueries'
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { Edit, FileCopy } from '@mui/icons-material';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
+import FileCard from '../../../_shared/components/library/FileCard';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -109,26 +110,3 @@ export default function PostDetails() {
   );
 }
 
-
-const FileCard = ({ file }) => {
-  return (
-      <Box 
-      sx={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          marginBottom: '10px', 
-          border: '1px solid #ccc', 
-          padding: '10px', 
-          borderRadius: '4px' 
-      }}
-      >
-      <a href={file?.file} target="_blank">
-          <FileCopy sx={{ marginRight: '10px' }} />
-      </a>
-      <a href={file?.file} target="_blank"><Typography variant="body1" sx={{ flexGrow: 1 }}>
-            {file.caption}
-        </Typography>
-      </a>
-      </Box>
-  );
-};

@@ -10,6 +10,7 @@ import {
   Typography,
   Divider,
   Button,
+  Stack,
 } from '@mui/material';
 
 import { GET_UNDESIRABLE_EVENTS, UNDESIRABLE_EVENT_RECAP } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
@@ -23,6 +24,7 @@ import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksPro
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import UndesirableEventStatusLabelMenu from './UndesirableEventStatusLabelMenu';
 import CircularProgressWithLabel from '../../../../_shared/components/feedbacks/CircularProgressWithLabel';
+import FileCard from '../../../_shared/components/library/FileCard';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -123,6 +125,25 @@ export default function UndesirableEventDetails() {
               undesirableEvent={undesirableEventData?.undesirableEvent}
             />
           </Grid>
+          {undesirableEventData?.undesirableEvent?.files && undesirableEventData?.undesirableEvent?.files?.length > 0 && 
+          <>
+            <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
+              <Divider />
+            </Grid>
+            <Grid item xs={12}>
+                <Typography gutterBottom variant="subtitle4" component="h4">
+                  Pièces jointes
+                </Typography>
+                <Stack direction="row" flexWrap="wrap" spacing={1}>
+                    {undesirableEventData?.undesirableEvent?.files?.map((file, index) => (
+                      <Box key={index} sx={{margin: 1}}>
+                        <FileCard file={file} />
+                      </Box>
+                    ))}
+                </Stack>
+            </Grid>
+          </>
+          }
           <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
             <Divider />
           </Grid>

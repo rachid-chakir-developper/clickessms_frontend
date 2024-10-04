@@ -36,7 +36,7 @@ import EstablishmentChip from '../../companies/establishments/EstablishmentChip'
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
-import { getFormatDate, getFormatDateTime, getPriorityLabel, getUndesirableEventSeverityLabel, getUndesirableEventTypeMiniLabel } from '../../../../_shared/tools/functions';
+import { getFormatDate, getFormatDateTime, getPriorityLabel, getUndesirableEventSeverityLabel, getUndesirableEventTypeLabel, getUndesirableEventTypeMiniLabel } from '../../../../_shared/tools/functions';
 import UndesirableEventStatusLabelMenu from './UndesirableEventStatusLabelMenu';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 import { POST_UNDESIRABLE_EVENT_TICKET } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
@@ -155,6 +155,19 @@ const headCells = [
         render: ({employee}) => <EmployeeChip employee={employee} />
     },
     {
+      id: 'declarants',
+      property: 'declarants__first_name',
+      exportField: ['declarants__first_name', 'declarants__last_name'],
+      numeric: false,
+      disablePadding: false,
+      disableClickDetail: true,
+      sortDisabled: true,
+      label: 'Autres décalarants',
+      render: ({declarants}) => declarants && declarants?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+        <ChipGroupWithPopover people={declarants} />
+    </Stack>
+    },
+    {
         id: 'undesirableEventType',
         property: 'undesirable_event_type',
         exportField: 'undesirable_event_type',
@@ -162,11 +175,13 @@ const headCells = [
         disablePadding: false,
         isDefault: true,
         label: 'Type',
-        render: ({undesirableEventType})=> 
-        <Chip variant="outlined" 
-              color={undesirableEventType === 'NORMAL' ? 'secondary' : 'warning'}
-              label={getUndesirableEventTypeMiniLabel(undesirableEventType)}
-        />
+        render: ({undesirableEventType})=>
+          <Tooltip title={getUndesirableEventTypeLabel(undesirableEventType)}>
+            <Chip variant="outlined" 
+                  color={undesirableEventType === 'NORMAL' ? 'secondary' : 'warning'}
+                  label={getUndesirableEventTypeMiniLabel(undesirableEventType)}
+            />
+          </Tooltip>
     },
     {
         id: 'normalTypes',
@@ -498,6 +513,7 @@ export default function TableListUndesirableEvents({
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
+  const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const [createUndesirableEventTicket, { loading: loadingPostTicket }] =
     useMutation(POST_UNDESIRABLE_EVENT_TICKET, {
       onCompleted: (datas) => {

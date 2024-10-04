@@ -4,6 +4,20 @@ import { gql } from '@apollo/client';
 import { VEHICLE_MINI_INFOS } from './VehicleFragment';
 import { PARTNER_BASIC_INFOS } from './PartnerFragment';
 
+
+export const VEHICLE_CARRIED_OUT_REPAIR_DETAILS = gql`
+  fragment VehicleTheCarriedOutRepairFragment on VehicleTheCarriedOutRepairType {
+    id
+    description
+  }
+`;
+export const VEHICLE_REPAIR_VIGILANT_POINT_DETAILS = gql`
+  fragment VehicleRepairVigilantPointFragment on VehicleRepairVigilantPointType {
+    id
+    description
+  }
+`;
+
 export const VEHICLE_REPAIR_BASIC_INFOS = gql`
   fragment VehicleRepairBasicInfosFragment on VehicleRepairType {
     id
@@ -19,31 +33,6 @@ export const VEHICLE_REPAIR_BASIC_INFOS = gql`
     garagePartner{
         ...PartnerBasicInfosFragment
     }
-  }
-  ${VEHICLE_MINI_INFOS}
-  ${PARTNER_BASIC_INFOS}
-`;
-
-
-export const VEHICLE_CARRIED_OUT_REPAIR_DETAILS = gql`
-  fragment VehicleTheCarriedOutRepairFragment on VehicleTheCarriedOutRepairType {
-    id
-    description
-  }
-`;
-export const VEHICLE_REPAIR_VIGILANT_POINT_DETAILS = gql`
-  fragment VehicleRepairVigilantPointFragment on VehicleRepairVigilantPointType {
-    id
-    description
-  }
-`;
-
-
-
-
-export const VEHICLE_REPAIR_DETAILS = gql`
-  fragment VehicleRepairDetailsFragment on VehicleRepairType {
-    ...VehicleRepairBasicInfosFragment
     report
     description
     observation
@@ -54,9 +43,18 @@ export const VEHICLE_REPAIR_DETAILS = gql`
       ...VehicleRepairVigilantPointFragment
     }
   }
-  ${VEHICLE_REPAIR_BASIC_INFOS}
+  ${VEHICLE_MINI_INFOS}
+  ${PARTNER_BASIC_INFOS}
   ${VEHICLE_CARRIED_OUT_REPAIR_DETAILS}
   ${VEHICLE_REPAIR_VIGILANT_POINT_DETAILS}
+`;
+
+
+export const VEHICLE_REPAIR_DETAILS = gql`
+  fragment VehicleRepairDetailsFragment on VehicleRepairType {
+    ...VehicleRepairBasicInfosFragment
+  }
+  ${VEHICLE_REPAIR_BASIC_INFOS}
 `;
 
 export const VEHICLE_REPAIR_RECAP_DETAILS = gql`

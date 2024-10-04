@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Box } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { Cancel, Done, HourglassEmpty, HourglassFull, HourglassTop, Pending, TaskAlt } from '@mui/icons-material';
 import { useMutation } from '@apollo/client';
 import CustomizedStatusLabelMenu from '../../../../_shared/components/app/menu/CustomizedStatusLabelMenu';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import { PUT_TASK_FIELDS } from '../../../../_shared/graphql/mutations/TaskMutations';
 import { useSession } from '../../../../_shared/context/SessionProvider';
+import InputSendComment from './tasks-tabs/task-chat/InputSendComment';
 
 
 export default function TaskStatusLabelMenu({task}) {
@@ -40,6 +41,10 @@ export default function TaskStatusLabelMenu({task}) {
     { value: "COMPLETED", label: "Terminée", icon: <TaskAlt />, color: 'success', hidden: !canChangeStatus()},
   ];
     const [updateTaskFields, { loading: loadingPut }] = useMutation(PUT_TASK_FIELDS, {
+      onCompleted: (data) => {
+        console.log(data);
+        if(data.updateTaskFields.success) setOpenDialog(true);
+      },
       update(cache, { data: { updateTaskFields } }) {
         const updatedTask = updateTaskFields.task;
   
@@ -64,6 +69,13 @@ export default function TaskStatusLabelMenu({task}) {
         });
       },
     });
+  
+
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
   return (
     <Box>
         <CustomizedStatusLabelMenu
@@ -74,6 +86,17 @@ export default function TaskStatusLabelMenu({task}) {
             onChange={(status)=> {updateTaskFields({ variables: {id: task?.id, taskData: {status}} })}}
             disabled={!canManageFacility && !canChangeStatus()}
         />
+
+        {/* Modal pour demander le commentaire */}
+        <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth="true" maxWidth="md">
+          <DialogTitle>Ajouter un commentaire</DialogTitle>
+          <DialogContent>
+            <InputSendComment type="iconButton" task={task} onCommentSent={handleCloseDialog}/>
+          </DialogContent>
+          <DialogActions>
+              <Button color="inherit" onClick={handleCloseDialog}>Annuler</Button>
+          </DialogActions>
+        </Dialog>
     </Box>
   );
 }

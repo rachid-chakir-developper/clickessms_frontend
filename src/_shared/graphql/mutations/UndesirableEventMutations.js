@@ -4,11 +4,11 @@ import { UNDESIRABLE_EVENT_BASIC_INFOS } from '../fragments/UndesirableEventFrag
 export const POST_UNDESIRABLE_EVENT = gql`
   mutation CreateUndesirableEvent(
     $undesirableEventData: UndesirableEventInput!
-    $image: Upload
+    $image: Upload, $files : [MediaInput]
   ) {
     createUndesirableEvent(
       undesirableEventData: $undesirableEventData
-      image: $image
+      image: $image, files: $files
     ) {
       undesirableEvent {
         ...UndesirableEventBasicInfosFragment
@@ -22,12 +22,12 @@ export const PUT_UNDESIRABLE_EVENT = gql`
   mutation UpdateUndesirableEvent(
     $id: ID!
     $undesirableEventData: UndesirableEventInput!
-    $image: Upload
+    $image: Upload, $files : [MediaInput]
   ) {
     updateUndesirableEvent(
       id: $id
       undesirableEventData: $undesirableEventData
-      image: $image
+      image: $image, files: $files
     ) {
       undesirableEvent {
         ...UndesirableEventBasicInfosFragment

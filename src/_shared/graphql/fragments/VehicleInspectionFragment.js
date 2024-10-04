@@ -22,6 +22,19 @@ export const VEHICLE_INSPECTION_BASIC_INFOS = gql`
     controllerPartner{
         ...PartnerBasicInfosFragment
     }
+    mileage
+    isRegistrationCardHere
+    isInsuranceCertificateHere
+    isInsuranceAttestationHere
+    isTechnicalControlHere
+    isOilLevelChecked
+    isWindshieldWasherLevelChecked
+    isBrakeFluidLevelChecked
+    isCoolantLevelChecked
+    isTirePressureChecked
+    isLightsConditionChecked
+    isBodyConditionChecked
+    remarks
   }
   ${VEHICLE_MINI_INFOS}
   ${EMPLOYEE_MINI_INFOS}
@@ -31,19 +44,6 @@ export const VEHICLE_INSPECTION_BASIC_INFOS = gql`
 export const VEHICLE_INSPECTION_DETAILS = gql`
   fragment VehicleInspectionDetailsFragment on VehicleInspectionType {
     ...VehicleInspectionBasicInfosFragment
-	mileage
-	isRegistrationCardHere
-	isInsuranceCertificateHere
-	isInsuranceAttestationHere
-  isTechnicalControlHere
-	isOilLevelChecked
-	isWindshieldWasherLevelChecked
-	isBrakeFluidLevelChecked
-	isCoolantLevelChecked
-	isTirePressureChecked
-	isLightsConditionChecked
-	isBodyConditionChecked
-    remarks
     images {
       id
       caption

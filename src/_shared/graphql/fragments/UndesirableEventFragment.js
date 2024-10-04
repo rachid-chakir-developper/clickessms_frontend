@@ -69,7 +69,10 @@ export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
     }
     employee{
       ...EmployeeBasicInfosFragment
-    } 
+    }
+    declarants{
+      ...EmployeeBasicInfosFragment
+    }
     ticket {
       ...TicketMiniInfosFragment
     }
@@ -121,6 +124,13 @@ export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
 export const UNDESIRABLE_EVENT_DETAILS = gql`
   fragment UndesirableEventDetailsFragment on UndesirableEventType{
     ...UndesirableEventBasicInfosFragment
+    files {
+      id
+      caption
+      file
+      createdAt
+      updatedAt
+    }
   }
   ${UNDESIRABLE_EVENT_BASIC_INFOS}
 `;
@@ -157,6 +167,13 @@ export const UNDESIRABLE_EVENT_RECAP_DETAILS = gql`
     frequency{
       id
       name
+    }
+    files {
+      id
+      caption
+      file
+      createdAt
+      updatedAt
     }
     createdAt
     updatedAt

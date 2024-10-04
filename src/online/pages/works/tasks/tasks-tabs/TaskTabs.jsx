@@ -3,13 +3,8 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import VehicleEstablishments from './VehicleEstablishments';
-import VehicleEmployees from './VehicleEmployees';
-import VehicleOwnerships from './VehicleOwnerships';
-import VehicleInspections from './VehicleInspections';
 import { Stack } from '@mui/material';
-import VehicleTechnicalInspections from './VehicleTechnicalInspections';
-import VehicleRepairs from './VehicleRepairs';
+import TaskChat from './task-chat/TaskChat';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -50,7 +45,7 @@ function LinkTab(props) {
   return (
     <Tab
       component="a"
-      sx={{textTransform: 'initial'}}
+      sx={{textTransform: 'capitalize'}}
       onClick={(event) => {
         // Routing libraries handle this, you can remove the onClick handle when using them.
         if (samePageLinkNavigation(event)) {
@@ -67,7 +62,7 @@ LinkTab.propTypes = {
   selected: PropTypes.bool,
 };
 
-export default function VehicleTabs({vehicle}) {
+export default function TaskTabs({task}) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -89,31 +84,11 @@ export default function VehicleTabs({vehicle}) {
                 aria-label="nav tabs example"
                 role="navigation"
             >
-              <LinkTab label="Contrôles véhicule" href="/spam" />
-              <LinkTab label="Contrôles techniques" href="/spam" />
-              <LinkTab label="Suivi des réparations" href="/spam" />
-              <LinkTab label="Structures rattachées" href="/spam" />
-              <LinkTab label="Employés" href="/spam" />
-              <LinkTab label="Statut de détention" href="/spam" />
+                <LinkTab label="Discussion" href="/spam" />
             </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-            <VehicleInspections vehicle={vehicle} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
-            <VehicleTechnicalInspections vehicle={vehicle} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={2}>
-            <VehicleRepairs vehicle={vehicle} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={3}>
-            <VehicleEstablishments vehicleEstablishments={vehicle?.vehicleEstablishments} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={4}>
-            <VehicleEmployees vehicleEmployees={vehicle?.vehicleEmployees} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={5}>
-            <VehicleOwnerships vehicleOwnerships={vehicle?.vehicleOwnerships} />
+        <TaskChat task={task}/>
         </CustomTabPanel>
     </Box>
   );

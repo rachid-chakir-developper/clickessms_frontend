@@ -183,7 +183,7 @@ const headCells = [
         exportField: 'state',
         numeric: false,
         disablePadding: false,
-        label: 'Etats',
+        label: 'État',
         render: ({state}) => getVehicleStateLabel(state),
     },
     {
@@ -367,7 +367,7 @@ export default function TableListVehicles({
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit);
+  const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {

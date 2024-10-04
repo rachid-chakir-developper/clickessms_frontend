@@ -165,6 +165,8 @@ export default function ListTickets() {
           loading={loadingTickets}
           rows={ticketsData?.tickets?.nodes || []}
           onDeleteTicket={onDeleteTicket}
+          onFilterChange={(newFilter) => handleFilterChange({ ...ticketFilter, ...newFilter })}
+          paginator={paginator}
         />
       </Grid>
       <Grid item xs={12}>

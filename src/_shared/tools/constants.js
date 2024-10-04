@@ -259,7 +259,7 @@ export const REPAIR_STATES = {
   COMPLETED: "COMPLETED",
   TO_DO: "TO_DO",
   ALL: [
-    { value: "COMPLETED", label: "Términée" },
+    { value: "COMPLETED", label: "Terminée" },
     { value: "TO_DO", label: "À faire" },
   ],
 };

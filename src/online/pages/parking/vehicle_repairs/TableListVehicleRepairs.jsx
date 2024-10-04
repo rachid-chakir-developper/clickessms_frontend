@@ -18,12 +18,6 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
-  getFormatDate,
-  getFormatDateTime,
-  getStatusLabel,
-  getStatusLebelColor,
-} from '../../../../_shared/tools/functions';
-import {
   Article,
   Delete,
   Done,
@@ -31,11 +25,20 @@ import {
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
+import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Stack, TablePagination } from '@mui/material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import { render } from 'react-dom';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
+import { getFormatDate, getFormatDateTime, getPriorityLabel, getRepairStateLabel } from '../../../../_shared/tools/functions';
+import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
+import VehicleChip from '../vehicles/VehicleChip';
+import PartnerChip from '../../partnerships/partners/PartnerChip';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -95,36 +98,103 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  {
-    id: 'reasons',
-    numeric: false,
-    disablePadding: false,
-    label: 'Vehicule',
-  },
-  {
-    id: 'controller',
-    numeric: false,
-    disablePadding: false,
-    label: 'Controlleurs',
-  },
-  {
-    id: 'inspectionDateTime',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date et heure du contrôle',
-  },
-  {
-    id: 'nextInspectionDate',
-    numeric: false,
-    disablePadding: false,
-    label: 'Prochaine date du contrôle',
-  },
-  {
-    id: 'action',
-    numeric: true,
-    disablePadding: false,
-    label: 'Actions',
-  },
+    {
+      id: 'vehicle',
+      property: 'vehicle',
+      exportField: ['vehicle__name', 'vehicle__registration_number'],
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Vehicule',
+      render: ({vehicle}) => <VehicleChip vehicle={vehicle} />
+    },
+    {
+        id: 'repairDateTime',
+        property: 'repair_date_time',
+        exportField: 'repair_date_time',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Date et heure de réparation',
+        render: ({repairDateTime})=> getFormatDateTime(repairDateTime)
+    },
+    {
+        id: 'garagePartner',
+        property: 'garage_partner__name',
+        exportField: 'garage_partner__name',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Garage',
+        render: ({garagePartner}) => garagePartner && <PartnerChip partner={garagePartner} />
+    },
+    {
+        id: 'description',
+        property: 'description',
+        exportField: 'description',
+        numeric: false,
+        disablePadding: false,
+        label: 'Description',
+    },
+    {
+        id: 'report',
+        property: 'report',
+        exportField: 'report',
+        numeric: false,
+        disablePadding: false,
+        label: 'Compte-rendu',
+    },
+    {
+        id: 'repairs',
+        property: 'repairs__description',
+        exportField: 'repairs__description',
+        numeric: false,
+        disablePadding: false,
+        sortDisabled: true,
+        label: 'Réparations menées',
+        render: ({repairs})=> repairs?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+              {repairs?.map((r, i)=> <Chip variant="outlined" key={i} label={r?.description} />)}
+        </Stack>
+    },
+    {
+        id: 'vigilantPoints',
+        property: 'vigilant_points__description',
+        exportField: 'vigilant_points__description',
+        numeric: false,
+        disablePadding: false,
+        sortDisabled: true,
+        label: 'Points de vigilance',
+        render: ({vigilantPoints})=> vigilantPoints?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+              {vigilantPoints?.map((r, i)=> <Chip variant="outlined" key={i} label={r?.description} />)}
+        </Stack>
+    },
+    {
+        id: 'state',
+        property: 'state',
+        exportField: 'state',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'État',
+        render: ({state}) => getRepairStateLabel(state),
+    },
+    {
+        id: 'observation',
+        property: 'observation',
+        exportField: 'observation',
+        numeric: false,
+        disablePadding: false,
+        label: 'Observation',
+    },
+    {
+        id: 'action',
+        numeric: true,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Actions',
+    },
 ];
 
 function EnhancedTableHead(props) {
@@ -135,9 +205,10 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    selectedColumns = []
   } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property, sortDisabled=false) => (event) => {
+    if(!sortDisabled) onRequestSort(event, property);
   };
 
   return (
@@ -154,7 +225,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </StyledTableCell>
-        {headCells.map((headCell) => (
+        {selectedColumns.map((headCell) => (
           <StyledTableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -162,9 +233,10 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+              hideSortIcon={headCell.sortDisabled}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.property, headCell?.sortDisabled)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -181,7 +253,10 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onFilterChange } = props;
+  const [selectedColumns, setSelectedColumns] = React.useState(
+    headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
+  );
 
   return (
     <Toolbar
@@ -218,7 +293,11 @@ function EnhancedTableToolbar(props) {
           Les réparations
         </Typography>
       )}
-
+      <TableExportButton 
+        entity={'VehicleRepair'}
+        fileName={'reparations-vehicules'}
+        fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
+        titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>
@@ -226,11 +305,12 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <TableFilterButton headCells={headCells} 
+          onFilterChange={(currentColumns)=>{
+            setSelectedColumns(currentColumns);
+            onFilterChange(headCells?.filter(c=> currentColumns?.includes(c.id)))
+          }
+        }/>
       )}
     </Toolbar>
   );
@@ -239,14 +319,17 @@ function EnhancedTableToolbar(props) {
 export default function TableListVehicleRepairs({
   loading,
   rows,
-  onDeleteVehicleRepair
+  onDeleteVehicleRepair,
+  onFilterChange,
+  paginator,
 }) {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -263,6 +346,7 @@ export default function TableListVehicleRepairs({
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    onFilterChange({orderBy: `${isAsc ? '-' : ''}${property}`})
   };
 
   const handleSelectAllClick = (event) => {
@@ -308,17 +392,20 @@ export default function TableListVehicleRepairs({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
+  const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+      <Paper sx={{ width: '100%', mb: 2 }} >
+        <EnhancedTableToolbar numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
+            border="0"
             size="medium"
           >
             <EnhancedTableHead
+              selectedColumns={selectedColumns}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -329,16 +416,16 @@ export default function TableListVehicleRepairs({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                        Aucune réparation trouvé.
+                      Aucune réparation trouvée.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -388,65 +475,20 @@ export default function TableListVehicleRepairs({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell align="left"> 
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.vehicle?.name} ${row?.vehicle?.registrationNumber}`}
-                              src={
-                                row?.vehicle?.image
-                                  ? row?.vehicle?.image
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.vehicle?.name} ${row?.vehicle?.registrationNumber}`}
-                          variant="outlined"
-                        />
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.controllerEmployees?.map((employee, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={`${employee?.firstName} ${employee?.lastName}`}
-                                  src={
-                                    employee?.photo
-                                      ? employee?.photo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={`${employee?.firstName} ${employee?.lastName}`}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>
-                      {row?.garagePartner && <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.garagePartner?.name}`}
-                              src={
-                                row?.garagePartner?.photo
-                                  ? row?.garagePartner?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.garagePartner?.name}`}
-                          variant="outlined"
-                        />
-                      </Stack>}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDateTime(row?.inspectionDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.nextInspectionDate)}`}</StyledTableCell>
+                    {
+                      selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
+                        return <StyledTableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding={column?.disablePadding ? "none" : "normal"}
+                          key={index}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/parc-automobile/reparations/details/${row?.id}`)}}
+                        >
+                        {column?.render ? column?.render(row) : row[column?.id]}
+                        </StyledTableCell>
+                      })
+                    }
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -512,7 +554,7 @@ export default function TableListVehicleRepairs({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={6} />
+                  <StyledTableCell colSpan={selectedColumns.length + 1} />
                 </StyledTableRow>
               )}
             </TableBody>

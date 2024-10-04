@@ -321,7 +321,6 @@ export const modules: Module[] = [
         name: 'Planning',
         path: '/online/ressources-humaines/planning',
         icon: <DateRangeIcon />,
-        disabled: true,
       },
       {
         id: 'bdes',

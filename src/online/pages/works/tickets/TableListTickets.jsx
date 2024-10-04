@@ -18,12 +18,6 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
-  getFormatDate,
-  getPriorityLabel,
-  getStatusLabel,
-  getStatusLebelColor,
-} from '../../../../_shared/tools/functions';
-import {
   Article,
   Delete,
   Done,
@@ -33,10 +27,18 @@ import {
   KeyboardArrowUp,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, Collapse, MenuItem, Popover, Stack } from '@mui/material';
+import { Alert, Avatar, Chip, Collapse, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Stack, TablePagination } from '@mui/material';
+import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import { render } from 'react-dom';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import { getCritAirVignetteLabel, getFormatDate, getOwnershipTypeLabel, getPriorityLabel } from '../../../../_shared/tools/functions';
+import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
+import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 import CircularProgressWithLabel from '../../../../_shared/components/feedbacks/CircularProgressWithLabel';
 import TicketStatusLabelMenu from './TicketStatusLabelMenu';
 import TaskActionStatusLabelMenu from '../actions/TaskActionStatusLabelMenu';
@@ -100,45 +102,128 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
-        id: 'establishments',
-        numeric: false,
-        disablePadding: false,
-        label: 'Structures',
-    },
-    {
-        id: 'source',
-        numeric: false,
-        disablePadding: false,
-        label: 'Source',
-    },
-    {
       id: 'title',
+      property: 'title',
+      exportField: 'title',
       numeric: false,
       disablePadding: true,
+      isDefault: true,
       label: 'Libellé',
     },
     {
-        id: 'priority',
+        id: 'establishments',
+        property: 'establishments__name',
+        exportField: ['establishments__name'],
         numeric: false,
         disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Structure(s)',
+        render: ({establishments}) => establishments && establishments.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+        {establishments?.map((establishment, index) => {
+          return (
+            <EstablishmentChip
+              key={index}
+              establishment={establishment}
+            />
+          );
+        })}
+      </Stack>
+    },
+    {
+        id: 'priority',
+        property: 'priority',
+        exportField: 'priority',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
         label: 'Priorité',
+        render: ({priority})=> getPriorityLabel(priority)
+    },
+    {
+        id: 'efcReports__title',
+        property: 'efc_reports__title',
+        exportField: 'efc_reports__title',
+        numeric: false,
+        disablePadding: false,
+        label: 'Intitulé CREX',
+        render: ({efcReports})=> efcReports?.length > 0 && efcReports[0]?.title
+    },,
+    {
+        id: 'efcReports__efcDate',
+        property: 'efc_reports__efc_date',
+        exportField: 'efc_reports__efc_date',
+        numeric: false,
+        disablePadding: false,
+        label: 'Date CREX',
+        render: ({efcReports})=> efcReports?.length > 0 && getFormatDate(efcReports[0]?.efcDate)
+    },
+    {
+        id: 'efcReports__employees',
+        property: 'efc_reports__employees__first_name',
+        exportField: ['efc_reports__employees__first_name', 'efc_reports__employees__last_name'],
+        numeric: false,
+        disablePadding: false,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'CREX-Participant(s)',
+        render: ({efcReports}) => efcReports?.length > 0 && efcReports[0] && efcReports[0]?.employees.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+            <ChipGroupWithPopover people={efcReports[0]?.employees} />
+      </Stack>
+    },
+    {
+        id: 'efcReports__declarationDate',
+        property: 'efc_reports__declaration_date',
+        exportField: 'efc_reports__declaration_date',
+        numeric: false,
+        disablePadding: false,
+        label: 'Date de déclaration aux autorités compétentes',
+        render: ({efcReports})=> efcReports?.length > 0 && getFormatDate(efcReports[0]?.declarationDate)
+    },
+    {
+        id: 'description',
+        property: 'description',
+        exportField: 'description',
+        numeric: false,
+        disablePadding: false,
+        label: 'Analyse',
+    },
+    {
+        id: 'observation',
+        property: 'observation',
+        exportField: 'observation',
+        numeric: false,
+        disablePadding: false,
+        label: 'Observation',
     },
     {
         id: 'status',
+        property: 'status',
+        exportField: 'status',
         numeric: false,
         disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
         label: 'Status',
+        render: (data)=> <TicketStatusLabelMenu ticket={data} />
     },
     {
         id: 'completionPercentage',
+        property: 'completion_percentage',
+        exportField: 'completion_percentage',
         numeric: false,
         disablePadding: false,
+        disableClickDetail: true,
+        isDefault: true,
         label: 'Progression',
+        render: ({completionPercentage})=> <CircularProgressWithLabel value={completionPercentage}/>
     },
     {
         id: 'action',
         numeric: true,
         disablePadding: false,
+        isDefault: true,
         label: 'Actions',
     },
 ];
@@ -151,9 +236,10 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    selectedColumns = []
   } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property, sortDisabled=false) => (event) => {
+    if(!sortDisabled) onRequestSort(event, property);
   };
 
   return (
@@ -170,7 +256,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </StyledTableCell>
-        {headCells.map((headCell) => (
+        {selectedColumns.map((headCell) => (
           <StyledTableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -178,9 +264,10 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+              hideSortIcon={headCell.sortDisabled}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.property, headCell?.sortDisabled)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -197,7 +284,10 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onFilterChange } = props;
+  const [selectedColumns, setSelectedColumns] = React.useState(
+    headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
+  );
 
   return (
     <Toolbar
@@ -231,10 +321,14 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Plan d’amélioration continue de la qualité et de la gestion des risques
+         Plan d’amélioration continue de la qualité et de la gestion des risques
         </Typography>
       )}
-
+      <TableExportButton 
+        entity={'Ticket'}
+        fileName={'Plan-action'}
+        fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
+        titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>
@@ -242,11 +336,12 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <TableFilterButton headCells={headCells} 
+          onFilterChange={(currentColumns)=>{
+            setSelectedColumns(currentColumns);
+            onFilterChange(headCells?.filter(c=> currentColumns?.includes(c.id)))
+          }
+        }/>
       )}
     </Toolbar>
   );
@@ -256,7 +351,8 @@ export default function TableListTickets({
   loading,
   rows,
   onDeleteTicket,
-  onUpdateTicketState,
+  onFilterChange,
+  paginator,
 }) {
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
@@ -264,7 +360,7 @@ export default function TableListTickets({
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -281,6 +377,7 @@ export default function TableListTickets({
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    onFilterChange({orderBy: `${isAsc ? '-' : ''}${property}`})
   };
 
   const handleSelectAllClick = (event) => {
@@ -326,18 +423,21 @@ export default function TableListTickets({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
+  const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
   const [anchorElRowList, setAnchorElRowList] = React.useState([]);
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+      <Paper sx={{ width: '100%', mb: 2 }} >
+        <EnhancedTableToolbar numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
+            border="0"
             size="medium"
           >
             <EnhancedTableHead
+              selectedColumns={selectedColumns}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -348,14 +448,14 @@ export default function TableListTickets({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="8">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="8">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
                       Aucun objectif trouvé.
                     </Alert>
@@ -422,81 +522,39 @@ export default function TableListTickets({
                       selected={isItemSelected}
                       sx={{ cursor: 'pointer' }}
                     >
-                      <StyledTableCell padding="checkbox">
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                          <Checkbox
-                            onClick={(event) => handleClick(event, row.id)}
-                            color="primary"
-                            checked={isItemSelected}
-                            inputProps={{
-                              'aria-labelledby': labelId,
-                            }}
-                          />
-                          {row?.actions && row?.actions?.length > 0 && <Tooltip title={`${openRow ? 'Cacher' : 'Afficher'} les actions`}><IconButton
-                            aria-label="expand row"
-                            size="small"
-                            onClick={handleOpenRow}
+                    <StyledTableCell padding="checkbox">
+                      <Stack direction="row" alignItems="center" spacing={1}>
+                        <Checkbox
+                          onClick={(event) => handleClick(event, row.id)}
+                          color="primary"
+                          checked={isItemSelected}
+                          inputProps={{
+                            'aria-labelledby': labelId,
+                          }}
+                        />
+                        {row?.actions && row?.actions?.length > 0 && <Tooltip title={`${openRow ? 'Cacher' : 'Afficher'} les actions`}><IconButton
+                          aria-label="expand row"
+                          size="small"
+                          onClick={handleOpenRow}
+                        >
+                          {openRow ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                        </IconButton></Tooltip>}
+                      </Stack>
+                    </StyledTableCell>
+                      {
+                        selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
+                          return <StyledTableCell
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                            padding={column?.disablePadding ? "none" : "normal"}
+                            key={index}
+                            onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/qualites/plan-action/tickets/details/${row?.id}`)}}
                           >
-                            {openRow ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-                          </IconButton></Tooltip>}
-                        </Stack>
-                      </StyledTableCell>
-                      <StyledTableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
-                        <Stack direction="row" flexWrap='wrap' spacing={1}>
-                          {row?.establishments?.map((establishment, index) => {
-                            return (
-                              <Chip
-                                key={index}
-                                avatar={
-                                  <Avatar
-                                    alt={establishment?.name}
-                                    src={
-                                      establishment?.logo
-                                        ? establishment?.logo
-                                        : '/default-placeholder.jpg'
-                                    }
-                                  />
-                                }
-                                label={establishment?.name}
-                                variant="outlined"
-                              />
-                            );
-                          })}
-                        </Stack>
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        <Stack direction="row" flexWrap='wrap' spacing={1}>
-                          {row?.undesirableEvent && <Chip
-                            label={`EI: ${row?.undesirableEvent?.title}`}
-                            variant="filled"
-                            clickable
-                            onClick={()=> navigate(`/online/qualites/evenements-indesirables/details/${row?.undesirableEvent?.id}`)}
-                          />}
-                        </Stack>
-                      </StyledTableCell>
-                      <StyledTableCell align="left"
-                        onClick={()=> navigate(`/online/qualites/plan-action/tickets/details/${row?.id}`)}>
-                        {row.title}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        <Stack direction="row" flexWrap='wrap' spacing={1}>
-                          <Chip
-                            label={getPriorityLabel(row?.priority)}
-                            variant="filled"
-                          />
-                        </Stack>
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        <TicketStatusLabelMenu ticket={row} />
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        <CircularProgressWithLabel value={row?.completionPercentage}/>
-                      </StyledTableCell>
+                          {column?.render ? column?.render(row) : row[column?.id]}
+                          </StyledTableCell>
+                        })
+                      }
                       <StyledTableCell align="right">
                         <IconButton
                           aria-describedby={id}
@@ -564,7 +622,7 @@ export default function TableListTickets({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={6} />
+                  <StyledTableCell colSpan={selectedColumns.length + 1} />
                 </StyledTableRow>
               )}
             </TableBody>
@@ -604,25 +662,7 @@ function CollapsibleRow({rows, open}) {
                     <StyledTableCell align="left">{`${getFormatDate(row?.dueDate)}`}</StyledTableCell>
                     <StyledTableCell align="left">
                       <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.employees?.map((employee, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={employee?.firstName}
-                                  src={
-                                    employee?.photo
-                                      ? employee?.photo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={employee?.firstName}
-                              variant="outlined"
-                            />
-                          );
-                        })}
+                        <ChipGroupWithPopover people={row?.employees} />
                       </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left">
@@ -638,4 +678,3 @@ function CollapsibleRow({rows, open}) {
     </StyledTableRow>
   );
 }
-

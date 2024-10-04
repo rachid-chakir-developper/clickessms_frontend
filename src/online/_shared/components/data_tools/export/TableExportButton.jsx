@@ -8,10 +8,12 @@ export default function TableExportButton(props) {
   const exportData = async () => {
   
     try {
+      const token = JSON.parse(localStorage.getItem('token')) || '';
       const response = await fetch(`${END_POINT}/export-data/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `JWT ${token}`,
         },
         body: JSON.stringify({
           entity: entity,

@@ -5,12 +5,14 @@ export const POST_COMMENT = gql`
   mutation CreateComment(
     $taskStepId: ID
     $ticketId: ID
+    $taskId: ID
     $commentData: CommentInput!
     $image: Upload
   ) {
     createComment(
       taskStepId: $taskStepId
       ticketId: $ticketId
+      taskId: $taskId
       commentData: $commentData
       image: $image
     ) {

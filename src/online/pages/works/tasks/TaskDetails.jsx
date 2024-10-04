@@ -36,6 +36,7 @@ import SignatureCard from '../../../_shared/components/feedBacks/SignatureCard';
 import { Edit, Star, StarBorder } from '@mui/icons-material';
 import TaskStatusLabelMenu from './TaskStatusLabelMenu';
 import EstablishmentItemCard from '../../companies/establishments/EstablishmentItemCard';
+import TaskTabs from './tasks-tabs/TaskTabs';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -87,6 +88,14 @@ export default function TaskDetails() {
               <Typography gutterBottom variant="subtitle1" component="div">
                 {taskData?.task?.description}
               </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} sx={{ marginY: 3 }}>
+            <Divider />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <Paper sx={{ padding: 2 }}>
+              <TaskTabs task={taskData?.task}/>
             </Paper>
           </Grid>
         </Grid>

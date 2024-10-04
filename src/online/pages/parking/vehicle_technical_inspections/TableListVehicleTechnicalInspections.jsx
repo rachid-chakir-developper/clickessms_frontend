@@ -18,10 +18,6 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
-  getFormatDate,
-  getFormatDateTime,
-} from '../../../../_shared/tools/functions';
-import {
   Article,
   Delete,
   Done,
@@ -29,10 +25,21 @@ import {
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Stack, TablePagination } from '@mui/material';
+import AppLabel from '../../../../_shared/components/app/label/AppLabel';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import { render } from 'react-dom';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
+import { getFormatDate, getFormatDateTime, getPriorityLabel, getTechnicalInspectionLabel } from '../../../../_shared/tools/functions';
+import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
+import VehicleChip from '../vehicles/VehicleChip';
+import PartnerChip from '../../partnerships/partners/PartnerChip';
+import { INSPECTION_FAILURE_TYPES } from '../../../../_shared/tools/constants';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -92,30 +99,97 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  {
-    id: 'reasons',
-    numeric: false,
-    disablePadding: false,
-    label: 'Vehicule',
-  },
-  {
-    id: 'inspectionDateTime',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date et heure du contrôle',
-  },
-  {
-    id: 'nextInspectionDate',
-    numeric: false,
-    disablePadding: false,
-    label: 'Prochaine date du contrôle',
-  },
-  {
-    id: 'action',
-    numeric: true,
-    disablePadding: false,
-    label: 'Actions',
-  },
+    {
+      id: 'vehicle',
+      property: 'vehicle',
+      exportField: ['vehicle__name', 'vehicle__registration_number'],
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Vehicule',
+      render: ({vehicle}) => <VehicleChip vehicle={vehicle} />
+    },
+    {
+        id: 'inspectionDateTime',
+        property: 'inspection_date_time',
+        exportField: 'inspection_date_time',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Date et heure du contrôle',
+        render: ({inspectionDateTime})=> getFormatDateTime(inspectionDateTime)
+    },
+    {
+        id: 'nextInspectionDate',
+        property: 'next_inspection_date',
+        exportField: 'next_inspection_date',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Prochain contrôle',
+        render: ({nextInspectionDate})=> getFormatDate(nextInspectionDate)
+    },
+    {
+        id: 'failures_minor__description',
+        property: 'failures__description',
+        exportField: 'failures_minor__description',
+        numeric: false,
+        disablePadding: false,
+        sortDisabled: true,
+        label: 'Défaillances mineurs',
+        render: ({failures})=> failures?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+              {failures?.filter(d=>d?.failureType == INSPECTION_FAILURE_TYPES.MINOR).map((d, i)=> <Chip variant="outlined" key={i} label={d?.description} />)}
+        </Stack>
+    },
+    {
+        id: 'failures_major__description',
+        property: 'failures__description',
+        exportField: 'failures_major__description',
+        numeric: false,
+        disablePadding: false,
+        sortDisabled: true,
+        label: 'Défaillances majeurs',
+        render: ({failures})=> failures?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+              {failures?.filter(d=>d?.failureType == INSPECTION_FAILURE_TYPES.MAJOR).map((d, i)=> <Chip variant="outlined" key={i} label={d?.description} />)}
+        </Stack>
+    },
+    {
+        id: 'failures_critical__description',
+        property: 'failures__description',
+        exportField: 'failures_critical__description',
+        numeric: false,
+        disablePadding: false,
+        sortDisabled: true,
+        label: 'Défaillances critiques',
+        render: ({failures})=> failures?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+              {failures?.filter(d=>d?.failureType == INSPECTION_FAILURE_TYPES.CRITICAL).map((d, i)=> <Chip variant="outlined" key={i} label={d?.description} />)}
+        </Stack>
+    },
+    {
+        id: 'state',
+        property: 'state',
+        exportField: 'state',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'État',
+        render: ({state}) => getTechnicalInspectionLabel(state),
+    },
+    {
+        id: 'observation',
+        property: 'observation',
+        exportField: 'observation',
+        numeric: false,
+        disablePadding: false,
+        label: 'Observation',
+    },
+    {
+        id: 'action',
+        numeric: true,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Actions',
+    },
 ];
 
 function EnhancedTableHead(props) {
@@ -126,9 +200,10 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    selectedColumns = []
   } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property, sortDisabled=false) => (event) => {
+    if(!sortDisabled) onRequestSort(event, property);
   };
 
   return (
@@ -145,7 +220,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </StyledTableCell>
-        {headCells.map((headCell) => (
+        {selectedColumns.map((headCell) => (
           <StyledTableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -153,9 +228,10 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+              hideSortIcon={headCell.sortDisabled}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.property, headCell?.sortDisabled)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -172,7 +248,10 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onFilterChange } = props;
+  const [selectedColumns, setSelectedColumns] = React.useState(
+    headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
+  );
 
   return (
     <Toolbar
@@ -209,7 +288,11 @@ function EnhancedTableToolbar(props) {
           Les contrôles techniques
         </Typography>
       )}
-
+      <TableExportButton 
+        entity={'VehicleTechnicalInspection'}
+        fileName={'Controles-techniques'}
+        fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
+        titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>
@@ -217,11 +300,12 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <TableFilterButton headCells={headCells} 
+          onFilterChange={(currentColumns)=>{
+            setSelectedColumns(currentColumns);
+            onFilterChange(headCells?.filter(c=> currentColumns?.includes(c.id)))
+          }
+        }/>
       )}
     </Toolbar>
   );
@@ -230,14 +314,17 @@ function EnhancedTableToolbar(props) {
 export default function TableListVehicleTechnicalInspections({
   loading,
   rows,
-  onDeleteVehicleTechnicalInspection
+  onDeleteVehicleTechnicalInspection,
+  onFilterChange,
+  paginator,
 }) {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -254,6 +341,7 @@ export default function TableListVehicleTechnicalInspections({
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    onFilterChange({orderBy: `${isAsc ? '-' : ''}${property}`})
   };
 
   const handleSelectAllClick = (event) => {
@@ -299,17 +387,20 @@ export default function TableListVehicleTechnicalInspections({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
+  const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+      <Paper sx={{ width: '100%', mb: 2 }} >
+        <EnhancedTableToolbar numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
+            border="0"
             size="medium"
           >
             <EnhancedTableHead
+              selectedColumns={selectedColumns}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -320,16 +411,16 @@ export default function TableListVehicleTechnicalInspections({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                        Aucun contrôle technique trouvé.
+                    Aucun contrôle technique trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -379,26 +470,20 @@ export default function TableListVehicleTechnicalInspections({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell align="left"> 
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.vehicle?.name} ${row?.vehicle?.registrationNumber}`}
-                              src={
-                                row?.vehicle?.image
-                                  ? row?.vehicle?.image
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.vehicle?.name} ${row?.vehicle?.registrationNumber}`}
-                          variant="outlined"
-                        />
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDateTime(row?.inspectionDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.nextInspectionDate)}`}</StyledTableCell>
+                    {
+                      selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
+                        return <StyledTableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding={column?.disablePadding ? "none" : "normal"}
+                          key={index}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/parc-automobile/controles-techniques/details/${row?.id}`)}}
+                        >
+                        {column?.render ? column?.render(row) : row[column?.id]}
+                        </StyledTableCell>
+                      })
+                    }
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -464,7 +549,7 @@ export default function TableListVehicleTechnicalInspections({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={6} />
+                  <StyledTableCell colSpan={selectedColumns.length + 1} />
                 </StyledTableRow>
               )}
             </TableBody>

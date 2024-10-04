@@ -43,6 +43,7 @@ import {
 import { GET_DATAS_UNDESIRABLE_EVENT } from '../../../../_shared/graphql/queries/DataQueries';
 import SelectCheckmarks from '../../../../_shared/components/form-fields/SelectCheckmarks';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
+import MultiFileField from '../../../../_shared/components/form-fields/MultiFileField';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -90,10 +91,16 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
       notifiedPersons: [],
       otherNotifiedPersons: '',
       employee: null,
+      declarants: [],
+      files: [],
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let { image, ...undesirableEventCopy } = values;
+      let { image, files, ...undesirableEventCopy } = values;
+      files = files?.map((f)=>({id: f?.id, file: f.file || f.path,  caption: f?.caption}))
+      undesirableEventCopy.declarants = undesirableEventCopy.declarants.map(
+        (i) => i?.id,
+      );
       undesirableEventCopy.establishments =
         undesirableEventCopy.establishments.map((i) => i?.id);
       undesirableEventCopy.employees = undesirableEventCopy.employees.map((i) => i?.id);
@@ -115,12 +122,14 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
           id: undesirableEventCopy.id,
           undesirableEventData: undesirableEventCopy,
           image: image,
+          files
         });
       } else
         createUndesirableEvent({
           variables: {
             undesirableEventData: undesirableEventCopy,
             image: image,
+            files
           },
         });
     },
@@ -425,12 +434,28 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                         onInput={(e) => {
                           onGetEmployees(e.target.value)
                         }}
-                        label="Décalarant"
-                        placeholder="Décalarant"
+                        label="Décalarant principal"
+                        placeholder="Décalarant principal"
                         multiple={false}
                         value={formik.values.employee}
                         onChange={(e, newValue) =>
                           formik.setFieldValue('employee', newValue)
+                        }
+                      />
+                    </Item>
+                    <Item>
+                      <TheAutocomplete
+                        options={employeesData?.employees?.nodes}
+                        onInput={(e) => {
+                          onGetEmployees(e.target.value)
+                        }}
+
+                        label="Autres décalarants"
+                        placeholder="Ajouter un autre décalarant"
+                        limitTags={3}
+                        value={formik.values.declarants}
+                        onChange={(e, newValue) =>
+                          formik.setFieldValue('declarants', newValue)
                         }
                       />
                     </Item>
@@ -631,6 +656,19 @@ onInput={(e) => {
                             'circumstanceEventText',
                             e.target.value,
                           )
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={12}>
+                    <Item>
+                      <MultiFileField
+                        variant="outlined"
+                        label="Pièces jointes"
+                        fileValue={formik.values.files}
+                        onChange={(files) =>
+                          formik.setFieldValue('files', files)
                         }
                         disabled={loadingPost || loadingPut}
                       />

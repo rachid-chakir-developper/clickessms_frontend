@@ -180,6 +180,8 @@ export default function ListVehicleTechnicalInspections() {
           loading={loadingVehicleTechnicalInspections}
           rows={vehicleTechnicalInspectionsData?.vehicleTechnicalInspections?.nodes || []}
           onDeleteVehicleTechnicalInspection={onDeleteVehicleTechnicalInspection}
+          onFilterChange={(newFilter) => handleFilterChange({ ...vehicleTechnicalInspectionFilter, ...newFilter })}
+          paginator={paginator}
         />
       </Grid>
       <Grid item xs={12}>
