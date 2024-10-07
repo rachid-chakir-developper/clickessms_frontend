@@ -17,7 +17,6 @@ import Tooltip from '@mui/material/Tooltip';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
-import { getFormatDate } from '../../../../../_shared/tools/functions';
 import {
   Article,
   Delete,
@@ -25,12 +24,14 @@ import {
   Edit,
   Folder,
   MoreVert,
-  Print,
+  PauseRounded,
+  PlayArrowRounded,
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
-import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
+import AppLabel from '../../../../../../_shared/components/app/label/AppLabel';
+import { Link, useNavigate } from 'react-router-dom';
+import { useFeedBacks } from '../../../../../../_shared/context/feedbacks/FeedBacksProvider';
+import ProgressService from '../../../../../../_shared/services/feedbacks/ProgressService';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -90,54 +91,30 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  {
-    id: 'employee',
-    numeric: false,
-    disablePadding: false,
-    label: 'Employé',
-  },
-  {
-    id: 'position',
-    numeric: false,
-    disablePadding: true,
-    label: 'Poste',
-  },
-  {
-    id: 'contractType',
-    numeric: false,
-    disablePadding: false,
-    label: 'Type de contrat',
-  },
-  {
-      id: 'establishments',
+    {
+      id: 'image',
+      numeric: false,
+      disablePadding: true,
+      label: 'Image',
+    },
+    {
+      id: 'title',
       numeric: false,
       disablePadding: false,
-      label: 'Structures',
-  },
-  {
-    id: 'startingDate',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date de début',
-  },
-  {
-    id: 'endingDate',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date de fin',
-  },
-  {
-    id: 'restLeaveDays',
-    numeric: false,
-    disablePadding: false,
-    label: 'Jours du congé restants',
-  },
-  {
-    id: 'action',
-    numeric: true,
-    disablePadding: false,
-    label: 'Actions',
-  },
+      label: 'Titre',
+    },
+    {
+        id: 'content',
+        numeric: false,
+        disablePadding: false,
+        label: 'Contenu',
+    },
+    {
+        id: 'action',
+        numeric: true,
+        disablePadding: false,
+        label: 'Actions',
+    },
 ];
 
 function EnhancedTableHead(props) {
@@ -228,7 +205,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les contrats
+          Les models
         </Typography>
       )}
 
@@ -249,12 +226,13 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListEmployeeContracts({
+export default function TableListContractTemplates({
   loading,
   rows,
-  onDeleteEmployeeContract,
-  onUpdateEmployeeContractState,
+  onDeleteContractTemplate,
+  onUpdateContractTemplateState,
 }) {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -262,11 +240,7 @@ export default function TableListEmployeeContracts({
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  React.useEffect(() => {
-    console.log(loading, rows);
-  }, [loading, rows]);
-
-  const { setDialogListLibrary, setPrintingModal } = useFeedBacks();
+  const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
     setDialogListLibrary({
       isOpen: true,
@@ -347,15 +321,17 @@ export default function TableListEmployeeContracts({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="9">
+                  <StyledTableCell colSpan="8">
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="9">
-                    <Alert severity="warning">Aucun contrat trouvé.</Alert>
+                  <StyledTableCell colSpan="8">
+                    <Alert severity="warning">
+                      Aucun model trouvée.
+                    </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
               )}
@@ -383,17 +359,7 @@ export default function TableListEmployeeContracts({
 
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
-                const {leaveDayInfos} = row
-                const onOpenModalToPrint = (EmployeeContract) => {
-                  setPrintingModal({
-                      isOpen: true,
-                      type: 'EmployeeContract',
-                      data: EmployeeContract,
-                      onClose: () => { 
-                        setPrintingModal({isOpen: false})
-                        }
-                    })
-                }
+
                 return (
                   <StyledTableRow
                     hover
@@ -414,73 +380,30 @@ export default function TableListEmployeeContracts({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell align="left"> 
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
-                              src={
-                                row?.employee?.photo
-                                  ? row?.employee?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
-                          variant="outlined"
-                        />
-                        </Stack>
-                    </StyledTableCell>
                     <StyledTableCell
                       component="th"
                       id={labelId}
                       scope="row"
                       padding="none"
+                      onClick={()=> navigate(`/online/ressources-humaines/employes/contrats/templates/details/${row?.id}`)}
                     >
-                      {row.position}
+                      <Avatar
+                        alt={row?.title}
+                        variant="rounded"
+                        src={
+                          row?.image
+                            ? row?.image
+                            : '/default-placeholder.jpg'
+                        }
+                        sx={{ width: 50, height: 50, bgcolor: '#e1e1e1' }}
+                      />
                     </StyledTableCell>
-                    <StyledTableCell align="left"> 
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <Chip
-                          label={row?.contractType}
-                          variant="outlined"
-                        />
-                        </Stack>
+                    <StyledTableCell align="left"
+                      onClick={()=> navigate(`/online/ressources-humaines/employes/contrats/templates/details/${row?.id}`)}>
+                      {row?.title}
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.establishments?.map((establishment, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={establishment?.establishment?.name}
-                                  src={
-                                    establishment?.establishment?.logo
-                                      ? establishment?.establishment?.logo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={establishment?.establishment?.name}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.startingDate)}`}</StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.endingDate)}`}</StyledTableCell>
-                    <StyledTableCell align="left">
-                          CP: {leaveDayInfos?.restPaidLeaveDays} jour{leaveDayInfos?.restPaidLeaveDays > 1 ? 's' : ''}
-                      <br/>CP Acquis Par mois: {leaveDayInfos?.acquiredPaidLeaveDaysByMonth}
-                      <br/>CP Acquis: {leaveDayInfos?.acquiredPaidLeaveDays}
-                      <br/>CP en cours d'acquisition: {leaveDayInfos?.beingAcquiredPaidLeaveDays}
-                      <br/>CP reportés: {leaveDayInfos?.totalReportedPaidLeaveDays}
-                      <br/>RTT: {leaveDayInfos?.restRwtLeaveDays} jour{leaveDayInfos?.restRwtLeaveDays > 1 ? 's' : ''}
-                      <br/>CT: {leaveDayInfos?.restTemporaryLeaveDays} jour{leaveDayInfos?.restTemporaryLeaveDays > 1 ? 's' : ''}
+                      {row?.content?.slice(0, 100)}
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
@@ -500,7 +423,7 @@ export default function TableListEmployeeContracts({
                         }}
                       >
                         <Link
-                          to={`/online/ressources-humaines/employes/contrats/details/${row?.id}`}
+                          to={`/online/ressources-humaines/employes/contrats/templates/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -508,26 +431,8 @@ export default function TableListEmployeeContracts({
                             Détails
                           </MenuItem>
                         </Link>
-                        <MenuItem
-                          onClick={() => {
-                            onOpenDialogListLibrary(row?.folder);
-                            handleCloseMenu();
-                          }}
-                        >
-                          <Folder sx={{ mr: 2 }} />
-                          Bibliothèque
-                        </MenuItem>
-                        <MenuItem
-                          onClick={() => {
-                            onOpenModalToPrint(row)
-                            handleCloseMenu();
-                          }}
-                        >
-                          <Print sx={{ mr: 2 }} />
-                          Imprimer
-                        </MenuItem>
                         <Link
-                          to={`/online/ressources-humaines/employes/contrats/modifier/${row?.id}`}
+                          to={`/online/ressources-humaines/employes/contrats/templates/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -537,7 +442,7 @@ export default function TableListEmployeeContracts({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteEmployeeContract(row?.id);
+                            onDeleteContractTemplate(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}
@@ -545,6 +450,24 @@ export default function TableListEmployeeContracts({
                           <Delete sx={{ mr: 2 }} />
                           Supprimer
                         </MenuItem>
+                        {onUpdateContractTemplateState && (
+                          <Tooltip title={!row?.isActive ? 'Activer' : 'Désactiver'}>
+                            <MenuItem
+                              aria-label={!row?.isActive ? 'play' : 'pause'}
+                              onClick={() => {
+                                onUpdateContractTemplateState(row?.id);
+                                handleCloseMenu();
+                              }}
+                            >
+                              {!row?.isActive ? (
+                                <PlayArrowRounded />
+                              ) : (
+                                <PauseRounded />
+                              )}
+                              {!row?.isActive ? 'Activer' : 'Désactiver'}
+                            </MenuItem>
+                          </Tooltip>
+                        )}
                       </Popover>
                     </StyledTableCell>
                   </StyledTableRow>

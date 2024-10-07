@@ -13,8 +13,6 @@ import DocumentToPrint from './DocumentToPrint';
 
 export default function PrintingModal({ printingModal, setPrintingModal }) {
   let { isOpen, onClose, type, data } = printingModal;
-  const theme = useTheme();
-
   const componentRef = React.useRef();
   const pageStyle = `
     @page{ 

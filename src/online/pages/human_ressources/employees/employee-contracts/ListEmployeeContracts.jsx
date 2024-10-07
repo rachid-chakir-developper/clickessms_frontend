@@ -168,6 +168,34 @@ export default function ListEmployeeContracts() {
       <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
+            to="/online/ressources-humaines/employes/contrats/templates"
+            className="no_style"
+          >
+            <Button
+              variant="outlined"
+              disableElevation
+              color="inherit"
+              sx={{ mr: 2 }}
+              endIcon={<List />}
+            >
+              Liste des models
+            </Button>
+          </Link>
+          <Link
+            to="/online/ressources-humaines/employes/contrats/templates/ajouter"
+            className="no_style"
+          >
+            <Button
+              variant="outlined"
+              disableElevation
+              color="inherit"
+              sx={{ mr: 2 }}
+              endIcon={<Add />}
+            >
+              Ajouter un model
+            </Button>
+          </Link>
+          <Link
             to="/online/ressources-humaines/employes/liste"
             className="no_style"
           >

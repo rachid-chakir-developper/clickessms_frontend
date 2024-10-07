@@ -54,6 +54,8 @@ export default function AddEmployeeForm({ idEmployee, title }) {
       lastName: '',
       preferredName: '',
       birthDate: null,
+      birthPlace: '',
+      nationality: '',
       hiringDate: null,
       probationEndDate: null,
       workEndDate: null,
@@ -302,6 +304,17 @@ export default function AddEmployeeForm({ idEmployee, title }) {
             </Grid>
             <Grid item xs={2} sm={4} md={4}>
               <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Numéro de sécurité sociale (N°SS)"
+                  value={formik.values.socialSecurityNumber}
+                  onChange={(e) =>
+                    formik.setFieldValue('socialSecurityNumber', e.target.value)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+              <Item>
                 <TheDesktopDatePicker
                   label="Date de naissance"
                   value={formik.values.birthDate}
@@ -312,10 +325,21 @@ export default function AddEmployeeForm({ idEmployee, title }) {
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Numéro de sécurité sociale (N°SS)"
-                  value={formik.values.socialSecurityNumber}
+                  label="Lieu de naissance"
+                  value={formik.values.birthPlace}
                   onChange={(e) =>
-                    formik.setFieldValue('socialSecurityNumber', e.target.value)
+                    formik.setFieldValue('birthPlace', e.target.value)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Nationalité"
+                  value={formik.values.nationality}
+                  onChange={(e) =>
+                    formik.setFieldValue('nationality', e.target.value)
                   }
                   disabled={loadingPost || loadingPut}
                 />

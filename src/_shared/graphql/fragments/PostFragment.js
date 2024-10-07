@@ -2,15 +2,6 @@
 
 import { gql } from '@apollo/client';
 
-export const POST_PHONE_INFOS = gql`
-  fragment PostPhoneInfosFragment on PostType {
-    id
-    image
-    title
-    isActive
-  }
-`;
-
 export const POST_MINI_INFOS = gql`
   fragment PostMiniInfosFragment on PostType {
     id

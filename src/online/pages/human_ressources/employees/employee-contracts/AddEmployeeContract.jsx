@@ -9,7 +9,7 @@ export default function AddEmployeeContract() {
       idEmployeeContract={idEmployeeContract}
       title={
         idEmployeeContract && idEmployeeContract > 0
-          ? `Modifier l'contrat d'employé`
+          ? `Modifier le contrat d'employé`
           : `Ajouter un contrat d'employé`
       }
     />

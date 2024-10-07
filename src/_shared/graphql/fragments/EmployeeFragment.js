@@ -57,6 +57,8 @@ export const EMPLOYEE_BASIC_INFOS = gql`
 export const EMPLOYEE_DETAILS = gql`
   fragment EmployeeDetailsFragment on EmployeeType {
     ...EmployeeBasicInfosFragment
+    birthPlace
+    nationality
     hiringDate
     probationEndDate
     workEndDate
@@ -85,6 +87,8 @@ export const EMPLOYEE_DETAILS = gql`
 export const EMPLOYEE_RECAP_DETAILS = gql`
   fragment EmployeeRecapDetailsFragment on EmployeeType {
     ...EmployeeBasicInfosFragment
+    birthPlace
+    nationality
     hiringDate
     probationEndDate
     workEndDate
