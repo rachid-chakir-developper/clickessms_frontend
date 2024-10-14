@@ -329,7 +329,7 @@ export default function AddContractTemplateForm({ idContractTemplate, title }) {
                     <AccordionDetails>
                       {keys.map(field => (
                         <Box key={field.key} sx={{textAlign: 'left', paddingY: 1}}>
-                          <strong>{field.label}:</strong><br /> {`{{ `}{model}__{field.key}{` }}`}
+                          <strong>{field.label}:</strong><br /> {`{{`}{model}__{field.key}{`}}`}
                         </Box>
                       ))}
                     </AccordionDetails>

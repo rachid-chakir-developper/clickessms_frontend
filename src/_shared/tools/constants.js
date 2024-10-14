@@ -402,3 +402,19 @@ export const CSE_ROLE_CHOICES = {
       { value: "PRIMARY_MEMBER", label: "Titulaire" },
   ],
 };
+
+export const FIELD_TYPE_CHOICES = {
+  TEXT: "TEXT",
+  NUMBER: "NUMBER",
+  DATE: "DATE",
+  BOOLEAN: "BOOLEAN",
+  SELECT: "SELECT",
+  ALL: [
+    { value: "TEXT", label: "Text" },
+    { value: "NUMBER", label: "Number" },
+    { value: "DATE", label: "Date" },
+    { value: "BOOLEAN", label: "Boolean" },
+    { value: "SELECT", label: "Select" },
+    // Add more field types if necessary
+  ],
+};

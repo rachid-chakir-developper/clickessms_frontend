@@ -18,7 +18,6 @@ import { GET_CONTRACT_TEMPLATES } from '../../../../../../_shared/graphql/querie
 import ProgressService from '../../../../../../_shared/services/feedbacks/ProgressService';
 import ContractTemplateFilter from './ContractTemplateFilter';
 import PaginationControlled from '../../../../../../_shared/components/helpers/PaginationControlled';
-import TableListContractTemplates from './TableListContractTemplates';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',

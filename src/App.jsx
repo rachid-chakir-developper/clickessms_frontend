@@ -41,8 +41,8 @@ function App() {
     <Box sx={{ flexGrow: 1, p: 3, width: '100%', minHeight: '100vh'}}>
       <ThemeProvider theme={theme}>
         <ApolloProvider>
-          <FeedBacksProvider>
-            <SessionProvider>
+          <SessionProvider>
+            <FeedBacksProvider>
               <LocalizationProvider dateAdapter={AdapterDayjs} locale="fr">
                 <BrowserRouter>
                   <Routes>
@@ -73,8 +73,8 @@ function App() {
                   </Routes>
                 </BrowserRouter>
               </LocalizationProvider>
-            </SessionProvider>
-          </FeedBacksProvider>
+            </FeedBacksProvider>
+          </SessionProvider>
         </ApolloProvider>
       </ThemeProvider>
     </Box>

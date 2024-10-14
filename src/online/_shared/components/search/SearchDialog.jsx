@@ -29,7 +29,7 @@ const SearchDialog = ({ open, onClose }) => {
   });
 
   React.useEffect(() => {
-    getSearchResults();
+    if(searchFilter) getSearchResults();
   }, [searchFilter, paginator]);
 
   const handleClose = () => {

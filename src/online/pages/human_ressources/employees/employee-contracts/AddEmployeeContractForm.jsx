@@ -24,6 +24,7 @@ import { GET_EMPLOYEES } from '../../../../../_shared/graphql/queries/EmployeeQu
 import { GET_ESTABLISHMENTS } from '../../../../../_shared/graphql/queries/EstablishmentQueries';
 import { CONTRACT_TYPES } from '../../../../../_shared/tools/constants';
 import TheDesktopDatePicker from '../../../../../_shared/components/form-fields/TheDesktopDatePicker';
+import CustomFieldValue from '../../../../../_shared/components/form-fields/costum-fields/CustomFieldValue';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -385,36 +386,13 @@ onInput={(e) => {
               </Item>
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
-              <Divider variant="middle" />
-            </Grid>
-            <Grid item xs={12} sm={6} md={6}>
               <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Description"
-                  multiline
-                  rows={4}
-                  value={formik.values.description}
-                  onChange={(e) =>
-                    formik.setFieldValue('description', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={6}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Observation"
-                  multiline
-                  rows={4}
-                  value={formik.values.observation}
-                  onChange={(e) =>
-                    formik.setFieldValue('observation', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
+                <CustomFieldValue 
+                  formModel="EmployeeContract"
+                  initialValues={[]}
+                  onChange={(newValues)=>{
+                    console.log(newValues)
+                  }}/>
               </Item>
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
