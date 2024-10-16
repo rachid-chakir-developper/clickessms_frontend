@@ -24,6 +24,7 @@ import {
 } from '@mui/material';
 import { Delete, Edit, Group } from '@mui/icons-material';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import { getFieldTypeLabel } from '../../../../_shared/tools/functions';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -43,7 +44,7 @@ export default function DialogListCustomFields({ open, onClose, customField }) {
     useLazyQuery(GET_CUSTOM_FIELDS);
   React.useEffect(() => {
     if (open) {
-      getCustomFields({ variables: { formModel: customField.formModel } });
+      getCustomFields({ variables: { formModels: [customField.formModel] } });
     }
   }, [open]);
   const [deleteCustomField, { loading: loadingDelete }] = useMutation(DELETE_CUSTOM_FIELD, {
@@ -182,7 +183,7 @@ export default function DialogListCustomFields({ open, onClose, customField }) {
                   </ListItemAvatar>
                   <ListItemText 
                     primary={customField?.label}
-                    secondary={`${customField?.key} / ${customField?.fieldType}`}
+                    secondary={`${customField?.key} / de type "${getFieldTypeLabel(customField?.fieldType)}"`}
                   />
                 </ListItem>
               );

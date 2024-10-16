@@ -56,7 +56,8 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
       isActive: true,
       employee: null,
       contractType: 'CDI',
-      establishments :[]
+      establishments :[],
+      customFieldValues: []
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -389,9 +390,9 @@ onInput={(e) => {
               <Item>
                 <CustomFieldValue 
                   formModel="EmployeeContract"
-                  initialValues={[]}
+                  initialValues={formik.values.customFieldValues}
                   onChange={(newValues)=>{
-                    console.log(newValues)
+                    formik.setFieldValue(`customFieldValues`, newValues)
                   }}/>
               </Item>
             </Grid>

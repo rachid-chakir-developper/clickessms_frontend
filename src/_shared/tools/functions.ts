@@ -23,6 +23,7 @@ import {
   CSE_ROLE_CHOICES,
   UNDESIRABLE_EVENT_TYPES,
   UNDESIRABLE_EVENT_SEVERITY,
+  FIELD_TYPE_CHOICES,
 } from './constants';
 
 export const getStatusColor = (status) => {
@@ -168,6 +169,11 @@ export const getUndesirableEventTypeMiniLabel = (eventType) => {
 export const getUndesirableEventSeverityLabel = (severity) => {
   return UNDESIRABLE_EVENT_SEVERITY.ALL.find((level) => level.value === severity)?.label;
 };
+
+export const getFieldTypeLabel = (fieldType) => {
+  return FIELD_TYPE_CHOICES.ALL.find((t) => t.value === fieldType)?.label;
+};
+
 
 
 const intlNumFmt = new Intl.NumberFormat('fr-FR', {

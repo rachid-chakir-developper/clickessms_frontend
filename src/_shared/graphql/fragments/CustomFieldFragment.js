@@ -10,18 +10,25 @@ export const CUSTOM_FIELD_OPTION_DETAILS = gql`
     }
 `;
 
-export const CUSTOM_FIELD_BASIC_INFOS = gql`
-    fragment CustomFieldBasicInfosFragment on CustomFieldType {
+export const CUSTOM_FIELD_MINI_INFOS = gql`
+    fragment CustomFieldMiniInfosFragment on CustomFieldType {
         id
         label
         key
         fieldType
         formModel
+    }
+`;
+
+export const CUSTOM_FIELD_BASIC_INFOS = gql`
+    fragment CustomFieldBasicInfosFragment on CustomFieldType {
+        ...CustomFieldMiniInfosFragment
         isActive
         options{
         ...CustomFieldOptionFragment
         }
     }
+    ${CUSTOM_FIELD_MINI_INFOS}
     ${CUSTOM_FIELD_OPTION_DETAILS}
 `;
 
@@ -32,3 +39,15 @@ export const CUSTOM_FIELD_DETAILS = gql`
     }
     ${CUSTOM_FIELD_BASIC_INFOS}
 `;
+
+export const CUSTOM_FIELD_VALUE_DETAILS = gql`
+    fragment CustomFieldValueDetailsFragment on CustomFieldValueType {
+        id
+        value
+        customField{
+            ...CustomFieldMiniInfosFragment
+        }
+    }
+    ${CUSTOM_FIELD_MINI_INFOS}
+`;
+

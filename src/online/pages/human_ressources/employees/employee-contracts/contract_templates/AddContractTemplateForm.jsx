@@ -22,6 +22,7 @@ import ProgressService from '../../../../../../_shared/services/feedbacks/Progre
 import { CONTRACT_TYPES } from '../../../../../../_shared/tools/constants';
 import TextEditorField from '../../../../../../_shared/components/form-fields/TextEditorField';
 import { ExpandMore } from '@mui/icons-material';
+import { GET_CUSTOM_FIELDS } from '../../../../../../_shared/graphql/queries/CustomFieldQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -34,6 +35,7 @@ const Item = styled(Stack)(({ theme }) => ({
 const FIELDS = {
   Company: {
     label: 'Association',
+    formModel: 'Company',
     keys: [
       { key: "name", label: "Nom de l'association" },
       { key: "logo", label: "Logo de l'association" },
@@ -50,6 +52,7 @@ const FIELDS = {
   },
   Employee: {
     label: 'Employé',
+    formModel: 'Employee',
     keys: [
       { key: "first_name", label: "Prénom" },
       { key: "last_name", label: "Nom de famille" },
@@ -66,6 +69,7 @@ const FIELDS = {
   },
   EmployeeContract: {
     label: 'Contrat',
+    formModel: 'EmployeeContract',
     keys: [
       { key: "contract_type", label: "Type de contrat" },
       { key: "starting_date", label: "Date de début" },
@@ -80,6 +84,7 @@ const FIELDS = {
   },
   Establishment: {
     label: 'Structure',
+    formModel: 'Establishment',
     keys: [
       { key: "name", label: "Nom de l'établissement" },
       { key: "siret", label: "Numéro SIRET" },
@@ -238,6 +243,13 @@ export default function AddContractTemplateForm({ idContractTemplate, title }) {
     setExpanded(isExpanded ? panel : false);
   };
 
+  const {
+    loading: loadingCustomFields,
+    data: customFieldsData,
+    error: customFieldsError,
+    fetchMore: fetchMoreCustomFields,
+  } = useQuery(GET_CUSTOM_FIELDS, { variables: { formModels: ['COMPANY', 'ESTABLISHMENT', 'EMPLOYEE', 'EMPLOYEE_CONTRACT'] } });
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
@@ -317,7 +329,7 @@ export default function AddContractTemplateForm({ idContractTemplate, title }) {
                 <Typography component="div" variant="h6">
                   Les clés variables
                 </Typography>
-                {Object.entries(FIELDS).map(([model, { label, keys }]) => (
+                {Object.entries(FIELDS).map(([model, { formModel, label, keys }]) => (
                   <Accordion key={model} expanded={expanded === model} onChange={handleChange(model)}>
                     <AccordionSummary
                       expandIcon={<ExpandMore />}
@@ -328,6 +340,11 @@ export default function AddContractTemplateForm({ idContractTemplate, title }) {
                     </AccordionSummary>
                     <AccordionDetails>
                       {keys.map(field => (
+                        <Box key={field.key} sx={{textAlign: 'left', paddingY: 1}}>
+                          <strong>{field.label}:</strong><br /> {`{{`}{model}__{field.key}{`}}`}
+                        </Box>
+                      ))}
+                      {customFieldsData?.customFields?.nodes.filter(f => f.formModel === formModel)?.map((field, index) => (
                         <Box key={field.key} sx={{textAlign: 'left', paddingY: 1}}>
                           <strong>{field.label}:</strong><br /> {`{{`}{model}__{field.key}{`}}`}
                         </Box>

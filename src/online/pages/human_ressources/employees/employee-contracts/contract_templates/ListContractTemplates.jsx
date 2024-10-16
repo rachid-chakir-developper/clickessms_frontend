@@ -2,7 +2,7 @@ import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { Alert, Button, Stack } from '@mui/material';
+import { Alert, Button, List, Stack } from '@mui/material';
 import ContractTemplateItemCard from './ContractTemplateItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Add } from '@mui/icons-material';
@@ -166,6 +166,15 @@ export default function ListContractTemplates() {
     <Grid container spacing={2}>
       {canManageSceModules && <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
+          
+          <Link
+              to="/online/ressources-humaines/employes/contrats/liste"
+              className="no_style"
+            >
+            <Button variant="outlined" sx={{ mr: 2 }} endIcon={<List />}>
+              Liste des contrats
+            </Button>
+          </Link>
           <Link to="/online/ressources-humaines/employes/contrats/templates/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
               Ajouter un model

@@ -44,7 +44,7 @@ const modulesToManage = [
   {
     title: 'Administratif',
     customFields: [
-        { name: "Les contrats", description: '', formModel: 'EMPLOYEE_CONTRACT' },
+        { name: "Les contrats", description: '', formModel: 'EmployeeContract' },
       ],
   },
   {

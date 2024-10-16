@@ -37,7 +37,6 @@ export default function CustomFieldForm({ formModel, values =[] }) {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      alert()
       if (values.id && values.id != '') {
         onUpdateCustomField({
           id: customFieldCopy.id,

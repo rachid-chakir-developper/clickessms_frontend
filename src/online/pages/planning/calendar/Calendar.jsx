@@ -36,8 +36,8 @@ export default function Calendar() {
         select={handleSelect} // Action lors de la sélection d'une plage de dates
         eventResizableFromStart={true} // Permet le redimensionnement à gauche
         events={[ // Liste d'événements
-          { title: 'Événement 1', date: '2024-10-01' },
-          { title: 'Événement 2', date: '2024-10-02' },
+          { title: 'Événement 1', date: '2024-10-15' },
+          { title: 'Événement 2', date: '2024-10-20' },
         ]}
         eventColor="transparent" // Couleur de fond pour tous les événements
         eventTextColor="transparent" // Couleur du texte pour tous les événements

@@ -1,6 +1,7 @@
 // EmployeeContractFragment.js
 
 import { gql } from '@apollo/client';
+import { CUSTOM_FIELD_VALUE_DETAILS } from './CustomFieldFragment';
 
 export const EMPLOYEE_CONTRACT_ESTABLISHMENT_DETAILS = gql`
   fragment EmployeeContractEstablishmentTypeFragment on EmployeeContractEstablishmentType {
@@ -57,8 +58,12 @@ export const EMPLOYEE_CONTRACT_BASIC_INFOS = gql`
       lastName
       photo
     }
+    customFieldValues{
+      ...CustomFieldValueDetailsFragment
+    }
   }
   ${EMPLOYEE_CONTRACT_MINI_INFOS}
+  ${CUSTOM_FIELD_VALUE_DETAILS}
 `;
 
 export const EMPLOYEE_CONTRACT_DETAILS = gql`

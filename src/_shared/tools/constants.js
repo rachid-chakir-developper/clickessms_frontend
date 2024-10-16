@@ -383,23 +383,23 @@ export const FEEDBACK_MODULES = {
 };
 
 export const CSE_ROLE_CHOICES = {
-    PRESIDENT: "PRESIDENT",
-    TREASURER: "TREASURER",
-    ASSISTANT_TREASURER: "ASSISTANT_TREASURER",
-    SECRETARY: "SECRETARY",
-    ASSISTANT_SECRETARY: "ASSISTANT_SECRETARY",
-    MEMBER: "MEMBER",
-    SUBSTITUTE: "SUBSTITUTE",
-    PRIMARY_MEMBER: "PRIMARY_MEMBER",
-    ALL: [
-      { value: "PRESIDENT", label: "Président / Présidente" },
-      { value: "TREASURER", label: "Trésorier / Trésorière" },
-      { value: "ASSISTANT_TREASURER", label: "Trésorier Adjoint / Trésorière Adjointe" },
-      { value: "SECRETARY", label: "Secrétaire" },
-      { value: "ASSISTANT_SECRETARY", label: "Secrétaire Adjoint / Secrétaire Adjointe" },
-      { value: "MEMBER", label: "Membre" },
-      { value: "SUBSTITUTE", label: "Suppléant / Suppléante" },
-      { value: "PRIMARY_MEMBER", label: "Titulaire" },
+  PRESIDENT: "PRESIDENT",
+  TREASURER: "TREASURER",
+  ASSISTANT_TREASURER: "ASSISTANT_TREASURER",
+  SECRETARY: "SECRETARY",
+  ASSISTANT_SECRETARY: "ASSISTANT_SECRETARY",
+  MEMBER: "MEMBER",
+  SUBSTITUTE: "SUBSTITUTE",
+  PRIMARY_MEMBER: "PRIMARY_MEMBER",
+  ALL: [
+    { value: "PRESIDENT", label: "Président / Présidente" },
+    { value: "TREASURER", label: "Trésorier / Trésorière" },
+    { value: "ASSISTANT_TREASURER", label: "Trésorier Adjoint / Trésorière Adjointe" },
+    { value: "SECRETARY", label: "Secrétaire" },
+    { value: "ASSISTANT_SECRETARY", label: "Secrétaire Adjoint / Secrétaire Adjointe" },
+    { value: "MEMBER", label: "Membre" },
+    { value: "SUBSTITUTE", label: "Suppléant / Suppléante" },
+    { value: "PRIMARY_MEMBER", label: "Titulaire" },
   ],
 };
 
