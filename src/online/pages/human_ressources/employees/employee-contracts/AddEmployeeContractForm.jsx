@@ -389,11 +389,13 @@ onInput={(e) => {
             <Grid item xs={12} sm={12} md={12}>
               <Item>
                 <CustomFieldValue 
-                  formModel="EmployeeContract"
-                  initialValues={formik.values.customFieldValues}
-                  onChange={(newValues)=>{
-                    formik.setFieldValue(`customFieldValues`, newValues)
-                  }}/>
+                    formModel="EmployeeContract"
+                    initialValues={formik.values.customFieldValues}
+                    onChange={(newValues)=>{
+                      formik.setFieldValue(`customFieldValues`, newValues)
+                    }}
+                    disabled={loadingPost || loadingPut}
+                  />
               </Item>
             </Grid>
             <Grid item xs={12} sm={12} md={12}>

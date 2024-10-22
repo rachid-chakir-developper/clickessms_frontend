@@ -407,14 +407,18 @@ export const FIELD_TYPE_CHOICES = {
   TEXT: "TEXT",
   NUMBER: "NUMBER",
   DATE: "DATE",
+  DATETIME: "DATETIME",
   BOOLEAN: "BOOLEAN",
   SELECT: "SELECT",
+  SELECT_MULTIPLE: "SELECT_MULTIPLE",
   ALL: [
     { value: "TEXT", label: "Text" },
     { value: "NUMBER", label: "Number" },
     { value: "DATE", label: "Date" },
+    { value: "DATETIME", label: "Date et heure" },
     { value: "BOOLEAN", label: "Boolean" },
-    { value: "SELECT", label: "Select" },
+    { value: "SELECT", label: "Liste" },
+    { value: "SELECT_MULTIPLE", label: "Liste à choix multiple" },
     // Add more field types if necessary
   ],
 };

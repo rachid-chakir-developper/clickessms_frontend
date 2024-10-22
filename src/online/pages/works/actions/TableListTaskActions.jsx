@@ -18,22 +18,28 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
-  getFormatDate,
-  formatCurrencyAmount,
-} from '../../../../_shared/tools/functions';
-import {
+  Archive,
   Article,
   Delete,
   Done,
   Edit,
   Folder,
   MoreVert,
+  Unarchive,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
+import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Stack, TablePagination } from '@mui/material';
+import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import { render } from 'react-dom';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
+import { getFormatDate, getFormatDateTime, getPriorityLabel } from '../../../../_shared/tools/functions';
 import TaskActionStatusLabelMenu from './TaskActionStatusLabelMenu';
+import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -93,42 +99,76 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  {
+    {
       id: 'source',
+      property: 'ticket__undesirable_event__title',
+      exportField: 'ticket__undesirable_event__title',
       numeric: false,
-      disablePadding: false,
+      disablePadding: true,
+      isDefault: true,
+      disableClickDetail: true,
+      sortDisabled: true,
       label: 'Source',
-  },
-  {
-    id: 'description',
-    numeric: false,
-    disablePadding: false,
-    label: 'Description',
-  },,
-  {
-    id: 'dueDate',
-    numeric: false,
-    disablePadding: false,
-    label: 'Échéance',
-  },
-  {
-    id: 'employees',
-    numeric: false,
-    disablePadding: true,
-    label: 'Responsables',
-  },
-  {
-    id: 'status',
-    numeric: false,
-    disablePadding: false,
-    label: 'Statut',
-  },
-  {
-    id: 'action',
-    numeric: true,
-    disablePadding: false,
-    label: 'Actions',
-  },
+      render: ({ticket}, navigate) => <Stack direction="row" flexWrap='wrap' spacing={1}>
+                        {ticket?.undesirableEvent && <Chip
+                          label={`EI: ${ticket?.undesirableEvent?.title}`}
+                          variant="filled"
+                          clickable
+                          onClick={()=> navigate(`/online/qualites/evenements-indesirables/details/${ticket?.undesirableEvent?.id}`)}
+                        />}
+                      </Stack>
+    },
+    {
+        id: 'description',
+        property: 'description',
+        exportField: 'description',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Description',
+    },
+    {
+        id: 'dueDate',
+        property: 'due_date',
+        exportField: 'due_date',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Échéance',
+        render: ({dueDate})=> getFormatDate(dueDate)
+    },,
+    {
+        id: 'employees',
+        property: 'employees__first_name',
+        exportField: ['employees__first_name', 'employees__last_name'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Responsable(s)',
+        render: ({employees}) => employees && employees?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+          <ChipGroupWithPopover people={employees} />
+      </Stack>
+    },
+    {
+        id: 'status',
+        property: 'status',
+        exportField: 'status',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        label: 'Status',
+        render: (data)=> <TaskActionStatusLabelMenu taskAction={data} />
+    },
+    {
+        id: 'action',
+        numeric: true,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Actions',
+    },
 ];
 
 function EnhancedTableHead(props) {
@@ -139,9 +179,10 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    selectedColumns = []
   } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property, sortDisabled=false) => (event) => {
+    if(!sortDisabled) onRequestSort(event, property);
   };
 
   return (
@@ -158,7 +199,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </StyledTableCell>
-        {headCells.map((headCell) => (
+        {selectedColumns.map((headCell) => (
           <StyledTableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -166,9 +207,10 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+              hideSortIcon={headCell.sortDisabled}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.property, headCell?.sortDisabled)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -185,7 +227,10 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onFilterChange } = props;
+  const [selectedColumns, setSelectedColumns] = React.useState(
+    headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
+  );
 
   return (
     <Toolbar
@@ -222,7 +267,11 @@ function EnhancedTableToolbar(props) {
           Les actions
         </Typography>
       )}
-
+      <TableExportButton 
+        entity={'TaskAction'}
+        fileName={'Actions'}
+        fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
+        titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>
@@ -230,11 +279,12 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <TableFilterButton headCells={headCells} 
+          onFilterChange={(currentColumns)=>{
+            setSelectedColumns(currentColumns);
+            onFilterChange(headCells?.filter(c=> currentColumns?.includes(c.id)))
+          }
+        }/>
       )}
     </Toolbar>
   );
@@ -244,7 +294,9 @@ export default function TableListTaskActions({
   loading,
   rows,
   onDeleteTaskAction,
-  onUpdateTaskActionState,
+  onUpdateTaskAction,
+  onFilterChange,
+  paginator,
 }) {
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
@@ -252,11 +304,7 @@ export default function TableListTaskActions({
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  React.useEffect(() => {
-    console.log(loading, rows);
-  }, [loading, rows]);
+  const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -273,6 +321,7 @@ export default function TableListTaskActions({
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    onFilterChange({orderBy: `${isAsc ? '-' : ''}${property}`})
   };
 
   const handleSelectAllClick = (event) => {
@@ -318,17 +367,20 @@ export default function TableListTaskActions({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
+  const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+      <Paper sx={{ width: '100%', mb: 2 }} >
+        <EnhancedTableToolbar numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
+            border="0"
             size="medium"
           >
             <EnhancedTableHead
+              selectedColumns={selectedColumns}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -339,15 +391,17 @@ export default function TableListTaskActions({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
-                    <Alert severity="warning">Aucune action trouvé.</Alert>
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
+                    <Alert severity="warning">
+                      Aucune action trouvé.
+                    </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
               )}
@@ -396,52 +450,20 @@ export default function TableListTaskActions({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.ticket?.undesirableEvent && <Chip
-                          label={`EI: ${row?.ticket?.undesirableEvent?.title}`}
-                          variant="filled"
-                          clickable
-                          onClick={()=> navigate(`/online/qualites/evenements-indesirables/details/${row?.ticket?.undesirableEvent?.id}`)}
-                        />}
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left"
-                    onClick={()=> navigate(`/online/travaux/actions/details/${row?.id}`)}>
-                      {row.description}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.dueDate)}`}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.employees?.map((employee, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={employee?.firstName}
-                                  src={
-                                    employee?.photo
-                                      ? employee?.photo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={employee?.firstName}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <TaskActionStatusLabelMenu taskAction={row} />
-                    </StyledTableCell>
+                    {
+                      selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
+                        return <StyledTableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding={column?.disablePadding ? "none" : "normal"}
+                          key={index}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/travaux/actions/details/${row?.id}`)}}
+                        >
+                        {column?.render ? column?.render(row, navigate) : row[column?.id]}
+                        </StyledTableCell>
+                      })
+                    }
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -459,24 +481,6 @@ export default function TableListTaskActions({
                           horizontal: 'right',
                         }}
                       >
-                        {/* <Link
-                          to={`/online/travaux/actions/details/${row?.id}`}
-                          className="no_style"
-                        >
-                          <MenuItem onClick={handleCloseMenu}>
-                            <Article sx={{ mr: 2 }} />
-                            Détails
-                          </MenuItem>
-                        </Link>
-                        <MenuItem
-                          onClick={() => {
-                            onOpenDialogListLibrary(row?.folder);
-                            handleCloseMenu();
-                          }}
-                        >
-                          <Folder sx={{ mr: 2 }} />
-                          Bibliothèque
-                        </MenuItem> */}
                         <Link
                           to={`/online/travaux/actions/modifier/${row?.id}`}
                           className="no_style"
@@ -486,7 +490,16 @@ export default function TableListTaskActions({
                             Modifier
                           </MenuItem>
                         </Link>
-                        {onDeleteTaskAction && <MenuItem
+                        <MenuItem
+                          onClick={() => {
+                            onUpdateTaskAction({ variables: {id: row?.id, taskActionData: {isArchived: !row?.isArchived}} });
+                            handleCloseMenu();
+                          }}
+                        >
+                          {row?.isArchived ? <Unarchive sx={{ mr: 2 }} /> : <Archive sx={{ mr: 2 }} />}
+                          {row?.isArchived ? 'Restaurer' : 'Archiver'}
+                        </MenuItem>
+                        <MenuItem
                           onClick={() => {
                             onDeleteTaskAction(row?.id);
                             handleCloseMenu();
@@ -495,7 +508,7 @@ export default function TableListTaskActions({
                         >
                           <Delete sx={{ mr: 2 }} />
                           Supprimer
-                        </MenuItem>}
+                        </MenuItem>
                       </Popover>
                     </StyledTableCell>
                   </StyledTableRow>
@@ -507,7 +520,7 @@ export default function TableListTaskActions({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={6} />
+                  <StyledTableCell colSpan={selectedColumns.length + 1} />
                 </StyledTableRow>
               )}
             </TableBody>

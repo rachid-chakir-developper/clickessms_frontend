@@ -27,6 +27,7 @@ TextEditorField.modules = {
     [{ size: [] }],
     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
     [{ list: 'ordered' }, { list: 'bullet' }],
+    [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
     ['link', 'image', 'video'],
     ['clean'], // Remove formatting button
   ],
@@ -48,6 +49,7 @@ TextEditorField.formats = [
   'blockquote',
   'list',
   'bullet',
+  'align',
   'link',
   'image',
   'video',

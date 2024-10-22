@@ -9,6 +9,7 @@ export const TASK_ACTION_MINI_INFOS = gql`
     description
     dueDate
     status
+    isArchived
     employees{
       ...EmployeeMiniInfosFragment
     }
