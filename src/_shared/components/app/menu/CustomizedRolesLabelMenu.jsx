@@ -112,7 +112,7 @@ export default function CustomizedRolesLabelMenu({roles, loading=false, onChange
         open={open}
         onClose={handleClose}
       >
-        {options.map((option, index) => (
+        {options.filter(option=>option?.value!=='SUPER_ADMIN').map((option, index) => (
           <MenuItem
             key={index}
             onClick={() => handleClose(option)}

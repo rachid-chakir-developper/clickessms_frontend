@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import { Stack, Box, Typography, Button, Divider, FormControl, InputLabel, Select, MenuItem, InputAdornment } from '@mui/material';
+import { Stack, Box, Typography, Button, Divider, FormControl, InputLabel, Select, MenuItem, InputAdornment, IconButton, Tooltip } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -22,9 +22,13 @@ import TheDateTimePicker from '../../../../../_shared/components/form-fields/The
 import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_EMPLOYEES } from '../../../../../_shared/graphql/queries/EmployeeQueries';
 import { GET_ESTABLISHMENTS } from '../../../../../_shared/graphql/queries/EstablishmentQueries';
+import SelectCheckmarks from '../../../../../_shared/components/form-fields/SelectCheckmarks';
+import { GET_DATAS_EMPLOYEE_CONTRACT } from '../../../../../_shared/graphql/queries/DataQueries';
 import { CONTRACT_TYPES } from '../../../../../_shared/tools/constants';
 import TheDesktopDatePicker from '../../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import CustomFieldValue from '../../../../../_shared/components/form-fields/costum-fields/CustomFieldValue';
+import DialogAddData from '../../../settings/data_management/DialogAddData';
+import { Add } from '@mui/icons-material';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -56,6 +60,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
       isActive: true,
       employee: null,
       contractType: 'CDI',
+      missions :[],
       establishments :[],
       customFieldValues: []
     },
@@ -64,6 +69,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
       let { document, ...employeeContractCopy } = values;
       employeeContractCopy.employee = employeeContractCopy.employee ? employeeContractCopy.employee.id : null;
       employeeContractCopy.establishments = employeeContractCopy.establishments.map((i) => i?.id);
+      employeeContractCopy.missions = employeeContractCopy.missions.map((i) => i?.id);
       if (idEmployeeContract && idEmployeeContract != '') {
         onUpdateEmployeeContract({
           id: employeeContractCopy.id,
@@ -99,6 +105,13 @@ const [getEmployees, {
   } = useQuery(GET_ESTABLISHMENTS, {
     fetchPolicy: 'network-only',
   });
+  
+  const {
+    loading: loadingDatas,
+    data: dataData,
+    error: datsError,
+    fetchMore: fetchMoreDatas,
+  } = useQuery(GET_DATAS_EMPLOYEE_CONTRACT, { fetchPolicy: 'network-only' });
 
   const [createEmployeeContract, { loading: loadingPost }] = useMutation(POST_EMPLOYEE_CONTRACT, {
     onCompleted: (data) => {
@@ -195,6 +208,10 @@ const [getEmployees, {
       employeeContractCopy.establishments
         ? employeeContractCopy.establishments.map((i) => i?.establishment)
         : [];
+      employeeContractCopy.missions =
+      employeeContractCopy.missions
+        ? employeeContractCopy.missions.map((i) => i?.mission)
+        : [];
       formik.setValues(employeeContractCopy);
     },
     onError: (err) => console.log(err),
@@ -205,6 +222,16 @@ const [getEmployees, {
       getEmployeeContract({ variables: { id: idEmployeeContract } });
     }
   }, [idEmployeeContract]);
+  const [openAddDataDialog, setOpenAddDataDialog] = React.useState(false);
+    const handleClickAddData = () => {
+      setOpenAddDataDialog(true);
+    };
+    const closeAddDataDialog = (value) => {
+      setOpenAddDataDialog(false);
+        if(value && value?.id && value?.id !=''){
+            formik.setFieldValue('missions', [...formik.values.missions, value]);
+        }
+    };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
@@ -329,6 +356,23 @@ onInput={(e) => {
                   }
                 />
               </Item>
+              <Item sx={{ display: "flex", justifyContent: "space-around", flexDirection: "row", alignContent: "center"}}>
+                <SelectCheckmarks
+                  options={dataData?.employeeMissions}
+                  label="Missions"
+                  placeholder="Ajouter une mission"
+                  limitTags={3}
+                  value={formik.values.missions}
+                  onChange={(e, newValue) =>
+                    formik.setFieldValue('missions', newValue)
+                  }
+                />
+                <Tooltip title="Ajouter une mission si vous ne la trouvez pas dans la liste" sx={{width: 50, height: 50}}>
+                  <IconButton onClick={handleClickAddData}>
+                      <Add />
+                  </IconButton>
+                </Tooltip>
+              </Item>
             </Grid>
             <Grid item xs={12} sm={6} md={4} >
               <Item>
@@ -420,6 +464,11 @@ onInput={(e) => {
           </Grid>
         </form>
       )}
+      <DialogAddData
+        open={openAddDataDialog}
+        onClose={closeAddDataDialog}
+        data={{ name: 'Mission d’employé dans un contrat', description: '', type: 'EmployeeMission' }}
+      />
     </Box>
   );
 }

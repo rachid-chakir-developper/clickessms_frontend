@@ -11,7 +11,7 @@ import * as yup from 'yup';
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_COMPANY } from '../../../../_shared/graphql/queries/CompanyQueries';
+import { GET_MY_COMPANY } from '../../../../_shared/graphql/queries/CompanyQueries';
 import { PUT_COMPANY } from '../../../../_shared/graphql/mutations/CompanyMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 
@@ -96,7 +96,7 @@ export default function AddCompanyForm({ idCompany = null, title = '' }) {
       },
     });
   };
-  const [getCompany, { loading: loadingCompany }] = useLazyQuery(GET_COMPANY, {
+  const [getCompany, { loading: loadingCompany }] = useLazyQuery(GET_MY_COMPANY, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       let { __typename, ...companyCopy } = data.company;

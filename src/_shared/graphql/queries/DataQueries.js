@@ -95,10 +95,19 @@ export const GET_DATAS_VEHICLE = gql`
 `;
 
 
-
 export const GET_DATAS_FRAME_DOCUMENT_ = gql`
   query {
     documentTypes: datas(typeData: "DocumentType") {
+      ...DataBasicInfosFragment
+    }
+  }
+  ${DATA_BASIC_INFOS}
+`;
+
+
+export const GET_DATAS_EMPLOYEE_CONTRACT = gql`
+  query {
+    employeeMissions: datas(typeData: "EmployeeMission") {
       ...DataBasicInfosFragment
     }
   }

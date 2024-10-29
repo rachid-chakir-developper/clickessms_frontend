@@ -4,6 +4,7 @@ import { defineRolesModel } from './lib/rolesModelEngine';
 export const rolesModel = defineRolesModel(entitiesModel, {
   company: {
     SUPER_ADMIN: { // Super admin'
+      companies: 'edit',
       sce: 'edit',
       sceModules: 'edit',
       settings: 'edit',

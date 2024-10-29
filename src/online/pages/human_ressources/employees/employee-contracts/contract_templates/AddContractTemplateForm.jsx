@@ -75,11 +75,13 @@ const FIELDS = {
       { key: "starting_date", label: "Date de début" },
       { key: "ending_date", label: "Date de fin" },
       { key: "position", label: "Poste" },
+      { key: "missions__mission__name", label: "Misions" },
       { key: "monthly_gross_salary", label: "Salaire brut mensuel" },
       { key: "salary", label: "Salaire brut annuel" },
       { key: "initial_paid_leave_days", label: "Jours de congés payés initiaux (CP)" },
       { key: "initial_rwt_days", label: "Jours RTT initiaux" },
       { key: "initial_temporary_days", label: "Jours de congé temporaire initiaux (CT)" },
+
     ]
   },
   Establishment: {

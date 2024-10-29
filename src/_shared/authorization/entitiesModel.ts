@@ -4,6 +4,10 @@ export const entitiesModel = defineEntitiesModel({
   company: {
     root: true,
   },
+  companies: {
+    ownedBy: 'company',
+    privileges: ['edit', 'view'],
+  },
   settings: {
     ownedBy: 'company',
     privileges: ['edit', 'view'],

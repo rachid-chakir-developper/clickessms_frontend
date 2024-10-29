@@ -54,7 +54,7 @@ export default function DialogAddData({ open, onClose, data, dataToEdit }) {
   const [createData, { loading: loadingPost }] = useMutation(POST_DATA, {
     onCompleted: (data) => {
       console.log(data);
-      onClose(formik.values);
+      onClose(data?.createData?.data);
       setNotifyAlert({
         isOpen: true,
         message: 'Ajouté avec succès',

@@ -41,6 +41,37 @@ export const PUT_COMPANY = gql`
   ${COMPANY_BASIC_INFOS}
 `;
 
+
+export const PUT_COMPANY_FIELDS = gql`
+  mutation updateCompanyFields($id: ID!, $companyFields: CompanyFieldInput!) {
+    updateCompanyFields(id: $id, companyFields: $companyFields){
+      done
+      success
+      message
+      company{
+        ...CompanyBasicInfosFragment
+      }
+    }
+  }
+  ${COMPANY_BASIC_INFOS}
+`;
+
+
+export const PUT_COMPANY_STATE = gql`
+  mutation UpdateCompanyState($id: ID!) {
+    updateCompanyState(id: $id){
+      done
+      success
+      message
+      company{
+        ...CompanyBasicInfosFragment
+      }
+    }
+  }
+  ${COMPANY_BASIC_INFOS}
+`;
+
+
 export const DELETE_COMPANY = gql`
   mutation DeleteCompany($id: ID!) {
     deleteCompany(id: $id) {

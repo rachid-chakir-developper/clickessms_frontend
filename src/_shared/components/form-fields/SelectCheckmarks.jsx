@@ -45,7 +45,7 @@ export default function SelectCheckmarks({
   }, [value]);
 
   return (
-    <div>
+    <Box sx={{ width: '100%' }}>
       <FormControl sx={{ width: '100%' }}>
         <InputLabel id="demo-multiple-checkbox-label">{label}</InputLabel>
         <Select
@@ -90,6 +90,6 @@ export default function SelectCheckmarks({
         </Select>
         {helperText && <FormHelperText>{helperText}</FormHelperText>}
       </FormControl>
-    </div>
+    </Box>
   );
 }

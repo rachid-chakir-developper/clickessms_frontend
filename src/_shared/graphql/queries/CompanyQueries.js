@@ -2,7 +2,17 @@ import { gql } from '@apollo/client';
 import {
   COMPANY_BASIC_INFOS,
   COMPANY_DETAILS,
+  MY_COMPANY_DETAILS,
 } from '../fragments/CompanyFragment';
+
+export const GET_MY_COMPANY = gql`
+  query GetCompany($id: ID) {
+    company(id: $id) {
+      ...MyCompanyDetailsFragment
+    }
+  }
+  ${MY_COMPANY_DETAILS}
+`;
 
 export const GET_COMPANY = gql`
   query GetCompany($id: ID) {
@@ -13,14 +23,14 @@ export const GET_COMPANY = gql`
   ${COMPANY_DETAILS}
 `;
 
-export const GET_COMPANYS = gql`
-  query GetCompanys(
+export const GET_COMPANIES = gql`
+  query GetCompanies(
     $companyFilter: CompanyFilterInput
     $offset: Int
     $limit: Int
     $page: Int
   ) {
-    companys(
+    companies(
       companyFilter: $companyFilter
       offset: $offset
       limit: $limit

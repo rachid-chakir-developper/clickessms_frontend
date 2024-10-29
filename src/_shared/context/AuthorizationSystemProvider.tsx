@@ -40,6 +40,11 @@ export function AuthorizationSystemProvider({ children }) {
 
   const entityChainRepository = buildEntityChainRepository({
     company: {},
+    companies: {
+      company() {
+        return user.company.id;
+      },
+    },
     settings: {
       company() {
         return user.company.id;

@@ -4,6 +4,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import BusinessIcon from '@mui/icons-material/Business';
 import { useNavigate } from 'react-router-dom';
 import { modules } from './modules';
 import Divider from '@mui/material/Divider';
@@ -337,6 +338,16 @@ function NavMenuFooter() {
         icon={<SettingsIcon />}
         hidden={()=> !authorizationSystem.requestAuthorization({
             type: 'manageSettings',
+          }).authorized
+        }
+      />
+      <NavEntry
+        path="/online/associations"
+        key="companies"
+        name="Associations"
+        icon={<BusinessIcon />}
+        hidden={()=> !authorizationSystem.requestAuthorization({
+            type: 'manageCompanies',
           }).authorized
         }
       />

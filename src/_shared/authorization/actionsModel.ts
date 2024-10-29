@@ -5,6 +5,7 @@ export const actionsModel = defineActionsModel(
   entitiesModel,
   ({ params, id, privilege }) => {
     return {
+      manageCompanies: privilege('companies:edit'),
       manageSettings: privilege('settings:edit'),
       manageSce: privilege('sce:edit'),
       manageSceModules: privilege('sceModules:edit'),

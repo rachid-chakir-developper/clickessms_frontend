@@ -54,7 +54,7 @@ export default function UndesirableEventStatusLabelMenu({undesirableEvent, disab
             disabled={!canManageQuality}
             onChange={(status)=> {updateUndesirableEventFields({ variables: {id: undesirableEvent?.id, undesirableEventData: {status}} })}}
         /> :
-        <Tooltip title="Cliquer pour continer">
+        <Tooltip title="Cliquez pour compléter">
           <Link
             to={`/online/qualites/evenements-indesirables/modifier/${undesirableEvent?.id}`}
             className="no_style"

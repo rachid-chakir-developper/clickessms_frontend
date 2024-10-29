@@ -15,6 +15,7 @@ import DialogAddData from './DialogAddData';
 import {
   Alert,
   Avatar,
+  Box,
   List,
   ListItem,
   ListItemAvatar,
@@ -115,7 +116,7 @@ export default function DialogListDatas({ open, onClose, data }) {
   };
 
   return (
-    <div>
+    <Box>
       <BootstrapDialog
         onClose={onClose}
         aria-labelledby="customized-dialog-title"
@@ -196,6 +197,6 @@ export default function DialogListDatas({ open, onClose, data }) {
         data={data}
         dataToEdit={dataToEdit}
       />
-    </div>
+    </Box>
   );
 }

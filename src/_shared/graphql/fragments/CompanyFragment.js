@@ -11,6 +11,39 @@ export const COMPANY_BASIC_INFOS = gql`
     coverImage
     sceShopUrl
     isActive
+    status
+  }
+`;
+
+export const MY_COMPANY_DETAILS = gql`
+  fragment MyCompanyDetailsFragment on CompanyType {
+    ...CompanyBasicInfosFragment
+    latitude
+    longitude
+    city
+    zipCode
+    address
+    mobile
+    fix
+    fax
+    webSite
+    otherContacts
+    iban
+    bic
+    bankName
+    isActive
+    description
+    observation
+  }
+  ${COMPANY_BASIC_INFOS}
+`;
+
+export const COMPANY_ADMIN_DETAILS = gql`
+  fragment CompanyAdminDetails on UserType {
+    id
+    firstName
+    lastName
+    email
   }
 `;
 
@@ -33,6 +66,11 @@ export const COMPANY_DETAILS = gql`
     isActive
     description
     observation
+    companyAdmin{
+      ...CompanyAdminDetails
+    }
   }
   ${COMPANY_BASIC_INFOS}
+  ${COMPANY_ADMIN_DETAILS}
 `;
+
