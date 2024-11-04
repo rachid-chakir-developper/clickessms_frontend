@@ -15,6 +15,7 @@ import { GET_TICKETS } from '../../../../_shared/graphql/queries/TicketQueries';
 import TicketFilter from './TicketFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
 import TableListTickets from './TableListTickets';
+import { ON_TICKET_ADDED, ON_TICKET_DELETED, ON_TICKET_UPDATED } from '../../../../_shared/graphql/subscriptions/TicketSubscriptions';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -38,12 +39,84 @@ export default function ListTickets() {
     {
       loading: loadingTickets,
       data: ticketsData,
+      subscribeToMore: subscribeToMoreTickets,
       error: ticketsError,
       fetchMore: fetchMoreTickets,
     },
   ] = useLazyQuery(GET_TICKETS, {
-    variables: { ticketFilter, page: paginator.page, limit: paginator.limit },
+    variables: {
+      ticketFilter,
+      page: paginator.page,
+      limit: paginator.limit,
+    },
   });
+  
+  // Souscription pour l'ajout d'un ticket
+  subscribeToMoreTickets({
+    document: ON_TICKET_ADDED,
+    updateQuery: (prev, { subscriptionData }) => {
+      console.log('Ticket Added:', subscriptionData);
+      if (!subscriptionData.data) return prev;
+  
+      const newTicket = subscriptionData.data.onTicketAdded.ticket;
+  
+      // Si le ticket existe déjà, ne pas l'ajouter
+      if (prev.tickets.nodes.map(t => t.id).includes(newTicket.id)) return prev;
+  
+      return {
+        tickets: {
+          totalCount: prev.tickets.totalCount + 1,
+          nodes: [newTicket, ...prev.tickets.nodes]
+        }
+      };
+    }
+  });
+  
+  // Souscription pour la mise à jour d'un ticket
+  subscribeToMoreTickets({
+    document: ON_TICKET_UPDATED,
+    updateQuery: (prev, { subscriptionData }) => {
+      console.log('Ticket Updated:', subscriptionData);
+      if (!subscriptionData.data) return prev;
+  
+      const updatedTicket = subscriptionData.data.onTicketUpdated.ticket;
+      const ticketIndex = prev.tickets.nodes.findIndex(t => t.id === updatedTicket.id);
+  
+      // Si le ticket existe dans la liste, le mettre à jour
+      if (ticketIndex >= 0) {
+        const updatedTickets = [...prev.tickets.nodes];
+        updatedTickets[ticketIndex] = updatedTicket;
+  
+        return {
+          tickets: {
+            totalCount: prev.tickets.totalCount,
+            nodes: updatedTickets
+          }
+        };
+      }
+  
+      return prev;
+    }
+  });
+  
+  // Souscription pour la suppression d'un ticket
+  subscribeToMoreTickets({
+    document: ON_TICKET_DELETED,
+    updateQuery: (prev, { subscriptionData }) => {
+      console.log('Ticket Deleted:', subscriptionData);
+      if (!subscriptionData.data) return prev;
+  
+      const deletedTicket = subscriptionData.data.onTicketDeleted.ticket;
+  
+      return {
+        tickets: {
+          totalCount: prev.tickets.totalCount - 1,
+          nodes: prev.tickets.nodes.filter(t => t.id !== deletedTicket.id)
+        }
+      };
+    }
+  });
+  
 
   React.useEffect(() => {
     getTickets();

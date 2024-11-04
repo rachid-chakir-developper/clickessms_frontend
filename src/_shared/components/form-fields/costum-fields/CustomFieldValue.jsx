@@ -36,7 +36,7 @@ export default function CustomFieldValue({ formModel, initialValues = [], onChan
 
     React.useEffect(() => {
         if (formModel) {
-        getCustomFields({ variables: { customFieldFilter: { formModels: [formModel] } } });
+            getCustomFields({ variables: { customFieldFilter: { formModels: [formModel] } } });
         }
     }, [formModel]);
 

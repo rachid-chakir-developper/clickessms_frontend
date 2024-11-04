@@ -46,6 +46,7 @@ export default function TheAutocomplete({
           : `${option?.firstName} ${option?.lastName}`
       }
       filterSelectedOptions
+      isOptionEqualToValue={(option, value) => option.id === value.id}
       value={value}
       onInputChange={onInputChange}
       onChange={onChange}

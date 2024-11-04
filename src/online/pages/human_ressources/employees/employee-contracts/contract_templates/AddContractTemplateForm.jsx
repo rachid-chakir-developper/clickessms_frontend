@@ -81,6 +81,7 @@ const FIELDS = {
       { key: "initial_paid_leave_days", label: "Jours de congés payés initiaux (CP)" },
       { key: "initial_rwt_days", label: "Jours RTT initiaux" },
       { key: "initial_temporary_days", label: "Jours de congé temporaire initiaux (CT)" },
+      { key: "replaced_employees__text", label: "Remplacement" },
 
     ]
   },

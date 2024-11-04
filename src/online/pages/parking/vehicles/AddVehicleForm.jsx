@@ -48,6 +48,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
   });
   const formik = useFormik({
     initialValues: {
+      id: null,
       image: undefined,
       number: '',
       name: '',
@@ -89,7 +90,7 @@ export default function AddVehicleForm({ idVehicle, title }) {
         items.push(itemCopy);
       });
       vehicleCopy.vehicleOwnerships = items;
-      if (idVehicle && idVehicle != '') {
+      if (vehicleCopy?.id && vehicleCopy?.id != '') {
         onUpdateVehicle({
           id: vehicleCopy.id,
           vehicleData: vehicleCopy,

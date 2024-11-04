@@ -17,6 +17,7 @@ import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/Unde
 import UndesirableEventFilter from './UndesirableEventFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
 import TableListUndesirableEvents from './TableListUndesirableEvents';
+import { ON_UNDESIRABLE_EVENT_ADDED, ON_UNDESIRABLE_EVENT_DELETED, ON_UNDESIRABLE_EVENT_UPDATED } from '../../../../_shared/graphql/subscriptions/UndesirableEventSubscriptions';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -42,6 +43,7 @@ export default function ListUndesirableEvents() {
     {
       loading: loadingUndesirableEvents,
       data: undesirableEventsData,
+      subscribeToMore: subscribeToMoreUndesirableEvent,
       error: undesirableEventsError,
       fetchMore: fetchMoreUndesirableEvents,
     },
@@ -52,6 +54,73 @@ export default function ListUndesirableEvents() {
       limit: paginator.limit,
     },
   });
+
+  // Souscription pour l'ajout d'un événement indésirable
+  subscribeToMoreUndesirableEvent({
+    document: ON_UNDESIRABLE_EVENT_ADDED,
+    updateQuery: (prev, { subscriptionData }) => {
+      console.log('Event Added:', subscriptionData);
+      if (!subscriptionData.data) return prev;
+  
+      const newUndesirableEvent = subscriptionData.data.onUndesirableEventAdded.undesirableEvent;
+  
+      // Si l'événement existe déjà, ne pas l'ajouter
+      if (prev.undesirableEvents.nodes.map(e => e.id).includes(newUndesirableEvent.id)) return prev;
+  
+      return {
+        undesirableEvents: {
+          totalCount: prev.undesirableEvents.totalCount + 1,
+          nodes: [newUndesirableEvent, ...prev.undesirableEvents.nodes]
+        }
+      };
+    }
+  });
+  
+  // Souscription pour la mise à jour d'un événement indésirable
+  subscribeToMoreUndesirableEvent({
+    document: ON_UNDESIRABLE_EVENT_UPDATED,
+    updateQuery: (prev, { subscriptionData }) => {
+      console.log('Event Updated:', subscriptionData);
+      if (!subscriptionData.data) return prev;
+  
+      const updatedUndesirableEvent = subscriptionData.data.onUndesirableEventUpdated.undesirableEvent;
+      const eventIndex = prev.undesirableEvents.nodes.findIndex(e => e.id === updatedUndesirableEvent.id);
+  
+      // Si l'événement existe dans la liste, le mettre à jour
+      if (eventIndex >= 0) {
+        const updatedUndesirableEvents = [...prev.undesirableEvents.nodes];
+        updatedUndesirableEvents[eventIndex] = updatedUndesirableEvent;
+  
+        return {
+          undesirableEvents: {
+            totalCount: prev.undesirableEvents.totalCount,
+            nodes: updatedUndesirableEvents
+          }
+        };
+      }
+  
+      return prev;
+    }
+  });
+  
+  // Souscription pour la suppression d'un événement indésirable
+  subscribeToMoreUndesirableEvent({
+    document: ON_UNDESIRABLE_EVENT_DELETED,
+    updateQuery: (prev, { subscriptionData }) => {
+      console.log('Event Deleted:', subscriptionData);
+      if (!subscriptionData.data) return prev;
+  
+      const deletedUndesirableEvent = subscriptionData.data.onUndesirableEventDeleted.undesirableEvent;
+  
+      return {
+        undesirableEvents: {
+          totalCount: prev.undesirableEvents.totalCount - 1,
+          nodes: prev.undesirableEvents.nodes.filter(e => e.id !== deletedUndesirableEvent.id)
+        }
+      };
+    }
+  });
+  
 
   React.useEffect(() => {
     getUndesirableEvents();

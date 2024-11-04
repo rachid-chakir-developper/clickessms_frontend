@@ -94,7 +94,7 @@ const headCells = [
     id: 'name',
     numeric: false,
     disablePadding: true,
-    label: 'Rasion sociale',
+    label: 'Raison sociale',
   },
   {
     id: 'email',
@@ -427,7 +427,7 @@ export default function TableListCompanies({
                             Modifier
                           </MenuItem>
                         </Link>
-                        <MenuItem
+                        {/* <MenuItem
                           onClick={() => {
                             onDeleteCompany(row?.id);
                             handleCloseMenu();
@@ -436,7 +436,7 @@ export default function TableListCompanies({
                         >
                           <Delete sx={{ mr: 2 }} />
                           Supprimer
-                        </MenuItem>
+                        </MenuItem> */}
                       </Popover>
                     </StyledTableCell>
                   </StyledTableRow>

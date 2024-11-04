@@ -3,8 +3,25 @@
 import { gql } from '@apollo/client';
 import { CUSTOM_FIELD_VALUE_DETAILS } from './CustomFieldFragment';
 
+export const EMPLOYEE_CONTRACT_REPLACED_EMPLOYEES_DETAILS = gql`
+  fragment EmployeeContractReplacedEmployeeDetailsFragment on EmployeeContractReplacedEmployeeType {
+    id
+    employee{
+        id
+        firstName
+        lastName
+        photo
+        position
+    }
+    position
+    reason
+    startingDate
+    endingDate
+  }
+`;
+
 export const EMPLOYEE_CONTRACT_MISSION_DETAILS = gql`
-  fragment EmployeeContractMissionTypeFragment on EmployeeContractMissionType {
+  fragment EmployeeContractMissionDetailsFragment on EmployeeContractMissionType {
     id
     mission{
       id
@@ -53,7 +70,7 @@ export const EMPLOYEE_CONTRACT_MINI_INFOS = gql`
     }
     contractType
     missions{
-      ...EmployeeContractMissionTypeFragment
+      ...EmployeeContractMissionDetailsFragment
     }
     establishments{
       ...EmployeeContractEstablishmentTypeFragment
@@ -72,12 +89,16 @@ export const EMPLOYEE_CONTRACT_BASIC_INFOS = gql`
       lastName
       photo
     }
+    replacedEmployees{
+      ...EmployeeContractReplacedEmployeeDetailsFragment
+    }
     customFieldValues{
       ...CustomFieldValueDetailsFragment
     }
   }
   ${EMPLOYEE_CONTRACT_MINI_INFOS}
   ${CUSTOM_FIELD_VALUE_DETAILS}
+  ${EMPLOYEE_CONTRACT_REPLACED_EMPLOYEES_DETAILS}
 `;
 
 export const EMPLOYEE_CONTRACT_DETAILS = gql`
