@@ -100,7 +100,6 @@ export default function DialogAddFolder({
       name: folderForm.name,
       description: folderForm.description,
       observation: folderForm.observation,
-      observation: folderForm.observation,
       folder: folderForm.folder,
     };
     if (folderToEdit)

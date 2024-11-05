@@ -108,7 +108,6 @@ export default function DialogAddFile({
       name: fileForm.name,
       description: fileForm.description,
       observation: fileForm.observation,
-      observation: fileForm.observation,
       folder: fileForm.folder,
     };
     if (fileToEdit)

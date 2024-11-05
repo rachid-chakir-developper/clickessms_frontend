@@ -643,7 +643,7 @@ const [getEmployees, {
                   </Grid>
                   <Grid xs={12} sm={12} md={12} item>
                       <Box onClick={addReplacedEmployee} sx={{ padding: 2, display: 'flex', justifyContent: 'space-between', borderStyle: 'dashed', borderWidth: 2, borderColor: '#f1f1f1', backgroundColor: '#fcfcfc'}}>
-                          <Typography variant="small" gutterBottom sx={{ color: '#c1c1c1', fontStyle: 'italic', fontStyle: 'italic' }}>
+                          <Typography variant="small" gutterBottom sx={{ color: '#c1c1c1', fontStyle: 'italic' }}>
                               Cliquez pour ajouter un employé à remplacer
                           </Typography>
                           <Button

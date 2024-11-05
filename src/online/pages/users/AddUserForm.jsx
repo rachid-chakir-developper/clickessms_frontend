@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import { Stack, Box, Typography, Button, Divider } from '@mui/material';
+import { Stack, Box, Typography, Button, Divider, FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton } from '@mui/material';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
@@ -27,6 +27,7 @@ import TheAutocomplete from '../../../_shared/components/form-fields/TheAutocomp
 import { GET_PARTNERS } from '../../../_shared/graphql/queries/PartnerQueries';
 import { GET_FINANCIERS } from '../../../_shared/graphql/queries/FinancierQueries';
 import { GET_SUPPLIERS } from '../../../_shared/graphql/queries/SupplierQueries';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -38,12 +39,20 @@ const Item = styled(Stack)(({ theme }) => ({
 
 export default function AddUserForm({ idUser, title }) {
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
+  const [showPassword, setShowPassword] = React.useState(true);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const handleMouseUpPassword = (event) => {
+    event.preventDefault();
+  };
   const navigate = useNavigate();
   const validationSchema = yup.object({
-    username: yup
-      .string('Entrez votre username')
-      .required(`L'username est obligatoire`),
-      firstName: yup.string('Entrez votre prénom').required('Le prénom est obligatoire'),
+    firstName: yup.string('Entrez votre prénom').required('Le prénom est obligatoire'),
     lastName: yup.string('Entrez votre nom').required('Le nom est obligatoire'),
     email: yup
       .string('Entrez votre email')
@@ -61,7 +70,8 @@ export default function AddUserForm({ idUser, title }) {
       financier: null,
       supplier: null,
       email: '',
-      username: '',
+      password1: '',
+      password2: '',
       description: '',
       observation: '',
     },
@@ -329,24 +339,6 @@ const [getEmployees, {
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="username"
-                  id="username"
-                  value={formik.values.username}
-                  required
-                  onChange={(e) =>
-                    formik.setFieldValue('username', e.target.value)
-                  }
-                  onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.username && Boolean(formik.errors.username)
-                  }
-                  helperText={formik.touched.username && formik.errors.username}
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-              <Item>
-                <TheTextField
-                  variant="outlined"
                   label="E-mail"
                   id="email"
                   value={formik.values.email}
@@ -359,6 +351,62 @@ const [getEmployees, {
                   helperText={formik.touched.email && formik.errors.email}
                   disabled={loadingPost || loadingPut}
                 />
+              </Item>
+              <Item>
+                <FormControl variant="outlined">
+                  <InputLabel htmlFor="outlined-adornment-password1">Mot de passe</InputLabel>
+                  <OutlinedInput
+                    id="outlined-adornment-password1"
+                    type={showPassword ? 'text' : 'password'}
+                    value={formik.values.password1}
+                    onChange={(e) =>
+                      formik.setFieldValue('password1', e.target.value)
+                    }
+                    onBlur={formik.handleBlur}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label={showPassword ? 'Cacher' : 'Afficher'}
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label="Mot de passe"
+                    autoComplete="new-password"
+                  />
+                </FormControl>
+              </Item>
+              <Item>
+                <FormControl variant="outlined">
+                  <InputLabel htmlFor="outlined-adornment-password2">Confirmer le mot de passe</InputLabel>
+                  <OutlinedInput
+                    id="outlined-adornment-password2"
+                    type={showPassword ? 'text' : 'password'}
+                    value={formik.values.password2}
+                    onChange={(e) =>
+                      formik.setFieldValue('password2', e.target.value)
+                    }
+                    onBlur={formik.handleBlur}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label={showPassword ? 'Cacher' : 'Afficher'}
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label="Confirmer le mot de passe"
+                    autoComplete="new-password"
+                  />
+                </FormControl>
               </Item>
             </Grid>
             <Grid item xs={2} sm={4} md={4}>
@@ -428,7 +476,7 @@ onInput={(e) => {
                   variant="outlined"
                   label="Détail"
                   multiline
-                  rows={4}
+                  rows={6}
                   value={formik.values.description}
                   onChange={(e) =>
                     formik.setFieldValue('description', e.target.value)
@@ -436,27 +484,6 @@ onInput={(e) => {
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
-            </Grid>
-            <Grid item xs={12} sm={12} md={12}>
-              <Divider variant="middle" />
-            </Grid>
-            <Grid item xs={12} sm={12} md={6}>
-              <TransferList
-                left={permissions}
-                setLeft={setPermissions}
-                right={userPermissions}
-                setRight={setUserPermissions}
-                title="Permissions"
-              />
-            </Grid>
-            <Grid item xs={12} sm={12} md={6}>
-              <TransferList
-                left={groups}
-                setLeft={setGroups}
-                right={userGroups}
-                setRight={setUserGroups}
-                title="Groups"
-              />
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" />

@@ -512,13 +512,12 @@ export default function TableListTickets({
                 const openRow = Boolean(anchorElRowList[index]);
 
                 return (
-                  <>
+                  <React.Fragment key={row.id}>
                     <StyledTableRow
                       hover
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.id}
                       selected={isItemSelected}
                       sx={{ cursor: 'pointer' }}
                     >
@@ -613,7 +612,7 @@ export default function TableListTickets({
                       </StyledTableCell>
                     </StyledTableRow>
                     {row?.actions && row?.actions?.length > 0 && <CollapsibleRow rows={row?.actions} open={openRow}/>}
-                  </>
+                  </React.Fragment>
                 );
               })}
               {emptyRows > 0 && (

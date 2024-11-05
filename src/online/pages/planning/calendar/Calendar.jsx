@@ -1,14 +1,57 @@
-import React, { useState } from 'react';
-import FullCalendar from '@fullcalendar/react'; 
-import dayGridPlugin from '@fullcalendar/daygrid'; 
-import timeGridPlugin from '@fullcalendar/timegrid'; 
-import interactionPlugin from '@fullcalendar/interaction'; 
-import frLocale from '@fullcalendar/core/locales/fr'; 
-import listPlugin from '@fullcalendar/list';
-import { Chip } from '@mui/material';
+import React from 'react';
+import FullCalendar from '@fullcalendar/react';
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import interactionPlugin from '@fullcalendar/interaction';
+import frLocale from '@fullcalendar/core/locales/fr';
+import { Avatar, Typography, Box, Chip } from '@mui/material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
+import { useLazyQuery } from '@apollo/client';
+import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
 export default function Calendar() {
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
+  const [employeeFilter, setEmployeeFilter] = React.useState(null); // Correction du nom de variable
+  const handleFilterChange = (newFilter) => {
+    console.log('newFilter', newFilter);
+    setEmployeeFilter(newFilter);
+  };
+
+  const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
+  const [
+    getEmployees,
+    {
+      loading: loadingEmployees,
+      data: employeesData,
+      error: employeesError,
+      fetchMore: fetchMoreEmployees,
+    },
+  ] = useLazyQuery(GET_EMPLOYEES, {
+    variables: { employeeFilter, page: paginator.page, limit: paginator.limit },
+    onCompleted: (data) => {
+      console.log(data);
+      if(data?.employees?.nodes){
+        getEmployeeShifts({
+          variables: { employeeShiftFilter: {employees: data?.employees?.nodes} },
+        })
+      }
+    }
+  });
+
+  React.useEffect(() => {
+    getEmployees();
+  }, [employeeFilter, paginator]);
+
+  const [
+    getEmployeeShifts,
+    {
+      loading: loadingEmployeeShifts,
+      data: employeeShiftsData,
+      error: employeeShiftsError,
+      fetchMore: fetchMoreEmployeeShifts,
+    },
+  ] = useLazyQuery(GET_EMPLOYEES);
+
   const handleDateClick = (arg) => {
     alert('Créer un événement');
   };
@@ -16,64 +59,79 @@ export default function Calendar() {
   const handleSelect = (selectionInfo) => {
     console.log(selectionInfo);
   };
-  
 
   return (
-      <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
-        initialView="dayGridMonth" // Vue par défaut : mois
-        locale={frLocale}  // Définit la locale en français
-        headerToolbar={{
-          left: 'prev,next today', // Boutons de navigation
-          center: 'title', // Titre du calendrier
-          right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek', // Options de vue
-        }}
-        editable={true} // Permet de déplacer et redimensionner les événements
-        selectable={true} // Permet de sélectionner des dates
-        eventClick={(info) => alert(info.event.title)} // Action au clic sur un événement
-        eventContent={renderEventContent} // Fonction pour le contenu des événements
-        dateClick={handleDateClick} // Action au clic sur une date
-        select={handleSelect} // Action lors de la sélection d'une plage de dates
-        eventResizableFromStart={true} // Permet le redimensionnement à gauche
-        events={[ // Liste d'événements
-          { title: 'Événement 1', date: '2024-10-15' },
-          { title: 'Événement 2', date: '2024-10-20' },
-        ]}
-        eventColor="transparent" // Couleur de fond pour tous les événements
-        eventTextColor="transparent" // Couleur du texte pour tous les événements
-        eventBackgroundColor="transparent" // Couleur de fond personnalisée pour les événements
-        eventBorderColor="transparent" // Couleur de bordure personnalisée pour les événements
-        eventDisplay="block" // Style d'affichage des événements
-        displayEventTime={true} // Affiche l'heure des événements
-        eventOrder="start" // Ordre des événements par date de début
-        nextDayThreshold="00:00:00" // Minimum de temps pour qu'un événement soit affiché sur le jour suivant
-        
-        // Propriétés supplémentaires
-        height={750} // Définit la hauteur de l'ensemble du calendrier, y compris l'en-tête et le pied
-        contentHeight={550} // Définit la hauteur de la zone de visualisation du calendrier
-        aspectRatio={1.5} // Définit le rapport largeur-hauteur du calendrier
-        expandRows={true} // Les lignes d'une vue donnée s'étendent pour occuper toute la hauteur
-        updateSize={true} // Force immédiatement le calendrier à réajuster sa taille
-        handleWindowResize={true} // Redimensionne automatiquement le calendrier lors du redimensionnement de la fenêtre du navigateur
-        windowResizeDelay={200} // Délai en millisecondes avant que le calendrier n'ajuste sa taille après un redimensionnement de fenêtre
-        stickyHeaderDates={true} // Fixe les en-têtes de date en haut du calendrier lors du défilement
-        stickyFooterScrollbar={true} // Fixe la barre de défilement horizontale en bas de la vue lors du défilement
-      />
+    <FullCalendar
+      schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives" // Licence trial
+      plugins={[resourceTimelinePlugin, interactionPlugin]}
+      initialView="resourceTimelineWeek" // Vue Timeline par semaine
+      locale={frLocale}
+      headerToolbar={{
+        left: 'prev,next today',
+        center: 'title',
+        right: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth',
+      }}
+      editable={true}
+      selectable={true}
+      eventClick={(info) => alert(info.event.title)}
+      eventContent={renderEventContent}
+      dateClick={handleDateClick}
+      select={handleSelect}
+      
+      // Chargez les ressources depuis les données récupérées
+      resources={employeesData?.employees?.nodes?.map((employee) => ({
+        id: employee.id,
+        title: `${employee.firstName} ${employee.lastName}`, 
+        extendedProps:{
+          ...employee
+        }
+      }))}
+
+      resourceAreaColumns={[
+        {
+          field: 'title',
+          headerContent: 'Employés',
+        },
+      ]}
+
+      resourceLabelContent={({resource}) => {
+        return (
+          <Box display="flex" alignItems="center">
+            <Avatar src={resource.extendedProps.photo} alt={resource.title} sx={{ width: 40, height: 40, marginRight: 1 }} />
+            <Typography variant="body2">{resource.title}</Typography>
+          </Box>
+        )
+      }}
+      
+      events={[
+        { title: 'Shift du Matin', start: '2024-11-05T08:00:00', end: '2024-11-05T12:00:00', resourceId: '1' },
+        { title: 'Shift de l’Après-midi', start: '2024-11-05T13:00:00', end: '2024-11-05T17:00:00', resourceId: '1' },
+        { title: 'Shift de Nuit', start: '2024-11-05T20:00:00', end: '2024-11-06T04:00:00', resourceId: '1' },
+        // Ajoutez plus de shifts ici
+      ]}
+      
+      height={750}
+      contentHeight={550}
+      aspectRatio={1.5}
+      expandRows={true}
+      handleWindowResize={true}
+      windowResizeDelay={200}
+      stickyHeaderDates={true}
+      stickyFooterScrollbar={true}
+    />
   );
 }
 
 function renderEventContent(eventInfo) {
-  // Exemple de couleurs pour les Chip
   const colors = {
-    'Événement 1': 'primary',
-    'Événement 2': 'secondary',
+    'Shift du Matin': 'primary',
+    'Shift de l’Après-midi': 'secondary',
+    'Shift de Nuit': 'default',
   };
 
   return (
-    <>
-      <AppLabel sx={{width: '100%', justifyContent: 'start'}} size="small" color={colors[eventInfo.event.title] || 'default'} >
-        {eventInfo.event.title}
-      </AppLabel>
-    </>
+    <AppLabel sx={{ width: '100%', justifyContent: 'start' }} size="small" color={colors[eventInfo.event.title] || 'default'}>
+      {eventInfo.event.title}
+    </AppLabel>
   );
 }
