@@ -24,6 +24,7 @@ import {
   UNDESIRABLE_EVENT_TYPES,
   UNDESIRABLE_EVENT_SEVERITY,
   FIELD_TYPE_CHOICES,
+  BUDGET_STATUS_CHOICES
 } from './constants';
 
 export const getStatusColor = (status) => {
@@ -84,25 +85,25 @@ export const getStepTypeLabel = (stepType) => {
   return STEP_TYPES.ALL.find((t) => t.value == stepType)?.label;
 };
 
-export const getFormatDateTime = (dateTime) => {
+export const getFormatDateTime = (dateTime, format='DD/MM/YYYY à HH:mm') => {
   try {
-    return dateTime ? moment(dateTime).format('DD/MM/YYYY à HH:mm') : '';
+    return dateTime ? moment(dateTime).format(format) : '';
   } catch (error) {
     return null;
   }
 };
 
-export const getFormatDate = (dateTime) => {
+export const getFormatDate = (dateTime, format='DD/MM/YYYY') => {
   try {
-    return dateTime ? moment(dateTime).format('DD/MM/YYYY') : '';
+    return dateTime ? moment(dateTime).format(format) : '';
   } catch (error) {
     return null;
   }
 };
 
-export const getFormatTime = (dateTime) => {
+export const getFormatTime = (dateTime, format='HH:mm') => {
   try {
-    return dateTime ? moment(dateTime).format('HH:mm') : '';
+    return dateTime ? moment(dateTime).format(format) : '';
   } catch (error) {
     return null;
   }
@@ -174,6 +175,9 @@ export const getFieldTypeLabel = (fieldType) => {
   return FIELD_TYPE_CHOICES.ALL.find((t) => t.value === fieldType)?.label;
 };
 
+export const getBudgetStatusLabel = (status) => {
+  return BUDGET_STATUS_CHOICES.ALL.find((s) => s.value === status)?.label;
+};
 
 
 const intlNumFmt = new Intl.NumberFormat('fr-FR', {

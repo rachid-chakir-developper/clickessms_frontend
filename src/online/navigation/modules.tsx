@@ -555,23 +555,22 @@ export const modules: Module[] = [
       {
         id: 'spending-commitments',
         name: 'Dépenses et Engagements',
-        path: '/online/sales/dépenses-engagements',
+        path: '/online/finance/depenses-engagements',
         icon: <AttachMoneyIcon />,
         disabled: true,
       },
       {
         id: 'billing',
         name: 'Facturation de l’activité',
-        path: '/online/sales/facturation-activité',
+        path: '/online/finance/facturation-activite',
         icon: <RequestQuoteIcon />,
         disabled: true,
       },
       {
         id: 'budget',
         name: 'Budget',
-        path: '/online/sales/budget',
+        path: '/online/finance/budgets',
         icon: <LocalAtmIcon />,
-        disabled: true,
       },
       {
         id: 'cash-flow',

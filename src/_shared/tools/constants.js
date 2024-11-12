@@ -422,3 +422,31 @@ export const FIELD_TYPE_CHOICES = {
     // Add more field types if necessary
   ],
 };
+
+
+export const BUDGET_STATUS_CHOICES = {
+  DRAFT: "DRAFT",
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+  IN_PROGRESS: "IN_PROGRESS",
+  PARTIALLY_USED: "PARTIALLY_USED",
+  COMPLETED: "COMPLETED",
+  OVERSPENT: "OVERSPENT",
+  ON_HOLD: "ON_HOLD",
+  CANCELLED: "CANCELLED",
+  CLOSED: "CLOSED",
+  ALL: [
+    { value: "DRAFT", label: "Brouillon" },
+    { value: "PENDING", label: "En attente de validation" },
+    { value: "APPROVED", label: "Validé" },
+    { value: "REJECTED", label: "Rejeté" },
+    { value: "IN_PROGRESS", label: "En cours" },
+    { value: "PARTIALLY_USED", label: "Partiellement utilisé" },
+    { value: "COMPLETED", label: "Complété" },
+    { value: "OVERSPENT", label: "Dépassement" },
+    { value: "ON_HOLD", label: "En attente" },
+    { value: "CANCELLED", label: "Annulé" },
+    { value: "CLOSED", label: "Clôturé" },
+  ],
+};
