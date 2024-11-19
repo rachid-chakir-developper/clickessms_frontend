@@ -450,3 +450,40 @@ export const BUDGET_STATUS_CHOICES = {
     { value: "CLOSED", label: "Clôturé" },
   ],
 };
+
+export const EXPENSE_STATUS_CHOICES = {
+  DRAFT: "DRAFT",
+  NEW: "NEW",
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+  PAID: "PAID",
+  UNPAID: "UNPAID",
+  ALL: [
+    { value: "DRAFT", label: "Brouillon" },
+    { value: "NEW", label: "Nouveau" },
+    { value: "PENDING", label: "En attente" },
+    { value: "APPROVED", label: "Approuvé" },
+    { value: "REJECTED", label: "Rejeté" },
+    { value: "PAID", label: "Payé" },
+    { value: "UNPAID", label: "Non payé" },
+  ],
+};
+
+
+
+export const EXPENSE_ITEM_STATUS_CHOICES = {
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+  PAID: "PAID",
+  UNPAID: "UNPAID",
+  ALL: [
+    { value: "PENDING", label: "En attente" },
+    { value: "APPROVED", label: "Approuvé" },
+    { value: "REJECTED", label: "Rejeté" },
+    { value: "PAID", label: "Payé" },
+    { value: "UNPAID", label: "Non payé" },
+  ],
+};
+

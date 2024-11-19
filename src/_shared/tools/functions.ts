@@ -24,7 +24,9 @@ import {
   UNDESIRABLE_EVENT_TYPES,
   UNDESIRABLE_EVENT_SEVERITY,
   FIELD_TYPE_CHOICES,
-  BUDGET_STATUS_CHOICES
+  BUDGET_STATUS_CHOICES,
+  EXPENSE_STATUS_CHOICES,
+  EXPENSE_ITEM_STATUS_CHOICES,
 } from './constants';
 
 export const getStatusColor = (status) => {
@@ -177,6 +179,14 @@ export const getFieldTypeLabel = (fieldType) => {
 
 export const getBudgetStatusLabel = (status) => {
   return BUDGET_STATUS_CHOICES.ALL.find((s) => s.value === status)?.label;
+};
+
+export const getExpenseStatusLabel = (status) => {
+  return EXPENSE_STATUS_CHOICES.ALL.find((s) => s.value === status)?.label;
+};
+
+export const getExpenseItemStatusLabel = (status) => {
+  return EXPENSE_ITEM_STATUS_CHOICES.ALL.find((s) => s.value === status)?.label;
 };
 
 

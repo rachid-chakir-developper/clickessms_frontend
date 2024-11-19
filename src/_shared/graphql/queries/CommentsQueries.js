@@ -95,5 +95,26 @@ export const GET_TASK_COMMENTS = gql`
   }
   ${COMMENT_BASIC_INFOS}
 `;
+export const GET_EXPENSE_COMMENTS = gql`
+  query GetExpenseComments(
+    $expenseId: ID
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    expenseComments(
+      expenseId: $expenseId
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
+      totalCount
+      nodes {
+        ...CommentBasicInfosFragment
+      }
+    }
+  }
+  ${COMMENT_BASIC_INFOS}
+`;
 
 // Add more comment-related queries here

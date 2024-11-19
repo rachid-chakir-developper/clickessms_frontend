@@ -89,6 +89,12 @@ const modulesToManage = [
       { name: 'Les modèles des véhicules', description: '', type: 'VehicleModel' },
     ],
   },
+  {
+    title: 'finance',
+    datas: [
+      { name: 'Les natures comptables', description: '', type: 'AccountingNature' },
+    ],
+  },
 ];
 
 function CustomTabPanel(props) {

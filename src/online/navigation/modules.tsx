@@ -9,7 +9,6 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import KeyIcon from '@mui/icons-material/Key';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
@@ -553,10 +552,10 @@ export const modules: Module[] = [
     },
     entries: [
       {
-        id: 'spending-commitments',
-        name: 'Dépenses et Engagements',
-        path: '/online/finance/depenses-engagements',
-        icon: <AttachMoneyIcon />,
+        id: 'finance-dashboard',
+        name: 'Tableaux de bord',
+        path: '/online/finance/dashboard',
+        icon: <DashboardIcon />,
         disabled: true,
       },
       {
@@ -568,7 +567,7 @@ export const modules: Module[] = [
       },
       {
         id: 'budget',
-        name: 'Budget',
+        name: 'Budget / Réalisé',
         path: '/online/finance/budgets',
         icon: <LocalAtmIcon />,
       },
@@ -704,28 +703,27 @@ export const modules: Module[] = [
       {
         id: 'purchase-request-investment',
         name: 'Demande d’achat / Investissement',
-        path: '/online/achat/demande-achat-investissement',
+        path: '/online/achats/depenses-engagements',
         icon: <ShoppingBasketIcon />,
-        disabled: true,
       },
       {
         id: 'approved-suppliers',
         name: 'Fournisseurs vérifiés',
-        path: '/online/achat/fournisseurs-vérifiés',
+        path: '/online/achats/fournisseurs-vérifiés',
         icon: <HowToRegIcon />,
         disabled: true,
       },
       {
         id: 'contract-template',
         name: 'Base contrat',
-        path: '/online/achat/base-contrat',
+        path: '/online/achats/base-contrat',
         icon: <ContentPasteIcon />,
         disabled: true,
       },
       {
         id: 'competition',
         name: 'Mise en concurrence',
-        path: '/online/achat/mise-en-concurrence',
+        path: '/online/achats/mise-en-concurrence',
         icon: <ReduceCapacityIcon />,
         disabled: true,
       },
