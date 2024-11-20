@@ -3,15 +3,17 @@ import Beneficiaries from './beneficiaries/Beneficiaries';
 import Employees from './employees/Employees';
 import { Box } from '@mui/material';
 import Planning from '../planning/Planning';
+import Meetings from './meetings/Meetings';
 
 export default function Humans() {
   return (
     <Box>
       <Routes>
+        <Route path={`cr-entretiens/*`} element={<Meetings />} />
         <Route path={`beneficiaires/*`} element={<Beneficiaries />} />
         <Route path={`employes/*`} element={<Employees />} />
         <Route path={`planning/*`} element={<Planning />} />
-        <Route path="/" element={<Navigate to={`employes`} replace />} />
+        <Route path="/" element={<Navigate to={`reunions`} replace />} />
       </Routes>
     </Box>
   );

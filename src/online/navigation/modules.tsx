@@ -300,7 +300,6 @@ export const modules: Module[] = [
         name: 'CR Entretiens',
         path: '/online/ressources-humaines/cr-entretiens',
         icon: <AssignmentIcon />,
-        disabled: true,
       },
       {
         id: 'absences',
