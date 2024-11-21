@@ -160,7 +160,7 @@ function TransmissionEventOtherInfos({ transmissionEvent }) {
       }}
     >
       <Typography gutterBottom variant="subtitle3" component="h3">
-        Les Bénificiaires
+        Les Bénéficiaires
       </Typography>
       <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
         {transmissionEvent?.beneficiaries?.map((beneficiary, index) => (

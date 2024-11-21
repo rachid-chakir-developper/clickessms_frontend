@@ -241,7 +241,7 @@ function MeetingOtherInfos({ meeting }) {
       {meeting?.beneficiaries?.length > 0 && (
           <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
             <Typography variant="h6" gutterBottom>
-              Bénificiaires concernés
+              Bénéficiaires concernés
             </Typography>
             <Stack direction="row" flexWrap='wrap' spacing={1}>
               {meeting?.beneficiaries?.map((beneficiary, index) => (

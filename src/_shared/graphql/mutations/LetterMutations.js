@@ -2,8 +2,8 @@ import { gql } from '@apollo/client';
 import { LETTER_BASIC_INFOS } from '../fragments/LetterFragment';
 
 export const POST_LETTER = gql`
-  mutation CreateLetter($letterData: LetterInput!, $image: Upload) {
-    createLetter(letterData: $letterData, image: $image) {
+  mutation CreateLetter($letterData: LetterInput!, $document: Upload) {
+    createLetter(letterData: $letterData, document: $document) {
       letter {
         ...LetterBasicInfosFragment
       }
@@ -13,8 +13,8 @@ export const POST_LETTER = gql`
 `;
 
 export const PUT_LETTER = gql`
-  mutation UpdateLetter($id: ID!, $letterData: LetterInput!, $image: Upload) {
-    updateLetter(id: $id, letterData: $letterData, image: $image) {
+  mutation UpdateLetter($id: ID!, $letterData: LetterInput!, $document: Upload) {
+    updateLetter(id: $id, letterData: $letterData, document: $document) {
       letter {
         ...LetterBasicInfosFragment
       }

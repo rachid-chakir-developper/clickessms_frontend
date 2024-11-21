@@ -455,8 +455,8 @@ const [getEmployees, {
                         onInput={(e) => {
                           onGetBeneficiaries(e.target.value)
                         }}
-                        label="Bénificiaires concernés"
-                        placeholder="Ajouter un bénificiaire"
+                        label="Bénéficiaires concernés"
+                        placeholder="Ajouter un bénéficiaire"
                         limitTags={3}
                         value={formik.values.beneficiaries}
                         onChange={(e, newValue) =>

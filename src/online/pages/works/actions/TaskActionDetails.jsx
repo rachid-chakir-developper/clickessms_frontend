@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
   Box,
@@ -9,6 +9,8 @@ import {
   ButtonBase,
   Typography,
   Divider,
+  Button,
+  Stack,
 } from '@mui/material';
 
 import { TASK_ACTION_RECAP } from '../../../../_shared/graphql/queries/TaskActionQueries';
@@ -16,9 +18,13 @@ import ProgressService from '../../../../_shared/services/feedbacks/ProgressServ
 import {
   getFormatDateTime,
   formatCurrencyAmount,
+  getFormatDate,
 } from '../../../../_shared/tools/functions';
 import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard';
 import EstablishmentItemCard from '../../companies/establishments/EstablishmentItemCard';
+import { Edit } from '@mui/icons-material';
+import TaskActionStatusLabelMenu from './TaskActionStatusLabelMenu';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -44,6 +50,17 @@ export default function TaskActionDetails() {
   return (
     <>
       <Box sx={{ width: '100%' }}>
+        
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+        <Link
+          to={`/online/travaux/actions/modifier/${taskActionData?.taskAction?.id}`}
+          className="no_style"
+        >
+          <Button variant="outlined" endIcon={<Edit />}>
+            Modifier
+          </Button>
+        </Link>
+      </Box>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
             <TaskActionMiniInfos taskAction={taskActionData?.taskAction} />
@@ -54,23 +71,13 @@ export default function TaskActionDetails() {
           <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
             <Divider />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Description
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
                 {taskActionData?.taskAction?.description}
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid item xs={6}>
-            <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography gutterBottom variant="subtitle3" component="h3">
-                Observation
-              </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {taskActionData?.taskAction?.observation}
               </Typography>
             </Paper>
           </Grid>
@@ -111,11 +118,8 @@ function TaskActionMiniInfos({ taskAction }) {
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                Réference : <b>{taskAction?.number}</b>
-              </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {taskAction?.name}
+              <Typography variant="body2" color="text.secondary">
+                <b>Échéance: </b> {`${getFormatDate(taskAction?.dueDate)}`}{' '}
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
@@ -124,6 +128,7 @@ function TaskActionMiniInfos({ taskAction }) {
                 <b>Dernière modification: </b>
                 {`${getFormatDateTime(taskAction?.updatedAt)}`}
               </Typography>
+              <TaskActionStatusLabelMenu taskAction={taskAction} />
             </Grid>
           </Grid>
         </Grid>
@@ -144,19 +149,17 @@ function TaskActionOtherInfos({ taskAction }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
-      {taskAction?.bankAccount?.establishment && (
-        <>
-          <Typography variant="h6" gutterBottom>
-            Structure
-          </Typography>
-          <Paper sx={{ padding: 2 }} variant="outlined">
-            <Item>
-              <EstablishmentItemCard
-                establishment={taskAction?.bankAccount?.establishment}
-              />
-            </Item>
+      {taskAction?.employees.length > 0 && (
+          <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
+            <Typography variant="h6" gutterBottom>
+              Personnes concernées
+            </Typography>
+            <Stack direction="row" flexWrap='wrap' spacing={1}>
+              {taskAction?.employees?.map((employee, index) => (
+                <EmployeeChip key={index} employee={employee} />
+              ))}
+            </Stack>
           </Paper>
-        </>
       )}
     </Paper>
   );

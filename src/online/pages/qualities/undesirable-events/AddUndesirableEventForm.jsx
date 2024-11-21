@@ -434,8 +434,8 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                         onInput={(e) => {
                           onGetEmployees(e.target.value)
                         }}
-                        label="Décalarant principal"
-                        placeholder="Décalarant principal"
+                        label="Déclarant principal"
+                        placeholder="Déclarant principal"
                         multiple={false}
                         value={formik.values.employee}
                         onChange={(e, newValue) =>
@@ -450,8 +450,8 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
                           onGetEmployees(e.target.value)
                         }}
 
-                        label="Autres décalarants"
-                        placeholder="Ajouter un autre décalarant"
+                        label="Autres déclarants"
+                        placeholder="Ajouter un autre déclarant"
                         limitTags={3}
                         value={formik.values.declarants}
                         onChange={(e, newValue) =>
@@ -576,8 +576,8 @@ onInput={(e) => {
                         onInput={(e) => {
                           onGetBeneficiaries(e.target.value)
                         }}
-                        label="Bénificiaire(s) concerné(s)"
-                        placeholder="Ajouter un bénificiaire"
+                        label="Bénéficiaire(s) concerné(s)"
+                        placeholder="Ajouter un bénéficiaire"
                         limitTags={3}
                         value={formik.values.beneficiaries}
                         onChange={(e, newValue) =>

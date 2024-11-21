@@ -32,6 +32,7 @@ import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/Beneficia
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
+import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -51,7 +52,7 @@ export default function AddLetterForm({ idLetter, title }) {
   });
   const formik = useFormik({
     initialValues: {
-      image: undefined,
+      document: undefined,
       number: '',
       title: '',
       letterType: 'INCOMING',
@@ -66,7 +67,7 @@ export default function AddLetterForm({ idLetter, title }) {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let { image, ...letterCopy } = values;
+      let { document, ...letterCopy } = values;
       letterCopy.establishments = letterCopy.establishments.map((i) => i?.id);
       letterCopy.employees = letterCopy.employees.map((i) => i?.id);
       letterCopy.beneficiaries = letterCopy.beneficiaries.map((i) => i?.id);
@@ -75,13 +76,13 @@ export default function AddLetterForm({ idLetter, title }) {
         onUpdateLetter({
           id: letterCopy.id,
           letterData: letterCopy,
-          image: image,
+          document: document,
         });
       } else
         createLetter({
           variables: {
             letterData: letterCopy,
-            image: image,
+            document: document,
           },
         });
     },
@@ -253,7 +254,7 @@ const [getEmployees, {
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Titre"
+                  label="libellé"
                   id="title"
                   value={formik.values.title}
                   required
@@ -267,7 +268,7 @@ const [getEmployees, {
                 />
               </Item>
             </Grid>
-            <Grid  xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <FormControl fullWidth>
                   <InputLabel>Type d'courrier</InputLabel>
@@ -295,7 +296,17 @@ const [getEmployees, {
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
-              <Item></Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4} >
+              <Item>
+                <TheFileField
+                  variant="outlined"
+                  label="Pièce jointe"
+                  fileValue={formik.values.document}
+                  onChange={(file) => formik.setFieldValue('document', file)}
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <Item>
@@ -310,8 +321,6 @@ const [getEmployees, {
                   }
                 />
               </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <TheAutocomplete
                   options={employeesData?.employees?.nodes}
@@ -335,8 +344,8 @@ onInput={(e) => {
                         onInput={(e) => {
                           onGetBeneficiaries(e.target.value)
                         }}
-                  label="Bénificiaires"
-                  placeholder="Ajouter un bénificiaire"
+                  label="Bénéficiaires"
+                  placeholder="Ajouter un bénéficiaire"
                   limitTags={3}
                   value={formik.values.beneficiaries}
                   onChange={(e, newValue) =>

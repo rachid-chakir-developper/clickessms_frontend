@@ -42,7 +42,7 @@ export const LETTER_BASIC_INFOS = gql`
     number
     title
     letterType
-    image
+    document
     entryDateTime
     isActive
     establishments{

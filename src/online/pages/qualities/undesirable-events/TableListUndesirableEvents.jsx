@@ -162,7 +162,7 @@ const headCells = [
       disablePadding: false,
       disableClickDetail: true,
       sortDisabled: true,
-      label: 'Autres décalarants',
+      label: 'Autres déclarants',
       render: ({declarants}) => declarants && declarants?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
         <ChipGroupWithPopover people={declarants} />
     </Stack>
@@ -234,7 +234,7 @@ const headCells = [
       disablePadding: false,
       disableClickDetail: true,
       sortDisabled: true,
-      label: 'Bénificiaire(s)',
+      label: 'Bénéficiaire(s)',
       render: ({beneficiaries}) => beneficiaries && beneficiaries?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
         <ChipGroupWithPopover people={beneficiaries?.map((beneficiarie)=>beneficiarie?.beneficiary)} />
     </Stack>
@@ -346,14 +346,14 @@ const headCells = [
         label: 'Progression',
         render: ({id, status, completionPercentage, ticket}, canManageQuality, onCreateUndesirableEventTicket)=> {
           return (status !== EI_STATUS.DRAFT && <>
-          {ticket && <CircularProgressWithLabel value={completionPercentage}/>}
-          {!ticket && canManageQuality && <Button variant="text" size="small" endIcon={<Done />} 
+          {ticket && status !== EI_STATUS.NEW && <CircularProgressWithLabel value={completionPercentage}/>}
+          {(!ticket || status === EI_STATUS.NEW) && canManageQuality && <Button variant="text" size="small" endIcon={<Done />} 
                             onClick={() => {
                               onCreateUndesirableEventTicket(id);
                             }}>
                             Analyser
                           </Button>}
-          {!ticket && !canManageQuality && `En attente d'analyse`}
+          {(!ticket || status === EI_STATUS.NEW) && !canManageQuality && `En attente d'analyse`}
         </>)}
     },
     {

@@ -189,7 +189,7 @@ export default function AddFrameDocumentForm({ idFrameDocument, title }) {
               <Item>
                 <TheFileField
                   variant="outlined"
-                  label="Document de document"
+                  label="Document"
                   fileValue={formik.values.document}
                   onChange={(file) => formik.setFieldValue('document', file)}
                   disabled={loadingPost || loadingPut}
