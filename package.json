@@ -43,6 +43,7 @@
     "@mui/material": "^5.15.18",
     "@mui/x-charts": "^7.3.0",
     "@mui/x-date-pickers": "^7.2.0",
+    "@mui/x-tree-view": "^7.22.1",
     "@react-google-maps/api": "^2.19.3",
     "@tiptap/core": "^2.4.0",
     "@tiptap/extension-heading": "^2.4.0",

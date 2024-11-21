@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { COMPANY_BASIC_INFOS } from '../fragments/CompanyFragment';
+import { COMPANY_BASIC_INFOS, COMPANY_MEDIA_INFOS } from '../fragments/CompanyFragment';
 
 export const POST_COMPANY = gql`
   mutation CreateCompany(
@@ -39,6 +39,29 @@ export const PUT_COMPANY = gql`
     }
   }
   ${COMPANY_BASIC_INFOS}
+`;
+
+
+
+export const PUT_COMPANY_MEDIA = gql`
+  mutation UpdateCompanyMedia(
+    $id: ID
+    $companyMediaData: CompanyMediaInput!
+    $collectiveAgreement: Upload
+    $companyAgreement: Upload
+  ) {
+    updateCompanyMedia(
+      id: $id
+      companyMediaData: $companyMediaData
+      collectiveAgreement: $collectiveAgreement
+      companyAgreement: $companyAgreement
+    ) {
+      companyMedia {
+        ...CompanyMediaBasicInfosFragment
+      }
+    }
+  }
+  ${COMPANY_MEDIA_INFOS}
 `;
 
 

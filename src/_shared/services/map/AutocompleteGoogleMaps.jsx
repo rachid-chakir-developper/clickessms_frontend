@@ -112,7 +112,7 @@ export default function AutocompleteGoogleMaps({onSelect}) {
         setInputValue(newInputValue);
       }}
       renderInput={(params) => (
-        <TextField {...params} label="Trouver où se trouve" fullWidth sx={{ backgroundColor : '#ffffff'}}/>
+        <TextField {...params} label="Rechercher..." fullWidth sx={{ backgroundColor : '#ffffff'}}/>
       )}
       renderOption={(props, option) => {
         const matches =

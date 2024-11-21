@@ -14,6 +14,7 @@ import {
 import { Add, List, Settings } from '@mui/icons-material';
 import DialogAddData from './DialogAddData';
 import DialogListDatas from './DialogListDatas';
+import AccountingNatureTreeView from './AccountingNatureTreeView';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -159,6 +160,7 @@ export default function Datas() {
           </Box>
           {modulesToManage?.map((moduleToManage, index1) => (
             <CustomTabPanel value={value} index={index1} key={index1}>
+              {moduleToManage?.title === 'finance' && <AccountingNatureTreeView />}
               <Grid
                 container
                 spacing={{ xs: 2, md: 3 }}

@@ -337,16 +337,22 @@ export const modules: Module[] = [
       {
         id: 'collective-bargaining-agreement',
         name: 'Convention collective',
-        path: '/online/ressources-humaines/convention-collective',
+        path(session) {
+          const {user}= session
+          return user?.company?.companyMedia?.collectiveAgreement
+        },
+        target: '_blank',
         icon: <AutoStoriesIcon />,
-        disabled: true,
       },
       {
         id: 'company-agreement',
         name: 'Accord d’entreprise',
-        path: '/online/ressources-humaines/accord-d’entreprise',
+        path(session) {
+          const {user}= session
+          return user?.company?.companyMedia?.companyAgreement
+        },
+        target: '_blank',
         icon: <StickyNote2Icon />,
-        disabled: true,
       },
     ],
   },
@@ -845,16 +851,22 @@ export const modules: Module[] = [
       {
         id: 'collective-bargaining-agreement',
         name: 'Convention collective',
-        path: '/online/juridique/convention-collective',
+        path(session) {
+          const {user}= session
+          return user?.company?.companyMedia?.collectiveAgreement
+        },
+        target: '_blank',
         icon: <AutoStoriesIcon />,
-        disabled: true,
       },
       {
         id: 'company-agreement',
         name: 'Accord d’entreprise',
-        path: '/online/juridique/accord-d’entreprise',
+        path(session) {
+          const {user}= session
+          return user?.company?.companyMedia?.companyAgreement
+        },
+        target: '_blank',
         icon: <StickyNote2Icon />,
-        disabled: true,
       },
     ],
   },

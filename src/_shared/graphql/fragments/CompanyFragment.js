@@ -2,6 +2,15 @@
 
 import { gql } from '@apollo/client';
 
+export const COMPANY_MEDIA_INFOS = gql`
+  fragment CompanyMediaBasicInfosFragment on CompanyMediaType {
+    id
+    collectiveAgreement
+    companyAgreement
+    sceShopUrl
+  }
+`;
+
 export const COMPANY_BASIC_INFOS = gql`
   fragment CompanyBasicInfosFragment on CompanyType {
     id
@@ -9,10 +18,14 @@ export const COMPANY_BASIC_INFOS = gql`
     email
     logo
     coverImage
+    companyMedia{
+      ...CompanyMediaBasicInfosFragment
+    }
     sceShopUrl
     isActive
     status
   }
+  ${COMPANY_MEDIA_INFOS}
 `;
 
 export const MY_COMPANY_DETAILS = gql`

@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 import {
   COMPANY_BASIC_INFOS,
   COMPANY_DETAILS,
+  COMPANY_MEDIA_INFOS,
   MY_COMPANY_DETAILS,
 } from '../fragments/CompanyFragment';
 
@@ -12,6 +13,15 @@ export const GET_MY_COMPANY = gql`
     }
   }
   ${MY_COMPANY_DETAILS}
+`;
+
+export const GET_MY_COMPANY_MEDIA = gql`
+  query GetCompanyMedia($id: ID) {
+    companyMedia(id: $id) {
+      ...CompanyMediaBasicInfosFragment
+    }
+  }
+  ${COMPANY_MEDIA_INFOS}
 `;
 
 export const GET_COMPANY = gql`

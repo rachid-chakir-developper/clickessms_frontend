@@ -1,13 +1,22 @@
 import { gql } from '@apollo/client';
-import { DATA_BASIC_INFOS } from '../fragments/DataFragment';
+import { ACCOUNTING_NATURE_BASIC_INFOS, DATA_BASIC_INFOS } from '../fragments/DataFragment';
 
 export const GET_DATAS = gql`
-  query ($typeData: String!) {
-    datas(typeData: $typeData) {
+  query ($typeData: String!, $idParent: ID) {
+    datas(typeData: $typeData, idParent: $idParent) {
       ...DataBasicInfosFragment
     }
   }
   ${DATA_BASIC_INFOS}
+`;
+
+export const GET_ACCOUNTING_NATURES = gql`
+  query ($idParent: ID) {
+    accountingNatures(idParent: $idParent) {
+      ...AccountingNatureBasicInfosFragment
+    }
+  }
+  ${ACCOUNTING_NATURE_BASIC_INFOS}
 `;
 
 export const GET_DATAS_ESTABLISHMENT = gql`
