@@ -49,12 +49,18 @@ export const PUT_COMPANY_MEDIA = gql`
     $companyMediaData: CompanyMediaInput!
     $collectiveAgreement: Upload
     $companyAgreement: Upload
+    $laborLaw: Upload
+    $associationsFoundationsCode: Upload
+    $safcCode: Upload
   ) {
     updateCompanyMedia(
       id: $id
       companyMediaData: $companyMediaData
       collectiveAgreement: $collectiveAgreement
       companyAgreement: $companyAgreement
+      laborLaw: $laborLaw
+      associationsFoundationsCode: $associationsFoundationsCode
+      safcCode: $safcCode
     ) {
       companyMedia {
         ...CompanyMediaBasicInfosFragment

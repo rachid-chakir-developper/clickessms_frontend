@@ -5,6 +5,9 @@ import { Description, Close } from "@mui/icons-material";
 export default function TheFileField(props) {
   const [uploadedFile, setUploadedFile] = React.useState({ path: null, localUrl: null, file: null });
 
+  // Génère un ID unique basé sur le label ou un ID aléatoire
+  const inputId = React.useMemo(() => `file-input-${props.label || Math.random()}`, [props.label]);
+
   React.useEffect(() => {
     if (typeof props?.fileValue === "string") {
       setUploadedFile({ path: props?.fileValue, localUrl: null, file: null });
@@ -47,7 +50,8 @@ export default function TheFileField(props) {
                 <Description sx={{ fontSize: 40 }} />
               </IconButton>
               <Typography variant="body2" color="text.secondary" noWrap>
-                {uploadedFile.file?.name || props?.label}
+                {uploadedFile.file?.name || props?.label}<br />
+                <small><i>{props?.helperText}</i></small>
               </Typography>
               <IconButton
                 onClick={handleRemoveFile}
@@ -64,11 +68,11 @@ export default function TheFileField(props) {
             <Box sx={{ marginTop: 1 }}>
               <input
                 type="file"
-                id="file-input"
+                id={inputId} // Utilisation de l'ID unique
                 style={{ display: "none" }}
                 onChange={handleFileChange}
               />
-              <label htmlFor="file-input">
+              <label htmlFor={inputId}> {/* Lien vers l'ID unique */}
                 <Box
                   sx={{
                     display: "inline-flex",

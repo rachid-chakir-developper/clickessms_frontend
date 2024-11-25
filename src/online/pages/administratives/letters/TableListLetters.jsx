@@ -34,6 +34,7 @@ import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -439,27 +440,7 @@ export default function TableListLetters({
                       </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.employees?.map((employee, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={employee?.employee?.firstName}
-                                  src={
-                                    employee?.employee?.photo
-                                      ? employee?.employee?.photo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={employee?.employee?.firstName}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>
+                      <ChipGroupWithPopover people={row?.employees?.map((employee, index)=> employee?.employee)} />
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton

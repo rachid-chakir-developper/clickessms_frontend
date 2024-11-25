@@ -219,3 +219,11 @@ export function filterMap<I, O>(
   }
   return result;
 }
+
+
+export const truncateText = (text, maxLength = 20) => {
+  if (typeof text !== 'string') {
+    return '';
+  }
+  return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+};

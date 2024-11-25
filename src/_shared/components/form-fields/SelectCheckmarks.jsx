@@ -62,7 +62,7 @@ export default function SelectCheckmarks({
                   label={
                     option?.name
                       ? `${option?.name}`
-                      : `${option?.firstName} ${option?.lastName}`
+                      : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`
                   }
                 />
               ))}
@@ -82,7 +82,7 @@ export default function SelectCheckmarks({
                 primary={
                   option?.name
                     ? `${option?.name}`
-                    : `${option?.firstName} ${option?.lastName}`
+                    : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`
                 }
               />
             </MenuItem>

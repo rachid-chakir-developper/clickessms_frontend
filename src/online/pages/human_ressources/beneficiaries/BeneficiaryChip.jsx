@@ -5,11 +5,11 @@ export default function BeneficiaryChip({ beneficiary }) {
     <Chip
       avatar={
         <Avatar
-          alt={`${beneficiary?.firstName} ${beneficiary?.lastName}`}
+          alt={`${beneficiary?.firstName} ${beneficiary?.preferredName && beneficiary?.preferredName !== ''  ? beneficiary?.preferredName : beneficiary?.lastName}`}
           src={beneficiary?.photo ? beneficiary?.photo : '/default-placeholder.jpg'}
         />
       }
-      label={`${beneficiary?.firstName} ${beneficiary?.lastName}`}
+      label={`${beneficiary?.firstName} ${beneficiary?.preferredName && beneficiary?.preferredName !== ''  ? beneficiary?.preferredName : beneficiary?.lastName}`}
       variant="outlined"
     />
   );

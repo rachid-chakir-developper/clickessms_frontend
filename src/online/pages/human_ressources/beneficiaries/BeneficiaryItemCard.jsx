@@ -69,7 +69,7 @@ export default function BeneficiaryItemCard({
           <Stack direction="row" spacing={2} alignItems="center">
             <Stack direction="column" spacing={0.2} alignItems="center">
             <Typography color="text.primary" fontWeight="medium" fontSize={18}>
-              {`${beneficiary?.firstName} ${beneficiary?.lastName}`}
+              {`${beneficiary?.firstName} ${beneficiary?.preferredName && beneficiary?.preferredName !== ''  ? beneficiary?.preferredName : beneficiary?.lastName}`}
             </Typography>
             <Typography
               component="div"

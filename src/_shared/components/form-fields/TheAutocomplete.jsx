@@ -43,7 +43,7 @@ export default function TheAutocomplete({
       getOptionLabel={(option) =>
         option?.name
           ? `${option?.name}`
-          : `${option?.firstName} ${option?.lastName}`
+          : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`
       }
       filterSelectedOptions
       isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -68,13 +68,13 @@ export default function TheAutocomplete({
                 alt={
                   option?.name
                     ? `${option?.name}`
-                    : `${option?.firstName} ${option?.lastName}`
+                    : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`
                 }
                 src={getPhoto(option)}
               />
               {option?.name
                 ? `${option?.name}`
-                : `${option?.firstName} ${option?.lastName}`}
+                : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`}
             </Box>
           </li>
         ) : (
@@ -87,13 +87,13 @@ export default function TheAutocomplete({
               alt={
                 option?.name
                   ? `${option?.name}`
-                  : `${option?.firstName} ${option?.lastName}`
+                  : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`
               }
               src={getPhoto(option)}
             />
             {option?.name
               ? `${option?.name}`
-              : `${option?.firstName} ${option?.lastName}`}
+              : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`}
           </Box>
         )
       }
@@ -106,7 +106,7 @@ export default function TheAutocomplete({
                 alt={
                   option?.name
                     ? `${option?.name}`
-                    : `${option?.firstName} ${option?.lastName}`
+                    : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`
                 }
                 src={getPhoto(option)}
               />
@@ -114,7 +114,7 @@ export default function TheAutocomplete({
             label={
               option?.name
                 ? `${option?.name}`
-                : `${option?.firstName} ${option?.lastName}`
+                : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`
             }
             {...getTagProps({ index })}
           />

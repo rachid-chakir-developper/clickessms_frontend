@@ -5,11 +5,11 @@ export default function EmployeeChip({ employee }) {
     <Chip
       avatar={
         <Avatar
-          alt={`${employee?.firstName} ${employee?.lastName}`}
+          alt={`${employee?.firstName} ${employee?.preferredName && employee?.preferredName !== ''  ? employee?.preferredName : employee?.lastName}`}
           src={employee?.photo ? employee?.photo : '/default-placeholder.jpg'}
         />
       }
-      label={`${employee?.firstName} ${employee?.lastName}`}
+      label={`${employee?.firstName} ${employee?.preferredName && employee?.preferredName !== ''  ? employee?.preferredName : employee?.lastName}`}
       variant="outlined"
     />
   );

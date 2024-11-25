@@ -163,7 +163,7 @@ const [getEmployees, {
   const [getTaskAction, { loading: loadingTaskAction }] = useLazyQuery(GET_TASK_ACTION, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, folder, ticket, ...taskActionCopy } = data.taskAction;
+      let { __typename, folder, ticket, creator, ...taskActionCopy } = data.taskAction;
       taskActionCopy.dueDate = taskActionCopy.dueDate ? dayjs(taskActionCopy.dueDate) : null;
       formik.setValues(taskActionCopy);
     },

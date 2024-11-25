@@ -830,23 +830,32 @@ export const modules: Module[] = [
       {
         id: 'casf',
         name: 'CASF',
-        path: '/online/juridique/casf',
+        path(session) {
+          const {user}= session
+          return user?.company?.companyMedia?.safcCode
+        },
+        target: '_blank',
         icon: <SourceIcon />,
-        disabled: true,
       },
       {
         id: 'associations-foundation-code',
         name: 'Code des associations et fondations',
-        path: '/online/juridique/Code-associations-fondations',
+        path(session) {
+          const {user}= session
+          return user?.company?.companyMedia?.associationsFoundationsCode
+        },
+        target: '_blank',
         icon: <ImportContactsIcon />,
-        disabled: true,
       },
       {
         id: 'labor-law',
         name: 'Droit du travail',
-        path: '/online/juridique/droit-travail',
+        path(session) {
+          const {user}= session
+          return user?.company?.companyMedia?.laborLaw
+        },
+        target: '_blank',
         icon: <MenuBookIcon />,
-        disabled: true,
       },
       {
         id: 'collective-bargaining-agreement',

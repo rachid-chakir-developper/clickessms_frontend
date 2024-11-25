@@ -7,6 +7,9 @@ export const COMPANY_MEDIA_INFOS = gql`
     id
     collectiveAgreement
     companyAgreement
+    laborLaw
+    associationsFoundationsCode
+    safcCode
     sceShopUrl
   }
 `;

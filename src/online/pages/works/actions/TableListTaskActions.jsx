@@ -37,7 +37,7 @@ import EstablishmentChip from '../../companies/establishments/EstablishmentChip'
 import { render } from 'react-dom';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
-import { getFormatDate, getFormatDateTime, getPriorityLabel } from '../../../../_shared/tools/functions';
+import { getFormatDate, getFormatDateTime, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
 import TaskActionStatusLabelMenu from './TaskActionStatusLabelMenu';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 
@@ -109,13 +109,14 @@ const headCells = [
       disableClickDetail: true,
       sortDisabled: true,
       label: 'Source',
-      render: ({ticket}, navigate) => <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {ticket?.undesirableEvent && <Chip
-                          label={`EI: ${ticket?.undesirableEvent?.title}`}
+      render: ({ticket, creator}, navigate) => <Stack direction="row" flexWrap='wrap' spacing={1}>
+                        {ticket?.undesirableEvent && <Tooltip title={`EI: ${ticket?.undesirableEvent?.title}`}><Chip
+                          label={`EI: ${truncateText(ticket?.undesirableEvent?.title)}`}
                           variant="filled"
                           clickable
                           onClick={()=> navigate(`/online/qualites/evenements-indesirables/details/${ticket?.undesirableEvent?.id}`)}
-                        />}
+                        /></Tooltip>}
+                        {creator?.employee && <EmployeeChip employee={creator?.employee}/>}
                       </Stack>
     },
     {

@@ -69,7 +69,7 @@ export default function EmployeeItemCard({
           <Stack direction="row" spacing={2} alignItems="center">
             <Stack direction="column" spacing={0.2} alignItems="center">
             <Typography color="text.primary" fontWeight="medium" fontSize={18}>
-              {`${employee?.firstName} ${employee?.lastName}`}
+              {`${employee?.firstName} ${employee?.preferredName && employee?.preferredName !== ''  ? employee?.preferredName : employee?.lastName}`}
             </Typography>
             <Typography
               component="div"

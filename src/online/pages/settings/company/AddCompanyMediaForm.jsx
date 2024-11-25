@@ -34,17 +34,22 @@ export default function AddCompanyMediaForm({ idCompanyMedia = null, title = '' 
     initialValues: {
       collectiveAgreement: undefined,
       companyAgreement: undefined,
+      laborLaw: undefined,
+      associationsFoundationsCode: undefined,
+      safcCode: undefined,
       sceShopUrl: '',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let { collectiveAgreement, ...companyMediaFormCopy } = values;
-      let { companyAgreement, ...companyMediaCopy } = companyMediaFormCopy;
+      let { collectiveAgreement, companyAgreement, laborLaw, associationsFoundationsCode, safcCode, ...companyMediaCopy } = values;
       onUpdateCompanyMedia({
         id: companyMediaCopy.id,
         companyMediaData: companyMediaCopy,
         collectiveAgreement: collectiveAgreement,
         companyAgreement: companyAgreement,
+        laborLaw: laborLaw,
+        associationsFoundationsCode: associationsFoundationsCode,
+        safcCode: safcCode,
       });
     },
   });
@@ -141,6 +146,46 @@ export default function AddCompanyMediaForm({ idCompanyMedia = null, title = '' 
                   onChange={(file) =>
                     formik.setFieldValue('companyAgreement', file)
                   }
+                  disabled={loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={2} sm={4} md={4}>
+              <Item>
+                <TheFileField
+                  variant="outlined"
+                  label="Droit du travail"
+                  fileValue={formik.values.laborLaw}
+                  onChange={(file) =>
+                    formik.setFieldValue('laborLaw', file)
+                  }
+                  disabled={loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={2} sm={4} md={4}>
+              <Item>
+                <TheFileField
+                  variant="outlined"
+                  label="Code des associations et fondations"
+                  fileValue={formik.values.associationsFoundationsCode}
+                  onChange={(file) =>
+                    formik.setFieldValue('associationsFoundationsCode', file)
+                  }
+                  disabled={loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={2} sm={4} md={4}>
+              <Item>
+                <TheFileField
+                  variant="outlined"
+                  label="CASF"
+                  fileValue={formik.values.safcCode}
+                  onChange={(file) =>
+                    formik.setFieldValue('safcCode', file)
+                  }
+                  helperText="Code de l'Action Sociale et des Familles"
                   disabled={loadingPut}
                 />
               </Item>

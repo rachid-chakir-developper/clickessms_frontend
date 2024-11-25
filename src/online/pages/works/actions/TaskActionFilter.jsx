@@ -39,11 +39,13 @@ const TaskActionFilter = ({ onFilterChange }) => {
   
   const LIST_TYPES_ITEMS = {
     ALL : 'ALL',
-    // MY_TASK_ACTIONS : 'MY_TASK_ACTIONS',
+    TASK_ACTION_RECEIVED : 'TASK_ACTION_RECEIVED',
+    TASK_ACTION_GIVEN : 'TASK_ACTION_GIVEN',
     TASK_ACTION_ARCHIVED : 'TASK_ACTION_ARCHIVED',
     ALL_: [
       {value: 'ALL', label: 'Tous', hidden: false},
-      // {value: 'MY_TASK_ACTIONS', label: 'Mes actions', hidden: false},
+      {value: 'TASK_ACTION_RECEIVED', label: 'Actions reçues', hidden: false},
+      {value: 'TASK_ACTION_GIVEN', label: 'Actions données', hidden: false},
       {value: 'TASK_ACTION_ARCHIVED', label: 'Archivées', hidden: false},
     ]
   }

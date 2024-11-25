@@ -31,6 +31,7 @@ import { Link } from 'react-router-dom';
 import { useFeedBacks } from '../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../_shared/services/feedbacks/ProgressService';
 import UserRolesLabelMenu from './UserRolesLabelMenu';
+import EmployeeChip from '../human_ressources/employees/EmployeeChip';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -404,20 +405,7 @@ export default function TableListUsers({
                     <StyledTableCell align="left">{row.email}</StyledTableCell>
                     <StyledTableCell align="left"> 
                       <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.employee && <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
-                              src={
-                                row?.employee?.photo
-                                  ? row?.employee?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
-                          variant="outlined"
-                        />}
+                        {row?.employee && <EmployeeChip employee={row?.employee} />}
                         {row?.partner && <Chip
                           avatar={
                             <Avatar
