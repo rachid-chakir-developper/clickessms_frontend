@@ -5,7 +5,7 @@ import { POST_COMMENT } from '../../../../../../_shared/graphql/mutations/Commen
 import { useMutation } from '@apollo/client';
 import { Send } from '@mui/icons-material';
 
-export default function InputSendComment({type, task, onCommentSent}){
+export default function InputSendComment({type, taskAction, onCommentSent}){
 
     const [createComment, { loading : loadingCommentPost }] = useMutation(POST_COMMENT, {
         onCompleted: (data) => {
@@ -23,7 +23,7 @@ export default function InputSendComment({type, task, onCommentSent}){
     if (newComment.trim() === '') return;
     createComment({ 
         variables: {
-            taskId : task?.id,
+            taskActionId : taskAction?.id,
             commentData : {text: newComment},
         } 
     })

@@ -11,7 +11,7 @@ export default function InputSendComment({type, expense, onCommentSent}){
         onCompleted: (data) => {
             console.log(data);
             let { __typename, ...commentCopy } = data.createComment.comment;
-            if(commentCopy) onCommentSent()
+            if(commentCopy && onCommentSent) onCommentSent()
         },
         onError: (err) => {
             console.warn(err)

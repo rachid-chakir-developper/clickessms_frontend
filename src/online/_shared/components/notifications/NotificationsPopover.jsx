@@ -181,7 +181,7 @@ function NotificationItem({ notification, onClick }) {
     if(task) return `/online/travaux/interventions/details/${task?.id}`
     if(undesirableEvent) return `/online/qualites/evenements-indesirables/details/${undesirableEvent?.id}`
     if(taskAction) return `/online/travaux/actions/details/${taskAction?.id}`
-    if(meetingDecision) return `/online/administratif/reunion-decisions/details/${meetingDecision?.id}`
+    if(meetingDecision) return `/online/travaux/actions/`
     if(employeeAbsence) return`/online/planning/absences-employes/details/${employeeAbsence?.id}`
     return '#';
   }

@@ -437,7 +437,7 @@ export default function AddVehicleRepairForm({
                     <Item>
                       <TheTextField
                         variant="outlined"
-                        label="Déscription"
+                        label="Description"
                         multiline
                         rows={4}
                         value={formik.values.description}
@@ -495,7 +495,7 @@ export default function AddVehicleRepairForm({
                           <Item sx={{position: 'relative'}}>
                             <TheTextField
                               variant="outlined"
-                              label="Déscription"
+                              label="Description"
                               multiline
                               rows={2}
                               value={item.description}
@@ -549,7 +549,7 @@ export default function AddVehicleRepairForm({
                           <Item sx={{position: 'relative'}}>
                             <TheTextField
                               variant="outlined"
-                              label="Déscription"
+                              label="Description"
                               multiline
                               rows={2}
                               value={item.description}

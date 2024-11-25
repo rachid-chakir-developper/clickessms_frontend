@@ -25,6 +25,7 @@ import EstablishmentItemCard from '../../companies/establishments/EstablishmentI
 import { Edit } from '@mui/icons-material';
 import TaskActionStatusLabelMenu from './TaskActionStatusLabelMenu';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import TaskActionTabs from './actions-tabs/TaskActionTabs';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -79,6 +80,14 @@ export default function TaskActionDetails() {
               <Typography gutterBottom variant="subtitle1" component="div">
                 {taskActionData?.taskAction?.description}
               </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} sx={{ marginY: 3 }}>
+            <Divider />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <Paper sx={{ padding: 2 }}>
+              <TaskActionTabs taskAction={taskActionData?.taskAction}/>
             </Paper>
           </Grid>
         </Grid>

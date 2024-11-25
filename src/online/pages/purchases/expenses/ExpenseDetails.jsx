@@ -90,7 +90,7 @@ export default function ExpenseDetails() {
           <Grid item xs={6}>
             <Paper sx={{ padding: 2, marginBottom: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
-                Déscription
+                Description
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
                 {expenseData?.expense?.description}

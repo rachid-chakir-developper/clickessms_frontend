@@ -3,8 +3,20 @@ import { gql } from '@apollo/client';
 import { COMMENT_BASIC_INFOS, COMMENT_DETAILS } from '../fragments/CommentFragment';
 
 export const ON_COMMENT_ADDED = gql`
-  subscription onCommentAdded($taskStepId: ID, $ticketId: ID){
-    onCommentAdded(taskStepId: $taskStepId, ticketId: $ticketId){
+    subscription onCommentAdded(
+    $taskStepId: ID
+    $ticketId: ID
+    $taskId: ID
+    $taskActionId: ID
+    $expenseId: ID
+  ){
+    onCommentAdded(
+      taskStepId: $taskStepId
+      ticketId: $ticketId
+      taskId: $taskId
+      taskActionId: $taskActionId
+      expenseId: $expenseId
+      ){
       comment{
         ...CommentDetailsFragment
       }
@@ -14,8 +26,20 @@ export const ON_COMMENT_ADDED = gql`
 `;
 
 export const ON_COMMENT_UPDATED = gql`
-  subscription onCommentUpdated($taskStepId: ID, $ticketId: ID) {
-    onCommentUpdated(taskStepId: $taskStepId, ticketId: $ticketId) {
+  subscription onCommentUpdated(
+    $taskStepId: ID
+    $ticketId: ID
+    $taskId: ID
+    $taskActionId: ID
+    $expenseId: ID
+  ) {
+    onCommentUpdated(
+      taskStepId: $taskStepId
+      ticketId: $ticketId
+      taskId: $taskId
+      taskActionId: $taskActionId
+      expenseId: $expenseId
+      ) {
       comment{
         ...CommentBasicInfosFragment
       }
@@ -25,8 +49,20 @@ export const ON_COMMENT_UPDATED = gql`
 `;
 
 export const ON_COMMENT_DELETED = gql`
-  subscription onCommentDeleted($taskStepId: ID, $ticketId: ID){
-    onCommentDeleted(taskStepId: $taskStepId, ticketId: $ticketId) {
+  subscription onCommentDeleted(
+    $taskStepId: ID
+    $ticketId: ID
+    $taskId: ID
+    $taskActionId: ID
+    $expenseId: ID
+    ){
+    onCommentDeleted(
+      taskStepId: $taskStepId
+      ticketId: $ticketId
+      taskId: $taskId
+      taskActionId: $taskActionId
+      expenseId: $expenseId
+      ) {
       comment{
         ...CommentBasicInfosFragment
       }

@@ -73,29 +73,30 @@ export default function ListTaskActions() {
       },
       update(cache, { data: { deleteTaskAction } }) {
         console.log('Updating cache after deletion:', deleteTaskAction);
-
-        const deletedTaskActionId = deleteTaskAction.id;
-
-        cache.modify({
-          fields: {
-            taskActions(
-              existingTaskActions = { totalCount: 0, nodes: [] },
-              { readField },
-            ) {
-              const updatedTaskActions = existingTaskActions.nodes.filter(
-                (taskAction) =>
-                  readField('id', taskAction) !== deletedTaskActionId,
-              );
-
-              console.log('Updated taskActions:', updatedTaskActions);
-
-              return {
-                totalCount: existingTaskActions.totalCount - 1,
-                nodes: updatedTaskActions,
-              };
+        if(deleteTaskAction?.success){
+          const deletedTaskActionId = deleteTaskAction.id;
+  
+          cache.modify({
+            fields: {
+              taskActions(
+                existingTaskActions = { totalCount: 0, nodes: [] },
+                { readField },
+              ) {
+                const updatedTaskActions = existingTaskActions.nodes.filter(
+                  (taskAction) =>
+                    readField('id', taskAction) !== deletedTaskActionId,
+                );
+  
+                console.log('Updated taskActions:', updatedTaskActions);
+  
+                return {
+                  totalCount: existingTaskActions.totalCount - 1,
+                  nodes: updatedTaskActions,
+                };
+              },
             },
-          },
-        });
+          });
+        }
       },
       onError: (err) => {
         console.log(err);

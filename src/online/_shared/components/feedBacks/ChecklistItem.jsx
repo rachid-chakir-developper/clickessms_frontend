@@ -30,7 +30,7 @@ export default function ChecklistListItem({ checklistItem }) {
                 {checklistItem?.localisation}
               </Typography>
               <Typography gutterBottom variant="p" component="p">
-                <b>Déscription : </b>
+                <b>Description : </b>
                 {checklistItem?.description}
               </Typography>
               <Typography gutterBottom variant="p" component="p">
