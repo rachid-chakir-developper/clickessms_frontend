@@ -45,6 +45,11 @@ export function AuthorizationSystemProvider({ children }) {
         return user.company.id;
       },
     },
+    accountingNatures: {
+      company() {
+        return user.company.id;
+      },
+    },
     settings: {
       company() {
         return user.company.id;

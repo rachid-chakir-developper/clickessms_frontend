@@ -24,8 +24,8 @@ export default function ChipGroupWithPopover({ people }) {
       {displayedPeople.map((person, index) => (
         <Chip
           key={index}
-          avatar={<Avatar alt={`${person?.firstName} ${person?.lastName}`} src={person?.photo} />}
-          label={`${person?.firstName} ${person?.lastName}`}
+          avatar={<Avatar alt={`${person?.firstName} ${person?.preferredName && person?.preferredName !== ''  ? person?.preferredName : person?.lastName}`} src={person?.photo} />}
+          label={`${person?.firstName} ${person?.preferredName && person?.preferredName !== ''  ? person?.preferredName : person?.lastName}`}
           variant="outlined"
         />
       ))}
@@ -55,10 +55,10 @@ export default function ChipGroupWithPopover({ people }) {
             {people.map((person, index) => (
               <ListItem key={index}>
                 <ListItemAvatar>
-                  <Avatar src={person?.photo} alt={`${person?.firstName} ${person?.lastName}`} />
+                  <Avatar src={person?.photo} alt={`${person?.firstName} ${person?.preferredName && person?.preferredName !== ''  ? person?.preferredName : person?.lastName}`} />
                 </ListItemAvatar>
                 <ListItemText
-                  primary={`${person?.firstName} ${person?.lastName}`}
+                  primary={`${person?.firstName} ${person?.preferredName && person?.preferredName !== ''  ? person?.preferredName : person?.lastName}`}
                 />
               </ListItem>
             ))}

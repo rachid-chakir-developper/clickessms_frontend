@@ -21,6 +21,7 @@ import ProgressService from '../../../../_shared/services/feedbacks/ProgressServ
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
+import AccountingNatureTreeViewForm from './AccountingNatureTreeViewForm';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -285,6 +286,11 @@ export default function AddBudgetForm({ idBudget, title }) {
                 >
                   Valider
                 </Button>
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+              <Item>
+                <AccountingNatureTreeViewForm budget={formik.values} />
               </Item>
             </Grid>
           </Grid>

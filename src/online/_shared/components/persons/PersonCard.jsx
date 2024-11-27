@@ -32,7 +32,7 @@ export default function PersonCard({ person }) {
         <Typography fontWeight="bold" noWrap>
           {person?.name
             ? person?.name
-            : `${person?.firstName} ${person?.lastName}`}
+            : `${person?.firstName} ${person?.preferredName && person?.preferredName !== ''  ? person?.preferredName : person?.lastName}`}
         </Typography>
         <Typography variant="body2" color="text.secondary" fontWeight="medium">
           {person?.mobile && person?.mobile != '' ? `${person?.mobile} | ` : ''}

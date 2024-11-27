@@ -10,10 +10,24 @@ export const GET_DATAS = gql`
   ${DATA_BASIC_INFOS}
 `;
 
+
 export const GET_ACCOUNTING_NATURES = gql`
-  query ($idParent: ID) {
-    accountingNatures(idParent: $idParent) {
-      ...AccountingNatureBasicInfosFragment
+  query GetAccountingNatures(
+    $accountingNatureFilter: AccountingNatureFilterInput
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    accountingNatures(
+      accountingNatureFilter: $accountingNatureFilter
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
+      totalCount
+      nodes {
+        ...AccountingNatureBasicInfosFragment
+      }
     }
   }
   ${ACCOUNTING_NATURE_BASIC_INFOS}

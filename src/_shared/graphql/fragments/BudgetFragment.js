@@ -4,6 +4,22 @@ import { gql } from '@apollo/client';
 import { FOLDER_MINI_INFOS } from './MediaFragment';
 import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 
+export const BUDGET_ACCOUNTING_NATURE_BASIC_INFOS = gql`
+  fragment BudgetAccountingNatureBasicInfosFragment on BudgetAccountingNatureType {
+    id
+    amountAllocated
+    budget{
+      id
+      name
+    }
+    accountingNature{
+      id
+      name
+    }
+  }
+`;
+
+
 export const BUDGET_BASIC_INFOS = gql`
   fragment BudgetBasicInfosFragment on BudgetType {
     id

@@ -36,7 +36,7 @@ export default function InputSendComment({type, taskAction, onCommentSent}){
                 fullWidth
                 multiline
                 variant="outlined"
-                label="Tapez votre comment..."
+                label="Tapez votre commentaire..."
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
             />

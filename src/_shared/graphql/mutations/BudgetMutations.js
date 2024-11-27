@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { BUDGET_BASIC_INFOS } from '../fragments/BudgetFragment';
+import { BUDGET_ACCOUNTING_NATURE_BASIC_INFOS, BUDGET_BASIC_INFOS } from '../fragments/BudgetFragment';
 
 export const POST_BUDGET = gql`
   mutation CreateBudget($budgetData: BudgetInput!) {
@@ -24,6 +24,20 @@ export const PUT_BUDGET = gql`
     }
   }
   ${BUDGET_BASIC_INFOS}
+`;
+
+export const PUT_ACCOUNTING_NATURE_BUDGET = gql`
+  mutation UpdateBudgetAccountingNature(
+    $id: ID
+    $budgetAccountingNatureData: BudgetAccountingNatureInput!
+  ) {
+    updateBudgetAccountingNature(id: $id, budgetAccountingNatureData: $budgetAccountingNatureData) {
+      budgetAccountingNature {
+        ...BudgetAccountingNatureBasicInfosFragment
+      }
+    }
+  }
+  ${BUDGET_ACCOUNTING_NATURE_BASIC_INFOS}
 `;
 
 export const PUT_BUDGET_STATE = gql`

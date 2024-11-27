@@ -34,6 +34,20 @@ export const PUT_TASK_ACTION = gql`
   ${TASK_ACTION_BASIC_INFOS}
 `;
 
+export const PUT_TASK_ACTION_FIELDS = gql`
+  mutation UpdateTaskActionFields($id: ID!, $taskActionData: TaskActionInput!) {
+    updateTaskActionFields(id: $id, taskActionData: $taskActionData) {
+      done
+      success
+      message
+      taskAction {
+        ...TaskActionBasicInfosFragment
+      }
+    }
+  }
+  ${TASK_ACTION_BASIC_INFOS}
+`;
+
 export const DELETE_TASK_ACTION = gql`
   mutation DeleteTaskAction($id: ID!) {
     deleteTaskAction(id: $id) {

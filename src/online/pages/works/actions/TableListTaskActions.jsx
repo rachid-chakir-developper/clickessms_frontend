@@ -402,7 +402,7 @@ export default function TableListTaskActions({
                 <StyledTableRow>
                   <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucune action trouvé.
+                      Aucune action trouvée.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>

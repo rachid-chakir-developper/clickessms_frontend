@@ -5,6 +5,7 @@ export const rolesModel = defineRolesModel(entitiesModel, {
   company: {
     SUPER_ADMIN: { // Super admin'
       companies: 'edit',
+      accountingNatures: 'edit',
       sce: 'edit',
       sceModules: 'edit',
       settings: 'edit',

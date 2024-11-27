@@ -14,7 +14,7 @@ import {
 import { Add, List, Settings } from '@mui/icons-material';
 import DialogAddData from './DialogAddData';
 import DialogListDatas from './DialogListDatas';
-import AccountingNatureTreeView from './AccountingNatureTreeView';
+import AccountingNatureTreeView from './accounting_natures/AccountingNatureTreeView';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -91,11 +91,9 @@ const modulesToManage = [
     ],
   },
   {
-    title: 'finance',
-    datas: [
-      { name: 'Les natures comptables', description: '', type: 'AccountingNature' },
-    ],
-  },
+    title: 'finance - Les natures comptables',
+    type: 'AccountingNature',
+  },,
 ];
 
 function CustomTabPanel(props) {
@@ -160,13 +158,13 @@ export default function Datas() {
           </Box>
           {modulesToManage?.map((moduleToManage, index1) => (
             <CustomTabPanel value={value} index={index1} key={index1}>
-              {moduleToManage?.title === 'finance' && <AccountingNatureTreeView />}
+              {moduleToManage?.type === 'AccountingNature' && <AccountingNatureTreeView />}
               <Grid
                 container
                 spacing={{ xs: 2, md: 3 }}
                 columns={{ xs: 4, sm: 8, md: 12 }}
               >
-                {moduleToManage.datas.map((data, index) => (
+                {moduleToManage?.datas?.map((data, index) => (
                   <Grid item xs={2} sm={4} md={4} key={index}>
                     <Item>
                       <Card sx={{ height: '100%' }}>

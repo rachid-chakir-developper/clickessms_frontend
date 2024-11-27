@@ -8,6 +8,10 @@ export const entitiesModel = defineEntitiesModel({
     ownedBy: 'company',
     privileges: ['edit', 'view'],
   },
+  accountingNatures: {
+    ownedBy: 'company',
+    privileges: ['edit', 'view'],
+  },
   settings: {
     ownedBy: 'company',
     privileges: ['edit', 'view'],
