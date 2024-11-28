@@ -15,6 +15,7 @@ export default function TheAutocomplete({
   onChange,
   onInputChange,
   onInput,
+  onFocus,
   multiple = true,
   id="TheAutocomplete",
   helperText = null,
@@ -130,6 +131,7 @@ export default function TheAutocomplete({
           helperText={helperText}
           error={error}
           onInput={onInput}
+          onFocus={onFocus}
         />
       )}
     />

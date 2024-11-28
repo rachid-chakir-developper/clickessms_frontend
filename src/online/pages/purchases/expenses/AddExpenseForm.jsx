@@ -35,10 +35,10 @@ import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueri
 import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
 import CardDisplayMap from '../../../../_shared/components/helpers/CardDisplayMap';
 import { Close } from '@mui/icons-material';
-import { EXPENSE_STATUS_CHOICES, PRIORITIES } from '../../../../_shared/tools/constants';
+import { EXPENSE_STATUS_CHOICES } from '../../../../_shared/tools/constants';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
-import { GET_DATAS_EXPENSE } from '../../../../_shared/graphql/queries/DataQueries';
+import { GET_ALL_ACCOUNTING_NATURES } from '../../../../_shared/graphql/queries/DataQueries';
 import MultiFileField from '../../../../_shared/components/form-fields/MultiFileField';
 
 const Item = styled(Stack)(({ theme }) => ({
@@ -86,6 +86,7 @@ export default function AddExpenseForm({ idExpense, title }) {
       expenseCopy.expenseItems.forEach((item) => {
         let { __typename, ...itemCopy } = item;
         itemCopy.establishment = itemCopy.establishment ? itemCopy.establishment.id : null;
+        itemCopy.accountingNature = itemCopy.accountingNature ? itemCopy.accountingNature.id : null;
         items.push(itemCopy);
       });
       expenseCopy.expenseItems = items;
@@ -114,12 +115,16 @@ export default function AddExpenseForm({ idExpense, title }) {
     fetchPolicy: 'network-only',
   });
 
-  const {
-    loading: loadingDatas,
-    data: dataData,
-    error: datsError,
-    fetchMore: fetchMoreDatas,
-  } = useQuery(GET_DATAS_EXPENSE, { fetchPolicy: 'network-only' });
+  const [getAccountingNatures, {
+    loading: loadingAccountingNatures,
+    data: accountingNaturesData,
+    error: accountingNaturesError,
+    fetchMore: fetchMoreAccountingNatures,
+  }] = useLazyQuery(GET_ALL_ACCOUNTING_NATURES, { variables: { accountingNatureFilter : {listType: 'ALL'}, page: 1, limit: 10 } });
+  
+  const onGetAccountingNatures = (keyword)=>{
+    getAccountingNatures({ variables: { accountingNatureFilter : keyword === '' ? null : {listType: 'ALL', keyword}, page: 1, limit: 10 } })
+  }
 
   const [createExpense, { loading: loadingPost }] = useMutation(POST_EXPENSE, {
     onCompleted: (data) => {
@@ -219,9 +224,6 @@ export default function AddExpenseForm({ idExpense, title }) {
       let items = [];
       expenseCopy.expenseItems.forEach((item) => {
         let { __typename, ...itemCopy } = item;
-        itemCopy.accountingNature = itemCopy.accountingNature
-          ? Number(itemCopy.accountingNature.id)
-          : null;
         items.push(itemCopy);
       });
       expenseCopy.expenseItems = items;
@@ -240,7 +242,7 @@ export default function AddExpenseForm({ idExpense, title }) {
       ...formik.values,
       expenseItems: [
         ...formik.values.expenseItems,
-        { accountingNature: null, establishment: null, amount: 0, description: '' },
+        { accountingNature: null, establishment: null, amount: 0, comment: '' },
       ],
     });
   };
@@ -332,7 +334,7 @@ export default function AddExpenseForm({ idExpense, title }) {
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Description"
+                  label="Détail"
                   multiline
                   rows={4}
                   value={formik.values.description}
@@ -358,31 +360,22 @@ export default function AddExpenseForm({ idExpense, title }) {
                   
                   <Grid item xs={12} sm={6} md={3} >
                     <Item>
-                      <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">
-                          Nature
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          label="Nature"
-                          value={item.accountingNature}
-                          onChange={(e) =>
-                            formik.setFieldValue(`expenseItems.${index}.accountingNature`, e.target.value)
-                          }
-                        >
-                          <MenuItem value={null}>
-                            <em>Choisissez un type</em>
-                          </MenuItem>
-                          {dataData?.accountingNatures?.map((data, index) => {
-                            return (
-                              <MenuItem key={index} value={data.id}>
-                                {data.name}
-                              </MenuItem>
-                            );
-                          })}
-                        </Select>
-                      </FormControl>
+                      <TheAutocomplete
+                        options={accountingNaturesData?.accountingNatures?.nodes}
+                        onInput={(e) => {
+                                onGetAccountingNatures(e.target.value)
+                              }}
+                        onFocus={(e) => {
+                          onGetAccountingNatures(e.target.value)
+                        }}
+                        label="Nature"
+                        placeholder="Nature"
+                        multiple={false}
+                        value={item.accountingNature}
+                        onChange={(e, newValue) =>
+                          formik.setFieldValue(`expenseItems.${index}.accountingNature`, newValue)
+                        }
+                      />
                     </Item>
                   </Grid>
                   <Grid item xs={12} sm={4} md={3} >
@@ -426,13 +419,13 @@ export default function AddExpenseForm({ idExpense, title }) {
                     <Item sx={{position: 'relative'}}>
                       <TheTextField
                         variant="outlined"
-                        label="Description"
+                        label="Commentaire"
                         multiline
                         rows={4}
-                        value={item.description}
+                        value={item.comment}
                         onChange={(e) =>
                           formik.setFieldValue(
-                            `expenseItems.${index}.description`,
+                            `expenseItems.${index}.comment`,
                             e.target.value,
                           )
                         }

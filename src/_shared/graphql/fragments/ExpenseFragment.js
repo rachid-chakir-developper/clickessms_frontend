@@ -52,6 +52,7 @@ export const EXPENSE_ITEM_DETAILS = gql`
     establishment{
       ...EstablishmentMiniInfosFragment
     }
+    comment
     description
   }
   ${ESTABLISHMENT_MINI_INFOS}

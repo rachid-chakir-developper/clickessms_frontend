@@ -86,7 +86,7 @@ export default function ExpenseStatusLabelMenu({expense}) {
         />
 
         {/* Modal pour demander le commentaire */}
-        <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth="true" maxWidth="md">
+        <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth={true} maxWidth="md">
           <DialogTitle>Ajouter un commentaire</DialogTitle>
           <DialogContent>
             <InputSendComment type="iconButton" expense={expense} onCommentSent={handleCloseDialog}/>

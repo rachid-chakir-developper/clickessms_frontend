@@ -66,6 +66,26 @@ function CustomLabel({ children, className, numberOfChildren, amountAllocated, a
     update(cache, { data: { updateBudgetAccountingNature } }) {
       const updatedAccountingNature = updateBudgetAccountingNature.budgetAccountingNature.accountingNature;
       const amountAllocated = updateBudgetAccountingNature.budgetAccountingNature.amountAllocated;
+
+      const updateChildRecursively = (nodes, updatedNode, readField) => {
+        return nodes.map(accountingNature => {
+          // Si c'est le bon node à mettre à jour
+          const accountingNatureChildren = readField('children', accountingNature)
+          if (readField('id', accountingNature) === updatedNode.id) {
+            return {...updatedNode, amountAllocated: amountAllocated};
+          }
+  
+          // Si cet élément a des enfants, on les met à jour récursivement
+          if (accountingNatureChildren && accountingNatureChildren.length > 0) {
+            return {
+              ...accountingNature,
+              children: updateChildRecursively(accountingNatureChildren, updatedNode),
+            };
+          }
+  
+          return accountingNature;
+        });
+      };
   
       cache.modify({
         fields: {
@@ -73,6 +93,13 @@ function CustomLabel({ children, className, numberOfChildren, amountAllocated, a
             let updatedNodes = existingAccountingNatures.nodes.map(accountingNature => {
               if (readField('id', accountingNature) === updatedAccountingNature.id) {
                 return {...updatedAccountingNature, amountAllocated: amountAllocated};
+              }
+
+              if (readField('children', accountingNature)) {
+                return {
+                  ...accountingNature,
+                  children: updateChildRecursively(accountingNature.children || [], updatedAccountingNature, readField),
+                };
               }
   
               return accountingNature;
@@ -119,7 +146,7 @@ function CustomLabel({ children, className, numberOfChildren, amountAllocated, a
               <InputAdornment position="start">€</InputAdornment>
             ),
           }}
-          value={amountAllocatedValue}
+          value={amountAllocatedValue || ''}
           onChange={(e) =>{
               setAmountAllocatedValue(e.target.value)
             }

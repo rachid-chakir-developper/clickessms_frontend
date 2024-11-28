@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { ACCOUNTING_NATURE_BASIC_INFOS, DATA_BASIC_INFOS } from '../fragments/DataFragment';
+import { ACCOUNTING_NATURE_BASIC_INFOS, ACCOUNTING_NATURE_MINI_INFOS, DATA_BASIC_INFOS } from '../fragments/DataFragment';
 
 export const GET_DATAS = gql`
   query ($typeData: String!, $idParent: ID) {
@@ -31,6 +31,28 @@ export const GET_ACCOUNTING_NATURES = gql`
     }
   }
   ${ACCOUNTING_NATURE_BASIC_INFOS}
+`;
+
+export const GET_ALL_ACCOUNTING_NATURES = gql`
+  query GetAccountingNatures(
+    $accountingNatureFilter: AccountingNatureFilterInput
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    accountingNatures(
+      accountingNatureFilter: $accountingNatureFilter
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
+      totalCount
+      nodes {
+        ...AccountingNatureMiniInfosFragment
+      }
+    }
+  }
+  ${ACCOUNTING_NATURE_MINI_INFOS}
 `;
 
 export const GET_DATAS_ESTABLISHMENT = gql`

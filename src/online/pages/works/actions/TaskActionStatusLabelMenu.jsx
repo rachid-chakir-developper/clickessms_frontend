@@ -55,7 +55,7 @@ export default function TaskActionStatusLabelMenu({taskAction, disabled}) {
             disabled={disabled}
         />
         {/* Modal pour demander le commentaire */}
-        <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth="true" maxWidth="md">
+        <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth={true} maxWidth="md">
           <DialogTitle>Ajouter un commentaire</DialogTitle>
           <DialogContent>
             <InputSendComment type="iconButton" taskAction={taskAction} onCommentSent={handleCloseDialog}/>
