@@ -22,7 +22,7 @@ export default function ExpenseStatusLabelMenu({expense}) {
     return expense?.status === 'PAID' || expense?.status === 'UNPAID'
   }
   const ALL_EXPENSE_STATUS_CHOICES = [
-    { value: 'NEW', label: 'Nouveau', icon: <HourglassEmpty />, color: 'default'},
+    // { value: 'NEW', label: 'Nouveau', icon: <HourglassEmpty />, color: 'default'},
     { value: 'PENDING', label: 'En attente', icon: <HourglassTop />, color: 'default'},
     { value: "APPROVED", label: "Approuvé", icon: <Done />, color: 'success',},
     { value: "REJECTED", label: "Rejeté", icon: <Cancel />, color: 'warning'},
@@ -31,7 +31,7 @@ export default function ExpenseStatusLabelMenu({expense}) {
   ];
   
   const EXPENSE_STATUS_CHOICES = [
-    { value: 'NEW', label: 'Nouveau', icon: <HourglassEmpty />, color: 'default', hidden: true},
+    // { value: 'NEW', label: 'Nouveau', icon: <HourglassEmpty />, color: 'default', hidden: true},
     { value: 'PENDING', label: 'En attente', icon: <HourglassTop />, color: 'default', hidden: true},
     { value: "APPROVED", label: "Approuvé", icon: <Done />, color: 'success', hidden: true},
     { value: "REJECTED", label: "Rejeté", icon: <Cancel />, color: 'warning', hidden: true},

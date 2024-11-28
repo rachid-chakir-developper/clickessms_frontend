@@ -47,9 +47,9 @@ const ExpenseFilter = ({ onFilterChange }) => {
     MY_EXPENSE_REQUESTS : 'MY_EXPENSE_REQUESTS',
     ALL : 'ALL',
     ALL_: [
-      {value: 'ALL', label: 'Tous', hidden: !canManageFinance},
+      {value: 'ALL', label: 'Tous', hidden: false},
       {value: 'MY_EXPENSES', label: 'Mes dépenses', hidden: false},
-      {value: 'MY_EXPENSE_REQUESTS', label: 'Mes demandes', hidden: canManageFinance},
+      {value: 'MY_EXPENSE_REQUESTS', label: 'Mes demandes', hidden: true},
     ]
   }
 
@@ -59,7 +59,7 @@ const ExpenseFilter = ({ onFilterChange }) => {
     keyword: '',
     establishments: null,
     statuses: null,
-    listType: canManageFinance ? 'ALL' : 'MY_EXPENSES'
+    listType: 'ALL'
   });
 
   const [selectedStatuses, setFilterSelectedStatuses] = useState([])

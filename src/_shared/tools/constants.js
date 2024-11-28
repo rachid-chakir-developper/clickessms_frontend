@@ -487,3 +487,46 @@ export const EXPENSE_ITEM_STATUS_CHOICES = {
   ],
 };
 
+export const PAYMENT_METHOD = {
+  CREDIT_CARD: "CREDIT_CARD",
+  CHECK: "CHECK",
+  CASH: "CASH",
+  PURCHASE_ORDER: "PURCHASE_ORDER",
+  BANK_TRANSFER: "BANK_TRANSFER",
+  DIRECT_DEBIT: "DIRECT_DEBIT",  // Prélèvement
+  // BILL_OF_EXCHANGE: "BILL_OF_EXCHANGE",  // Lettre de change relevé
+  // LIBEO_TRANSFER: "LIBEO_TRANSFER",  // Virement par Libeo
+  // PAYPAL: "PAYPAL",
+  // MOBILE_PAYMENT: "MOBILE_PAYMENT",
+  // CRYPTOCURRENCY: "CRYPTOCURRENCY",
+  // DEBIT_CARD: "DEBIT_CARD",
+  // APPLE_PAY: "APPLE_PAY",
+  // GOOGLE_PAY: "GOOGLE_PAY",
+  ALL: [
+      { value: "CREDIT_CARD", label: "Carte de crédit" },
+      { value: "CHECK", label: "Chèque" },
+      { value: "CASH", label: "Espèces" },
+      { value: "PURCHASE_ORDER", label: "Bon de commande" },  // Prélèvement
+      { value: "BANK_TRANSFER", label: "Virement bancaire" },
+      { value: "DIRECT_DEBIT", label: "Prélèvement" },  // Prélèvement
+      // { value: "BILL_OF_EXCHANGE", label: "Lettre de change relevé" },  // Lettre de change relevé
+      // { value: "LIBEO_TRANSFER", label: "Virement par Libeo" },  // Virement par Libeo
+      // { value: "PAYPAL", label: "PayPal" },
+      // { value: "MOBILE_PAYMENT", label: "Paiement mobile" },
+      // { value: "CRYPTOCURRENCY", label: "Cryptomonnaie" },
+      // { value: "DEBIT_CARD", label: "Carte de débit" },
+      // { value: "APPLE_PAY", label: "Apple Pay" },
+      // { value: "GOOGLE_PAY", label: "Google Pay" },
+  ]
+};
+
+export const EXPENSE_TYPE_CHOICES = {
+  PURCHASE: "PURCHASE",
+  INVESTMENT: "INVESTMENT",
+  ALL: [
+    { value: "PURCHASE", label: "Achat" },
+    { value: "INVESTMENT", label: "Investissement" },
+  ],
+};
+
+

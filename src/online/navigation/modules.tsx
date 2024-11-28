@@ -699,11 +699,6 @@ export const modules: Module[] = [
     id: 'procurement',
     name: 'Achat',
     icon: <ShoppingCartIcon />,
-    hidden(authorizationSystem) {
-      return !authorizationSystem.requestAuthorization({
-        type: 'manageFinance',
-      }).authorized;
-    },
     entries: [
       {
         id: 'purchase-request-investment',
@@ -716,6 +711,11 @@ export const modules: Module[] = [
         name: 'Fournisseurs vérifiés',
         path: '/online/achats/fournisseurs-vérifiés',
         icon: <HowToRegIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageFinance',
+          }).authorized;
+        },
         disabled: true,
       },
       {
@@ -723,6 +723,11 @@ export const modules: Module[] = [
         name: 'Base contrat',
         path: '/online/achats/base-contrat',
         icon: <ContentPasteIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageFinance',
+          }).authorized;
+        },
         disabled: true,
       },
       {
@@ -730,6 +735,11 @@ export const modules: Module[] = [
         name: 'Mise en concurrence',
         path: '/online/achats/mise-en-concurrence',
         icon: <ReduceCapacityIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageFinance',
+          }).authorized;
+        },
         disabled: true,
       },
     ],

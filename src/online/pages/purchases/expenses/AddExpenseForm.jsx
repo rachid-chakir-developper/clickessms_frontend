@@ -35,11 +35,13 @@ import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueri
 import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
 import CardDisplayMap from '../../../../_shared/components/helpers/CardDisplayMap';
 import { Close } from '@mui/icons-material';
-import { EXPENSE_STATUS_CHOICES } from '../../../../_shared/tools/constants';
+import { EXPENSE_STATUS_CHOICES, EXPENSE_TYPE_CHOICES, PAYMENT_METHOD } from '../../../../_shared/tools/constants';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import { GET_ALL_ACCOUNTING_NATURES } from '../../../../_shared/graphql/queries/DataQueries';
 import MultiFileField from '../../../../_shared/components/form-fields/MultiFileField';
+import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
+import { GET_SUPPLIERS } from '../../../../_shared/graphql/queries/SupplierQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -70,16 +72,24 @@ export default function AddExpenseForm({ idExpense, title }) {
       number: '',
       label: '',
       expenseDateTime: dayjs(new Date()),
+      paymentMethod: PAYMENT_METHOD.CREDIT_CARD,
+      expenseType: EXPENSE_TYPE_CHOICES.PURCHASE,
+      isAmountAccurate: true,
+      isPlannedInBudget: false,
+      comment: '',
       description: '',
       observation: '',
       files: [],
       establishments: [],
       expenseItems: [],
+      expenseItems: [],
+      supplier: null,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if(isNotEditable) return
       let {files, ...expenseCopy} = values;
+      expenseCopy.supplier = expenseCopy.supplier?.id;
       files = files?.map((f)=>({id: f?.id, file: f.file || f.path,  caption: f?.caption}))
       expenseCopy.establishments = expenseCopy.establishments.map((i) => i?.id);
       let items = [];
@@ -104,6 +114,15 @@ export default function AddExpenseForm({ idExpense, title }) {
           },
         });
     },
+  });
+
+  const {
+    loading: loadingSuppliers,
+    data: suppliersData,
+    error: suppliersError,
+    fetchMore: fetchMoreSuppliers,
+  } = useQuery(GET_SUPPLIERS, {
+    fetchPolicy: 'network-only',
   });
 
   const {
@@ -279,7 +298,7 @@ export default function AddExpenseForm({ idExpense, title }) {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid item xs={12} sm={6} md={4} >
+            <Grid item xs={12} sm={6} md={3} >
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -290,7 +309,7 @@ export default function AddExpenseForm({ idExpense, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={4} >
+            <Grid item xs={12} sm={6} md={3} >
               <Item>
                 <TheDateTimePicker
                   label="Date et "
@@ -302,7 +321,7 @@ export default function AddExpenseForm({ idExpense, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={4} >
+            <Grid item xs={12} sm={6} md={3} >
               <Item>
                 <TheAutocomplete
                   options={establishmentsData?.establishments?.nodes}
@@ -317,17 +336,79 @@ export default function AddExpenseForm({ idExpense, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={5} >
+            <Grid item xs={12} sm={6} md={3}>
               <Item>
-                <MultiFileField
-                  variant="outlined"
-                  label="Pièces jointes"
-                  fileValue={formik.values.files}
-                  onChange={(files) =>
-                    formik.setFieldValue('files', files)
-                  }
-                  disabled={loadingPost || loadingPut}
+                <FormControl fullWidth>
+                    <InputLabel>Investissement ou Achat</InputLabel>
+                    <Select
+                        value={formik.values.expenseType}
+                        onChange={(e) => formik.setFieldValue('expenseType', e.target.value)}
+                        disabled={loadingPost || loadingPut || isNotEditable}
+                    >
+                        {EXPENSE_TYPE_CHOICES.ALL.map((state, index )=>{
+                            return <MenuItem key={index} value={state.value}>{state.label}</MenuItem>
+                        })}
+                    </Select>
+                </FormControl>
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Item>
+                <TheAutocomplete
+                  options={suppliersData?.suppliers?.nodes}
+                  label="Fournisseur"
+                  placeholder="Choisissez un fournisseur"
+                  limitTags={2}
+                  multiple={false}
+                  value={formik.values.supplier}
+                  onChange={(e, newValue) => {
+                    formik.setFieldValue('supplier', newValue);
+                  }}
                 />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="Montant précis ?"
+                  checked={formik.values.isAmountAccurate}
+                  value={formik.values.isAmountAccurate}
+                  onChange={(e) =>
+                    formik.setFieldValue('isAmountAccurate', e.target.checked)
+                  }
+                  disabled={loadingPost || loadingPut || isNotEditable}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="Prévu au budget ?"
+                  checked={formik.values.isPlannedInBudget}
+                  value={formik.values.isPlannedInBudget}
+                  onChange={(e) =>
+                    formik.setFieldValue('isPlannedInBudget', e.target.checked)
+                  }
+                  disabled={loadingPost || loadingPut || isNotEditable}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Item>
+                <FormControl fullWidth>
+                    <InputLabel>Methode du paiement</InputLabel>
+                    <Select
+                        value={formik.values.paymentMethod}
+                        onChange={(e) => formik.setFieldValue('paymentMethod', e.target.value)}
+                        disabled={loadingPost || loadingPut || isNotEditable}
+                    >
+                        {PAYMENT_METHOD.ALL.map((state, index )=>{
+                            return <MenuItem key={index} value={state.value}>{state.label}</MenuItem>
+                        })}
+                    </Select>
+                </FormControl>
               </Item>
             </Grid>
             <Grid item xs={12} sm={6} md={7} >
@@ -343,7 +424,20 @@ export default function AddExpenseForm({ idExpense, title }) {
                 />
               </Item>
             </Grid>
-            {!isRequestType && <><Grid item xs={12} sm={12} md={12} >
+            <Grid item xs={12} sm={6} md={5} >
+              <Item>
+                <MultiFileField
+                  variant="outlined"
+                  label="Pièces jointes"
+                  fileValue={formik.values.files}
+                  onChange={(files) =>
+                    formik.setFieldValue('files', files)
+                  }
+                  disabled={loadingPost || loadingPut || isNotEditable}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12} >
               <Divider variant="middle" />
             </Grid>
             <Grid item xs={12} sm={12} md={12} >
@@ -458,7 +552,7 @@ export default function AddExpenseForm({ idExpense, title }) {
               >
                 Ajouter une nature
               </Button>
-            </Grid></>}
+            </Grid>
             <Grid item xs={12} sm={12} md={12} >
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link

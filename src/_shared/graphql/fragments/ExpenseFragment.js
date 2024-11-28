@@ -3,6 +3,7 @@
 import { gql } from '@apollo/client';
 import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 import { EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
+import { SUPPLIER_MINI_INFOS } from './SupplierFragment';
 
 
 export const EXPENSE_ESTABLISHMENT_DETAILS = gql`
@@ -21,13 +22,20 @@ export const EXPENSE_BASIC_INFOS = gql`
     label
     totalAmount
     expenseDateTime
+    paymentMethod
+    expenseType
     status
+    isAmountAccurate
+    isPlannedInBudget
     isActive
     establishments{
       ...ExpenseEstablishmentTypeFragment
     }
     employee {
       ...EmployeeBasicInfosFragment
+    }
+    supplier {
+      ...SupplierMiniInfosFragment
     }
     folder {
       id
@@ -37,6 +45,7 @@ export const EXPENSE_BASIC_INFOS = gql`
   }
   ${EXPENSE_ESTABLISHMENT_DETAILS}
   ${EMPLOYEE_BASIC_INFOS}
+  ${SUPPLIER_MINI_INFOS}
 `;
 
 
@@ -62,6 +71,7 @@ export const EXPENSE_DETAILS = gql`
   fragment ExpenseDetailsFragment on ExpenseType {
     ...ExpenseBasicInfosFragment
     description
+    comment
     observation
     files {
       id
@@ -82,6 +92,7 @@ export const EXPENSE_RECAP = gql`
   fragment ExpenseRecapFragment on ExpenseType {
     ...ExpenseBasicInfosFragment
     description
+    comment
     observation
     expenseItems{
       ...ExpenseItemFragment

@@ -27,6 +27,8 @@ import {
   BUDGET_STATUS_CHOICES,
   EXPENSE_STATUS_CHOICES,
   EXPENSE_ITEM_STATUS_CHOICES,
+  PAYMENT_METHOD,
+  EXPENSE_TYPE_CHOICES,
 } from './constants';
 
 export const getStatusColor = (status) => {
@@ -187,6 +189,14 @@ export const getExpenseStatusLabel = (status) => {
 
 export const getExpenseItemStatusLabel = (status) => {
   return EXPENSE_ITEM_STATUS_CHOICES.ALL.find((s) => s.value === status)?.label;
+};
+
+export const getPaymentMethodLabel = (method) => {
+  return PAYMENT_METHOD.ALL.find((m) => m.value === method)?.label || "Méthode inconnue";
+};
+
+export const getExpenseTypeLabel = (method) => {
+  return EXPENSE_TYPE_CHOICES.ALL.find((m) => m.value === method)?.label || "Type inconnu";
 };
 
 
