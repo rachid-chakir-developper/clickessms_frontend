@@ -33,6 +33,9 @@ export const NOTIFICATION_BASIC_INFOS = gql`
     employeeAbsence{
       id
     }
+    expense{
+      id
+    }
     createdAt
   }
   ${USER_BASIC_INFOS}

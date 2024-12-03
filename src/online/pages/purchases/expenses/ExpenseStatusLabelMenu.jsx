@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { Cancel, Done, Euro, HourglassEmpty, HourglassFull, HourglassTop, Pending, TaskAlt } from '@mui/icons-material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, Tooltip } from '@mui/material';
+import { Cancel, Done, Euro, HourglassEmpty, HourglassFull, HourglassTop, Pending, Print, TaskAlt } from '@mui/icons-material';
 import { useMutation } from '@apollo/client';
 import CustomizedStatusLabelMenu from '../../../../_shared/components/app/menu/CustomizedStatusLabelMenu';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import { PUT_EXPENSE_FIELDS } from '../../../../_shared/graphql/mutations/ExpenseMutations';
 import { useSession } from '../../../../_shared/context/SessionProvider';
 import InputSendComment from './expenses-tabs/expense-chat/InputSendComment';
+import { EXPENSE_STATUS_CHOICES } from '../../../../_shared/tools/constants';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
 
 export default function ExpenseStatusLabelMenu({expense}) {
@@ -21,7 +23,7 @@ export default function ExpenseStatusLabelMenu({expense}) {
     if(!workerIds?.includes(user?.employee?.id)) return false
     return expense?.status === 'PAID' || expense?.status === 'UNPAID'
   }
-  const ALL_EXPENSE_STATUS_CHOICES = [
+  const ALL_EXPENSE_STATUS = [
     // { value: 'NEW', label: 'Nouveau', icon: <HourglassEmpty />, color: 'default'},
     { value: 'PENDING', label: 'En attente', icon: <HourglassTop />, color: 'default'},
     { value: "APPROVED", label: "Approuvé", icon: <Done />, color: 'success',},
@@ -30,7 +32,7 @@ export default function ExpenseStatusLabelMenu({expense}) {
     { value: "UNPAID", label: "Non payé", icon: <Cancel />, color: 'success'},
   ];
   
-  const EXPENSE_STATUS_CHOICES = [
+  const EXPENSE_STATUS = [
     // { value: 'NEW', label: 'Nouveau', icon: <HourglassEmpty />, color: 'default', hidden: true},
     { value: 'PENDING', label: 'En attente', icon: <HourglassTop />, color: 'default', hidden: true},
     { value: "APPROVED", label: "Approuvé", icon: <Done />, color: 'success', hidden: true},
@@ -74,16 +76,37 @@ export default function ExpenseStatusLabelMenu({expense}) {
     setOpenDialog(false);
   };
 
+  const  { setPrintingModal } = useFeedBacks();
+  const onOpenModalToPrint = (expense) => {
+    setPrintingModal({
+        isOpen: true,
+        type: 'expense',
+        data: expense,
+        onClose: () => { 
+          setPrintingModal({isOpen: false})
+          }
+      })
+  }
+
   return (
     <Box>
+      <Box display="flex" alignItems="center">
         <CustomizedStatusLabelMenu
-            options={canManageFinance ? ALL_EXPENSE_STATUS_CHOICES : EXPENSE_STATUS_CHOICES}
+            options={canManageFinance ? ALL_EXPENSE_STATUS : EXPENSE_STATUS}
             status={expense?.status}
             type="expense"
             loading={loadingPut}
             onChange={(status)=> {updateExpenseFields({ variables: {id: expense?.id, expenseData: {status}} })}}
             disabled={!canManageFinance && !canChangeStatus()}
         />
+        {expense?.status===EXPENSE_STATUS_CHOICES.APPROVED && <Tooltip title=" Générer un bon de commande">
+          <IconButton
+              onClick={()=> onOpenModalToPrint(expense)}
+            >
+              <Print />
+          </IconButton>
+        </Tooltip>}
+      </Box>
 
         {/* Modal pour demander le commentaire */}
         <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth={true} maxWidth="md">

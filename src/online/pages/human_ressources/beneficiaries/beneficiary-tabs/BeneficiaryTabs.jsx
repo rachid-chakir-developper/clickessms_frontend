@@ -99,7 +99,7 @@ export default function BeneficiaryTabs({beneficiary}) {
                 aria-label="nav tabs example"
                 role="navigation"
             >
-                <LinkTab label="Abscences" href="/spam" />
+                <LinkTab label="Absences" href="/spam" />
                 <LinkTab label="Evénements / Transmissions" href="/spam" />
                 <LinkTab label="Evénements indésirables" href="/spam" />
                 <LinkTab label="Admissions" href="/drafts" />

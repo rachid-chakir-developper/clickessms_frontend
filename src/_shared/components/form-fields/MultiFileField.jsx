@@ -6,7 +6,7 @@ import MediaModal from '../modals/MediaModal';
 import { Close } from '@mui/icons-material';
 import TheTextField from './TheTextField';
 
-const FileCard = ({ file, onDelete, onClick }) => {
+const FileCard = ({ file, onDelete, onClick, disabled=false }) => {
   return (
       <Box 
       sx={{ 
@@ -31,6 +31,7 @@ const FileCard = ({ file, onDelete, onClick }) => {
           onClick={onDelete} 
           edge="end" 
           color="error"
+          disabled={disabled}
       >
           <Close />
       </IconButton>
@@ -40,7 +41,7 @@ const FileCard = ({ file, onDelete, onClick }) => {
 
 
 export default function MultiFileField(props) {
-  const {type = 'button', label="Ajouter des fichiers"} = props
+  const {type = 'button', label="Ajouter des fichiers", disabled=false} = props
   const [modalOpen, setModalOpen] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState(null);
   const [uploadedFiles, setUploadedFiles] = React.useState([]);
@@ -61,6 +62,7 @@ export default function MultiFileField(props) {
   };
 
   const handleFileChange = (e) => {
+    if(disabled) return
     const files = Array.from(e.target.files);
     const newFiles = files.map(file => ({
       localUrl: URL.createObjectURL(file),
@@ -109,12 +111,13 @@ export default function MultiFileField(props) {
             onChange={handleFileChange}
             style={{ display: 'none' }} // Cacher le champ de fichier
             id="file-upload" // ID pour le bouton d'attachement
+            disabled={disabled}
             />
             <label htmlFor="file-upload">
-            {type === 'icon' && <Tooltip title={label}><IconButton component="span">
+            {type === 'icon' && <Tooltip title={label}><IconButton component="span" disabled={disabled}>
                 <AttachFileIcon />
             </IconButton></Tooltip>}
-            {type !== 'icon' && <Button component="span" variant="outlined" startIcon={<AttachFileIcon />}>
+            {type !== 'icon' && <Button component="span" variant="outlined" startIcon={<AttachFileIcon />} disabled={disabled}>
                     {label}
             </Button>}
             </label>

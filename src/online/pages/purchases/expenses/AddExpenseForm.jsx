@@ -139,10 +139,10 @@ export default function AddExpenseForm({ idExpense, title }) {
     data: accountingNaturesData,
     error: accountingNaturesError,
     fetchMore: fetchMoreAccountingNatures,
-  }] = useLazyQuery(GET_ALL_ACCOUNTING_NATURES, { variables: { accountingNatureFilter : {listType: 'ALL'}, page: 1, limit: 10 } });
+  }] = useLazyQuery(GET_ALL_ACCOUNTING_NATURES, { variables: { accountingNatureFilter : {listType: 'ALL'}, page: 1, limit: 20 } });
   
   const onGetAccountingNatures = (keyword)=>{
-    getAccountingNatures({ variables: { accountingNatureFilter : keyword === '' ? null : {listType: 'ALL', keyword}, page: 1, limit: 10 } })
+    getAccountingNatures({ variables: { accountingNatureFilter : keyword === '' ? {listType: 'ALL'} : {listType: 'ALL', keyword}, page: 1, limit: 20 } })
   }
 
   const [createExpense, { loading: loadingPost }] = useMutation(POST_EXPENSE, {
@@ -292,7 +292,7 @@ export default function AddExpenseForm({ idExpense, title }) {
       {loadingExpense && <ProgressService type="form" />}
       {!loadingExpense && (
         <form onSubmit={formik.handleSubmit}>
-          {isNotEditable && <Alert severity="warning">Pour modifier cette dépense, contactez le responsable des services généraux</Alert>}
+          {isNotEditable && <Alert severity="warning">Pour modifier cette dépense, contactez le responsable de la comptabilité</Alert>}
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}

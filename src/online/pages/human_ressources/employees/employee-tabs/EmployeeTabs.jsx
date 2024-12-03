@@ -100,7 +100,7 @@ export default function EmployeeTabs({employee}) {
                 role="navigation"
             >
                 <LinkTab label="Contrats" href="/spam" />
-                <LinkTab label="Abscences" href="/spam" />
+                <LinkTab label="Absences" href="/spam" />
                 <LinkTab label="Evénements indésirables" href="/spam" />
             </Tabs>
         </Box>

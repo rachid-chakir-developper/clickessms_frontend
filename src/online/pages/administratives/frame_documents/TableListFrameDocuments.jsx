@@ -124,7 +124,7 @@ const headCells = [
     {
         id: 'documentType',
         property: 'document_type',
-        exportField: 'document_type',
+        exportField: 'document_type__name',
         numeric: false,
         disablePadding: false,
         isDefault: true,
@@ -136,8 +136,8 @@ const headCells = [
     },
     {
         id: 'establishments',
-        property: 'establishments__establishment__name',
-        exportField: ['establishments__establishment__name'],
+        property: 'establishments__name',
+        exportField: ['establishments__name'],
         numeric: false,
         disablePadding: false,
         isDefault: true,
