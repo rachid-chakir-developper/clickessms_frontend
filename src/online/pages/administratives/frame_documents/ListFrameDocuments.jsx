@@ -23,7 +23,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListFrameDocuments() {
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [frameDocumentFilter, setFrameDocumentFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
@@ -139,6 +139,8 @@ export default function ListFrameDocuments() {
           loading={loadingFrameDocuments}
           rows={frameDocumentsData?.frameDocuments?.nodes || []}
           onDeleteFrameDocument={onDeleteFrameDocument}
+          onFilterChange={(newFilter) => handleFilterChange({ ...frameDocumentFilter, ...newFilter })}
+          paginator={paginator}
         />
       </Grid>
       <Grid item xs={12}>

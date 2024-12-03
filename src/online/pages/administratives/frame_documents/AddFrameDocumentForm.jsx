@@ -22,6 +22,7 @@ import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutoc
 import { GET_BANK_ACCOUNTS } from '../../../../_shared/graphql/queries/BankAccountQueries';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { GET_DATAS_FRAME_DOCUMENT_ } from '../../../../_shared/graphql/queries/DataQueries';
+import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -41,11 +42,13 @@ export default function AddFrameDocumentForm({ idFrameDocument, title }) {
       number: '',
       name: '',
       description: '',
+      establishments: [],
       documentType: null,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       let { document, ...frameDocumentCopy } = values;
+      frameDocumentCopy.establishments = frameDocumentCopy.establishments.map((i) => i?.id);
       if (idFrameDocument && idFrameDocument != '') {
         onUpdateFrameDocument({
           id: frameDocumentCopy.id,
@@ -159,6 +162,14 @@ export default function AddFrameDocumentForm({ idFrameDocument, title }) {
       },
     });
   };
+  const {
+    loading: loadingEstablishments,
+    data: establishmentsData,
+    error: establishmentsError,
+    fetchMore: fetchMoreEstablishments,
+  } = useQuery(GET_ESTABLISHMENTS, {
+    fetchPolicy: 'network-only',
+  });
   const [getFrameDocument, { loading: loadingFrameDocument }] = useLazyQuery(GET_FRAME_DOCUMENT, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
@@ -204,6 +215,18 @@ export default function AddFrameDocumentForm({ idFrameDocument, title }) {
                   value={formik.values.name}
                   onChange={(e) => formik.setFieldValue('name', e.target.value)}
                   disabled={loadingPost || loadingPut}
+                />
+              </Item>
+              <Item>
+                <TheAutocomplete
+                  options={establishmentsData?.establishments?.nodes}
+                  label="Structures concernées"
+                  placeholder="Ajouter une tructure"
+                  limitTags={3}
+                  value={formik.values.establishments}
+                  onChange={(e, newValue) =>
+                    formik.setFieldValue('establishments', newValue)
+                  }
                 />
               </Item>
             </Grid>

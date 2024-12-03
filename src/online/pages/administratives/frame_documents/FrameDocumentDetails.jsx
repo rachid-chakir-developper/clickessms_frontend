@@ -9,6 +9,8 @@ import {
   ButtonBase,
   Typography,
   Divider,
+  Stack,
+  Button,
 } from '@mui/material';
 
 import { FRAME_DOCUMENT_RECAP } from '../../../../_shared/graphql/queries/FrameDocumentQueries';
@@ -16,6 +18,7 @@ import ProgressService from '../../../../_shared/services/feedbacks/ProgressServ
 import {
   getFormatDateTime,
 } from '../../../../_shared/tools/functions';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -44,6 +47,9 @@ export default function FrameDocumentDetails() {
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
             <FrameDocumentMiniInfos frameDocument={frameDocumentData?.frameDocument} />
+          </Grid>
+          <Grid item xs={5}>
+            <FrameDocumentOtherInfos frameDocument={frameDocumentData?.frameDocument} />
           </Grid>
           <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
             <Divider />
@@ -101,6 +107,12 @@ function FrameDocumentMiniInfos({ frameDocument }) {
               <Typography gutterBottom variant="subtitle1" component="div">
                 {frameDocument?.name}
               </Typography>
+              {frameDocument?.document && <Button variant="outlined" size="small" sx={{textTransform: 'capitalize'}}
+                                                  onClick={() => {
+                                                    window.open(frameDocument?.document);
+                                                  }}>
+                                                  Voir le document
+                                                </Button>}
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
                 <b>Crée le: </b> {`${getFormatDateTime(frameDocument?.createdAt)}`}{' '}
@@ -116,3 +128,31 @@ function FrameDocumentMiniInfos({ frameDocument }) {
   );
 }
 
+function FrameDocumentOtherInfos({ frameDocument }) {
+  return (<>
+      {frameDocument?.establishments.length > 0 && (
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 2,
+            margin: 'auto',
+            flexGrow: 1,
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'dark' ? '#1A2027' : '#ffffff',
+          }}
+        >
+          <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
+            <Typography variant="h6" gutterBottom>
+              Les structures concernées
+            </Typography>
+            <Stack direction="row" flexWrap='wrap' spacing={1}>
+              {frameDocument?.establishments?.map((establishment, index) => (
+                <EstablishmentChip key={index} establishment={establishment} />
+              ))}
+            </Stack>
+          </Paper>
+        </Paper>
+      )}
+      </>
+  );
+}

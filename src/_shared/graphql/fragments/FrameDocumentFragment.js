@@ -1,6 +1,7 @@
 // FrameDocumentFragment.js
 
 import { gql } from '@apollo/client';
+import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 
 export const FRAME_DOCUMENT_BASIC_INFOS = gql`
   fragment FrameDocumentBasicInfosFragment on FrameDocumentType {
@@ -10,11 +11,15 @@ export const FRAME_DOCUMENT_BASIC_INFOS = gql`
     document
     isActive
     description
+    establishments{
+      ...EstablishmentMiniInfosFragment
+    }
     documentType{
         id
         name
     }
   }
+  ${ESTABLISHMENT_MINI_INFOS}
 `;
 
 export const FRAME_DOCUMENT_DETAILS = gql`

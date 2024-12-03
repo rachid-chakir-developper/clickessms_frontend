@@ -104,7 +104,7 @@ const headCells = [
       numeric: false,
       disablePadding: true,
       isDefault: true,
-      label: 'Libillé',
+      label: 'Libellé',
     },,
     {
         id: 'establishment',
