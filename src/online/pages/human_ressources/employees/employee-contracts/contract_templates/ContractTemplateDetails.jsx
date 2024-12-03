@@ -59,7 +59,7 @@ export default function ContractTemplateDetails() {
       <Box sx={{ width: '100%' }}>
         {canManageSceModules && <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
           <Link
-            to={`/online/ressources-humaines/employes/contrats/templates/modifier/${contractTemplateData?.contractTemplate?.id}`}
+            to={`/online/ressources-humaines/contrats/templates/modifier/${contractTemplateData?.contractTemplate?.id}`}
             className="no_style"
           >
             <Button variant="outlined" endIcon={<Edit />}>

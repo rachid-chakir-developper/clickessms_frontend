@@ -57,7 +57,7 @@ export default function ContractTemplateItemCard({
   };
   const onGoToDetails = () => {
     navigate(
-      `/online/ressources-humaines/employes/contrats/templates/details/${contractTemplate?.id}`,
+      `/online/ressources-humaines/contrats/templates/details/${contractTemplate?.id}`,
     );
   };
   return (
@@ -156,7 +156,7 @@ export default function ContractTemplateItemCard({
           )}
           <Tooltip title="Modifier">
             <Link
-              to={`/online/ressources-humaines/employes/contrats/templates/modifier/${contractTemplate?.id}`}
+              to={`/online/ressources-humaines/contrats/templates/modifier/${contractTemplate?.id}`}
               className="no_style"
             >
               <MenuItem onClick={handleCloseMenu}>
@@ -167,7 +167,7 @@ export default function ContractTemplateItemCard({
           </Tooltip>
           <Tooltip title="Détails">
             <Link
-              to={`/online/ressources-humaines/employes/contrats/templates/details/${contractTemplate?.id}`}
+              to={`/online/ressources-humaines/contrats/templates/details/${contractTemplate?.id}`}
               className="no_style"
             >
               <MenuItem onClick={handleCloseMenu}>

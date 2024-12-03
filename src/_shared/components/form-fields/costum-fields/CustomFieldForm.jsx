@@ -61,7 +61,7 @@ export default function CustomFieldForm({ formModel, values =[] }) {
       });
       let { __typename, ...customFieldCopy } = data.createCustomField.customField;
       //   formik.setValues(customFieldCopy);
-      navigate('/online/ressources-humaines/employes/contrats/liste');
+      navigate('/online/ressources-humaines/contrats/liste');
     },
     update(cache, { data: { createCustomField } }) {
       const newCustomField = createCustomField.customField;
@@ -96,7 +96,7 @@ export default function CustomFieldForm({ formModel, values =[] }) {
       });
       let { __typename, ...customFieldCopy } = data.updateCustomField.customField;
       //   formik.setValues(customFieldCopy);
-      navigate('/online/ressources-humaines/employes/contrats/liste');
+      navigate('/online/ressources-humaines/contrats/liste');
     },
     update(cache, { data: { updateCustomField } }) {
       const updatedCustomField = updateCustomField.customField;

@@ -145,7 +145,7 @@ export default function AddContractTemplateForm({ idContractTemplate, title }) {
       });
       let { __typename, ...contractTemplateCopy } = data.createContractTemplate.contractTemplate;
       //   formik.setValues(contractTemplateCopy);
-      navigate('/online/ressources-humaines/employes/contrats/templates/liste');
+      navigate('/online/ressources-humaines/contrats/templates/liste');
     },
     update(cache, { data: { createContractTemplate } }) {
       const newContractTemplate = createContractTemplate.contractTemplate;
@@ -180,7 +180,7 @@ export default function AddContractTemplateForm({ idContractTemplate, title }) {
       });
       let { __typename, ...contractTemplateCopy } = data.updateContractTemplate.contractTemplate;
       //   formik.setValues(contractTemplateCopy);
-      navigate('/online/ressources-humaines/employes/contrats/templates/liste');
+      navigate('/online/ressources-humaines/contrats/templates/liste');
     },
     update(cache, { data: { updateContractTemplate } }) {
       const updatedContractTemplate = updateContractTemplate.contractTemplate;
@@ -359,7 +359,7 @@ export default function AddContractTemplateForm({ idContractTemplate, title }) {
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
-                <Link to="/online/ressources-humaines/employes/contrats/templates/liste" className="no_style">
+                <Link to="/online/ressources-humaines/contrats/templates/liste" className="no_style">
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>
                     Annuler
                   </Button>

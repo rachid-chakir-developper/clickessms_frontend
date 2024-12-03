@@ -385,7 +385,7 @@ export default function TableListContractTemplates({
                       id={labelId}
                       scope="row"
                       padding="none"
-                      onClick={()=> navigate(`/online/ressources-humaines/employes/contrats/templates/details/${row?.id}`)}
+                      onClick={()=> navigate(`/online/ressources-humaines/contrats/templates/details/${row?.id}`)}
                     >
                       <Avatar
                         alt={row?.title}
@@ -399,7 +399,7 @@ export default function TableListContractTemplates({
                       />
                     </StyledTableCell>
                     <StyledTableCell align="left"
-                      onClick={()=> navigate(`/online/ressources-humaines/employes/contrats/templates/details/${row?.id}`)}>
+                      onClick={()=> navigate(`/online/ressources-humaines/contrats/templates/details/${row?.id}`)}>
                       {row?.title}
                     </StyledTableCell>
                     <StyledTableCell align="left">
@@ -423,7 +423,7 @@ export default function TableListContractTemplates({
                         }}
                       >
                         <Link
-                          to={`/online/ressources-humaines/employes/contrats/templates/details/${row?.id}`}
+                          to={`/online/ressources-humaines/contrats/templates/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -432,7 +432,7 @@ export default function TableListContractTemplates({
                           </MenuItem>
                         </Link>
                         <Link
-                          to={`/online/ressources-humaines/employes/contrats/templates/modifier/${row?.id}`}
+                          to={`/online/ressources-humaines/contrats/templates/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>

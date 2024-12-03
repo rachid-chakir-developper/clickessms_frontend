@@ -234,7 +234,7 @@ export default function ListEmployees() {
             </Button>
           </Link>
           <Link
-            to="/online/ressources-humaines/employes/contrats"
+            to="/online/ressources-humaines/contrats"
             className="no_style"
           >
             <Button
@@ -248,7 +248,7 @@ export default function ListEmployees() {
             </Button>
           </Link>
           <Link
-            to="/online/ressources-humaines/employes/contrats/ajouter"
+            to="/online/ressources-humaines/contrats/ajouter"
             className="no_style"
           >
             <Button

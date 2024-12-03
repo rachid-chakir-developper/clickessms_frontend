@@ -669,7 +669,7 @@ const [getEmployees, {
             <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row', paddingY: 8 }}>
                 <Link
-                  to="/online/ressources-humaines/employes/contrats/liste"
+                  to="/online/ressources-humaines/contrats/liste"
                   className="no_style"
                 >
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>

@@ -168,7 +168,7 @@ export default function ListEmployeeContracts() {
       <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
-            to="/online/ressources-humaines/employes/contrats/templates"
+            to="/online/ressources-humaines/contrats/templates"
             className="no_style"
           >
             <Button
@@ -182,7 +182,7 @@ export default function ListEmployeeContracts() {
             </Button>
           </Link>
           <Link
-            to="/online/ressources-humaines/employes/contrats/templates/ajouter"
+            to="/online/ressources-humaines/contrats/templates/ajouter"
             className="no_style"
           >
             <Button
@@ -204,7 +204,7 @@ export default function ListEmployeeContracts() {
             </Button>
           </Link>
           <Link
-            to="/online/ressources-humaines/employes/contrats/ajouter"
+            to="/online/ressources-humaines/contrats/ajouter"
             className="no_style"
           >
             <Button variant="contained" sx={{ mr: 2 }} endIcon={<Add />}>

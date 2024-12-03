@@ -68,6 +68,7 @@ import NewspaperIcon from '@mui/icons-material/Newspaper';
 import TableBarIcon from '@mui/icons-material/TableBar';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import WalletIcon from '@mui/icons-material/Wallet';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import GroupsIcon from '@mui/icons-material/Groups';
 import GroupIcon from '@mui/icons-material/Group';
@@ -222,6 +223,17 @@ export const modules: Module[] = [
         },
       },
       {
+        id: 'beneficiaries',
+        name: 'Bénéficiaires',
+        path: '/online/ressources-humaines/beneficiaires',
+        icon: <AssignmentIndIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'getEstablishments',
+          }).authorized;
+        },
+      },
+      {
         id: 'personalized-projects',
         name: 'Projets personnalisés ( PPA)',
         path: '/online/activité/projet-personnalisé',
@@ -288,6 +300,28 @@ export const modules: Module[] = [
     name: 'Ressources humaines',
     icon: <GroupsIcon />,
     entries: [
+      {
+        id: 'employees',
+        name: 'Salariés',
+        path: '/online/ressources-humaines/employes',
+        icon: <WalletIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'getEstablishments',
+          }).authorized;
+        },
+      },
+      {
+        id: 'contrats',
+        name: 'Contrat de travail',
+        path: '/online/ressources-humaines/contrats/',
+        icon: <ReceiptLongIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'getEstablishments',
+          }).authorized;
+        },
+      },
       {
         id: 'trainings',
         name: 'Formations',

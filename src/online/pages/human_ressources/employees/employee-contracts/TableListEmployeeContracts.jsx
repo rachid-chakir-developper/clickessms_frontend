@@ -500,7 +500,7 @@ export default function TableListEmployeeContracts({
                         }}
                       >
                         <Link
-                          to={`/online/ressources-humaines/employes/contrats/details/${row?.id}`}
+                          to={`/online/ressources-humaines/contrats/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -527,7 +527,7 @@ export default function TableListEmployeeContracts({
                           Imprimer
                         </MenuItem>
                         <Link
-                          to={`/online/ressources-humaines/employes/contrats/modifier/${row?.id}`}
+                          to={`/online/ressources-humaines/contrats/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>

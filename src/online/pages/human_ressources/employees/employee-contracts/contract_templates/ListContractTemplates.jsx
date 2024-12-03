@@ -168,14 +168,14 @@ export default function ListContractTemplates() {
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           
           <Link
-              to="/online/ressources-humaines/employes/contrats/liste"
+              to="/online/ressources-humaines/contrats/liste"
               className="no_style"
             >
             <Button variant="outlined" sx={{ mr: 2 }} endIcon={<List />}>
               Liste des contrats
             </Button>
           </Link>
-          <Link to="/online/ressources-humaines/employes/contrats/templates/ajouter" className="no_style">
+          <Link to="/online/ressources-humaines/contrats/templates/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
               Ajouter un model
             </Button>
