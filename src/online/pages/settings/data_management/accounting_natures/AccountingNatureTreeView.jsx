@@ -21,6 +21,7 @@ import ProgressService from '../../../../../_shared/services/feedbacks/ProgressS
 import { DELETE_ACCOUNTING_NATURE } from '../../../../../_shared/graphql/mutations/DataMutations';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
 import { useAuthorizationSystem } from '../../../../../_shared/context/AuthorizationSystemProvider';
+import DatasImportField from '../../../../_shared/components/data_tools/import/DatasImportField';
 
 const CustomTreeItemStyled = styled(TreeItem2)(({ theme }) => ({
   color: theme.palette.grey[200],
@@ -279,8 +280,14 @@ export default function AccountingNatureTreeView() {
   )
   return (
     <Box sx={{ minHeight: 200, minWidth: 350 }}>
-      {canManageAccountingNatures && <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
-        <Button onClick={handleClickAdd} variant="contained" endIcon={<Add />}>
+      {canManageAccountingNatures && <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start', my: 3 }}>
+        <DatasImportField 
+          title="Importer" 
+          entity="AccountingNature" 
+          label="Importer" 
+          fields={['code', 'name', 'description']}
+          refetchQueries={[{ query: GET_ACCOUNTING_NATURES }]} />
+        <Button onClick={handleClickAdd} variant="contained" endIcon={<Add />} sx={{marginLeft: 1}}>
           Ajouter une nature
         </Button>
       </Box>}

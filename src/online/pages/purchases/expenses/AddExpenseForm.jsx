@@ -80,8 +80,7 @@ export default function AddExpenseForm({ idExpense, title }) {
       description: '',
       observation: '',
       files: [],
-      establishments: [],
-      expenseItems: [],
+      establishment: null,
       expenseItems: [],
       supplier: null,
     },
@@ -89,9 +88,9 @@ export default function AddExpenseForm({ idExpense, title }) {
     onSubmit: (values) => {
       if(isNotEditable) return
       let {files, ...expenseCopy} = values;
-      expenseCopy.supplier = expenseCopy.supplier?.id;
+      expenseCopy.supplier = expenseCopy.supplier ? expenseCopy.supplier.id : null;;
+      expenseCopy.establishment = expenseCopy.establishment ?  expenseCopy.establishment?.id : null;;
       files = files?.map((f)=>({id: f?.id, file: f.file || f.path,  caption: f?.caption}))
-      expenseCopy.establishments = expenseCopy.establishments.map((i) => i?.id);
       let items = [];
       expenseCopy.expenseItems.forEach((item) => {
         let { __typename, ...itemCopy } = item;
@@ -236,9 +235,6 @@ export default function AddExpenseForm({ idExpense, title }) {
       let { __typename, ...expenseCopy1 } = data.expense;
       let { folder, employee, ...expenseCopy } = expenseCopy1;
       expenseCopy.expenseDateTime = expenseCopy.expenseDateTime ? dayjs(expenseCopy.expenseDateTime) : null;
-      expenseCopy.establishments = expenseCopy.establishments
-        ? expenseCopy.establishments.map((i) => i?.establishment)
-        : [];
       if (!expenseCopy?.expenseItems) expenseCopy['expenseItems'] = [];
       let items = [];
       expenseCopy.expenseItems.forEach((item) => {
@@ -324,16 +320,16 @@ export default function AddExpenseForm({ idExpense, title }) {
             <Grid item xs={12} sm={6} md={3} >
               <Item>
                 <TheAutocomplete
-                  options={establishmentsData?.establishments?.nodes}
-                  label="Structure(s) concernée(s)"
-                  placeholder="Ajouter une structure"
-                  limitTags={3}
-                  value={formik.values.establishments}
-                  onChange={(e, newValue) =>
-                    formik.setFieldValue('establishments', newValue)
-                  }heure
-                  disabled={loadingPost || loadingPut || isNotEditable}
-                />
+                    options={establishmentsData?.establishments?.nodes}
+                    label="Établissement / Service"
+                    placeholder="Ajouter un établissement ou service"
+                    multiple={false}
+                    value={formik.values.establishment}
+                    onChange={(e, newValue) =>
+                      formik.setFieldValue('establishment', newValue)
+                    }
+                    disabled={loadingPost || loadingPut || isNotEditable}
+                  />
               </Item>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>

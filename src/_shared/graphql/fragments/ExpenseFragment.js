@@ -5,17 +5,6 @@ import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 import { EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
 import { SUPPLIER_MINI_INFOS } from './SupplierFragment';
 
-
-export const EXPENSE_ESTABLISHMENT_DETAILS = gql`
-  fragment ExpenseEstablishmentTypeFragment on ExpenseEstablishmentType {
-    id
-    establishment{
-      ...EstablishmentMiniInfosFragment
-    }
-  }
-  ${ESTABLISHMENT_MINI_INFOS}
-`;
-
 export const EXPENSE_BASIC_INFOS = gql`
   fragment ExpenseBasicInfosFragment on ExpenseType {
     id
@@ -28,8 +17,8 @@ export const EXPENSE_BASIC_INFOS = gql`
     isAmountAccurate
     isPlannedInBudget
     isActive
-    establishments{
-      ...ExpenseEstablishmentTypeFragment
+    establishment{
+      ...EstablishmentMiniInfosFragment
     }
     employee {
       ...EmployeeBasicInfosFragment
@@ -43,7 +32,7 @@ export const EXPENSE_BASIC_INFOS = gql`
       name
     }
   }
-  ${EXPENSE_ESTABLISHMENT_DETAILS}
+  ${ESTABLISHMENT_MINI_INFOS}
   ${EMPLOYEE_BASIC_INFOS}
   ${SUPPLIER_MINI_INFOS}
 `;

@@ -21,6 +21,7 @@ export const ACCOUNTING_NATURE_MINI_INFOS = gql`
     description
     childrenNumber
     amountAllocated
+    isActive
   }
 `;
 
@@ -57,6 +58,13 @@ export const ACCOUNTING_NATURE_BASIC_INFOS = gql`
   }
   ${ACCOUNTING_NATURE_MINI_INFOS}
 `;
+
+// export const ACCOUNTING_NATURE_BASIC_INFOS = gql`
+//   fragment AccountingNatureBasicInfosFragment on AccountingNatureType {
+//     ...AccountingNatureMiniInfosFragment
+//   }
+//   ${ACCOUNTING_NATURE_MINI_INFOS}
+// `;
 
 export const PHONE_NUMBER_INFOS = gql`
   fragment PhoneNumberInfosFragment on PhoneNumberType {

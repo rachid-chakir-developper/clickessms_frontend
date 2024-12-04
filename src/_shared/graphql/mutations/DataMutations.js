@@ -91,6 +91,21 @@ export const PUT_ACCOUNTING_NATURE = gql`
   ${ACCOUNTING_NATURE_BASIC_INFOS}
 `;
 
+export const PUT_ACCOUNTING_NATURE_STATE = gql`
+  mutation UpdateAccountingNatureState($id: ID!) {
+    updateAccountingNatureState(id: $id) {
+      done
+      success
+      message
+      accountingNature {
+        ...AccountingNatureBasicInfosFragment
+      }
+    }
+  }
+  ${ACCOUNTING_NATURE_BASIC_INFOS}
+`;
+
+
 export const DELETE_ACCOUNTING_NATURE = gql`
   mutation DeleteAccountingNature($id: ID!) {
     deleteAccountingNature(id: $id) {

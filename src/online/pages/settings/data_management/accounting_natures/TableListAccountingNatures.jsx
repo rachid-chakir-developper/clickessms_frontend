@@ -14,7 +14,6 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
@@ -22,22 +21,17 @@ import {
   Delete,
   Done,
   Edit,
+  Euro,
   Folder,
   MoreVert,
+  Print,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Stack, TablePagination } from '@mui/material';
-import AppLabel from '../../../../_shared/components/app/label/AppLabel';
+import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
-import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
-import { render } from 'react-dom';
-import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
-import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
-import { getFormatDate, getFormatDateTime, getPriorityLabel } from '../../../../_shared/tools/functions';
-import ExpenseStatusLabelMenu from './ExpenseStatusLabelMenu';
-import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
+import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
+import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { truncateText } from '../../../../../_shared/tools/functions';
+import TableFilterButton from '../../../../_shared/components/table/TableFilterButton';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -96,70 +90,24 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
+const headCells = [,
     {
-      id: 'label',
-      property: 'label',
-      exportField: 'label',
-      numeric: false,
-      disablePadding: true,
-      isDefault: true,
-      label: 'Libellé',
+        id: 'code',
+        property: 'code',
+        exportField: 'code',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Numéro',
     },
     {
-        id: 'establishment',
-        property: 'establishment__name',
-        exportField: ['establishment__name'],
+        id: 'name',
+        property: 'name',
+        exportField: 'name',
         numeric: false,
-        disablePadding: false,
+        disablePadding: true,
         isDefault: true,
-        disableClickDetail: true,
-        sortDisabled: true,
-        label: 'Structure',
-        render: ({establishment}) => establishment && <EstablishmentChip establishment={establishment}/>
-    },
-    {
-        id: 'employee',
-        property: 'employee__first_name',
-        exportField: ['employee__first_name', 'employee__last_name'],
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        disableClickDetail: true,
-        sortDisabled: true,
-        label: 'Demandé par par',
-        render: ({employee}) => employee && <EmployeeChip employee={employee} />
-    },
-    {
-        id: 'expenseDateTime',
-        property: 'expense_date_time',
-        exportField: 'expense_date_time',
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        label: 'Date',
-        render: ({expenseDateTime})=> getFormatDate(expenseDateTime)
-    },
-    {
-        id: 'totalAmount',
-        property: 'total_amount',
-        exportField: 'total_amount',
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        label: 'Montant',
-        render: ({totalAmount})=> <>{totalAmount}&nbsp;€</>
-    },
-    {
-        id: 'status',
-        property: 'status',
-        exportField: 'status',
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        disableClickDetail: true,
-        label: 'Status',
-        render: (data)=> <ExpenseStatusLabelMenu expense={data} />
+        label: 'Libellé',
     },
     {
         id: 'description',
@@ -167,7 +115,19 @@ const headCells = [
         exportField: 'description',
         numeric: false,
         disablePadding: false,
+        isDefault: true,
         label: 'Description',
+        render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
+    },
+    {
+        id: 'isActive',
+        property: 'is_active',
+        exportField: 'is_active',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'État',
+        render: ({isActive})=> isActive ? <Chip label='Actif' color="success"/> : <Chip label='Inactif' /> 
     },
     {
         id: 'action',
@@ -271,14 +231,9 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les dépenses
+          Plan comptable
         </Typography>
       )}
-      <TableExportButton 
-        entity={'Expense'}
-        fileName={'Dépenses'}
-        fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
-        titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>
@@ -297,10 +252,11 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListExpenses({
+export default function TableListAccountingNatures({
   loading,
   rows,
-  onDeleteExpense,
+  handleClickEdit,
+  onDeleteAccountingNature,
   onFilterChange,
   paginator,
 }) {
@@ -311,17 +267,6 @@ export default function TableListExpenses({
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
-
-  const { setDialogListLibrary } = useFeedBacks();
-  const onOpenDialogListLibrary = (folderParent) => {
-    setDialogListLibrary({
-      isOpen: true,
-      folderParent,
-      onClose: () => {
-        setDialogListLibrary({ isOpen: false });
-      },
-    });
-  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -374,6 +319,7 @@ export default function TableListExpenses({
 
   const [anchorElList, setAnchorElList] = React.useState([]);
   const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
+
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }} >
@@ -406,7 +352,7 @@ export default function TableListExpenses({
                 <StyledTableRow>
                   <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucune dépense trouvé.
+                      Aucune compte trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -464,7 +410,6 @@ export default function TableListExpenses({
                           scope="row"
                           padding={column?.disablePadding ? "none" : "normal"}
                           key={index}
-                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/achats/depenses-engagements/details/${row?.id}`)}}
                         >
                         {column?.render ? column?.render(row) : row[column?.id]}
                         </StyledTableCell>
@@ -487,36 +432,18 @@ export default function TableListExpenses({
                           horizontal: 'right',
                         }}
                       >
-                        <Link
-                          to={`/online/achats/depenses-engagements/details/${row?.id}`}
-                          className="no_style"
-                        >
-                          <MenuItem onClick={handleCloseMenu}>
-                            <Article sx={{ mr: 2 }} />
-                            Détails
-                          </MenuItem>
-                        </Link>
-                        <MenuItem
+                        
+                        <MenuItem 
                           onClick={() => {
-                            onOpenDialogListLibrary(row?.folder);
+                            handleClickEdit(row);
                             handleCloseMenu();
-                          }}
-                        >
-                          <Folder sx={{ mr: 2 }} />
-                          Bibliothèque
+                          }}>
+                          <Edit sx={{ mr: 2 }} />
+                          Modifier
                         </MenuItem>
-                        <Link
-                          to={`/online/achats/depenses-engagements/modifier/${row?.id}`}
-                          className="no_style"
-                        >
-                          <MenuItem onClick={handleCloseMenu}>
-                            <Edit sx={{ mr: 2 }} />
-                            Modifier
-                          </MenuItem>
-                        </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteExpense(row?.id);
+                            onDeleteAccountingNature(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}
