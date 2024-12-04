@@ -187,16 +187,12 @@ function ExpenseOtherInfos({ expense }) {
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
-              {expense?.establishments.length > 0 && (
+              {expense?.establishment && (
                   <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
                     <Typography variant="h6" gutterBottom>
-                      Les structures concernées
+                      La structure concernée
                     </Typography>
-                    <Stack direction="row" flexWrap='wrap' spacing={1}>
-                      {expense?.establishments?.map((establishment, index) => (
-                        <EstablishmentChip key={index} establishment={establishment.establishment} />
-                      ))}
-                    </Stack>
+                    <EstablishmentChip establishment={expense.establishment} />
                   </Paper>
               )}
               {expense?.employee && (

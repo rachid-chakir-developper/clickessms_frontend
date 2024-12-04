@@ -43,17 +43,14 @@ export const EXPENSE_ITEM_DETAILS = gql`
   fragment ExpenseItemFragment on ExpenseItemType {
     id
 	  amount
+    quantity
     accountingNature{
       id
       name
     }
-    establishment{
-      ...EstablishmentMiniInfosFragment
-    }
     comment
     description
   }
-  ${ESTABLISHMENT_MINI_INFOS}
 `;
 
 export const EXPENSE_DETAILS = gql`

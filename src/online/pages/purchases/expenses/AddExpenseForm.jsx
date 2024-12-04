@@ -94,7 +94,6 @@ export default function AddExpenseForm({ idExpense, title }) {
       let items = [];
       expenseCopy.expenseItems.forEach((item) => {
         let { __typename, ...itemCopy } = item;
-        itemCopy.establishment = itemCopy.establishment ? itemCopy.establishment.id : null;
         itemCopy.accountingNature = itemCopy.accountingNature ? itemCopy.accountingNature.id : null;
         items.push(itemCopy);
       });
@@ -257,7 +256,7 @@ export default function AddExpenseForm({ idExpense, title }) {
       ...formik.values,
       expenseItems: [
         ...formik.values.expenseItems,
-        { accountingNature: null, establishment: null, amount: 0, comment: '' },
+        { accountingNature: null, quantity: 1, amount: 0, description: '' },
       ],
     });
   };
@@ -448,7 +447,7 @@ export default function AddExpenseForm({ idExpense, title }) {
                   key={index}
                 >
                   
-                  <Grid item xs={12} sm={6} md={3} >
+                  <Grid item xs={12} sm={6} md={4} >
                     <Item>
                       <TheAutocomplete
                         options={accountingNaturesData?.accountingNatures?.nodes}
@@ -465,20 +464,6 @@ export default function AddExpenseForm({ idExpense, title }) {
                         onChange={(e, newValue) =>
                           formik.setFieldValue(`expenseItems.${index}.accountingNature`, newValue)
                         }
-                      />
-                    </Item>
-                  </Grid>
-                  <Grid item xs={12} sm={4} md={3} >
-                    <Item>
-                      <TheAutocomplete
-                        options={establishmentsData?.establishments?.nodes}
-                        label="Établissement / Service"
-                        placeholder="Ajouter un établissement ou service"
-                        multiple={false}
-                        value={item.establishment}
-                        onChange={(e, newValue) =>
-                          formik.setFieldValue(`expenseItems.${index}.establishment`, newValue)
-                        }
                         disabled={loadingPost || loadingPut || isNotEditable}
                       />
                     </Item>
@@ -487,7 +472,7 @@ export default function AddExpenseForm({ idExpense, title }) {
                     <Item>
                       <TheTextField
                         variant="outlined"
-                        label="Montant"
+                        label="Montant total TTC"
                         type="number"
                         InputProps={{
                           endAdornment: (
@@ -505,17 +490,34 @@ export default function AddExpenseForm({ idExpense, title }) {
                       />
                     </Item>
                   </Grid>
-                  <Grid item xs={12} sm={4} md={4} >
+                  <Grid item xs={12} sm={6} md={5} >
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Description"
+                        multiline
+                        rows={2}
+                        value={item.description}
+                        onChange={(e) =>
+                          formik.setFieldValue(
+                            `expenseItems.${index}.description`,
+                            e.target.value,
+                          )
+                        }
+                        disabled={loadingPost || loadingPut || isNotEditable}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={1} >
                     <Item sx={{position: 'relative'}}>
                       <TheTextField
                         variant="outlined"
-                        label="Commentaire"
-                        multiline
-                        rows={4}
-                        value={item.comment}
+                        label="Quantité"
+                        type="number"
+                        value={item.quantity}
                         onChange={(e) =>
                           formik.setFieldValue(
-                            `expenseItems.${index}.comment`,
+                            `expenseItems.${index}.quantity`,
                             e.target.value,
                           )
                         }
