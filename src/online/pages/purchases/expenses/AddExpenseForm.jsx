@@ -31,9 +31,7 @@ import {
 } from '../../../../_shared/graphql/mutations/ExpenseMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
-import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
-import CardDisplayMap from '../../../../_shared/components/helpers/CardDisplayMap';
 import { Close } from '@mui/icons-material';
 import { EXPENSE_STATUS_CHOICES, EXPENSE_TYPE_CHOICES, PAYMENT_METHOD } from '../../../../_shared/tools/constants';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
@@ -42,6 +40,7 @@ import { GET_ALL_ACCOUNTING_NATURES } from '../../../../_shared/graphql/queries/
 import MultiFileField from '../../../../_shared/components/form-fields/MultiFileField';
 import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 import { GET_SUPPLIERS } from '../../../../_shared/graphql/queries/SupplierQueries';
+import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -306,8 +305,8 @@ export default function AddExpenseForm({ idExpense, title }) {
             </Grid>
             <Grid item xs={12} sm={6} md={3} >
               <Item>
-                <TheDateTimePicker
-                  label="Date et "
+                <TheDesktopDatePicker
+                  label="Date"
                   value={formik.values.expenseDateTime}
                   onChange={(date) =>
                     formik.setFieldValue('expenseDateTime', date)

@@ -635,9 +635,8 @@ export const modules: Module[] = [
           {
             id: 'cash-register',
             name: 'Caisse',
-            path: '/online/sales/caisse',
+            path: '/online/finance/tresorerie/caisses',
             icon: <PointOfSaleIcon />,
-            disabled: true,
           },
         ],
       },

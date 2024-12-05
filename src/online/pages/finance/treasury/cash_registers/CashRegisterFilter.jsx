@@ -28,7 +28,7 @@ const Item = styled(Stack)(({ theme }) => ({
     color: theme.palette.text.secondary,
   }));
 
-const BankAccountFilter = ({ onFilterChange }) => {
+const CashRegisterFilter = ({ onFilterChange }) => {
   const [filterValues, setFilterValues] = useState({
     startingDateTime: null,
     endingDateTime: null,
@@ -141,4 +141,4 @@ const BankAccountFilter = ({ onFilterChange }) => {
   );
 };
 
-export default BankAccountFilter;
+export default CashRegisterFilter;
