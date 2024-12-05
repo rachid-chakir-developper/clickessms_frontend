@@ -21,6 +21,7 @@ import {
 } from '../../../../../_shared/tools/functions';
 import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
 import EmployeeChip from '../../../human_ressources/employees/EmployeeChip';
+import ListCashRegisterTransactions from './transactions/ListCashRegisterTransactions';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -65,6 +66,9 @@ export default function CashRegisterDetails() {
                 {cashRegisterData?.cashRegister?.description}
               </Typography>
             </Paper>
+          </Grid>
+          <Grid>
+            <ListCashRegisterTransactions cashRegister={cashRegisterData?.cashRegister}/>
           </Grid>
         </Grid>
       </Box>
