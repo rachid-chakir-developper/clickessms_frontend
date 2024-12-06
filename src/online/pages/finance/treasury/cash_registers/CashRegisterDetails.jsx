@@ -67,9 +67,9 @@ export default function CashRegisterDetails() {
               </Typography>
             </Paper>
           </Grid>
-          <Grid>
+          {cashRegisterData?.cashRegister && <Grid item xs={12}>
             <ListCashRegisterTransactions cashRegister={cashRegisterData?.cashRegister}/>
-          </Grid>
+          </Grid>}
         </Grid>
       </Box>
     </>

@@ -7,10 +7,12 @@ export const CR_TRANSACTION_BASIC_INFOS = gql`
   fragment CashRegisterTransactionBasicInfosFragment on CashRegisterTransactionType {
     id
     number
-    name
+    label
     document
     date
     amount
+    comment
+    transactionType
     cashRegister{
       ...CashRegisterBasicInfosFragment
     }

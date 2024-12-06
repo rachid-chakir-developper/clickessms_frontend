@@ -529,4 +529,11 @@ export const EXPENSE_TYPE_CHOICES = {
   ],
 };
 
-
+export const TRANSACTION_TYPE_CHOICES = {
+  CREDIT: "CREDIT",
+  DEBIT: "DEBIT",
+  ALL: [
+      {value: "CREDIT", label: "Encaissement", },
+      {value: "DEBIT", label: "Décaissement"},
+  ],
+}

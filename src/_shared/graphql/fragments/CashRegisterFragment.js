@@ -29,6 +29,7 @@ export const CASH_REGISTER_BASIC_INFOS = gql`
     id
     number
     name
+    balance
     isActive
     description
     openingDate

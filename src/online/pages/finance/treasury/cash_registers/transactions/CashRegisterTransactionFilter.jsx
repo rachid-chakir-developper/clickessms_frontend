@@ -1,43 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   TextField,
-  Button,
   Grid,
   Stack,
   Checkbox,
   Autocomplete,
   IconButton,
-  Typography,
-  InputAdornment
+  InputAdornment,
 } from '@mui/material';
 import styled from '@emotion/styled';
-import dayjs from 'dayjs';
 
 import TheTextField from '../../../../../../_shared/components/form-fields/TheTextField';
 import TheDesktopDatePicker from '../../../../../../_shared/components/form-fields/TheDesktopDatePicker';
-import { CheckBox, CheckBoxOutlineBlank, Close, Search } from '@mui/icons-material';
-import { useQuery } from '@apollo/client';
-import { GET_ESTABLISHMENTS } from '../../../../../../_shared/graphql/queries/EstablishmentQueries';
-import TheAutocomplete from '../../../../../../_shared/components/form-fields/TheAutocomplete';
+import {  Close, Search } from '@mui/icons-material';
 
 const Item = styled(Stack)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
-    padding: theme.spacing(2),
+    padding: theme.spacing(0),
     textAlign: 'center',
     color: theme.palette.text.secondary,
   }));
 
 const CashRegisterTransactionFilter = ({ onFilterChange }) => {
+
   const [filterValues, setFilterValues] = useState({
     startingDateTime: null,
     endingDateTime: null,
     keyword: '',
-    establishments: null,
   });
-
-
-  const [selectedEstablishments, setFilterSelectedEstablishments] = useState([])
 
   const handleFilterSubmit = () => {
     // Pass the filter values to the parent component for handling the filtering logic
@@ -47,22 +38,13 @@ const CashRegisterTransactionFilter = ({ onFilterChange }) => {
   const handleFilterClear = () => {
     // Pass the filter values to the parent component for handling the filtering logic
     const filterValuesInit = { 
-                            startingDateTime: null, endingDateTime: null, keyword: '', 
-                            establishments: null
+                            startingDateTime: null, endingDateTime: null, keyword: '',
                           }
-    setFilterSelectedEstablishments([])
     setFilterValues(filterValuesInit)
     onFilterChange(filterValuesInit);
   };
 
-  const {
-    loading: loadingEstablishments,
-    data: establishmentsData,
-    error: establishmentsError,
-    fetchMore: fetchMoreEstablishments,
-  } = useQuery(GET_ESTABLISHMENTS, {
-    fetchPolicy: 'network-only',
-  });
+
 
   
   return (
@@ -95,7 +77,7 @@ const CashRegisterTransactionFilter = ({ onFilterChange }) => {
                 />
             </Item>
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={8}>
             <Item>
                 <TheTextField variant="outlined"
                     label="Recherche"
@@ -120,21 +102,6 @@ const CashRegisterTransactionFilter = ({ onFilterChange }) => {
                       ),
                     }}
                 />
-            </Item>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-            <Item>
-                <TheAutocomplete
-                        options={establishmentsData?.establishments?.nodes}
-                        label="Structures"
-                        limitTags={3}
-                        value={selectedEstablishments}
-                        onChange={(event, newValue) => {
-                            setFilterSelectedEstablishments(newValue)
-                            setFilterValues({ ...filterValues, establishments: newValue.map((v) => v.id) })
-                            onFilterChange({ ...filterValues, establishments: newValue.map((v) => v.id) })
-                        }}
-                      />
             </Item>
         </Grid>
     </Grid>

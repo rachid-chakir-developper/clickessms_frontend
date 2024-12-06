@@ -120,6 +120,7 @@ export default function ListCashRegisterTransactions({cashRegister}) {
   };
 
   const [isCashRegisterTransactionDialogOpen, setCashRegisterTransactionDialogOpen] = React.useState(false);
+  const [cashRegisterTransaction, setCashRegisterTransaction] = React.useState(null);
 
   const handleCashRegisterTransactionConfirm = (cashRegisterTransactionData) => {
     // Ajouter ici la logique pour enregistrer les données du paiement
@@ -128,11 +129,16 @@ export default function ListCashRegisterTransactions({cashRegister}) {
     setCashRegisterTransactionDialogOpen(false); // Fermer le dialogue après la confirmation
   };
 
+  const handleCashRegisterTransactionEdit = (cashRegisterTransaction) => {
+    setCashRegisterTransaction(cashRegisterTransaction)
+    setCashRegisterTransactionDialogOpen(true);
+  };
+
   return (<>
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
-          <Button variant="contained" endIcon={<Add />} onClick={()=>setCashRegisterTransactionDialogOpen(true)}>
+          <Button variant="contained" endIcon={<Add />} onClick={()=>{setCashRegisterTransaction(null), setCashRegisterTransactionDialogOpen(true)}}>
             Ajouter un mouvement
           </Button>
         </Box>
@@ -145,6 +151,7 @@ export default function ListCashRegisterTransactions({cashRegister}) {
           loading={loadingCashRegisterTransactions}
           rows={cashRegisterTransactionsData?.cashRegisterTransactions?.nodes || []}
           onDeleteCashRegisterTransaction={onDeleteCashRegisterTransaction}
+          onEditCashRegisterTransaction={handleCashRegisterTransactionEdit}
         />
       </Grid>
       <Grid item xs={12}>
@@ -160,7 +167,8 @@ export default function ListCashRegisterTransactions({cashRegister}) {
         open={isCashRegisterTransactionDialogOpen}
         onClose={() => setCashRegisterTransactionDialogOpen(false)}
         onConfirm={handleCashRegisterTransactionConfirm}
-        cashRegister={cashRegister} // Passer l'objet creditNote en prop
+        cashRegister={cashRegister}
+        cashRegisterTransaction={cashRegisterTransaction}
       />
       </>
   );
