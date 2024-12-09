@@ -69,6 +69,7 @@ import TableBarIcon from '@mui/icons-material/TableBar';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import WalletIcon from '@mui/icons-material/Wallet';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import ArticleIcon from '@mui/icons-material/Article';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import GroupsIcon from '@mui/icons-material/Groups';
 import GroupIcon from '@mui/icons-material/Group';
@@ -315,7 +316,7 @@ export const modules: Module[] = [
         id: 'contrats',
         name: 'Contrat de travail',
         path: '/online/ressources-humaines/contrats/',
-        icon: <ReceiptLongIcon />,
+        icon: <ArticleIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'getEstablishments',
@@ -738,6 +739,12 @@ export const modules: Module[] = [
         name: 'Demande d’achat / Investissement',
         path: '/online/achats/depenses-engagements',
         icon: <ShoppingBasketIcon />,
+      },
+      {
+        id: 'purchase-orders',
+        name: 'Bons de commandes',
+        path: '/online/achats/bons-commandes',
+        icon: <ReceiptLongIcon />,
       },
       {
         id: 'approved-suppliers',

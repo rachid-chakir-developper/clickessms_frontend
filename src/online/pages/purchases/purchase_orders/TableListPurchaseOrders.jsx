@@ -14,31 +14,30 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
-  ArrowDownward,
-  ArrowUpward,
   Article,
   Delete,
   Done,
-  Download,
   Edit,
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Button, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Stack, TablePagination } from '@mui/material';
+import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Stack, TablePagination } from '@mui/material';
+import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
-import { useFeedBacks } from '../../../../../../_shared/context/feedbacks/FeedBacksProvider';
-import ProgressService from '../../../../../../_shared/services/feedbacks/ProgressService';
-import TableExportButton from '../../../../../_shared/components/data_tools/export/TableExportButton';
-import { useAuthorizationSystem } from '../../../../../../_shared/context/AuthorizationSystemProvider';
-import TableFilterButton from '../../../../../_shared/components/table/TableFilterButton';
-import { formatCurrencyAmount, getFormatDate, getTransactionTypeLabel, truncateText } from '../../../../../../_shared/tools/functions';
-
-import { useMutation } from '@apollo/client';
-import ChipGroupWithPopover from '../../../../../_shared/components/persons/ChipGroupWithPopover';
-import { TRANSACTION_TYPE_CHOICES } from '../../../../../../_shared/tools/constants';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import { render } from 'react-dom';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
+import { getFormatDate, getFormatDateTime, getPriorityLabel } from '../../../../_shared/tools/functions';
+import PurchaseOrderStatusLabelMenu from './PurchaseOrderStatusLabelMenu';
+import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -99,48 +98,76 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
-        id: 'date',
-        property: 'date',
-        exportField: 'date',
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        label: "Date",
-        render: ({date})=> getFormatDate(date)
+      id: 'label',
+      property: 'label',
+      exportField: 'label',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Libellé',
     },
     {
-        id: 'transactionType',
-        property: 'transaction_type',
-        exportField: 'transaction_type',
+        id: 'establishment',
+        property: 'establishment__name',
+        exportField: ['establishment__name'],
         numeric: false,
         disablePadding: false,
         isDefault: true,
         disableClickDetail: true,
-        label: 'Mouvement',
-        render: ({transactionType})=> <Chip variant={transactionType!==TRANSACTION_TYPE_CHOICES.CREDIT ? "" : "outlined"} 
-                                            label={getTransactionTypeLabel(transactionType)} 
-                                            icon={transactionType!==TRANSACTION_TYPE_CHOICES.CREDIT ? <ArrowDownward size="small" /> : <ArrowUpward size="small" />}
-                                      />
+        sortDisabled: true,
+        label: 'Structure',
+        render: ({establishment}) => establishment && <EstablishmentChip establishment={establishment}/>
     },
     {
-        id: 'amount',
-        property: 'amount',
-        exportField: 'amount',
+        id: 'employee',
+        property: 'employee__first_name',
+        exportField: ['employee__first_name', 'employee__last_name'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Généré par',
+        render: ({employee}) => employee && <EmployeeChip employee={employee} />
+    },
+    {
+        id: 'purchaseOrderDateTime',
+        property: 'purchaseOrder_date_time',
+        exportField: 'purchaseOrder_date_time',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Date',
+        render: ({purchaseOrderDateTime})=> getFormatDate(purchaseOrderDateTime)
+    },
+    {
+        id: 'totalAmount',
+        property: 'total_amount',
+        exportField: 'total_amount',
         numeric: false,
         disablePadding: false,
         isDefault: true,
         label: 'Montant',
-        render: ({amount, transactionType})=> <b>{transactionType===TRANSACTION_TYPE_CHOICES.CREDIT && amount ? "+" : "-"} {amount ? formatCurrencyAmount(amount) : ''}</b>
+        render: ({totalAmount})=> <>{totalAmount}&nbsp;€</>
     },
     {
-        id: 'comment',
-        property: 'comment',
-        exportField: 'comment',
+        id: 'status',
+        property: 'status',
+        exportField: 'status',
         numeric: false,
         disablePadding: false,
         isDefault: true,
-        label: 'Commentaire',
-        render: ({comment})=> <Tooltip title={comment}>{truncateText(comment, 160)}</Tooltip>
+        disableClickDetail: true,
+        label: 'Status',
+        render: (data)=> <PurchaseOrderStatusLabelMenu purchaseOrder={data} />
+    },
+    {
+        id: 'description',
+        property: 'description',
+        exportField: 'description',
+        numeric: false,
+        disablePadding: false,
+        label: 'Description',
     },
     {
         id: 'action',
@@ -244,12 +271,12 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les mouvements
+          Les bons de commandes
         </Typography>
       )}
       <TableExportButton 
-        entity={'CashRegisterTransaction'}
-        fileName={'caisses-mouvements'}
+        entity={'PurchaseOrder'}
+        fileName={'Dépenses'}
         fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
         titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
@@ -270,18 +297,13 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListCashRegisterTransactions({
+export default function TableListPurchaseOrders({
   loading,
   rows,
-  onDeleteCashRegisterTransaction,
-  onEditCashRegisterTransaction,
+  onDeletePurchaseOrder,
   onFilterChange,
   paginator,
 }) {
-  const authorizationSystem = useAuthorizationSystem();
-  const canManageFinance = authorizationSystem.requestAuthorization({
-    type: 'manageFinance',
-  }).authorized;
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -289,17 +311,6 @@ export default function TableListCashRegisterTransactions({
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
-  const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
-  const { setDialogListLibrary } = useFeedBacks();
-  const onOpenDialogListLibrary = (folderParent) => {
-    setDialogListLibrary({
-      isOpen: true,
-      folderParent,
-      onClose: () => {
-        setDialogListLibrary({ isOpen: false });
-      },
-    });
-  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -384,7 +395,7 @@ export default function TableListCashRegisterTransactions({
                 <StyledTableRow>
                   <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucun mouvement trouvé.
+                      Aucun bon de commande trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -442,7 +453,7 @@ export default function TableListCashRegisterTransactions({
                           scope="row"
                           padding={column?.disablePadding ? "none" : "normal"}
                           key={index}
-                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/finance/tresorerie/caisses/details/${row?.id}`)}}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/achats/bons-commandes/details/${row?.id}`)}}
                         >
                         {column?.render ? column?.render(row) : row[column?.id]}
                         </StyledTableCell>
@@ -465,26 +476,25 @@ export default function TableListCashRegisterTransactions({
                           horizontal: 'right',
                         }}
                       >
-                        {canManageFinance && <>
-                        <MenuItem
-                          onClick={() => {
-                            onEditCashRegisterTransaction(row);
-                            handleCloseMenu();
-                          }}
+                        <Link
+                          to={`/online/achats/bons-commandes/details/${row?.id}`}
+                          className="no_style"
                         >
-                          <Edit sx={{ mr: 2 }} />
-                          Modifier
-                        </MenuItem>
+                          <MenuItem onClick={handleCloseMenu}>
+                            <Article sx={{ mr: 2 }} />
+                            Détails
+                          </MenuItem>
+                        </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteCashRegisterTransaction(row?.id);
+                            onDeletePurchaseOrder(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}
                         >
                           <Delete sx={{ mr: 2 }} />
                           Supprimer
-                        </MenuItem></>}
+                        </MenuItem>
                       </Popover>
                     </StyledTableCell>
                   </StyledTableRow>

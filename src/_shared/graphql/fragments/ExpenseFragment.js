@@ -4,6 +4,7 @@ import { gql } from '@apollo/client';
 import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 import { EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
 import { SUPPLIER_MINI_INFOS } from './SupplierFragment';
+import { CASH_REGISTER_MINI_INFOS } from './CashRegisterFragment';
 
 export const EXPENSE_BASIC_INFOS = gql`
   fragment ExpenseBasicInfosFragment on ExpenseType {
@@ -26,6 +27,9 @@ export const EXPENSE_BASIC_INFOS = gql`
     supplier {
       ...SupplierMiniInfosFragment
     }
+    cashRegister{
+      ...CashRegisterMiniInfosFragment
+    }
     folder {
       id
       number
@@ -35,6 +39,7 @@ export const EXPENSE_BASIC_INFOS = gql`
   ${ESTABLISHMENT_MINI_INFOS}
   ${EMPLOYEE_BASIC_INFOS}
   ${SUPPLIER_MINI_INFOS}
+  ${CASH_REGISTER_MINI_INFOS}
 `;
 
 

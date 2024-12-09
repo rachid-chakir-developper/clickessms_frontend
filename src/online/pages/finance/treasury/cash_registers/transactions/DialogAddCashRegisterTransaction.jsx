@@ -196,7 +196,7 @@ export default function DialogAddCashRegisterTransaction({ open, onClose, onConf
   return (
     <BootstrapDialog onClose={onClose} aria-labelledby="customized-dialog-title" open={open}>
       <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-        {getTransactionTypeLabel(formik.values.transactionType)} {cashRegister ? `de la caisse:` : ''}<u><i>{cashRegister ? `${cashRegister?.name}` : ''}</i></u>
+        La caisse: <u><i>{cashRegister ? `${cashRegister?.name}` : ''}</i></u>
       </DialogTitle>
       <IconButton
         aria-label="close"
@@ -217,12 +217,12 @@ export default function DialogAddCashRegisterTransaction({ open, onClose, onConf
                   clickable 
                   onClick={()=> formik.setFieldValue('transactionType', TRANSACTION_TYPE_CHOICES.CREDIT)}
                   icon={<ArrowUpward />} label={getTransactionTypeLabel(TRANSACTION_TYPE_CHOICES.CREDIT)} 
-                  variant="filled" color="primary" />}
+                  variant="filled" color="primary" sx={{marginX: 1}} />}
             {(!formik.values.transactionType || formik.values.transactionType===TRANSACTION_TYPE_CHOICES.DEBIT) && <Chip 
                   clickabl
                   onClick={()=> formik.setFieldValue('transactionType', TRANSACTION_TYPE_CHOICES.DEBIT)}
                   icon={<ArrowDownward />} label={getTransactionTypeLabel(TRANSACTION_TYPE_CHOICES.DEBIT)}
-                  variant="filled" color="info"/>}
+                  variant="filled" color="info" sx={{marginX: 1}} />}
           </Box>}
           {formik.values.transactionType && <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
             <Grid item xs={12} sm={12} md={6}>

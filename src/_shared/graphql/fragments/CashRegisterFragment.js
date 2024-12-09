@@ -24,8 +24,9 @@ export const MANAGER_CASH_REGISTER_ITEM_DETAILS = gql`
   ${EMPLOYEE_MINI_INFOS}
 `;
 
-export const CASH_REGISTER_BASIC_INFOS = gql`
-  fragment CashRegisterBasicInfosFragment on CashRegisterType {
+
+export const CASH_REGISTER_MINI_INFOS = gql`
+  fragment CashRegisterMiniInfosFragment on CashRegisterType {
     id
     number
     name
@@ -34,6 +35,13 @@ export const CASH_REGISTER_BASIC_INFOS = gql`
     description
     openingDate
     closingDate
+  }
+`;
+
+
+export const CASH_REGISTER_BASIC_INFOS = gql`
+  fragment CashRegisterBasicInfosFragment on CashRegisterType {
+    ...CashRegisterMiniInfosFragment
     establishments{
       ...CashRegisterEstablishmentFragment
     }
@@ -43,6 +51,7 @@ export const CASH_REGISTER_BASIC_INFOS = gql`
   }
   ${CASH_REGISTER_ESTABLISHMENT_DETAILS}
   ${MANAGER_CASH_REGISTER_ITEM_DETAILS}
+  ${CASH_REGISTER_MINI_INFOS}
 `;
 
 export const CASH_REGISTER_DETAILS = gql`

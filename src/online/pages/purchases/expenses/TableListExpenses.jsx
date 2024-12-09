@@ -127,7 +127,7 @@ const headCells = [
         isDefault: true,
         disableClickDetail: true,
         sortDisabled: true,
-        label: 'Demandé par par',
+        label: 'Demandé par',
         render: ({employee}) => employee && <EmployeeChip employee={employee} />
     },
     {

@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
 import { EXPENSE_BASIC_INFOS } from '../fragments/ExpenseFragment';
+import { PURCHASE_ORDER_BASIC_INFOS } from '../fragments/PurchaseOrderFragment';
 
 export const POST_EXPENSE = gql`
   mutation CreateExpense($expenseData: ExpenseInput!, $files : [MediaInput]) {
@@ -53,6 +54,19 @@ export const PUT_EXPENSE_FIELDS = gql`
     }
   }
   ${EXPENSE_BASIC_INFOS}
+`;
+
+export const GENERATE_PURCHASE_ORDER_FROM_EXPENSE = gql`
+  mutation GeneratePurchaseOrder($idExpense: ID!, $idPurchaseOrder: ID) {
+    generatePurchaseOrder(idExpense: $idExpense, idPurchaseOrder: $idPurchaseOrder) {
+      success
+      message
+      purchaseOrder{
+        ...PurchaseOrderBasicInfosFragment
+      }
+    }
+  }
+  ${PURCHASE_ORDER_BASIC_INFOS}
 `;
 
 export const DELETE_EXPENSE = gql`

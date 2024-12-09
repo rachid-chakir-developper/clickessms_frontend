@@ -1,6 +1,7 @@
 // DataFragment.js
 
 import { gql } from '@apollo/client';
+import { EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
 
 export const DATA_BASIC_INFOS = gql`
   fragment DataBasicInfosFragment on DataType {
@@ -21,8 +22,12 @@ export const ACCOUNTING_NATURE_MINI_INFOS = gql`
     description
     childrenNumber
     amountAllocated
+    managers{
+      ...EmployeeMiniInfosFragment
+    }
     isActive
   }
+  ${EMPLOYEE_MINI_INFOS}
 `;
 
 export const ACCOUNTING_NATURE_BASIC_INFOS = gql`

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, Tooltip } from '@mui/material';
-import { Cancel, Done, Euro, HourglassEmpty, HourglassFull, HourglassTop, Pending, Print, TaskAlt } from '@mui/icons-material';
+import { Cancel, Done, Euro, HourglassEmpty, HourglassFull, HourglassTop, Pending, Print, ReceiptLong, TaskAlt } from '@mui/icons-material';
 import { useMutation } from '@apollo/client';
 import CustomizedStatusLabelMenu from '../../../../_shared/components/app/menu/CustomizedStatusLabelMenu';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
@@ -9,6 +9,7 @@ import { useSession } from '../../../../_shared/context/SessionProvider';
 import InputSendComment from './expenses-tabs/expense-chat/InputSendComment';
 import { EXPENSE_STATUS_CHOICES } from '../../../../_shared/tools/constants';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import GeneratePurchaseOrderButton from './GeneratePurchaseOrderButton';
 
 
 export default function ExpenseStatusLabelMenu({expense}) {
@@ -76,18 +77,6 @@ export default function ExpenseStatusLabelMenu({expense}) {
     setOpenDialog(false);
   };
 
-  const  { setPrintingModal } = useFeedBacks();
-  const onOpenModalToPrint = (expense) => {
-    setPrintingModal({
-        isOpen: true,
-        type: 'expense',
-        data: expense,
-        onClose: () => { 
-          setPrintingModal({isOpen: false})
-          }
-      })
-  }
-
   return (
     <Box>
       <Box display="flex" alignItems="center">
@@ -99,13 +88,7 @@ export default function ExpenseStatusLabelMenu({expense}) {
             onChange={(status)=> {updateExpenseFields({ variables: {id: expense?.id, expenseData: {status}} })}}
             disabled={!canManageFinance && !canChangeStatus()}
         />
-        {expense?.status===EXPENSE_STATUS_CHOICES.APPROVED && <Tooltip title=" Générer un bon de commande">
-          <IconButton
-              onClick={()=> onOpenModalToPrint(expense)}
-            >
-              <Print />
-          </IconButton>
-        </Tooltip>}
+        {expense?.status===EXPENSE_STATUS_CHOICES.APPROVED && <GeneratePurchaseOrderButton />}
       </Box>
 
         {/* Modal pour demander le commentaire */}

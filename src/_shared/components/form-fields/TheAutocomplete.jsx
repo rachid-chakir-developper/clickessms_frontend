@@ -16,13 +16,16 @@ export default function TheAutocomplete({
   onInputChange,
   onInput,
   onFocus,
+  onKeyDown,
+  onClick,
   multiple = true,
   id="TheAutocomplete",
   helperText = null,
   onBlur,
   error = false,
   disabled=false,
-  required=false
+  required=false,
+  size
 }) {
   const getPhoto = (option) => {
     if (option?.photo) return option?.photo;
@@ -32,6 +35,7 @@ export default function TheAutocomplete({
   };
   return (
     <Autocomplete
+      size={size}
       multiple={multiple}
       disabled={disabled}
       onBlur={onBlur}
@@ -132,6 +136,9 @@ export default function TheAutocomplete({
           error={error}
           onInput={onInput}
           onFocus={onFocus}
+          onKeyDown={onKeyDown}
+          onClick={onClick}
+          size={size}
         />
       )}
     />

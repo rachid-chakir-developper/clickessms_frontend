@@ -537,3 +537,18 @@ export const TRANSACTION_TYPE_CHOICES = {
       {value: "DEBIT", label: "Décaissement"},
   ],
 }
+
+export const PURCHASE_ORDER_STATUS_CHOICES = {
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+  PAID: "PAID",
+  UNPAID: "UNPAID",
+  ALL: [
+    { value: "PENDING", label: "En attente" },
+    { value: "APPROVED", label: "Approuvé" },
+    { value: "REJECTED", label: "Rejeté" },
+    { value: "PAID", label: "Payé" },
+    { value: "UNPAID", label: "Non payé" },
+  ],
+};

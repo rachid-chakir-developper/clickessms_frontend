@@ -3,6 +3,7 @@
 import { gql } from '@apollo/client';
 import { FOLDER_MINI_INFOS } from './MediaFragment';
 import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
+import { EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
 
 export const BUDGET_ACCOUNTING_NATURE_BASIC_INFOS = gql`
   fragment BudgetAccountingNatureBasicInfosFragment on BudgetAccountingNatureType {
@@ -16,7 +17,11 @@ export const BUDGET_ACCOUNTING_NATURE_BASIC_INFOS = gql`
       id
       name
     }
+    managers{
+      ...EmployeeMiniInfosFragment
+    }
   }
+  ${EMPLOYEE_MINI_INFOS}
 `;
 
 

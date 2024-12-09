@@ -30,6 +30,7 @@ import {
   PAYMENT_METHOD,
   EXPENSE_TYPE_CHOICES,
   TRANSACTION_TYPE_CHOICES,
+  PURCHASE_ORDER_STATUS_CHOICES,
 } from './constants';
 
 export const getStatusColor = (status) => {
@@ -202,6 +203,10 @@ export const getExpenseTypeLabel = (method) => {
 
 export const getTransactionTypeLabel = (type) => {
   return TRANSACTION_TYPE_CHOICES.ALL.find((t) => t.value === type)?.label || "Mouvement";
+};
+
+export const getPurchaseOrderStatusLabel = (status) => {
+  return PURCHASE_ORDER_STATUS_CHOICES.ALL.find((s) => s.value === status)?.label;
 };
 
 const intlNumFmt = new Intl.NumberFormat('fr-FR', {

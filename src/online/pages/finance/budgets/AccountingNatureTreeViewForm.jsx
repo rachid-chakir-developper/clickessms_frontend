@@ -3,24 +3,19 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
-import { useTreeItem2 } from '@mui/x-tree-view/useTreeItem2';
-import { Add, AddAPhoto, Expand, ExpandLess, ExpandMore } from '@mui/icons-material';
-import { Alert, Button, InputAdornment } from '@mui/material';
+import { Alert, InputAdornment } from '@mui/material';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { GET_ACCOUNTING_NATURES } from '../../../../_shared/graphql/queries/DataQueries';
 import { styled, alpha } from '@mui/material/styles';
-import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import { PUT_ACCOUNTING_NATURE_BUDGET } from '../../../../_shared/graphql/mutations/BudgetMutations';
+import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
+import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 
 const CustomTreeItemStyled = styled(TreeItem2)(({ theme }) => ({
   color: theme.palette.grey[200],
@@ -55,8 +50,9 @@ const CustomTreeItemStyled = styled(TreeItem2)(({ theme }) => ({
 }));
 
 // Composant pour afficher les actions (Ajouter, Modifier et Supprimer)
-function CustomLabel({ children, className, numberOfChildren, amountAllocated, accountingNatureId, budgetId }) {
+function CustomLabel({ children, className, numberOfChildren, amountAllocated, managers=[], accountingNatureId, budgetId }) {
   const [amountAllocatedValue, setAmountAllocatedValue] = React.useState(amountAllocated);
+  const [managersValue, setManagersValue] = React.useState(managers);
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const [updateBudgetAccountingNature, { loading: loadingPut }] = useMutation(PUT_ACCOUNTING_NATURE_BUDGET, {
@@ -123,6 +119,16 @@ function CustomLabel({ children, className, numberOfChildren, amountAllocated, a
     },
   });
     
+  const [getEmployees, {
+    loading: loadingEmployees,
+    data: employeesData,
+    error: employeesError,
+    fetchMore: fetchMoreEmployees,
+  }] = useLazyQuery(GET_EMPLOYEES, { variables: { employeeFilter : null, page: 1, limit: 10 } });
+  
+  const onGetEmployees = (keyword)=>{
+    getEmployees({ variables: { employeeFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+  }
   return (
     <Stack
       direction="row"
@@ -131,9 +137,9 @@ function CustomLabel({ children, className, numberOfChildren, amountAllocated, a
       flexGrow={1}
       className={className}
     >
-      <Stack direction="row" spacing={1} alignItems="center">
+      <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-start" sx={{maxWidth: 'calc(100% - 500px)'}}>
         {numberOfChildren > 0 && false && <Chip label={numberOfChildren} size="small" />}
-        <Typography>{children}</Typography>
+        <Typography textAlign="left">{children}</Typography>
       </Stack>
 
       <Stack direction="row" spacing={1} alignItems="center">
@@ -167,6 +173,35 @@ function CustomLabel({ children, className, numberOfChildren, amountAllocated, a
           onKeyDown={(e) => e.stopPropagation()}
           onClick={(e) => e.stopPropagation()}
         />
+        <TheAutocomplete
+          size="small"
+          options={employeesData?.employees?.nodes}
+          onInput={(e) => {
+            (e) => e.stopPropagation()
+            onGetEmployees(e.target.value)
+          }}
+
+          label="Responsables"
+          placeholder="Ajouter un responsable"
+          limitTags={1}
+          value={managersValue}
+          onChange={(e, newValue) =>{
+              setManagersValue(newValue)
+              updateBudgetAccountingNature({
+                variables: { 
+                  budgetAccountingNatureData: { 
+                    budget: budgetId,
+                    accountingNature: accountingNatureId,
+                    managers: newValue.map((i) => i?.id)
+                  }
+                },
+              })
+            }
+          }
+          onKeyDown={(e) => e.stopPropagation()}
+          onBlur={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+        />
       </Stack>
     </Stack>
   );
@@ -184,6 +219,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const childrenNumber = itemData?.childrenNumber || 0;
   const hasChildren = itemData?.childrenNumber > 0;
   const amountAllocated = itemData?.amountAllocated || null;
+  const managers = itemData?.managers || [];
 
   const handleExpand = () => {
     if (hasChildren) {
@@ -203,6 +239,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
         label: {
           numberOfChildren: childrenNumber,
           amountAllocated: amountAllocated,
+          managers: managers,
           accountingNatureId :itemData.id,
           budgetId :budget.id,
         },

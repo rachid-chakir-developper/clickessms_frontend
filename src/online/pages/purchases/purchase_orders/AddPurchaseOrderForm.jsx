@@ -24,16 +24,16 @@ import * as yup from 'yup';
 
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_EXPENSE } from '../../../../_shared/graphql/queries/ExpenseQueries';
+import { GET_PURCHASE_ORDER } from '../../../../_shared/graphql/queries/PurchaseOrderQueries';
 import {
-  POST_EXPENSE,
-  PUT_EXPENSE,
-} from '../../../../_shared/graphql/mutations/ExpenseMutations';
+  POST_PURCHASE_ORDER,
+  PUT_PURCHASE_ORDER,
+} from '../../../../_shared/graphql/mutations/PurchaseOrderMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
 import { Close } from '@mui/icons-material';
-import { EXPENSE_STATUS_CHOICES, EXPENSE_TYPE_CHOICES, PAYMENT_METHOD } from '../../../../_shared/tools/constants';
+import { PURCHASE_ORDER_STATUS_CHOICES, PAYMENT_METHOD } from '../../../../_shared/tools/constants';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import { GET_ALL_ACCOUNTING_NATURES } from '../../../../_shared/graphql/queries/DataQueries';
@@ -51,7 +51,7 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function AddExpenseForm({ idExpense, title }) {
+export default function AddPurchaseOrderForm({ idPurchaseOrder, title }) {
   const authorizationSystem = useAuthorizationSystem();
   const canManageFinance = authorizationSystem.requestAuthorization({
     type: 'manageFinance',
@@ -71,9 +71,8 @@ export default function AddExpenseForm({ idExpense, title }) {
       image: undefined,
       number: '',
       label: '',
-      expenseDateTime: dayjs(new Date()),
+      purchaseOrderDateTime: dayjs(new Date()),
       paymentMethod: PAYMENT_METHOD.CREDIT_CARD,
-      expenseType: EXPENSE_TYPE_CHOICES.PURCHASE,
       isAmountAccurate: true,
       isPlannedInBudget: false,
       comment: '',
@@ -81,35 +80,35 @@ export default function AddExpenseForm({ idExpense, title }) {
       observation: '',
       files: [],
       establishment: null,
-      expenseItems: [],
+      purchaseOrderItems: [],
       supplier: null,
       cashRegister: null,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if(isNotEditable) return
-      let {files, ...expenseCopy} = values;
-      expenseCopy.supplier = expenseCopy.supplier ? expenseCopy.supplier.id : null;
-      expenseCopy.cashRegister = expenseCopy.cashRegister && expenseCopy.paymentMethod===PAYMENT_METHOD.CASH ? expenseCopy.cashRegister.id : null;
-      expenseCopy.establishment = expenseCopy.establishment ?  expenseCopy.establishment?.id : null;;
+      let {files, ...purchaseOrderCopy} = values;
+      purchaseOrderCopy.supplier = purchaseOrderCopy.supplier ? purchaseOrderCopy.supplier.id : null;
+      purchaseOrderCopy.cashRegister = purchaseOrderCopy.cashRegister && purchaseOrderCopy.paymentMethod===PAYMENT_METHOD.CASH ? purchaseOrderCopy.cashRegister.id : null;
+      purchaseOrderCopy.establishment = purchaseOrderCopy.establishment ?  purchaseOrderCopy.establishment?.id : null;;
       files = files?.map((f)=>({id: f?.id, file: f.file || f.path,  caption: f?.caption}))
       let items = [];
-      expenseCopy.expenseItems.forEach((item) => {
+      purchaseOrderCopy.purchaseOrderItems.forEach((item) => {
         let { __typename, ...itemCopy } = item;
         itemCopy.accountingNature = itemCopy.accountingNature ? itemCopy.accountingNature.id : null;
         items.push(itemCopy);
       });
-      expenseCopy.expenseItems = items;
-      if (idExpense && idExpense != '') {
-        onUpdateExpense({
-          id: expenseCopy.id,
-          expenseData: expenseCopy,
+      purchaseOrderCopy.purchaseOrderItems = items;
+      if (idPurchaseOrder && idPurchaseOrder != '') {
+        onUpdatePurchaseOrder({
+          id: purchaseOrderCopy.id,
+          purchaseOrderData: purchaseOrderCopy,
           files: files
         });
       } else
-        createExpense({
+        createPurchaseOrder({
           variables: {
-            expenseData: expenseCopy,
+            purchaseOrderData: purchaseOrderCopy,
             files: files
           },
         });
@@ -154,7 +153,7 @@ export default function AddExpenseForm({ idExpense, title }) {
     getAccountingNatures({ variables: { accountingNatureFilter : keyword === '' ? {listType: 'ALL'} : {listType: 'ALL', keyword}, page: 1, limit: 20 } })
   }
 
-  const [createExpense, { loading: loadingPost }] = useMutation(POST_EXPENSE, {
+  const [createPurchaseOrder, { loading: loadingPost }] = useMutation(POST_PURCHASE_ORDER, {
     onCompleted: (data) => {
       console.log(data);
       setNotifyAlert({
@@ -162,19 +161,19 @@ export default function AddExpenseForm({ idExpense, title }) {
         message: 'Ajouté avec succès',
         type: 'success',
       });
-      let { __typename, ...expenseCopy } = data.createExpense.expense;
-      //   formik.setValues(expenseCopy);
-      navigate('/online/achats/depenses-engagements/liste');
+      let { __typename, ...purchaseOrderCopy } = data.createPurchaseOrder.purchaseOrder;
+      //   formik.setValues(purchaseOrderCopy);
+      navigate('/online/achats/bons-commandes/liste');
     },
-    update(cache, { data: { createExpense } }) {
-      const newExpense = createExpense.expense;
+    update(cache, { data: { createPurchaseOrder } }) {
+      const newPurchaseOrder = createPurchaseOrder.purchaseOrder;
 
       cache.modify({
         fields: {
-          expenses(existingExpenses = { totalCount: 0, nodes: [] }) {
+          purchaseOrders(existingPurchaseOrders = { totalCount: 0, nodes: [] }) {
             return {
-              totalCount: existingExpenses.totalCount + 1,
-              nodes: [newExpense, ...existingExpenses.nodes],
+              totalCount: existingPurchaseOrders.totalCount + 1,
+              nodes: [newPurchaseOrder, ...existingPurchaseOrders.nodes],
             };
           },
         },
@@ -189,7 +188,7 @@ export default function AddExpenseForm({ idExpense, title }) {
       });
     },
   });
-  const [updateExpense, { loading: loadingPut }] = useMutation(PUT_EXPENSE, {
+  const [updatePurchaseOrder, { loading: loadingPut }] = useMutation(PUT_PURCHASE_ORDER, {
     onCompleted: (data) => {
       console.log(data);
       setNotifyAlert({
@@ -197,23 +196,23 @@ export default function AddExpenseForm({ idExpense, title }) {
         message: 'Modifié avec succès',
         type: 'success',
       });
-      let { __typename, ...expenseCopy } = data.updateExpense.expense;
-      //   formik.setValues(expenseCopy);
-      navigate('/online/achats/depenses-engagements/liste');
+      let { __typename, ...purchaseOrderCopy } = data.updatePurchaseOrder.purchaseOrder;
+      //   formik.setValues(purchaseOrderCopy);
+      navigate('/online/achats/bons-commandes/liste');
     },
-    update(cache, { data: { updateExpense } }) {
-      const updatedExpense = updateExpense.expense;
+    update(cache, { data: { updatePurchaseOrder } }) {
+      const updatedPurchaseOrder = updatePurchaseOrder.purchaseOrder;
 
       cache.modify({
         fields: {
-          expenses(existingExpenses = { totalCount: 0, nodes: [] }, { readField }) {
-            const updatedExpenses = existingExpenses.nodes.map((expense) =>
-              readField('id', expense) === updatedExpense.id ? updatedExpense : expense,
+          purchaseOrders(existingPurchaseOrders = { totalCount: 0, nodes: [] }, { readField }) {
+            const updatedPurchaseOrders = existingPurchaseOrders.nodes.map((purchaseOrder) =>
+              readField('id', purchaseOrder) === updatedPurchaseOrder.id ? updatedPurchaseOrder : purchaseOrder,
             );
 
             return {
-              totalCount: existingExpenses.totalCount,
-              nodes: updatedExpenses,
+              totalCount: existingPurchaseOrders.totalCount,
+              nodes: updatedPurchaseOrders,
             };
           },
         },
@@ -228,62 +227,62 @@ export default function AddExpenseForm({ idExpense, title }) {
       });
     },
   });
-  const onUpdateExpense = (variables) => {
+  const onUpdatePurchaseOrder = (variables) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment modifier ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        updateExpense({ variables });
+        updatePurchaseOrder({ variables });
       },
     });
   };
-  const [getExpense, { loading: loadingExpense }] = useLazyQuery(GET_EXPENSE, {
+  const [getPurchaseOrder, { loading: loadingPurchaseOrder }] = useLazyQuery(GET_PURCHASE_ORDER, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, ...expenseCopy1 } = data.expense;
-      let { folder, employee, ...expenseCopy } = expenseCopy1;
-      expenseCopy.expenseDateTime = expenseCopy.expenseDateTime ? dayjs(expenseCopy.expenseDateTime) : null;
-      if (!expenseCopy?.expenseItems) expenseCopy['expenseItems'] = [];
+      let { __typename, ...purchaseOrderCopy1 } = data.purchaseOrder;
+      let { folder, employee, ...purchaseOrderCopy } = purchaseOrderCopy1;
+      purchaseOrderCopy.purchaseOrderDateTime = purchaseOrderCopy.purchaseOrderDateTime ? dayjs(purchaseOrderCopy.purchaseOrderDateTime) : null;
+      if (!purchaseOrderCopy?.purchaseOrderItems) purchaseOrderCopy['purchaseOrderItems'] = [];
       let items = [];
-      expenseCopy.expenseItems.forEach((item) => {
+      purchaseOrderCopy.purchaseOrderItems.forEach((item) => {
         let { __typename, ...itemCopy } = item;
         items.push(itemCopy);
       });
-      expenseCopy.expenseItems = items;
-      formik.setValues(expenseCopy);
-      if(!canManageFinance && expenseCopy.status !== EXPENSE_STATUS_CHOICES.PENDING) setIsNotEditable(true)
+      purchaseOrderCopy.purchaseOrderItems = items;
+      formik.setValues(purchaseOrderCopy);
+      if(!canManageFinance && purchaseOrderCopy.status !== PURCHASE_ORDER_STATUS_CHOICES.PENDING) setIsNotEditable(true)
     },
     onError: (err) => console.log(err),
   });
   React.useEffect(() => {
-    if (idExpense) {
-      getExpense({ variables: { id: idExpense } });
+    if (idPurchaseOrder) {
+      getPurchaseOrder({ variables: { id: idPurchaseOrder } });
     }
-  }, [idExpense]);
-  const addExpenseItem = () => {
+  }, [idPurchaseOrder]);
+  const addPurchaseOrderItem = () => {
     formik.setValues({
       ...formik.values,
-      expenseItems: [
-        ...formik.values.expenseItems,
+      purchaseOrderItems: [
+        ...formik.values.purchaseOrderItems,
         { accountingNature: null, quantity: 1, amount: 0, description: '' },
       ],
     });
   };
 
-  const removeExpenseItem = (index) => {
-    const updatedChecklist = [...formik.values.expenseItems];
+  const removePurchaseOrderItem = (index) => {
+    const updatedChecklist = [...formik.values.purchaseOrderItems];
     updatedChecklist.splice(index, 1);
 
     formik.setValues({
       ...formik.values,
-      expenseItems: updatedChecklist,
+      purchaseOrderItems: updatedChecklist,
     });
   };
   React.useEffect(() => {
-    if ((searchParams.get('type') && searchParams.get('type') === 'REQUEST' && !idExpense) || (!canManageFinance && !idExpense)) {
-        formik.setFieldValue('status', EXPENSE_STATUS_CHOICES.PENDING)
+    if ((searchParams.get('type') && searchParams.get('type') === 'REQUEST' && !idPurchaseOrder) || (!canManageFinance && !idPurchaseOrder)) {
+        formik.setFieldValue('status', PURCHASE_ORDER_STATUS_CHOICES.PENDING)
         setIsRequestType(true)
     }
     else if(!canManageFinance){
@@ -295,10 +294,10 @@ export default function AddExpenseForm({ idExpense, title }) {
       <Typography component="div" variant="h5">
         {title} {formik.values.number}
       </Typography>
-      {loadingExpense && <ProgressService type="form" />}
-      {!loadingExpense && (
+      {loadingPurchaseOrder && <ProgressService type="form" />}
+      {!loadingPurchaseOrder && (
         <form onSubmit={formik.handleSubmit}>
-          {isNotEditable && <Alert severity="warning">Pour modifier cette dépense, contactez le responsable de la comptabilité</Alert>}
+          {isNotEditable && <Alert severity="warning">Pour modifier cette bon de commande, contactez le responsable de la comptabilité</Alert>}
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}
@@ -319,9 +318,9 @@ export default function AddExpenseForm({ idExpense, title }) {
               <Item>
                 <TheDesktopDatePicker
                   label="Date"
-                  value={formik.values.expenseDateTime}
+                  value={formik.values.purchaseOrderDateTime}
                   onChange={(date) =>
-                    formik.setFieldValue('expenseDateTime', date)
+                    formik.setFieldValue('purchaseOrderDateTime', date)
                   }
                   disabled={loadingPost || loadingPut || isNotEditable}
                 />
@@ -340,22 +339,6 @@ export default function AddExpenseForm({ idExpense, title }) {
                     }
                     disabled={loadingPost || loadingPut || isNotEditable}
                   />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Item>
-                <FormControl fullWidth>
-                    <InputLabel>Investissement ou Achat</InputLabel>
-                    <Select
-                        value={formik.values.expenseType}
-                        onChange={(e) => formik.setFieldValue('expenseType', e.target.value)}
-                        disabled={loadingPost || loadingPut || isNotEditable}
-                    >
-                        {EXPENSE_TYPE_CHOICES.ALL.map((state, index )=>{
-                            return <MenuItem key={index} value={state.value}>{state.label}</MenuItem>
-                        })}
-                    </Select>
-                </FormControl>
               </Item>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
@@ -461,9 +444,9 @@ export default function AddExpenseForm({ idExpense, title }) {
             </Grid>
             <Grid item xs={12} sm={12} md={12} >
               <Typography component="div" variant="h6">
-                Détail de la dépense selon la nature
+                Détail de le bon de commande selon la nature
               </Typography>
-              {formik.values?.expenseItems?.map((item, index) => (
+              {formik.values?.purchaseOrderItems?.map((item, index) => (
                 <Grid
                   container
                   spacing={{ xs: 2, md: 3 }}
@@ -486,7 +469,7 @@ export default function AddExpenseForm({ idExpense, title }) {
                         multiple={false}
                         value={item.accountingNature}
                         onChange={(e, newValue) =>
-                          formik.setFieldValue(`expenseItems.${index}.accountingNature`, newValue)
+                          formik.setFieldValue(`purchaseOrderItems.${index}.accountingNature`, newValue)
                         }
                         disabled={loadingPost || loadingPut || isNotEditable}
                       />
@@ -506,7 +489,7 @@ export default function AddExpenseForm({ idExpense, title }) {
                         value={item.amount}
                         onChange={(e) =>
                           formik.setFieldValue(
-                            `expenseItems.${index}.amount`,
+                            `purchaseOrderItems.${index}.amount`,
                             e.target.value,
                           )
                         }
@@ -524,7 +507,7 @@ export default function AddExpenseForm({ idExpense, title }) {
                         value={item.description}
                         onChange={(e) =>
                           formik.setFieldValue(
-                            `expenseItems.${index}.description`,
+                            `purchaseOrderItems.${index}.description`,
                             e.target.value,
                           )
                         }
@@ -541,14 +524,14 @@ export default function AddExpenseForm({ idExpense, title }) {
                         value={item.quantity}
                         onChange={(e) =>
                           formik.setFieldValue(
-                            `expenseItems.${index}.quantity`,
+                            `purchaseOrderItems.${index}.quantity`,
                             e.target.value,
                           )
                         }
                         disabled={loadingPost || loadingPut || isNotEditable}
                       />
                       <IconButton sx={{position: 'absolute', top: -3, right: -2}}
-                        onClick={() => removeExpenseItem(index)}
+                        onClick={() => removePurchaseOrderItem(index)}
                         edge="end"
                         color="error"
                       >
@@ -569,7 +552,7 @@ export default function AddExpenseForm({ idExpense, title }) {
               <Button
                 variant="outlined"
                 size="small"
-                onClick={addExpenseItem}
+                onClick={addPurchaseOrderItem}
                 disabled={loadingPost || loadingPut || isNotEditable}
               >
                 Ajouter une nature
@@ -578,7 +561,7 @@ export default function AddExpenseForm({ idExpense, title }) {
             <Grid item xs={12} sm={12} md={12} >
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
-                  to="/online/achats/depenses-engagements/liste"
+                  to="/online/achats/bons-commandes/liste"
                   className="no_style"
                 >
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>
