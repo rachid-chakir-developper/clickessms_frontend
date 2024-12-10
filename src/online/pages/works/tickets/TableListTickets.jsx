@@ -36,7 +36,7 @@ import TableExportButton from '../../../_shared/components/data_tools/export/Tab
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import { render } from 'react-dom';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
-import { getCritAirVignetteLabel, getFormatDate, getOwnershipTypeLabel, getPriorityLabel } from '../../../../_shared/tools/functions';
+import { getCritAirVignetteLabel, getFormatDate, getOwnershipTypeLabel, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 import CircularProgressWithLabel from '../../../../_shared/components/feedbacks/CircularProgressWithLabel';
@@ -188,6 +188,7 @@ const headCells = [
         numeric: false,
         disablePadding: false,
         label: 'Analyse',
+        render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
     },
     {
         id: 'observation',

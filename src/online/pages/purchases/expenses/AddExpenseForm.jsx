@@ -243,7 +243,7 @@ export default function AddExpenseForm({ idExpense, title }) {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       let { __typename, ...expenseCopy1 } = data.expense;
-      let { folder, employee, ...expenseCopy } = expenseCopy1;
+      let { folder, employee, purchaseOrders, ...expenseCopy } = expenseCopy1;
       expenseCopy.expenseDateTime = expenseCopy.expenseDateTime ? dayjs(expenseCopy.expenseDateTime) : null;
       if (!expenseCopy?.expenseItems) expenseCopy['expenseItems'] = [];
       let items = [];

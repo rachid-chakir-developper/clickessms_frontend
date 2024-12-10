@@ -5,10 +5,12 @@ import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 import { EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
 import { SUPPLIER_MINI_INFOS } from './SupplierFragment';
 import { CASH_REGISTER_MINI_INFOS } from './CashRegisterFragment';
+import { PURCHASE_ORDER_MINI_INFOS } from './PurchaseOrderFragment';
 
 export const EXPENSE_BASIC_INFOS = gql`
   fragment ExpenseBasicInfosFragment on ExpenseType {
     id
+    number
     label
     totalAmount
     expenseDateTime
@@ -35,11 +37,15 @@ export const EXPENSE_BASIC_INFOS = gql`
       number
       name
     }
+    purchaseOrders{
+      ...PurchaseOrderMiniInfosFragment
+    }
   }
   ${ESTABLISHMENT_MINI_INFOS}
   ${EMPLOYEE_BASIC_INFOS}
   ${SUPPLIER_MINI_INFOS}
   ${CASH_REGISTER_MINI_INFOS}
+  ${PURCHASE_ORDER_MINI_INFOS}
 `;
 
 

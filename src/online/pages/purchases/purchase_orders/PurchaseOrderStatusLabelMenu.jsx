@@ -26,8 +26,6 @@ export default function PurchaseOrderStatusLabelMenu({purchaseOrder}) {
     { value: 'PENDING', label: 'En attente', icon: <HourglassTop />, color: 'default'},
     { value: "APPROVED", label: "Approuvé", icon: <Done />, color: 'success',},
     { value: "REJECTED", label: "Rejeté", icon: <Cancel />, color: 'warning'},
-    { value: "PAID", label: "Payé", icon: <Euro />, color: 'info'},
-    { value: "UNPAID", label: "Non payé", icon: <Cancel />, color: 'success'},
   ];
   
   const PURCHASE_ORDER_STATUS = [
@@ -35,8 +33,6 @@ export default function PurchaseOrderStatusLabelMenu({purchaseOrder}) {
     { value: 'PENDING', label: 'En attente', icon: <HourglassTop />, color: 'default', hidden: true},
     { value: "APPROVED", label: "Approuvé", icon: <Done />, color: 'success', hidden: true},
     { value: "REJECTED", label: "Rejeté", icon: <Cancel />, color: 'warning', hidden: true},
-    { value: "PAID", label: "Payé", icon: <Euro />, color: 'info', hidden: !canChangeStatus()},
-    { value: "UNPAID", label: "Non payé", icon: <Cancel />, color: 'warning', hidden: !canChangeStatus()},
   ];
     const [updatePurchaseOrderFields, { loading: loadingPut }] = useMutation(PUT_PURCHASE_ORDER_FIELDS, {
       onCompleted: (data) => {
@@ -79,13 +75,6 @@ export default function PurchaseOrderStatusLabelMenu({purchaseOrder}) {
             onChange={(status)=> {updatePurchaseOrderFields({ variables: {id: purchaseOrder?.id, purchaseOrderData: {status}} })}}
             disabled={!canManageFinance && !canChangeStatus()}
         />
-        {purchaseOrder?.status===PURCHASE_ORDER_STATUS_CHOICES.APPROVED && <Tooltip title="Générer un bon de commande">
-          <IconButton
-              onClick={()=> console.log(purchaseOrder)}
-            >
-              <ReceiptLong />
-          </IconButton>
-        </Tooltip>}
       </Box>
     </Box>
   );

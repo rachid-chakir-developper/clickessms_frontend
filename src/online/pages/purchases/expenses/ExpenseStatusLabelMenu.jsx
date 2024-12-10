@@ -88,7 +88,7 @@ export default function ExpenseStatusLabelMenu({expense}) {
             onChange={(status)=> {updateExpenseFields({ variables: {id: expense?.id, expenseData: {status}} })}}
             disabled={!canManageFinance && !canChangeStatus()}
         />
-        {expense?.status===EXPENSE_STATUS_CHOICES.APPROVED && <GeneratePurchaseOrderButton />}
+        {expense?.status===EXPENSE_STATUS_CHOICES.APPROVED && <GeneratePurchaseOrderButton expense={expense} />}
       </Box>
 
         {/* Modal pour demander le commentaire */}

@@ -35,7 +35,7 @@ import EstablishmentChip from '../../companies/establishments/EstablishmentChip'
 import { render } from 'react-dom';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
-import { getFormatDate, getFormatDateTime, getPriorityLabel } from '../../../../_shared/tools/functions';
+import { getFormatDate, getFormatDateTime, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
 import PurchaseOrderStatusLabelMenu from './PurchaseOrderStatusLabelMenu';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 
@@ -98,6 +98,15 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
+      id: 'number',
+      property: 'number',
+      exportField: 'number',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Numéro',
+    },
+    {
       id: 'label',
       property: 'label',
       exportField: 'label',
@@ -138,7 +147,7 @@ const headCells = [
         disablePadding: false,
         isDefault: true,
         label: 'Date',
-        render: ({purchaseOrderDateTime})=> getFormatDate(purchaseOrderDateTime)
+        render: ({orderDateTime})=> getFormatDate(orderDateTime)
     },
     {
         id: 'totalAmount',
@@ -147,8 +156,19 @@ const headCells = [
         numeric: false,
         disablePadding: false,
         isDefault: true,
-        label: 'Montant',
+        label: 'Montant.TTC',
         render: ({totalAmount})=> <>{totalAmount}&nbsp;€</>
+    },
+    {
+        id: 'expense',
+        property: 'expense__number',
+        exportField: ['expense__number', 'expense__label'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        label: 'Source',
+        render: ({expense})=> expense && <><small><i>Dépense</i></small> <Tooltip title={expense.label}><Chip label={truncateText(expense.label, 20)} /></Tooltip></>
     },
     {
         id: 'status',
@@ -168,6 +188,7 @@ const headCells = [
         numeric: false,
         disablePadding: false,
         label: 'Description',
+        render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
     },
     {
         id: 'action',

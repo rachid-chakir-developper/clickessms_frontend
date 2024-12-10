@@ -5,14 +5,23 @@ import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 import { EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
 import { SUPPLIER_MINI_INFOS } from './SupplierFragment';
 
-export const PURCHASE_ORDER_BASIC_INFOS = gql`
-  fragment PurchaseOrderBasicInfosFragment on PurchaseOrderType {
+
+export const PURCHASE_ORDER_MINI_INFOS = gql`
+  fragment PurchaseOrderMiniInfosFragment on PurchaseOrderType {
     id
+    number
     label
     totalAmount
     orderDateTime
     paymentMethod
     status
+  }
+`;
+
+
+export const PURCHASE_ORDER_BASIC_INFOS = gql`
+  fragment PurchaseOrderBasicInfosFragment on PurchaseOrderType {
+    ...PurchaseOrderMiniInfosFragment
     establishment{
       ...EstablishmentMiniInfosFragment
     }
@@ -22,7 +31,13 @@ export const PURCHASE_ORDER_BASIC_INFOS = gql`
     supplier{
       ...SupplierMiniInfosFragment
     }
+    expense{
+        id
+        number
+        label
+    }
   }
+  ${PURCHASE_ORDER_MINI_INFOS}
   ${ESTABLISHMENT_MINI_INFOS}
   ${EMPLOYEE_BASIC_INFOS}
   ${SUPPLIER_MINI_INFOS}
@@ -33,7 +48,7 @@ export const PURCHASE_ORDER_BASIC_INFOS = gql`
 export const PURCHASE_ORDER_ITEM_DETAILS = gql`
   fragment PurchaseOrderItemFragment on PurchaseOrderItemType {
     id
-	amount
+	amountTtc
     quantity
     description
   }

@@ -21,7 +21,7 @@ import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { GENERATE_PURCHASE_ORDER_FROM_EXPENSE } from '../../../../_shared/graphql/mutations/ExpenseMutations';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { getFormatDate, getPurchaseOrderStatusLabel } from '../../../../_shared/tools/functions';
+import { getFormatDate, getFormatDateTime, getPurchaseOrderStatusLabel } from '../../../../_shared/tools/functions';
 import styled from '@emotion/styled';
 import PurchaseOrderStatusLabelMenu from '../purchase_orders/PurchaseOrderStatusLabelMenu';
 
@@ -205,10 +205,10 @@ export default function GeneratePurchaseOrderButton({ expense }) {
                                 onClick={() => navigate(`/online/achats/bons-commandes/details/${purchaseOrder.id}`)}
                             >
                                 <StyledTableCell>
-                                    {`Facture #${purchaseOrder.number}`}
+                                    {`Bon #${purchaseOrder.number}`}
                                 </StyledTableCell>
                                 <StyledTableCell>
-                                {`${getFormatDate(purchaseOrder?.emissionDate)}`}
+                                {`${getFormatDateTime(purchaseOrder?.orderDateTime)}`}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                     <PurchaseOrderStatusLabelMenu disabled={true} purchaseOrder={purchaseOrder} />

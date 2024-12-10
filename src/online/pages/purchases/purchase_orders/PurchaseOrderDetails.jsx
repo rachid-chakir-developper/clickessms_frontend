@@ -178,7 +178,7 @@ function PurchaseOrderOtherInfos({ purchaseOrder }) {
               {purchaseOrder?.employee && (
                   <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
                     <Typography variant="h6" gutterBottom>
-                      Demandé par:
+                      Généré par:
                     </Typography>
                     <EmployeeChip employee={purchaseOrder?.employee} />
                   </Paper>
@@ -215,7 +215,7 @@ function PurchaseOrderItems({ purchaseOrder }) {
                   >
                     <ListItemText
                       primary={purchaseOrderItem?.accountingNature?.name}
-                      secondary={`${formatCurrencyAmount(purchaseOrderItem?.amount)}`}
+                      secondary={`${formatCurrencyAmount(purchaseOrderItem?.amountTtc)}`}
                     />
                     {purchaseOrderItem?.establishment && (
                         <>
