@@ -242,7 +242,7 @@ export default function AddPurchaseOrderForm({ idPurchaseOrder, title }) {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       let { __typename, ...purchaseOrderCopy1 } = data.purchaseOrder;
-      let { folder, employee, ...purchaseOrderCopy } = purchaseOrderCopy1;
+      let { folder, employee, generator, ...purchaseOrderCopy } = purchaseOrderCopy1;
       purchaseOrderCopy.purchaseOrderDateTime = purchaseOrderCopy.purchaseOrderDateTime ? dayjs(purchaseOrderCopy.purchaseOrderDateTime) : null;
       if (!purchaseOrderCopy?.purchaseOrderItems) purchaseOrderCopy['purchaseOrderItems'] = [];
       let items = [];

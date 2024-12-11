@@ -138,8 +138,20 @@ const headCells = [
         isDefault: true,
         disableClickDetail: true,
         sortDisabled: true,
-        label: 'Généré par',
+        label: 'Demandé par',
         render: ({employee}) => employee && <EmployeeChip employee={employee} />
+    },
+    {
+        id: 'generator',
+        property: 'generator__first_name',
+        exportField: ['generator__first_name', 'generator__last_name'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Généré par',
+        render: ({generator}) => generator && <EmployeeChip employee={generator} />
     },
     {
         id: 'purchaseOrderDateTime',

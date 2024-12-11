@@ -29,6 +29,9 @@ export const PURCHASE_ORDER_BASIC_INFOS = gql`
     employee{
       ...EmployeeBasicInfosFragment
     }
+    generator{
+      ...EmployeeBasicInfosFragment
+    }
     supplier{
       ...SupplierMiniInfosFragment
     }

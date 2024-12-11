@@ -121,7 +121,7 @@ export default function PurchaseOrderDetails() {
       {/* Informations supplémentaires */}
       <Grid container spacing={2}>
         {purchaseOrder?.establishment && (
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={4}>
             <Section>
               <Typography variant="h6">Structure concernée</Typography>
               <EstablishmentChip establishment={purchaseOrder.establishment} />
@@ -129,10 +129,18 @@ export default function PurchaseOrderDetails() {
           </Grid>
         )}
         {purchaseOrder?.employee && (
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={4}>
+            <Section>
+              <Typography variant="h6">Demandé par</Typography>
+              <EmployeeChip employee={purchaseOrder?.generator} />
+            </Section>
+          </Grid>
+        )}
+        {purchaseOrder?.generator && (
+          <Grid item xs={12} sm={4}>
             <Section>
               <Typography variant="h6">Généré par</Typography>
-              <EmployeeChip employee={purchaseOrder?.employee} />
+              <EmployeeChip employee={purchaseOrder?.generator} />
             </Section>
           </Grid>
         )}
