@@ -11,8 +11,9 @@ export const PURCHASE_ORDER_MINI_INFOS = gql`
     id
     number
     label
-    totalAmount
+    totalTtc
     orderDateTime
+    validityEndDate
     paymentMethod
     status
   }

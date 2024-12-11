@@ -141,7 +141,6 @@ export default function GeneratePurchaseOrderButton({ expense }) {
                     return {
                       ...expense,
                       purchaseOrders: updatedExpensePurchaseOrders,
-                      status: !['INVOICED'].includes(expense?.status) ? 'INVOICED' : expense?.status
                     };
                   }
 

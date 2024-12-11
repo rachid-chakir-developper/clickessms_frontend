@@ -36,7 +36,7 @@ export default function VehicleDetails() {
           to={`/online/parc-automobile/vehicules/modifier/${vehicleData?.vehicle?.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />}>
+          <Button variant="outlined" endIcon={<Edit />} size="small">
             Modifier
           </Button>
         </Link>

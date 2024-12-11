@@ -29,7 +29,7 @@ export default function GovernanceMemberDetails() {
           to={`/online/gouvernance/membres/modifier/${governanceMemberData?.governanceMember?.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />}>
+          <Button variant="outlined" endIcon={<Edit />} size="small">
             Modifier
           </Button>
         </Link>

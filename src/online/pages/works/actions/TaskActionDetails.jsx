@@ -57,7 +57,7 @@ export default function TaskActionDetails() {
           to={`/online/travaux/actions/modifier/${taskActionData?.taskAction?.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />}>
+          <Button variant="outlined" endIcon={<Edit />} size="small">
             Modifier
           </Button>
         </Link>

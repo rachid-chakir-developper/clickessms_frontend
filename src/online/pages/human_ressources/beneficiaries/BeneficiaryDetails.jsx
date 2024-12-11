@@ -32,7 +32,7 @@ export default function BeneficiaryDetails() {
           to={`/online/ressources-humaines/beneficiaires/modifier/${beneficiaryData?.beneficiary?.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />}>
+          <Button variant="outlined" endIcon={<Edit />} size="small">
             Modifier
           </Button>
         </Link>

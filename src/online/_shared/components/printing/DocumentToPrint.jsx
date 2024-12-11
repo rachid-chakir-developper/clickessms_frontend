@@ -4,6 +4,7 @@ import FooterDocumentToPrint from './FooterDocumentToPrint';
 import HeaderDocumentToPrint from './HeaderDocumentToPrint';
 import TaskReport from './tasks/TaskReport';
 import EmployeeContractDocument from './employes/EmployeeContractDocument';
+import PurchaseOrderDocument from './purchase_orders/PurchaseOrderDocument';
 
 export class DocumentToPrint extends React.PureComponent {
   render() {
@@ -14,6 +15,7 @@ export class DocumentToPrint extends React.PureComponent {
         <HeaderDocumentToPrint />
         {this.props.type === 'task' && <TaskReport task={this.props.data} />}
         {this.props.type === 'EmployeeContract' && <EmployeeContractDocument employeeContract={this.props.data} />}
+        {this.props.type === 'PurchaseOrder' && <PurchaseOrderDocument purchaseOrder={this.props.data} />}
         <FooterDocumentToPrint />
       </Box>
     );

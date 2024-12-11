@@ -34,7 +34,7 @@ export default function SceMemberDetails() {
           to={`/online/cse/membres/modifier/${sceMemberData?.sceMember?.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />}>
+          <Button variant="outlined" endIcon={<Edit />} size="small">
             Modifier
           </Button>
         </Link>

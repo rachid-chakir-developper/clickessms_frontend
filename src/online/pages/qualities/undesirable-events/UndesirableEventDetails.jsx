@@ -108,7 +108,7 @@ export default function UndesirableEventDetails() {
           to={`/online/qualites/evenements-indesirables/modifier/${undesirableEventData?.undesirableEvent?.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />}>
+          <Button variant="outlined" endIcon={<Edit />} size="small">
             Modifier
           </Button>
         </Link>

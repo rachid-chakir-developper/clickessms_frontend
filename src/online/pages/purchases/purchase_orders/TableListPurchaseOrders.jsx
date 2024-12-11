@@ -38,6 +38,8 @@ import TableFilterButton from '../../../_shared/components/table/TableFilterButt
 import { getFormatDate, getFormatDateTime, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
 import PurchaseOrderStatusLabelMenu from './PurchaseOrderStatusLabelMenu';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
+import { PURCHASE_ORDER_STATUS_CHOICES } from '../../../../_shared/tools/constants';
+import PrintButton from '../../../_shared/components/printing/PrintButton';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -150,14 +152,14 @@ const headCells = [
         render: ({orderDateTime})=> getFormatDate(orderDateTime)
     },
     {
-        id: 'totalAmount',
-        property: 'total_amount',
-        exportField: 'total_amount',
+        id: 'totalTtc',
+        property: 'total_ttc',
+        exportField: 'total_ttc',
         numeric: false,
         disablePadding: false,
         isDefault: true,
         label: 'Montant.TTC',
-        render: ({totalAmount})=> <>{totalAmount}&nbsp;€</>
+        render: ({totalTtc})=> <>{totalTtc}&nbsp;€</>
     },
     {
         id: 'expense',
@@ -506,6 +508,9 @@ export default function TableListPurchaseOrders({
                             Détails
                           </MenuItem>
                         </Link>
+                        {row?.status===PURCHASE_ORDER_STATUS_CHOICES.APPROVED && 
+                          <PrintButton options={{type: 'PurchaseOrder', data:row}}
+                          title = 'Imprimer le bon de commande.' apparence="menuItem" />}
                         <MenuItem
                           onClick={() => {
                             onDeletePurchaseOrder(row?.id);

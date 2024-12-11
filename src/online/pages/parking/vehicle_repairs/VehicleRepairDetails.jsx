@@ -44,7 +44,7 @@ export default function VehicleRepairDetails() {
           to={`/online/parc-automobile/reparations/modifier/${vehicleRepairData?.vehicleRepair?.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />}>
+          <Button variant="outlined" endIcon={<Edit />} size="small">
             Modifier
           </Button>
         </Link>

@@ -7,6 +7,7 @@ import { useAuthorizationSystem } from '../../../../_shared/context/Authorizatio
 import { PUT_PURCHASE_ORDER_FIELDS } from '../../../../_shared/graphql/mutations/PurchaseOrderMutations';
 import { useSession } from '../../../../_shared/context/SessionProvider';
 import { PURCHASE_ORDER_STATUS_CHOICES } from '../../../../_shared/tools/constants';
+import PrintButton from '../../../_shared/components/printing/PrintButton';
 
 
 export default function PurchaseOrderStatusLabelMenu({purchaseOrder}) {
@@ -75,6 +76,10 @@ export default function PurchaseOrderStatusLabelMenu({purchaseOrder}) {
             onChange={(status)=> {updatePurchaseOrderFields({ variables: {id: purchaseOrder?.id, purchaseOrderData: {status}} })}}
             disabled={!canManageFinance && !canChangeStatus()}
         />
+        {purchaseOrder?.status===PURCHASE_ORDER_STATUS_CHOICES.APPROVED && 
+            <PrintButton options={{type: 'PurchaseOrder', data:purchaseOrder}}
+                          title = 'Imprimer le bon de commande.' />
+        }
       </Box>
     </Box>
   );

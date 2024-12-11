@@ -42,7 +42,7 @@ export default function BeneficiaryAbsenceDetails() {
           to={`/online/activites/absences-beneficiaires/modifier/${beneficiaryAbsenceData?.beneficiaryAbsence?.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />}>
+          <Button variant="outlined" endIcon={<Edit />} size="small">
             Modifier
           </Button>
         </Link>

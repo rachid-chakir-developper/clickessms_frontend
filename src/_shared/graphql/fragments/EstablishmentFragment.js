@@ -28,6 +28,15 @@ export const ESTABLISHMENT_MIN_MINI_INFOS = gql`
     email
     logo
     coverImage
+    city
+    zipCode
+    address
+    additionalAddress
+    mobile
+    fix
+    fax
+    webSite
+    otherContacts
     isActive
   }
 `;
@@ -101,16 +110,6 @@ export const ESTABLISHMENT_DETAILS = gql`
     measurementActivityUnit
     latitude
     longitude
-    city
-    zipCode
-    address
-    additionalAddress
-    mobile
-    fix
-    fax
-    webSite
-    otherContacts
-    isActive
     description
     observation
     activityAuthorizations{
@@ -127,16 +126,6 @@ export const ESTABLISHMENT_RECAP_DETAILS = gql`
     measurementActivityUnit
     latitude
     longitude
-    city
-    zipCode
-    address
-    additionalAddress
-    mobile
-    fix
-    fax
-    webSite
-    otherContacts
-    isActive
     description
     observation
     activityAuthorizations{

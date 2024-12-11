@@ -46,7 +46,7 @@ export default function TransmissionEventDetails() {
           to={`/online/activites/evenements/modifier/${transmissionEventData?.transmissionEvent?.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />}>
+          <Button variant="outlined" endIcon={<Edit />} size="small">
             Modifier
           </Button>
         </Link>

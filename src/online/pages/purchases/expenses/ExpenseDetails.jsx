@@ -17,7 +17,6 @@ import {
   Stack,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -45,7 +44,7 @@ import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
-  padding: theme.spacing(1),
+  padding: theme.spacing(2),
   textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
@@ -63,49 +62,66 @@ export default function ExpenseDetails() {
   if (loadingExpense) return <ProgressService type="form" />;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1}}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
+        <Box sx={{ marginX: 2 }}>
+          <Link
+            to={`/online/achats/depenses-engagements/liste`}
+            className="no_style"
+          >
+            <Button variant="text" startIcon={<List />} size="small">
+              Retour à la Liste
+            </Button>
+          </Link>
+        </Box>
         <Link
           to={`/online/achats/depenses-engagements/modifier/${expenseData?.expense.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />}>
+          <Button variant="outlined" endIcon={<Edit />} size="small">
             Modifier
           </Button>
         </Link>
       </Box>
       <Box sx={{ width: '100%' }}>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid item xs={7}>
+        <Grid container rowSpacing={3} columnSpacing={{ xs: 2, sm: 3, md: 4 }}>
+          {/* Mini Information Section */}
+          <Grid item xs={12} sm={7}>
             <ExpenseMiniInfos expense={expenseData?.expense} />
           </Grid>
-          <Grid item xs={5}>
+
+          {/* Other Information Section */}
+          <Grid item xs={12} sm={5}>
             <ExpenseOtherInfos expense={expenseData?.expense} />
           </Grid>
-          <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
-            <Divider />
-          </Grid>
-          <Grid item xs={6}>
+
+          {/* Expense Items Section */}
+          <Grid item xs={12}>
             <ExpenseItems expense={expenseData?.expense} />
           </Grid>
-          <Grid item xs={6}>
-            <Paper sx={{ padding: 2, marginBottom: 2 }} variant="outlined">
-              <Typography gutterBottom variant="subtitle3" component="h3">
-                Description
-              </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {expenseData?.expense?.description}
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid item xs={12} sx={{ marginY: 3 }}>
+
+          <Grid item xs={12} sx={{ my: 3 }}>
             <Divider />
           </Grid>
+
+          {/* Description Section */}
           <Grid item xs={12} sm={12}>
-            <Paper sx={{ padding: 2 }}>
-              <ExpenseTabs expense={expenseData?.expense}/>
+            <Paper sx={{ padding: 3, marginBottom: 2 }} variant="outlined">
+              <Typography gutterBottom variant="subtitle2" component="h3">
+                Description de la dépense
+              </Typography>
+              <Typography variant="body1" component="div">
+                {expenseData?.expense?.description || ''}
+              </Typography>
             </Paper>
           </Grid>
-        </Grid> 
+
+          {/* Comments and Tabs Section */}
+          <Grid item xs={12}>
+            <Paper sx={{ padding: 3 }}>
+              <ExpenseTabs expense={expenseData?.expense} />
+            </Paper>
+          </Grid>
+        </Grid>
       </Box>
     </>
   );
@@ -123,47 +139,40 @@ function ExpenseMiniInfos({ expense }) {
     <Paper
       variant="outlined"
       sx={{
-        p: 2,
-        margin: 'auto',
-        //maxWidth: 500,
-        flexGrow: 1,
+        p: 3,
         backgroundColor: (theme) =>
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
-      <Grid container spacing={2}>
-        {expense?.image && expense?.image != '' && (
+      <Grid container spacing={3}>
+        {expense?.image && expense?.image !== '' && (
           <Grid item>
             <ButtonBase sx={{ width: 128, height: 128 }}>
-              <Img alt="complex" src={expense?.image} />
+              <Img alt="image" src={expense?.image} />
             </ButtonBase>
           </Grid>
         )}
-        <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={2}>
-            <Grid item xs>
-              <Typography gutterBottom variant="h5" component="div">
-                {expense?.label}
-              </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                Réference : <b>{expense?.number}</b>
-              </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                Montant : <b>{expense?.totalAmount}&nbsp;€</b>
-              </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b> {`${getFormatDateTime(expense?.createdAt)}`}{' '}
-                <br />
-                <b>Dernière modification: </b>
-                {`${getFormatDateTime(expense?.updatedAt)}`}
-              </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Status: </b>
-              </Typography>
-              <ExpenseStatusLabelMenu expense={expense} />
-            </Grid>
+        <Grid item xs={12} sm container direction="column" spacing={2}>
+          <Grid item xs>
+            <Typography variant="h5" gutterBottom>
+              {expense?.label}
+            </Typography>
+            <Typography variant="subtitle1" color="textSecondary">
+              Référence : <b>{expense?.number}</b>
+            </Typography>
+            <Typography variant="subtitle1" color="textSecondary">
+              Montant total : <b>{formatCurrencyAmount(expense?.totalAmount)} €</b>
+            </Typography>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="body2" color="textSecondary">
+              <b>Créé le :</b> {getFormatDateTime(expense?.createdAt)} <br />
+              <b>Dernière modification :</b> {getFormatDateTime(expense?.updatedAt)}
+            </Typography>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="body2" color="textSecondary">
+              <b>Status :</b>
+            </Typography>
+            <ExpenseStatusLabelMenu expense={expense} />
           </Grid>
         </Grid>
       </Grid>
@@ -176,35 +185,29 @@ function ExpenseOtherInfos({ expense }) {
     <Paper
       variant="outlined"
       sx={{
-        p: 2,
-        margin: 'auto',
-        flexGrow: 1,
+        p: 3,
         backgroundColor: (theme) =>
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={2}>
-            <Grid item xs>
-              {expense?.establishment && (
-                  <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
-                    <Typography variant="h6" gutterBottom>
-                      La structure concernée
-                    </Typography>
-                    <EstablishmentChip establishment={expense.establishment} />
-                  </Paper>
-              )}
-              {expense?.employee && (
-                  <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
-                    <Typography variant="h6" gutterBottom>
-                      Demandé par:
-                    </Typography>
-                    <EmployeeChip employee={expense?.employee} />
-                  </Paper>
-              )}
-            </Grid>
-          </Grid>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          {expense?.establishment && (
+            <Paper sx={{ padding: 2, marginBottom: 2 }} variant="outlined">
+              <Typography variant="h6" gutterBottom>
+                Structure concernée
+              </Typography>
+              <EstablishmentChip establishment={expense.establishment} />
+            </Paper>
+          )}
+          {expense?.employee && (
+            <Paper sx={{ padding: 2 }} variant="outlined">
+              <Typography variant="h6" gutterBottom>
+                Demandé par :
+              </Typography>
+              <EmployeeChip employee={expense?.employee} />
+            </Paper>
+          )}
         </Grid>
       </Grid>
     </Paper>
@@ -216,42 +219,31 @@ function ExpenseItems({ expense }) {
     <Paper
       variant="outlined"
       sx={{
-        p: 2,
-        margin: 'auto',
-        flexGrow: 1,
+        p: 3,
+        backgroundColor: (theme) =>
+          theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
-      {expense?.expenseItems.length > 0 && (
-          <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
-            <Typography variant="h6" gutterBottom>
-            Détail de la dépense selon la nature
-            </Typography>
-              <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                {expense?.expenseItems?.map((expenseItem, index) => (
-                  <Box sx={{background: index%2 === 0 ?  "#f5f5f5" : "#ffffff", padding:1}}>
-                  <ListItem
-                    alignItems="flex-start"
-                    key={index}
-                  >
-                    <ListItemText
-                      primary={expenseItem?.accountingNature?.name}
-                      secondary={`${formatCurrencyAmount(expenseItem?.amount)}`}
-                    />
-                    {expenseItem?.establishment && (
-                        <>
-                          <Stack direction="row" flexWrap='wrap' spacing={1}>
-                            <EstablishmentChip establishment={expenseItem?.establishment} />
-                          </Stack>
-                        </>
-                      )}
-                  </ListItem>
-                  {expenseItem?.description && expenseItem?.description != '' && <Typography variant="p" gutterBottom sx={{fontSize: 12, fontStyle: 'italic'}}>
-                    {expenseItem?.description}
-                  </Typography>}
-                </Box>
-                ))}
-              </List>
-          </Paper>
+      {expense?.expenseItems.length > 0 ? (
+        <>
+          <Typography variant="h6" gutterBottom>
+            Détail des dépenses
+          </Typography>
+          <List sx={{ width: '100%' }}>
+            {expense?.expenseItems?.map((expenseItem, index) => (
+              <ListItem key={index} sx={{ background: index % 2 === 0 ? '#f9f9f9' : '#fff' }}>
+                <ListItemText
+                  primary={expenseItem?.accountingNature?.name}
+                  secondary={`${formatCurrencyAmount(expenseItem?.amount)} / Quantité: ${expenseItem?.quantity} / ${expenseItem?.description}`}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </>
+      ) : (
+        <Typography variant="body2" color="textSecondary">
+          Aucun article de dépense ajouté.
+        </Typography>
       )}
     </Paper>
   );

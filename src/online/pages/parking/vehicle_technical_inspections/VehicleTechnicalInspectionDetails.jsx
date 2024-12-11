@@ -45,7 +45,7 @@ export default function VehicleTechnicalInspectionDetails() {
           to={`/online/parc-automobile/controles-techniques/modifier/${vehicleTechnicalInspectionData?.vehicleTechnicalInspection?.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />}>
+          <Button variant="outlined" endIcon={<Edit />} size="small">
             Modifier
           </Button>
         </Link>

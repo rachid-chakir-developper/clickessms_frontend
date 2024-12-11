@@ -1,44 +1,61 @@
 import { useLazyQuery } from '@apollo/client';
-import * as React from 'react';
+import React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
 import {
   Box,
   Grid,
   Paper,
-  ButtonBase,
   Typography,
   Divider,
   Button,
   Stack,
-  List,
-  ListItem,
-  ListItemText,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  tableCellClasses,
 } from '@mui/material';
-
+import { Edit, List } from '@mui/icons-material';
+import { styled } from '@mui/material/styles';
 import { GET_PURCHASE_ORDER_RECAP } from '../../../../_shared/graphql/queries/PurchaseOrderQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import {
-  formatCurrencyAmount,
-  getFormatDateTime,
-} from '../../../../_shared/tools/functions';
-import { Edit } from '@mui/icons-material';
+import { formatCurrencyAmount, getFormatDate, getFormatDateTime } from '../../../../_shared/tools/functions';
 import PurchaseOrderStatusLabelMenu from './PurchaseOrderStatusLabelMenu';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
+const Section = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(2),
+  marginBottom: theme.spacing(2),
+}));
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
 }));
 
 export default function PurchaseOrderDetails() {
   let { idPurchaseOrder } = useParams();
-  const [getPurchaseOrder, { loading: loadingPurchaseOrder, data: purchaseOrderData, error: purchaseOrderError }] =
+  const [getPurchaseOrder, { loading: loadingPurchaseOrder, data: purchaseOrderData }] =
     useLazyQuery(GET_PURCHASE_ORDER_RECAP);
+
   React.useEffect(() => {
     if (idPurchaseOrder) {
       getPurchaseOrder({ variables: { id: idPurchaseOrder } });
@@ -46,193 +63,122 @@ export default function PurchaseOrderDetails() {
   }, [idPurchaseOrder]);
 
   if (loadingPurchaseOrder) return <ProgressService type="form" />;
+
+  const purchaseOrder = purchaseOrderData?.purchaseOrder;
+
   return (
-    <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1}}>
-        <Link
-          to={`/online/achats/bons-commandes/modifier/${purchaseOrderData?.purchaseOrder.id}`}
-          className="no_style"
-        >
-          <Button variant="outlined" endIcon={<Edit />}>
+    <Box sx={{ width: '100%' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
+        <Box sx={{marginX: 2}}>
+          <Link
+            to={`/online/achats/bons-commandes/liste`}
+            className="no_style"
+          >
+            <Button variant="text" startIcon={<List />}  size="small">
+              Retour à la Liste
+            </Button>
+          </Link>
+        </Box>
+        {/* <Link to={`/online/achats/bons-commandes/modifier/${purchaseOrder?.id}`} className="no_style">
+          <Button variant="outlined" startIcon={<Edit />} size="small">
             Modifier
           </Button>
-        </Link>
+        </Link> */}
       </Box>
-      <Box sx={{ width: '100%' }}>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid item xs={7}>
-            <PurchaseOrderMiniInfos purchaseOrder={purchaseOrderData?.purchaseOrder} />
-          </Grid>
-          <Grid item xs={5}>
-            <PurchaseOrderOtherInfos purchaseOrder={purchaseOrderData?.purchaseOrder} />
-          </Grid>
-          <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
-            <Divider />
-          </Grid>
-          <Grid item xs={6}>
-            <PurchaseOrderItems purchaseOrder={purchaseOrderData?.purchaseOrder} />
-          </Grid>
-          <Grid item xs={6}>
-            <Paper sx={{ padding: 2, marginBottom: 2 }} variant="outlined">
-              <Typography gutterBottom variant="subtitle3" component="h3">
-                Description
-              </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {purchaseOrderData?.purchaseOrder?.description}
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid item xs={12} sx={{ marginY: 3 }}>
-            <Divider />
-          </Grid>
-        </Grid> 
-      </Box>
-    </>
-  );
-}
 
-const Img = styled('img')({
-  margin: 'auto',
-  display: 'block',
-  maxWidth: '100%',
-  maxHeight: '100%',
-});
+      {/* Informations générales */}
+      <Section>
+        <Typography variant="h6" gutterBottom>
+          Informations générales
+        </Typography>
+        <Typography variant="body1">
+          <b>Référence : </b> {purchaseOrder?.number}
+        </Typography>
+        <Typography variant="body1">
+          <b>Label : </b> {purchaseOrder?.label}
+        </Typography>
+        <Typography variant="body1">
+          <b>Date: </b> {getFormatDate(purchaseOrder?.orderDateTime)}
+        </Typography>
+        <Typography variant="body1">
+          <b>Valable jusqu'au: </b> {getFormatDate(purchaseOrder?.validityEndDate)}
+        </Typography>
+        <Typography variant="body1">
+          <b>Montant total : </b> {formatCurrencyAmount(purchaseOrder?.totalTtc)}
+        </Typography>
+        <Typography variant="body1">
+          <b>Date de création : </b> {getFormatDateTime(purchaseOrder?.createdAt)}
+        </Typography>
+        <Typography variant="body1">
+          <b>Dernière modification : </b> {getFormatDateTime(purchaseOrder?.updatedAt)}
+        </Typography>
+        <Typography variant="body1">
+          <b>Status : </b>
+        </Typography>
+        <PurchaseOrderStatusLabelMenu purchaseOrder={purchaseOrder} />
+      </Section>
 
-function PurchaseOrderMiniInfos({ purchaseOrder }) {
-  return (
-    <Paper
-      variant="outlined"
-      sx={{
-        p: 2,
-        margin: 'auto',
-        //maxWidth: 500,
-        flexGrow: 1,
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-      }}
-    >
+      {/* Informations supplémentaires */}
       <Grid container spacing={2}>
-        {purchaseOrder?.image && purchaseOrder?.image != '' && (
-          <Grid item>
-            <ButtonBase sx={{ width: 128, height: 128 }}>
-              <Img alt="complex" src={purchaseOrder?.image} />
-            </ButtonBase>
+        {purchaseOrder?.establishment && (
+          <Grid item xs={12} sm={6}>
+            <Section>
+              <Typography variant="h6">Structure concernée</Typography>
+              <EstablishmentChip establishment={purchaseOrder.establishment} />
+            </Section>
           </Grid>
         )}
-        <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={2}>
-            <Grid item xs>
-              <Typography gutterBottom variant="h5" component="div">
-                {purchaseOrder?.label}
-              </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                Réference : <b>{purchaseOrder?.number}</b>
-              </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                Montant : <b>{purchaseOrder?.totalAmount}&nbsp;€</b>
-              </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b> {`${getFormatDateTime(purchaseOrder?.createdAt)}`}{' '}
-                <br />
-                <b>Dernière modification: </b>
-                {`${getFormatDateTime(purchaseOrder?.updatedAt)}`}
-              </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Status: </b>
-              </Typography>
-              <PurchaseOrderStatusLabelMenu purchaseOrder={purchaseOrder} />
-            </Grid>
+        {purchaseOrder?.employee && (
+          <Grid item xs={12} sm={6}>
+            <Section>
+              <Typography variant="h6">Généré par</Typography>
+              <EmployeeChip employee={purchaseOrder?.employee} />
+            </Section>
           </Grid>
-        </Grid>
+        )}
       </Grid>
-    </Paper>
-  );
-}
 
-function PurchaseOrderOtherInfos({ purchaseOrder }) {
-  return (
-    <Paper
-      variant="outlined"
-      sx={{
-        p: 2,
-        margin: 'auto',
-        flexGrow: 1,
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-      }}
-    >
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={2}>
-            <Grid item xs>
-              {purchaseOrder?.establishment && (
-                  <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
-                    <Typography variant="h6" gutterBottom>
-                      La structure concernée
-                    </Typography>
-                    <EstablishmentChip establishment={purchaseOrder.establishment} />
-                  </Paper>
-              )}
-              {purchaseOrder?.employee && (
-                  <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
-                    <Typography variant="h6" gutterBottom>
-                      Généré par:
-                    </Typography>
-                    <EmployeeChip employee={purchaseOrder?.employee} />
-                  </Paper>
-              )}
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Paper>
-  );
-}
+      {/* Détails des articles */}
+      <Section>
+        <Typography variant="h6" gutterBottom>
+          Détails des articles
+        </Typography>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Description</StyledTableCell>
+                <StyledTableCell>Quantité</StyledTableCell>
+                <StyledTableCell  align="right">Montant TTC</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {purchaseOrder?.purchaseOrderItems?.map((item, index) => (
+                <StyledTableRow key={index}>
+                  <StyledTableCell>{item.description || ''}</StyledTableCell>
+                  <StyledTableCell>{item.quantity}</StyledTableCell>
+                  <StyledTableCell  align="right">{formatCurrencyAmount(item.totalTtc)}</StyledTableCell>
+                </StyledTableRow>
+              ))}
+              <TableRow>
+                <TableCell rowSpan={3} />
+                <TableCell colSpan={1} align="right" sx={{ fontWeight: 700, fontStyle: 'italic' }}>Total</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 700 }}>{formatCurrencyAmount(purchaseOrder?.totalTtc)}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Section>
 
-function PurchaseOrderItems({ purchaseOrder }) {
-  return (
-    <Paper
-      variant="outlined"
-      sx={{
-        p: 2,
-        margin: 'auto',
-        flexGrow: 1,
-      }}
-    >
-      {purchaseOrder?.purchaseOrderItems.length > 0 && (
-          <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
-            <Typography variant="h6" gutterBottom>
-            Détail de le bon de commande selon la nature
-            </Typography>
-              <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                {purchaseOrder?.purchaseOrderItems?.map((purchaseOrderItem, index) => (
-                  <Box sx={{background: index%2 === 0 ?  "#f5f5f5" : "#ffffff", padding:1}}>
-                  <ListItem
-                    alignItems="flex-start"
-                    key={index}
-                  >
-                    <ListItemText
-                      primary={purchaseOrderItem?.accountingNature?.name}
-                      secondary={`${formatCurrencyAmount(purchaseOrderItem?.amountTtc)}`}
-                    />
-                    {purchaseOrderItem?.establishment && (
-                        <>
-                          <Stack direction="row" flexWrap='wrap' spacing={1}>
-                            <EstablishmentChip establishment={purchaseOrderItem?.establishment} />
-                          </Stack>
-                        </>
-                      )}
-                  </ListItem>
-                  {purchaseOrderItem?.description && purchaseOrderItem?.description != '' && <Typography variant="p" gutterBottom sx={{fontSize: 12, fontStyle: 'italic'}}>
-                    {purchaseOrderItem?.description}
-                  </Typography>}
-                </Box>
-                ))}
-              </List>
-          </Paper>
+      {/* Description */}
+      {purchaseOrder?.description && (
+        <Section>
+          <Typography variant="h6" gutterBottom>
+            Description
+          </Typography>
+          <Typography>{purchaseOrder.description}</Typography>
+        </Section>
       )}
-    </Paper>
+    </Box>
   );
 }
