@@ -39,6 +39,7 @@ export const MY_COMPANY_DETAILS = gql`
     city
     zipCode
     address
+    additionalAddress
     mobile
     fix
     fax

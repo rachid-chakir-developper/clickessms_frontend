@@ -132,7 +132,7 @@ export default function PurchaseOrderDetails() {
           <Grid item xs={12} sm={4}>
             <Section>
               <Typography variant="h6">Demandé par</Typography>
-              <EmployeeChip employee={purchaseOrder?.generator} />
+              <EmployeeChip employee={purchaseOrder?.employee} />
             </Section>
           </Grid>
         )}
@@ -165,7 +165,7 @@ export default function PurchaseOrderDetails() {
                 <StyledTableRow key={index}>
                   <StyledTableCell>{item.description || ''}</StyledTableCell>
                   <StyledTableCell>{item.quantity}</StyledTableCell>
-                  <StyledTableCell  align="right">{formatCurrencyAmount(item.totalTtc)}</StyledTableCell>
+                  <StyledTableCell  align="right">{formatCurrencyAmount(item.amountTtc)}</StyledTableCell>
                 </StyledTableRow>
               ))}
               <TableRow>

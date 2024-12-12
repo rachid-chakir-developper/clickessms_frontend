@@ -15,16 +15,16 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
-import TheTextField from '../../../_shared/components/form-fields/TheTextField';
-import ImageFileField from '../../../_shared/components/form-fields/ImageFileField';
-import { useFeedBacks } from '../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_MATERIAL } from '../../../_shared/graphql/queries/MaterialQueries';
+import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
+import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { GET_MATERIAL } from '../../../../_shared/graphql/queries/MaterialQueries';
 import {
   POST_MATERIAL,
   PUT_MATERIAL,
-} from '../../../_shared/graphql/mutations/MaterialMutations';
-import ProgressService from '../../../_shared/services/feedbacks/ProgressService';
-import TheSwitch from '../../../_shared/components/form-fields/theSwitch';
+} from '../../../../_shared/graphql/mutations/MaterialMutations';
+import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -88,7 +88,7 @@ export default function AddMaterialForm({ idMaterial, title }) {
         });
         let { __typename, ...materialCopy } = data.createMaterial.material;
         //   formik.setValues(materialCopy);
-        navigate('/online/materiels/liste');
+        navigate('/online/informatique/materiels/liste');
       },
       update(cache, { data: { createMaterial } }) {
         const newMaterial = createMaterial.material;
@@ -124,7 +124,7 @@ export default function AddMaterialForm({ idMaterial, title }) {
       });
       let { __typename, ...materialCopy } = data.updateMaterial.material;
       //   formik.setValues(materialCopy);
-      navigate('/online/materiels/liste');
+      navigate('/online/informatique/materiels/liste');
     },
     update(cache, { data: { updateMaterial } }) {
       const updatedMaterial = updateMaterial.material;
@@ -189,7 +189,7 @@ export default function AddMaterialForm({ idMaterial, title }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
-        {title} {formik.values.number}
+        {title}: <u><em>{formik.values.name}</em></u>
       </Typography>
       {loadingMaterial && <ProgressService type="form" />}
       {!loadingMaterial && (
@@ -200,14 +200,6 @@ export default function AddMaterialForm({ idMaterial, title }) {
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
             <Grid item xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Référence"
-                  value={formik.values.number}
-                  disabled
-                />
-              </Item>
               <Item>
                 <ImageFileField
                   variant="outlined"
@@ -372,7 +364,7 @@ export default function AddMaterialForm({ idMaterial, title }) {
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
-                <Link to="/online/materiels/liste" className="no_style">
+                <Link to="/online/informatique/materiels/liste" className="no_style">
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>
                     Annuler
                   </Button>

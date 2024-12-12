@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 import {
   MATERIAL_BASIC_INFOS,
   MATERIAL_DETAILS,
+  MATERIAL_RECAP_DETAILS,
 } from '../fragments/MaterialFragment';
 
 export const GET_MATERIAL = gql`
@@ -35,4 +36,11 @@ export const GET_MATERIALS = gql`
   ${MATERIAL_BASIC_INFOS}
 `;
 
-// Add more material-related queries here
+export const GET_RECAP_MATERIAL = gql`
+  query GetMaterial($id: ID!) {
+    material(id: $id) {
+      ...MaterialRecapDetailsFragment
+    }
+  }
+  ${MATERIAL_RECAP_DETAILS}
+`;

@@ -46,6 +46,7 @@ export const PARTNER_DETAILS = gql`
     city
     zipCode
     address
+    additionalAddress
     mobile
     fix
     fax

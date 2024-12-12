@@ -100,8 +100,7 @@ export default function PurchaseOrderSpanningDocument({ order, items=[], deposit
                         <StyledTableCell rowSpan={3} colSpan={3} sx={{ border: 0 }}>
                             <Table sx={{marginY: 2}}>
                                 <TableRow sx={{borderBottom: 0}}>
-                                    <TableCell sx={{borderBottom: 0, padding: 0}}>Règlement</TableCell>
-                                    <TableCell sx={{borderBottom: 0, padding: 0}}><em>{getPaymentMethodLabel(order?.paymentMethod)}</em></TableCell>
+                                    <TableCell sx={{borderBottom: 0, padding: 0}}><em>Règlement : <b>{getPaymentMethodLabel(order?.paymentMethod)}</b></em></TableCell>
                                 </TableRow>
                             </Table>
                         </StyledTableCell>

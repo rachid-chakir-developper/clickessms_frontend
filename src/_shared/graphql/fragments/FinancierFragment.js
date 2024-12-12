@@ -25,6 +25,7 @@ export const FINANCIER_MINI_INFOS = gql`
     city
     zipCode
     address
+    additionalAddress
     isActive
   }
 `;

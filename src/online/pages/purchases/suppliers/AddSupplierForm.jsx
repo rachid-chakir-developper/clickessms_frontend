@@ -53,6 +53,7 @@ export default function AddSupplierForm({ idSupplier, title }) {
       city: '',
       zipCode: '',
       address: '',
+      additionalAddress: '',
       mobile: '',
       fix: '',
       fax: '',
@@ -308,19 +309,65 @@ export default function AddSupplierForm({ idSupplier, title }) {
               <Divider variant="middle" />
             </Grid>
             <Grid item xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Adresse"
-                  multiline
-                  rows={8}
-                  value={formik.values.address}
-                  onChange={(e) =>
-                    formik.setFieldValue('address', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
+              <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
+                <Grid item xs={12} sm={12} md={12}>
+                  <Item>
+                    <TheTextField
+                      variant="outlined"
+                      label="Adresse (Ligne 1)"
+                      multiline
+                      rows={2}
+                      value={formik.values.address}
+                      onChange={(e) =>
+                        formik.setFieldValue('address', e.target.value)
+                      }
+                      disabled={loadingPost || loadingPut}
+                    />
+                  </Item>
+                </Grid>
+                <Grid item xs={12} sm={12} md={12}>
+                  <Item>
+                    <TheTextField
+                      variant="outlined"
+                      label="Complément"
+                      value={formik.values.additionalAddress}
+                      onChange={(e) =>
+                        formik.setFieldValue(
+                          'additionalAddress',
+                          e.target.value,
+                        )
+                      }
+                      disabled={loadingPost || loadingPut}
+                    />
+                  </Item>
+                </Grid>
+                <Grid item xs={5} sm={5} md={5}>
+                  <Item>
+                    <TheTextField
+                      variant="outlined"
+                      label="Code postal"
+                      value={formik.values.zipCode}
+                      onChange={(e) =>
+                        formik.setFieldValue('zipCode', e.target.value)
+                      }
+                      disabled={loadingPost || loadingPut}
+                    />
+                  </Item>
+                </Grid>
+                <Grid item xs={7} sm={7} md={7}>
+                  <Item>
+                    <TheTextField
+                      variant="outlined"
+                      label="Ville"
+                      value={formik.values.city}
+                      onChange={(e) =>
+                        formik.setFieldValue('city', e.target.value)
+                      }
+                      disabled={loadingPost || loadingPut}
+                    />
+                  </Item>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item xs={2} sm={4} md={4}>
               <Item>

@@ -13,7 +13,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './pages/dashboard/Dashboard';
 import NavMenu from './navigation/NavMenu';
 import Users from './pages/users/Users';
-import Materials from './pages/materials/Materials';
 import Sales from './pages/sales/Sales';
 import Purchases from './pages/purchases/Purchases';
 import Works from './pages/works/Works';
@@ -39,6 +38,7 @@ import SpeedDialTooltipOpen from '../_shared/components/app/SpeedDialTooltipOpen
 import { AuthorizationSystemProvider } from '../_shared/context/AuthorizationSystemProvider';
 import Roberp from './pages/roberp/Roberp';
 import Sce from './pages/sce/Sce';
+import Computers from './pages/computers/Computers';
 
 const drawerWidth = 280;
 
@@ -185,7 +185,7 @@ export default function Online() {
             <Route path={`carte/*`} element={<Maps />} />
             <Route path={`associations/*`} element={<Companies />} />
             <Route path={`parc-automobile/*`} element={<Parking />} />
-            <Route path={`materiels/*`} element={<Materials />} />
+            <Route path={`informatique/*`} element={<Computers />} />
             <Route path={`travaux/*`} element={<Works />} />
             <Route path={`recuperations/*`} element={<Loans />} />
             <Route path={`partenariats/*`} element={<Partnerships />} />

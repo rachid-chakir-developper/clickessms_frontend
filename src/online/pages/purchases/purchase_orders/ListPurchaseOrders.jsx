@@ -14,7 +14,7 @@ import TableListPurchaseOrders from './TableListPurchaseOrders';
 
 export default function ListPurchaseOrders() {
   const authorizationSystem = useAuthorizationSystem();
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [purchaseOrderFilter, setPurchaseOrderFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);

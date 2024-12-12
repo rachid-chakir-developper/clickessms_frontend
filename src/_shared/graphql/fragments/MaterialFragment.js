@@ -13,6 +13,11 @@ export const MATERIAL_BASIC_INFOS = gql`
     isStockAuto
     designation
     quantity
+    barCode
+    buyingPriceHt
+    tva
+    description
+    observation
     isActive
     folder {
       ...FolderMiniInfosFragment
@@ -24,11 +29,16 @@ export const MATERIAL_BASIC_INFOS = gql`
 export const MATERIAL_DETAILS = gql`
   fragment MaterialDetailsFragment on MaterialType {
     ...MaterialBasicInfosFragment
-    barCode
-    buyingPriceHt
-    tva
-    description
-    observation
+  }
+  ${MATERIAL_BASIC_INFOS}
+`;
+
+
+export const MATERIAL_RECAP_DETAILS = gql`
+  fragment MaterialRecapDetailsFragment on MaterialType {
+    ...MaterialBasicInfosFragment
+    createdAt,
+    updatedAt,
   }
   ${MATERIAL_BASIC_INFOS}
 `;

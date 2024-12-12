@@ -696,15 +696,14 @@ export const modules: Module[] = [
       {
         id: 'hardware',
         name: 'Matériels',
-        path: '/online/materiels',
+        path: '/online/informatique/materiels',
         icon: <DevicesIcon />,
       },
       {
         id: 'software',
         name: 'Logiciel',
-        path: '/online/logiciels',
+        path: '/online/informatique/logiciels',
         icon: <MicrosoftIcon />,
-        disabled: true,
       },
       {
         id: 'tickets',
@@ -716,16 +715,14 @@ export const modules: Module[] = [
       {
         id: 'backups',
         name: 'Sauvegardes',
-        path: '/online/sauvegardes',
+        path: '/online/informatique/sauvegardes',
         icon: <SaveIcon />,
-        disabled: true,
       },
       {
         id: 'passwords',
         name: 'Mots de passe',
-        path: '/online/mots-de-passe',
+        path: '/online/informatique/mots-de-passe',
         icon: <PasswordIcon />,
-        disabled: true,
       },
     ],
   },

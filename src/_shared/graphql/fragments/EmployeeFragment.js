@@ -70,6 +70,7 @@ export const EMPLOYEE_DETAILS = gql`
     city
     zipCode
     address
+    additionalAddress
     mobile
     fix
     fax

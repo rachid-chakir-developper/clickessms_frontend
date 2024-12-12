@@ -98,6 +98,7 @@ export const BENEFICIARY_DETAILS = gql`
     city
     zipCode
     address
+    additionalAddress
     mobile
     fix
     fax

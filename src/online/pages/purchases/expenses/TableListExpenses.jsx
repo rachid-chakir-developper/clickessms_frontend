@@ -151,6 +151,25 @@ const headCells = [
         render: ({totalAmount})=> <>{totalAmount}&nbsp;€</>
     },
     {
+        id: 'isAmountAccurate',
+        property: 'is_amount_accurate',
+        exportField: 'is_amount_accurate',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Montant précis',
+        render: ({isAmountAccurate})=> isAmountAccurate ? <AppLabel color="success">Oui</AppLabel> : <AppLabel color="error">Non</AppLabel>
+    },
+    {
+        id: 'isPlannedInBudget',
+        property: 'is_planned_in_budget',
+        exportField: 'is_planned_in_budget',
+        numeric: false,
+        disablePadding: false,
+        label: 'Prévu au budget',
+        render: ({isPlannedInBudget})=> isPlannedInBudget ? <AppLabel color="success">Oui</AppLabel> : <AppLabel color="error">Non</AppLabel>
+    },
+    {
         id: 'status',
         property: 'status',
         exportField: 'status',

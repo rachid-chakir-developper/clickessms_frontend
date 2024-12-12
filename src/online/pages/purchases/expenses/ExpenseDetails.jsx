@@ -18,6 +18,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Alert,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -160,9 +161,13 @@ function ExpenseMiniInfos({ expense }) {
             <Typography variant="subtitle1" color="textSecondary">
               Référence : <b>{expense?.number}</b>
             </Typography>
-            <Typography variant="subtitle1" color="textSecondary">
-              Montant total : <b>{formatCurrencyAmount(expense?.totalAmount)} €</b>
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems:'center'}}>
+              <Typography variant="subtitle1" color="textSecondary">
+                Montant total : <b>{formatCurrencyAmount(expense?.totalAmount)}</b>
+              </Typography>
+              <Alert sx={{marginLeft: 2}} severity={expense?.isAmountAccurate ? "success" : "warning"}>{expense?.isAmountAccurate ? "Montant précis" : "Montant non précis"}</Alert>
+              <Alert sx={{marginLeft: 2}} severity="info">{expense?.isPlannedInBudget ? "Prévu au budget" : "Non prévu au budget"}</Alert>
+            </Box>
             <Divider sx={{ my: 2 }} />
             <Typography variant="body2" color="textSecondary">
               <b>Créé le :</b> {getFormatDateTime(expense?.createdAt)} <br />

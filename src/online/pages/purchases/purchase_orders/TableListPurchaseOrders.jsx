@@ -35,7 +35,7 @@ import EstablishmentChip from '../../companies/establishments/EstablishmentChip'
 import { render } from 'react-dom';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
-import { getFormatDate, getFormatDateTime, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
+import { formatCurrencyAmount, getFormatDate, getFormatDateTime, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
 import PurchaseOrderStatusLabelMenu from './PurchaseOrderStatusLabelMenu';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 import { PURCHASE_ORDER_STATUS_CHOICES } from '../../../../_shared/tools/constants';
@@ -171,7 +171,7 @@ const headCells = [
         disablePadding: false,
         isDefault: true,
         label: 'Montant.TTC',
-        render: ({totalTtc})=> <>{totalTtc}&nbsp;€</>
+        render: ({totalTtc})=> formatCurrencyAmount(totalTtc)
     },
     {
         id: 'expense',

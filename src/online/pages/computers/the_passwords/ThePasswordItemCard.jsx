@@ -12,12 +12,12 @@ import {
   Folder,
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import { useFeedBacks } from '../../../_shared/context/feedbacks/FeedBacksProvider';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
-export default function MaterialItemCard({
-  material,
-  onDeleteMaterial,
-  onUpdateMaterialState,
+export default function ThePasswordItemCard({
+  thePassword,
+  onDeleteThePassword,
+  onUpdateThePasswordState,
 }) {
   //   const theme = useTheme();
   const { setDialogListLibrary } = useFeedBacks();
@@ -35,20 +35,20 @@ export default function MaterialItemCard({
       variant="outlined"
       sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2 }}
     >
-      <Tooltip title={material?.name}>
+      <Tooltip title={thePassword?.name}>
         <CardMedia
           component="img"
           width="100"
           height="100"
-          alt={material?.name}
-          src={material?.image ? material?.image : '/default-placeholder.jpg'}
+          alt={thePassword?.name}
+          src={thePassword?.image ? thePassword?.image : '/default-placeholder.jpg'}
           sx={{ borderRadius: 0.6, height: 100, width: 100 }}
         />
       </Tooltip>
       <Stack direction="column" spacing={2} alignItems="center">
         <Stack direction="column" spacing={0.2} alignItems="center">
           <Typography color="text.primary" fontWeight="medium" fontSize={18}>
-            {material?.name}
+            {thePassword?.name}
           </Typography>
           <Typography
             component="div"
@@ -56,7 +56,7 @@ export default function MaterialItemCard({
             color="text.secondary"
             fontWeight="regular"
           >
-            {`${material?.designation}`}
+            {`${thePassword?.designation}`}
           </Typography>
         </Stack>
         <Stack direction="row" alignItems="center" spacing={1.5}>
@@ -65,23 +65,23 @@ export default function MaterialItemCard({
               aria-label="delete"
               size="small"
               sx={{ flexGrow: 0 }}
-              onClick={() => onDeleteMaterial(material?.id)}
+              onClick={() => onDeleteThePassword(thePassword?.id)}
             >
               <Delete fontSize="small" />
             </IconButton>
           </Tooltip>
-          <Tooltip title={!material?.isActive ? 'Activer' : 'Désactiver'}>
+          <Tooltip title={!thePassword?.isActive ? 'Activer' : 'Désactiver'}>
             <IconButton
-              aria-label={!material?.isActive ? 'play' : 'pause'}
+              aria-label={!thePassword?.isActive ? 'play' : 'pause'}
               sx={{ mx: 1 }}
-              onClick={() => onUpdateMaterialState(material?.id)}
+              onClick={() => onUpdateThePasswordState(thePassword?.id)}
             >
-              {!material?.isActive ? <PlayArrowRounded /> : <PauseRounded />}
+              {!thePassword?.isActive ? <PlayArrowRounded /> : <PauseRounded />}
             </IconButton>
           </Tooltip>
           <Tooltip title="Modifier">
             <Link
-              to={`/online/materiels/modifier/${material?.id}`}
+              to={`/online/informatique/mots-de-passe/modifier/${thePassword?.id}`}
               className="no_style"
             >
               <IconButton aria-label="edit" size="small">
@@ -89,13 +89,13 @@ export default function MaterialItemCard({
               </IconButton>
             </Link>
           </Tooltip>
-          {material?.folder && (
+          {thePassword?.folder && (
             <Tooltip title="Pièces jointes">
               <IconButton
                 aria-label="Attachment"
                 size="small"
                 sx={{ flexGrow: 0 }}
-                onClick={() => onOpenDialogListLibrary(material?.folder)}
+                onClick={() => onOpenDialogListLibrary(thePassword?.folder)}
               >
                 <Folder fontSize="small" />
               </IconButton>

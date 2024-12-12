@@ -53,6 +53,7 @@ export default function AddFinancierForm({ idFinancier, title }) {
       city: '',
       zipCode: '',
       address: '',
+      additionalAddress: '',
       mobile: '',
       fix: '',
       fax: '',
