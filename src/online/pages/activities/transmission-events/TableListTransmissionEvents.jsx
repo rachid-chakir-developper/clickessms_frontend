@@ -203,7 +203,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les événements / transmissions
+          Événements / transmissions
         </Typography>
       )}
 

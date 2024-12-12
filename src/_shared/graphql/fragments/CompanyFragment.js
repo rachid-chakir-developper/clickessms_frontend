@@ -11,6 +11,7 @@ export const COMPANY_MEDIA_INFOS = gql`
     associationsFoundationsCode
     safcCode
     sceShopUrl
+    blogUrl
   }
 `;
 
@@ -24,7 +25,6 @@ export const COMPANY_BASIC_INFOS = gql`
     companyMedia{
       ...CompanyMediaBasicInfosFragment
     }
-    sceShopUrl
     isActive
     status
   }

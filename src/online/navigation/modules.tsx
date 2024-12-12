@@ -68,7 +68,6 @@ import NewspaperIcon from '@mui/icons-material/Newspaper';
 import TableBarIcon from '@mui/icons-material/TableBar';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import WalletIcon from '@mui/icons-material/Wallet';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import ArticleIcon from '@mui/icons-material/Article';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -569,9 +568,8 @@ export const modules: Module[] = [
       {
         id: 'purchase-orders',
         name: 'Bons de commande',
-        path: '/online/partnerships/bons-commande',
+        path: '/online/achats/bons-commandes',
         icon: <PostAddIcon />,
-        disabled: true,
       },
       {
         id: 'keys',
@@ -739,9 +737,9 @@ export const modules: Module[] = [
       },
       {
         id: 'purchase-orders',
-        name: 'Bons de commandes',
+        name: 'Bons de commande',
         path: '/online/achats/bons-commandes',
-        icon: <ReceiptLongIcon />,
+        icon: <PostAddIcon />,
       },
       {
         id: 'approved-suppliers',
@@ -843,7 +841,7 @@ export const modules: Module[] = [
         name: 'Boutique',
         path(session) {
           const {user}= session
-          return user?.company?.sceShopUrl
+          return user?.company?.companyMedia?.sceShopUrl
         },
         target: '_blank',
         icon: <StorefrontIcon />,
@@ -934,9 +932,12 @@ export const modules: Module[] = [
       {
         id: 'blog',
         name: 'Blog',
-        path: '/online/ressources/blog',
+        path(session) {
+          const {user}= session
+          return user?.company?.companyMedia?.blogUrl
+        },
+        target: '_blank',
         icon: <StickyNote2Icon />,
-        disabled: true,
       },
       {
         id: 'le-comptoir-des-essms',

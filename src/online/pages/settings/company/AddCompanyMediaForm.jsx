@@ -38,6 +38,7 @@ export default function AddCompanyMediaForm({ idCompanyMedia = null, title = '' 
       associationsFoundationsCode: undefined,
       safcCode: undefined,
       sceShopUrl: '',
+      blogUrl: '',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -197,6 +198,15 @@ export default function AddCompanyMediaForm({ idCompanyMedia = null, title = '' 
                   label="Lien boutique cse"
                   value={formik.values.sceShopUrl}
                   onChange={(e) => formik.setFieldValue('sceShopUrl', e.target.value)}
+                  disabled={loadingPut}
+                />
+              </Item>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Lien du blog"
+                  value={formik.values.blogUrl}
+                  onChange={(e) => formik.setFieldValue('blogUrl', e.target.value)}
                   disabled={loadingPut}
                 />
               </Item>
