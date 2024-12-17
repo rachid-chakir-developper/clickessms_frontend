@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 import {
   CUSTOM_FIELD_BASIC_INFOS,
   CUSTOM_FIELD_DETAILS,
+  CUSTOM_FIELD_VALUE_DETAILS,
 } from '../fragments/CustomFieldFragment';
 
 export const GET_CUSTOM_FIELD = gql`
@@ -36,3 +37,17 @@ export const GET_CUSTOM_FIELDS = gql`
 `;
 
 // Add more customField-related queries here
+export const GET_CUSTOM_FIELD_VALUES = gql`
+query GetCustomFieldValues(
+  $formModel: String!
+  $idObject: ID!
+) {
+  customFieldValues(
+    formModel: $formModel
+    idObject: $idObject
+  ) {
+    ...CustomFieldValueDetailsFragment
+  }
+}
+${CUSTOM_FIELD_VALUE_DETAILS}
+`;

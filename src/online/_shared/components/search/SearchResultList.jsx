@@ -158,14 +158,14 @@ const SearchResultList = ({ results, loading, keyword }) => {
             sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
             subheader={
               <ListSubheader sx={{ fontSize: 20, fontWeight: 700 }}>
-                Les bénéficiaires
+                Les personnes accompagnées
               </ListSubheader>
             }
           >
             {loading && <ProgressService type="searchResults" />}
             {!loading && results?.beneficiaries?.totalCount < 1 && (
               <small>
-                Aucun bénéficiaire trouvé avec{' '}
+                Aucune personne accompagnée trouvé avec{' '}
                 <b>
                   "<em>{keyword}</em>"
                 </b>

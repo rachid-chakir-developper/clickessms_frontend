@@ -224,7 +224,7 @@ export const modules: Module[] = [
       },
       {
         id: 'beneficiaries',
-        name: 'Bénéficiaires',
+        name: 'Personnes accompagnées',
         path: '/online/ressources-humaines/beneficiaires',
         icon: <AssignmentIndIcon />,
         hidden(authorizationSystem) {
@@ -236,9 +236,8 @@ export const modules: Module[] = [
       {
         id: 'personalized-projects',
         name: 'Projets personnalisés ( PPA)',
-        path: '/online/activité/projet-personnalisé',
+        path: '/online/activites/projets-personnalises',
         icon: <RecentActorsIcon />,
-        disabled: true,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageActivity',
@@ -252,6 +251,12 @@ export const modules: Module[] = [
         icon: <CommentIcon />,
       },
       {
+        id: 'presence-absence',
+        name: 'Présences / Absences',
+        path: '/online/activites/absences-beneficiaires',
+        icon: <CalendarMonthIcon />,
+      },
+      {
         id: 'malette-law-2002-2',
         name: 'Malette loi 2002-2',
         path: '/online/activité/malette-loi-2002-2',
@@ -262,12 +267,6 @@ export const modules: Module[] = [
             type: 'manageActivity',
           }).authorized;
         },
-      },
-      {
-        id: 'presence-absence',
-        name: 'Présences / Absences',
-        path: '/online/activites/absences-beneficiaires',
-        icon: <CalendarMonthIcon />,
       },
       {
         id: 'prestations',
@@ -408,7 +407,7 @@ export const modules: Module[] = [
       },
       {
         id: 'beneficiaries',
-        name: 'Bénéficiaires',
+        name: 'Personnes accompagnées',
         path: '/online/ressources-humaines/beneficiaires',
         icon: <AssignmentIndIcon />,
         hidden(authorizationSystem) {
@@ -706,9 +705,8 @@ export const modules: Module[] = [
       {
         id: 'tickets',
         name: 'Tickets',
-        path: '/online/tickets',
+        path: '/online/informatique/tickets',
         icon: <EmailIcon />,
-        disabled: true,
       },
       {
         id: 'backups',

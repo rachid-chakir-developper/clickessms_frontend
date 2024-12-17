@@ -99,7 +99,7 @@ const headCells = [
     id: 'beneficiary',
     numeric: false,
     disablePadding: false,
-    label: 'Bénéficiaires',
+    label: 'Personnes accompagnées',
   },
   {
     id: 'employee',

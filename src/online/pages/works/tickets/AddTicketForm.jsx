@@ -23,7 +23,7 @@ import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueri
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import { Close } from '@mui/icons-material';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
-import { ACTION_STATUS, PRIORITIES } from '../../../../_shared/tools/constants';
+import { ACTION_STATUS, PRIORITIES, TICKET_TYPE_CHOICES } from '../../../../_shared/tools/constants';
 import { GET_TASK_ACTIONS } from '../../../../_shared/graphql/queries/TaskActionQueries';
 import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
@@ -50,6 +50,7 @@ export default function AddTicketForm({ idTicket, title }) {
     initialValues: {
       number: '',
       title: '',
+      ticketType: TICKET_TYPE_CHOICES.PLAN_ACTION,
       description: '',
       establishments: [],
       priority: 'LOW',

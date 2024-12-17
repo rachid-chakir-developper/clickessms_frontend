@@ -4,6 +4,7 @@ import { gql } from '@apollo/client';
 import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 import { EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
 import { FINANCIER_BASIC_INFOS } from './FinancierFragment';
+import { CUSTOM_FIELD_VALUE_DETAILS } from './CustomFieldFragment';
 
 export const BENEFICIARY_PHONE_INFOS = gql`
   fragment BeneficiaryPhoneInfosFragment on BeneficiaryType {
@@ -36,6 +37,20 @@ export const BENEFICIARY_MINI_INFOS = gql`
     isActive
   }
 `;
+
+export const BENEFICIARY_STATUS_ENTRY_DETAILS = gql`
+  fragment BeneficiaryStatusEntryFragment on BeneficiaryStatusEntryType {
+    id
+    document
+    beneficiaryStatus{
+      id
+      name
+    }
+    startingDate
+    endingDate
+  }
+`;
+
 export const BENEFICIARY_ENTRY_DETAILS = gql`
   fragment BeneficiaryEntryFragment on BeneficiaryEntryType {
     id
@@ -56,8 +71,14 @@ export const BENEFICIARY_BASIC_INFOS = gql`
   fragment BeneficiaryBasicInfosFragment on BeneficiaryType {
     ...BeneficiaryMiniInfosFragment
     birthDate
+    beneficiaryStatusEntries{
+      ...BeneficiaryStatusEntryFragment
+    }
     beneficiaryEntries{
       ...BeneficiaryEntryFragment
+    }
+    customFieldValues{
+      ...CustomFieldValueDetailsFragment
     }
     folder {
       id
@@ -66,7 +87,9 @@ export const BENEFICIARY_BASIC_INFOS = gql`
     }
   }
   ${BENEFICIARY_MINI_INFOS}
+  ${BENEFICIARY_STATUS_ENTRY_DETAILS}
   ${BENEFICIARY_ENTRY_DETAILS}
+  ${CUSTOM_FIELD_VALUE_DETAILS}
 `;
 
 export const BENEFICIARY_ADMISSION_DETAILS = gql`

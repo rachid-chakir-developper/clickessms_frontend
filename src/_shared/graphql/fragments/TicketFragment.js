@@ -10,6 +10,7 @@ export const TICKET_MINI_INFOS = gql`
     id
     number
     title
+    ticketType
     priority
     status
     completionPercentage

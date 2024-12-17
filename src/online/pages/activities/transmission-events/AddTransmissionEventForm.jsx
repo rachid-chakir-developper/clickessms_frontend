@@ -249,10 +249,9 @@ const [getEmployees, {
               <Item>
                 <TheAutocomplete
                   options={employeesData?.employees?.nodes}
-onInput={(e) => {
-                          onGetEmployees(e.target.value)
-                        }}
-
+                  onInput={(e) => {
+                    onGetEmployees(e.target.value)
+                  }}
                   label="Pour quel employé ?"
                   placeholder="Choisissez un employé ?"
                   multiple={false}
@@ -268,11 +267,11 @@ onInput={(e) => {
               <Item>
                 <TheAutocomplete
                   options={beneficiariesData?.beneficiaries?.nodes}
-                        onInput={(e) => {
-                          onGetBeneficiaries(e.target.value)
-                        }}
-                  label="Bénéficiaires"
-                  placeholder="Ajouter un bénéficiaire"
+                  onInput={(e) => {
+                    onGetBeneficiaries(e.target.value)
+                  }}
+                  label="Personnes accompagnées"
+                  placeholder="Ajouter une personne accompagnée"
                   limitTags={3}
                   value={formik.values.beneficiaries}
                   onChange={(e, newValue) =>

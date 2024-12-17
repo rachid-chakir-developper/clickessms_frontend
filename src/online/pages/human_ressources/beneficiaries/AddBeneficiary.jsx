@@ -9,8 +9,8 @@ export default function AddBeneficiary() {
       idBeneficiary={idBeneficiary}
       title={
         idBeneficiary && idBeneficiary > 0
-          ? `Modifier le bénéficiaire`
-          : `Ajouter un bénéficiaire`
+          ? `Modifier la personne accompagnée`
+          : `Ajouter une personne accompagnée`
       }
     />
   );

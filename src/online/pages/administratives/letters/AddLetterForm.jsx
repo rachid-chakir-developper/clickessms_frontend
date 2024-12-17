@@ -344,8 +344,8 @@ onInput={(e) => {
                         onInput={(e) => {
                           onGetBeneficiaries(e.target.value)
                         }}
-                  label="Bénéficiaires"
-                  placeholder="Ajouter un bénéficiaire"
+                  label="Personnes accompagnées"
+                  placeholder="Ajouter une personne accompagnée"
                   limitTags={3}
                   value={formik.values.beneficiaries}
                   onChange={(e, newValue) =>

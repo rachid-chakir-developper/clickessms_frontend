@@ -157,7 +157,7 @@ function BeneficiaryGroupOtherInfos({ beneficiaryGroup }) {
       }}
     >
       <Typography gutterBottom variant="subtitle3" component="h3">
-        Les bénéficiaires
+        Les personnes accompagnées
       </Typography>
       <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
         {beneficiaryGroup?.beneficiaries?.map((beneficiary, index) => (

@@ -146,7 +146,7 @@ function CallOtherInfos({ call }) {
       }}
     >
       <Typography gutterBottom variant="subtitle3" component="h3">
-        Les Bénéficiaires
+        Les Personnes accompagnées
       </Typography>
       <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
         {call?.beneficiaries?.map((beneficiary, index) => (

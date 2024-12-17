@@ -9,6 +9,8 @@ import BeneficiaryAbsences from './BeneficiaryAbsences';
 import BeneficiaryTransmissionEvents from './BeneficiaryTransmissionEvents';
 import BeneficiaryUndesirableEvents from './BeneficiaryUndesirableEvents';
 import { Stack } from '@mui/material';
+import BeneficiaryStatusEntries from './BeneficiaryStatusEntries';
+import PersonalizedProjects from './PersonalizedProjects';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -104,6 +106,7 @@ export default function BeneficiaryTabs({beneficiary}) {
                 <LinkTab label="Evénements indésirables" href="/spam" />
                 <LinkTab label="Admissions" href="/drafts" />
                 <LinkTab label="Entrées / sorties" href="/trash" />
+                <LinkTab label="Statuts" href="/trash" />
                 <LinkTab label="Projets personnalisés (PPA)" href="/trash" />
             </Tabs>
         </Box>
@@ -121,6 +124,12 @@ export default function BeneficiaryTabs({beneficiary}) {
         </CustomTabPanel>
         <CustomTabPanel value={value} index={4}>
             <BeneficiaryEntries beneficiaryEntries={beneficiary?.beneficiaryEntries} />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={5}>
+            <BeneficiaryStatusEntries beneficiaryStatusEntries={beneficiary?.beneficiaryStatusEntries} />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={6}>
+          <PersonalizedProjects beneficiary={beneficiary} />
         </CustomTabPanel>
     </Box>
   );

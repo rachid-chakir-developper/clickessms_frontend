@@ -126,10 +126,10 @@ const TransmissionEventFilter = ({ onFilterChange }) => {
                         onInput={(e) => {
                           onGetBeneficiaries(e.target.value)
                         }}
-                        label="Bénéficiaires"
+                        label="Personnes accompagnées"
                         limitTags={3}
                         value={selectedBeneficiaries}
-                        onChange={(transmissionEvent, newValue) => {
+                        onChange={(event, newValue) => {
                             setFilterSelectedBeneficiaries(newValue)
                             setFilterValues({ ...filterValues, beneficiaries: newValue.map((v) => v.id) })
                         }}

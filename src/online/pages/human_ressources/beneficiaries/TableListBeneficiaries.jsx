@@ -14,7 +14,6 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
@@ -22,15 +21,23 @@ import {
   Delete,
   Done,
   Edit,
+  Euro,
   Folder,
   MoreVert,
+  Print,
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
-import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import { getFormatDate } from '../../../../_shared/tools/functions';
+import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
+import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
+import { getFormatDate, getFormatDateTime } from '../../../../_shared/tools/functions';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
+import { GET_CUSTOM_FIELDS } from '../../../../_shared/graphql/queries/CustomFieldQueries';
+import { useQuery } from '@apollo/client';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -89,68 +96,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-    {
-      id: 'photo',
-      numeric: false,
-      disablePadding: true,
-      label: 'Photo',
-    },
-    {
-      id: 'firstName',
-      numeric: false,
-      disablePadding: false,
-      label: 'Prénom',
-    },
-    {
-        id: 'lastName',
-        numeric: false,
-        disablePadding: false,
-        label: 'Nom de naissance',
-    },
-    {
-        id: 'preferredName',
-        numeric: false,
-        disablePadding: false,
-        label: 'Nom d’usage',
-    },
-    {
-        id: 'birthDate',
-        numeric: false,
-        disablePadding: false,
-        label: 'Date de naissance',
-    },
-    {
-        id: 'establishments',
-        numeric: false,
-        disablePadding: false,
-        label: 'Structures',
-    },
-    {
-        id: 'internalReferents',
-        numeric: false,
-        disablePadding: false,
-        label: 'Référents internes',
-    },
-    {
-        id: 'entryDate',
-        numeric: false,
-        disablePadding: false,
-        label: "Date d'entrée",
-    },
-    {
-        id: 'releaseDate',
-        numeric: false,
-        disablePadding: false,
-        label: 'Date de sortie',
-    },
-    {
-        id: 'action',
-        numeric: true,
-        disablePadding: false,
-        label: 'Actions',
-    },
-];
 
 function EnhancedTableHead(props) {
   const {
@@ -160,9 +105,10 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    selectedColumns = []
   } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property, sortDisabled=false) => (event) => {
+    if(!sortDisabled) onRequestSort(event, property);
   };
 
   return (
@@ -179,7 +125,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </StyledTableCell>
-        {headCells.map((headCell) => (
+        {selectedColumns.map((headCell) => (
           <StyledTableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -187,9 +133,10 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+              hideSortIcon={headCell.sortDisabled}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.property, headCell?.sortDisabled)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -206,7 +153,10 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, totalCount } = props;
+  const { numSelected, onFilterChange, headCells } = props;
+  const [selectedColumns, setSelectedColumns] = React.useState(
+    headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
+  );
 
   return (
     <Toolbar
@@ -240,10 +190,14 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les bénéficiaires {totalCount && <>({totalCount})</>}
+          Les personnes accompagnées
         </Typography>
       )}
-
+      <TableExportButton 
+        entity={'Beneficiary'}
+        fileName={'personnes-accompagnees'}
+        fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
+        titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>
@@ -251,11 +205,12 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <TableFilterButton headCells={headCells} 
+          onFilterChange={(currentColumns)=>{
+            setSelectedColumns(currentColumns);
+            onFilterChange(headCells?.filter(c=> currentColumns?.includes(c.id)))
+          }
+        }/>
       )}
     </Toolbar>
   );
@@ -264,33 +219,198 @@ function EnhancedTableToolbar(props) {
 export default function TableListBeneficiaries({
   loading,
   rows,
-  totalCount = null,
   onDeleteBeneficiary,
-  onUpdateBeneficiaryState,
+  onFilterChange,
+  paginator,
 }) {
+  
+  const [headCells, setHeadCells] = React.useState([
+    {
+        id: 'firstName',
+        property: 'first_name',
+        exportField: 'first_name',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Prénom',
+    },
+    {
+        id: 'lastName',
+        property: 'last_name',
+        exportField: 'last_name',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Nom de naissance',
+    },
+    {
+        id: 'preferredName',
+        property: 'preferred_name',
+        exportField: 'preferred_name',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Nom d’usage',
+    },
+    {
+        id: 'birthDate',
+        property: 'birth_date',
+        exportField: 'birth_date',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Date de naissance',
+        render: ({birthDate})=> getFormatDate(birthDate)
+    },
+    {
+        id: 'establishments',
+        property: 'beneficiary_entries__establishments__name',
+        exportField: ['beneficiary_entries__establishments__name'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Structure(s)',
+        render: ({beneficiaryEntries}) => beneficiaryEntries && beneficiaryEntries?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+        {beneficiaryEntries[beneficiaryEntries?.length - 1]?.establishments?.map((establishment, index) => {
+          return (
+            <EstablishmentChip
+              key={index}
+              establishment={establishment}
+            />
+          );
+        })}
+      </Stack>
+    },
+    {
+        id: 'internalReferents',
+        property: 'beneficiary_entries__internal_referents__first_name',
+        exportField: ['beneficiary_entries__internal_referents__first_name', 'beneficiary_entries__internal_referents__last_name'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Référents internes',
+        render: ({beneficiaryEntries}) => beneficiaryEntries && beneficiaryEntries?.length > 0  && <Stack direction="row" flexWrap='wrap' spacing={1}>
+          <ChipGroupWithPopover people={beneficiaryEntries[beneficiaryEntries?.length - 1]?.internalReferents} />
+      </Stack>
+    },
+    {
+        id: 'entryDate',
+        property: 'entry_date',
+        exportField: 'entry_date',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: "Date d'entrée",
+        render: ({entryDate})=> getFormatDate(entryDate)
+    },
+    {
+        id: 'releaseDate',
+        property: 'release_date',
+        exportField: 'release_date',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: "Date de sortie",
+        render: ({releaseDate})=> getFormatDate(releaseDate)
+    },
+    {
+        id: 'action',
+        numeric: true,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Actions',
+    },
+  ]);
+  // Récupérer les champs personnalisés avec useQuery
+  const {
+    loading: loadingCustomFields,
+    data: customFieldsData,
+    error: customFieldsError,
+  } = useQuery(GET_CUSTOM_FIELDS, { variables: { customFieldFilter: { formModels: ['Beneficiary'] } } });
+
+  // Mettre à jour les headCells lorsque les champs personnalisés sont récupérés
+  React.useEffect(() => {
+    if (customFieldsData) {
+      setHeadCells(prevHeadCells => {
+        // Sélectionner les éléments à conserver
+        const actionCell = prevHeadCells.find(cell => cell.id === 'action');
+        const otherCells = prevHeadCells.slice(0, prevHeadCells.length - 1); // Tous les éléments sauf les deux derniers
+
+        // Créer les cellules de champs personnalisés
+        const customFieldCells = customFieldsData?.customFields?.nodes?.map(field => ({
+          id: field.id,
+          property: field.property,
+          exportField: field.exportField,
+          numeric: false,
+          disablePadding: false,
+          isDefault: false,
+          label: field.label,
+          render: ({ customFieldValues }) => {
+            const customFieldValue = customFieldValues.find((value) => value?.customField?.key === field?.key);
+            const value = customFieldValue ? customFieldValue?.value : "";
+            const { fieldType, options } = field;
+            switch (fieldType) {
+              case 'TEXT':
+                return value
+              case 'TEXTAREA':
+                return value
+              case 'NUMBER':
+                return value
+              case 'DATE':
+                return getFormatDate(value)
+              case 'DATETIME':
+                return getFormatDateTime(value)
+              case 'BOOLEAN':
+                return value ? <AppLabel color="success">Oui</AppLabel> : <AppLabel color="error">Non</AppLabel>
+              case 'SELECT':
+                return options.map((option, idx) => (
+                  value === option.value && <span key={idx}>{option.label}</span>
+                ))
+              case 'SELECT_MULTIPLE':
+                return options.filter(option => value.includes(option.value)) // Filtrer les options sélectionnées
+                        .map((option, idx) => (
+                  <span key={idx}>{option.label}{idx < options.filter(option => value.includes(option.value)).length - 1 ? ', ' : ''}</span>
+                  ))
+              default:
+                  return null;
+              }
+          },
+        }));
+
+        // Retourner l'array avec les champs personnalisés entre les deux derniers éléments et 'action' à la fin
+        return [...otherCells, ...customFieldCells, actionCell];
+      });
+    }
+  }, [customFieldsData]);
+
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(20);
+  const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
-  const { setDialogListLibrary } = useFeedBacks();
+  const  { setDialogListLibrary, setPrintingModal } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
-    setDialogListLibrary({
-      isOpen: true,
-      folderParent,
-      onClose: () => {
-        setDialogListLibrary({ isOpen: false });
-      },
-    });
-  };
+      setDialogListLibrary({
+        isOpen: true,
+        folderParent,
+        onClose: () => { 
+            setDialogListLibrary({isOpen: false})
+          }
+      })
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    onFilterChange({orderBy: `${isAsc ? '-' : ''}${property}`})
   };
 
   const handleSelectAllClick = (event) => {
@@ -336,17 +456,21 @@ export default function TableListBeneficiaries({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
+  const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
+
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} totalCount={totalCount}/>
+      <Paper sx={{ width: '100%', mb: 2 }} >
+        <EnhancedTableToolbar headCells={headCells} numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
+            border="0"
             size="medium"
           >
             <EnhancedTableHead
+              selectedColumns={selectedColumns}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -357,16 +481,16 @@ export default function TableListBeneficiaries({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="11">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="11">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucun bénéficiaire trouvé.
+                      Aucune personne accompagnée trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -416,91 +540,20 @@ export default function TableListBeneficiaries({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                      onClick={()=> navigate(`/online/ressources-humaines/beneficiaires/details/${row?.id}`)}
-                    >
-                      <Avatar
-                        alt={`${row?.firstName} ${row?.lastName}`}
-                        variant="rounded"
-                        src={
-                          row?.photo
-                            ? row?.photo
-                            : '/default-placeholder.jpg'
-                        }
-                        sx={{ width: 50, height: 50, bgcolor: '#e1e1e1' }}
-                      />
-                    </StyledTableCell>
-                    <StyledTableCell align="left"
-                      onClick={()=> navigate(`/online/ressources-humaines/beneficiaires/details/${row?.id}`)}>
-                      {row?.firstName}
-                    </StyledTableCell>
-                    <StyledTableCell align="left"
-                      onClick={()=> navigate(`/online/ressources-humaines/beneficiaires/details/${row?.id}`)}>
-                      {row?.lastName}
-                    </StyledTableCell>
-                    <StyledTableCell align="left"
-                      onClick={()=> navigate(`/online/ressources-humaines/beneficiaires/details/${row?.id}`)}>
-                      {row?.preferredName}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{getFormatDate(row?.birthDate)}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      {row?.beneficiaryEntries && row?.beneficiaryEntries?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.beneficiaryEntries[row?.beneficiaryEntries?.length - 1]?.establishments?.map((establishment, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={establishment?.name}
-                                  src={
-                                    establishment?.logo
-                                      ? establishment?.logo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={establishment?.name}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      {row?.beneficiaryEntries && row?.beneficiaryEntries?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.beneficiaryEntries[row?.beneficiaryEntries?.length - 1]?.internalReferents?.map((employee, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={`${employee?.firstName} ${employee?.lastName}`}
-                                  src={
-                                    employee?.photo
-                                      ? employee?.photo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={`${employee?.firstName} ${employee?.lastName}`}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      {row?.beneficiaryEntries && row?.beneficiaryEntries?.length > 0 ? 
-                      getFormatDate(row?.beneficiaryEntries[row?.beneficiaryEntries?.length - 1]?.entryDate)
-                       : ''}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      {row?.beneficiaryEntries && row?.beneficiaryEntries?.length > 0 ? 
-                      getFormatDate(row?.beneficiaryEntries[row?.beneficiaryEntries?.length - 1]?.releaseDate)
-                      : ''}</StyledTableCell>
+                    {
+                      selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
+                        return <StyledTableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding={column?.disablePadding ? "none" : "normal"}
+                          key={index}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/ressources-humaines/beneficiaires/details/${row?.id}`)}}
+                        >
+                        {column?.render ? column?.render(row) : row[column?.id]}
+                        </StyledTableCell>
+                      })
+                    }
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -566,7 +619,7 @@ export default function TableListBeneficiaries({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={6} />
+                  <StyledTableCell colSpan={selectedColumns.length + 1} />
                 </StyledTableRow>
               )}
             </TableBody>

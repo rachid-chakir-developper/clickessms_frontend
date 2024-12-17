@@ -125,23 +125,23 @@ const headCells = [
         render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
     },
     {
-        id: 'cycleInDays',
+        id: 'lastBackupDateTime',
         property: 'last_backup_date_time',
         exportField: 'last_backup_date_time',
         numeric: false,
         disablePadding: false,
         isDefault: true,
         label: "Date dernière sauvegarde",
+        render: ({lastBackupDateTime})=> getFormatDate(lastBackupDateTime)
     },
     {
-        id: 'lastBackupDateTime',
+        id: 'cycleInDays',
         property: 'cycle_in_days',
         exportField: 'cycle_in_days',
         numeric: false,
         disablePadding: false,
         isDefault: true,
         label: 'Cycle en jours',
-        render: ({lastBackupDateTime})=> getFormatDate(lastBackupDateTime)
     },
     {
         id: 'isActive',

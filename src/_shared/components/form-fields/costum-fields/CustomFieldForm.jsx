@@ -18,6 +18,7 @@ const Item = styled(Stack)(({ theme }) => ({
 
 const FIELD_TYPES = [
   { value: 'TEXT', label: 'Text' },
+  { value: 'TEXTAREA', label: 'Zone du text' },
   { value: 'NUMBER', label: 'Number' },
   { value: 'DATE', label: 'Date' },
   { value: 'BOOLEAN', label: 'Boolean' },

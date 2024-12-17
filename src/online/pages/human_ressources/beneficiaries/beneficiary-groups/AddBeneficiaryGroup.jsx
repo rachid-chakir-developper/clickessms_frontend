@@ -9,8 +9,8 @@ export default function AddBeneficiaryGroup() {
       idBeneficiaryGroup={idBeneficiaryGroup}
       title={
         idBeneficiaryGroup && idBeneficiaryGroup > 0
-          ? `Modifier l'groupe de bénéficiaires`
-          : `Ajouter un groupe de bénéficiaires`
+          ? `Modifier l'groupe de personnes accompagnées`
+          : `Ajouter un groupe de personnes accompagnées`
       }
     />
   );

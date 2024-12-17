@@ -75,6 +75,9 @@ export const GET_DATAS_BENEFICIARY = gql`
     admissionDocumentTypes: datas(typeData: "AdmissionDocumentType") {
       ...DataBasicInfosFragment
     }
+    beneficiaryStatuses: datas(typeData: "BeneficiaryStatus") {
+      ...DataBasicInfosFragment
+    }
   }
   ${DATA_BASIC_INFOS}
 `;

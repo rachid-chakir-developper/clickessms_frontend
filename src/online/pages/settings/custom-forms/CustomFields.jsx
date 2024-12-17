@@ -35,7 +35,9 @@ const modulesToManage = [
   },
   {
     title: 'Activités',
-    customFields: [],
+    customFields: [
+      { name: "Les personnes accompagnées", description: '', formModel: 'Beneficiary' },
+    ],
   },
   {
     title: 'Qualités',

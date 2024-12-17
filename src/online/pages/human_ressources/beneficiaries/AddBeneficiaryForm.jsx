@@ -25,6 +25,7 @@ import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueri
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
 import { GET_FINANCIERS } from '../../../../_shared/graphql/queries/FinancierQueries';
+import CustomFieldValues from '../../../../_shared/components/form-fields/costum-fields/CustomFieldValues';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -38,6 +39,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
+  const [triggerSave, setTriggerSave] = React.useState(false);
   const validationSchema = yup.object({
     firstName: yup
       .string('Entrez votre prénom')
@@ -59,6 +61,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       city: '',
       zipCode: '',
       address: '',
+      additionalAddress: '',
       mobile: '',
       fix: '',
       fax: '',
@@ -73,44 +76,56 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       isActive: true,
       beneficiaryEntries: [],
       beneficiaryAdmissionDocuments: [],
+      beneficiaryStatusEntries: [],
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      let { photo, ...beneficiaryFormCopy } = values;
-      let { coverImage, ...beneficiaryCopy } = beneficiaryFormCopy;
-      if (!beneficiaryCopy?.beneficiaryEntries) beneficiaryCopy['beneficiaryEntries'] = [];
-        let items = [];
-        beneficiaryCopy.beneficiaryEntries.forEach((item) => {
-          let { __typename, ...itemCopy } = item;
-          itemCopy.establishments = itemCopy.establishments.map((i) => i?.id);
-          itemCopy.internalReferents = itemCopy.internalReferents.map((i) => i?.id);
-          items.push(itemCopy);
-        });
-        beneficiaryCopy.beneficiaryEntries = items;
-        items = [];
-        beneficiaryCopy.beneficiaryAdmissionDocuments.forEach((item) => {
-          let { __typename, ...itemCopy } = item;
-          itemCopy.financier = itemCopy.financier ? itemCopy.financier.id : null;
-          items.push(itemCopy);
-        });
-        beneficiaryCopy.beneficiaryAdmissionDocuments = items;
+      onSubmit: (values) => {
+        if (activeStep === 4) {
+            setTriggerSave(true);
+            setTimeout(() => setTriggerSave(false), 100);
+            return
+        }
+        let { photo, ...beneficiaryFormCopy } = values;
+        let { coverImage, ...beneficiaryCopy } = beneficiaryFormCopy;
+        if (!beneficiaryCopy?.beneficiaryEntries) beneficiaryCopy['beneficiaryEntries'] = [];
+          let items = [];
+          beneficiaryCopy.beneficiaryEntries.forEach((item) => {
+            let { __typename, ...itemCopy } = item;
+            itemCopy.establishments = itemCopy.establishments.map((i) => i?.id);
+            itemCopy.internalReferents = itemCopy.internalReferents.map((i) => i?.id);
+            items.push(itemCopy);
+          });
+          beneficiaryCopy.beneficiaryEntries = items;
+          items = [];
+          beneficiaryCopy.beneficiaryAdmissionDocuments.forEach((item) => {
+            let { __typename, ...itemCopy } = item;
+            itemCopy.financier = itemCopy.financier ? itemCopy.financier.id : null;
+            items.push(itemCopy);
+          });
+          beneficiaryCopy.beneficiaryAdmissionDocuments = items;
+          items = [];
+          beneficiaryCopy.beneficiaryStatusEntries.forEach((item) => {
+            let { __typename, ...itemCopy } = item;
+            items.push(itemCopy);
+          });
+          beneficiaryCopy.beneficiaryStatusEntries = items;
 
-      if (beneficiaryCopy?.id && beneficiaryCopy?.id != '') {
-        onUpdateBeneficiary({
-          id: beneficiaryCopy.id,
-          beneficiaryData: beneficiaryCopy,
-          photo: photo,
-          coverImage: coverImage,
-        });
-      } else
-        createBeneficiary({
-          variables: {
+        if (beneficiaryCopy?.id && beneficiaryCopy?.id != '') {
+          onUpdateBeneficiary({
+            id: beneficiaryCopy.id,
             beneficiaryData: beneficiaryCopy,
             photo: photo,
             coverImage: coverImage,
-          },
-        });
-    },
+          });
+        } else
+          createBeneficiary({
+            variables: {
+              beneficiaryData: beneficiaryCopy,
+              photo: photo,
+              coverImage: coverImage,
+            },
+          });
+      },
   });
   const addBeneficiaryEntry = () => {
     formik.setValues({
@@ -151,6 +166,27 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       beneficiaryAdmissionDocuments: updatedBeneficiaryAdmissionDocuments,
     });
   };
+  
+  const addBeneficiaryStatusEntry = () => {
+    formik.setValues({
+      ...formik.values,
+      beneficiaryStatusEntries: [
+        ...formik.values.beneficiaryStatusEntries,
+        { document: undefined, beneficiaryStatus: null, startingDate: dayjs(new Date()), endingDate: null},
+      ],
+    });
+  };
+
+  const removeBeneficiaryStatusEntry = (index) => {
+    const updatedBeneficiaryStatusEntries = [...formik.values.beneficiaryStatusEntries];
+    updatedBeneficiaryStatusEntries.splice(index, 1);
+
+    formik.setValues({
+      ...formik.values,
+      beneficiaryStatusEntries: updatedBeneficiaryStatusEntries,
+    });
+  };
+
 
   const [createBeneficiary, { loading: loadingPost }] = useMutation(
     POST_BENEFICIARY,
@@ -258,8 +294,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
     {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
-        let { __typename, ...beneficiaryCopy1 } = data.beneficiary;
-        let { folder, ...beneficiaryCopy } = beneficiaryCopy1;
+        let { __typename, folder, customFieldValues, ...beneficiaryCopy } = data.beneficiary;
         beneficiaryCopy.gender = beneficiaryCopy.gender
           ? Number(beneficiaryCopy.gender.id)
           : null;
@@ -287,6 +322,18 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
           items.push(itemCopy);
         });
         beneficiaryCopy.beneficiaryAdmissionDocuments = items;
+        if (!beneficiaryCopy?.beneficiaryStatusEntries) beneficiaryCopy['beneficiaryStatusEntries'] = [];
+        items = [];
+        beneficiaryCopy.beneficiaryStatusEntries.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          itemCopy.startingDate = itemCopy.startingDate ? dayjs(itemCopy.startingDate) : null
+          itemCopy.endingDate = itemCopy.endingDate ? dayjs(itemCopy.endingDate) : null
+          itemCopy.beneficiaryStatus = itemCopy.beneficiaryStatus
+          ? Number(itemCopy.beneficiaryStatus.id)
+          : null;
+          items.push(itemCopy);
+        });
+        beneficiaryCopy.beneficiaryStatusEntries = items;
         formik.setValues(beneficiaryCopy);
       },
       onError: (err) => console.log(err),
@@ -348,7 +395,7 @@ const [getEmployees, {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if(activeStep >= 3) navigate('/online/ressources-humaines/beneficiaires/liste');
+    if(activeStep >= 4) navigate('/online/ressources-humaines/beneficiaires/liste');
     else if (formik.values.id)
       setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });
@@ -502,6 +549,22 @@ const [getEmployees, {
                           />
                         </Item>
                       </Grid>
+                      <Grid item xs={12} sm={12} md={12}>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Complément"
+                            value={formik.values.additionalAddress}
+                            onChange={(e) =>
+                              formik.setFieldValue(
+                                'additionalAddress',
+                                e.target.value,
+                              )
+                            }
+                            disabled={loadingPost || loadingPut}
+                          />
+                        </Item>
+                      </Grid>
                       <Grid item xs={5} sm={5} md={5}>
                         <Item>
                           <TheTextField
@@ -587,7 +650,7 @@ const [getEmployees, {
                                 <Select
                                   labelId="demo-simple-select-label"
                                   id="demo-simple-select"
-                                  label="Fréquence de l’événement"
+                                  label="Type de document d’admission"
                                   value={item.admissionDocumentType}
                                   onChange={(e) =>
                                     formik.setFieldValue(`beneficiaryAdmissionDocuments.${index}.admissionDocumentType`, e.target.value)
@@ -790,6 +853,122 @@ onInput={(e) => {
               <StepLabel
                 onClick={() => onGoToStep(3)}
                 optional={
+                  <Typography variant="caption">Les statut(s) </Typography>
+                }
+              >
+                Les statut(s) 
+              </StepLabel>
+              <StepContent>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  <Grid item xs={12} sm={12} md={12} >
+                      {formik.values?.beneficiaryStatusEntries?.map((item, index) => (
+                        <Grid
+                          container
+                          spacing={{ xs: 2, md: 3 }}
+                          columns={{ xs: 4, sm: 8, md: 12 }}
+                          key={index}
+                        >
+                          <Grid item xs={12} sm={6} md={3} >
+                            <Item>
+                              <TheFileField variant="outlined" label="Justificatif"
+                                fileValue={item.document}
+                                onChange={(file) => formik.setFieldValue(`beneficiaryStatusEntries.${index}.document`, file)}
+                                disabled={loadingPost || loadingPut}
+                                />
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={3} >
+                            <Item>
+                              <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">
+                                  Statut
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-label"
+                                  id="demo-simple-select"
+                                  label="Statut"
+                                  value={item.beneficiaryStatus}
+                                  onChange={(e) =>
+                                    formik.setFieldValue(`beneficiaryStatusEntries.${index}.beneficiaryStatus`, e.target.value)
+                                  }
+                                >
+                                  <MenuItem value={null}>
+                                    <em>Choisissez un status</em>
+                                  </MenuItem>
+                                  {dataData?.beneficiaryStatuses?.map((data, index) => {
+                                    return (
+                                      <MenuItem key={index} value={data.id}>
+                                        {data.name}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                              </FormControl>
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={3} >
+                            <Item>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Date de début"
+                                value={item.startingDate}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`beneficiaryStatusEntries.${index}.startingDate`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={3} >
+                            <Item sx={{position: 'relative'}}>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Date de fin"
+                                value={item.endingDate}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`beneficiaryStatusEntries.${index}.endingDate`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                              <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                                onClick={() => removeBeneficiaryStatusEntry(index)}
+                                edge="end"
+                                color="error"
+                              >
+                                <Close />
+                              </IconButton>
+                            </Item>
+                          </Grid>
+                        </Grid>
+                      ))}
+                  </Grid>
+                  <Grid
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    item
+                    sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                  >
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={addBeneficiaryStatusEntry}
+                      disabled={loadingPost || loadingPut}
+                    >
+                      Ajouter un statut
+                    </Button>
+                  </Grid>
+                </Grid>
+              </StepContent>
+            </Step>
+            <Step>
+              <StepLabel
+                onClick={() => onGoToStep(4)}
+                optional={
                   <Typography variant="caption">Autres informations</Typography>
                 }
               >
@@ -801,6 +980,15 @@ onInput={(e) => {
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
+                  <Grid item xs={12} sm={12} md={12} >
+                    <CustomFieldValues 
+                      formModel="Beneficiary"
+                      idObject={formik.values.id}
+                      disabled={loadingPost || loadingPut}
+                      triggerSave={triggerSave}
+                      onSaved={(data, err)=> {if(data) handleNext()}}
+                    />
+                  </Grid>
                 </Grid>
               </StepContent>
             </Step>

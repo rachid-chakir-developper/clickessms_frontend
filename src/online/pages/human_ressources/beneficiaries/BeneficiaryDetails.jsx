@@ -12,6 +12,7 @@ import {
 } from '../../../../_shared/tools/functions';
 import { Edit } from '@mui/icons-material';
 import BeneficiaryTabs from './beneficiary-tabs/BeneficiaryTabs';
+import CustomFieldValuesDetails from '../../../../_shared/components/form-fields/costum-fields/CustomFieldValuesDetails';
 
 export default function BeneficiaryDetails() {
   let { idBeneficiary } = useParams();
@@ -83,7 +84,7 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
 
   return (
     <Grid container spacing={3}>
-      {/* Informations de le bénéficiaire */}
+      {/* Informations de la personne accompagnée */}
       <Grid item xs={12} sm={4}>
         <Paper
           sx={{
@@ -159,7 +160,7 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
           </Box>
         </Paper>
       </Grid>
-      {/* Autres informations de le bénéficiaire */}
+      {/* Autres informations de la personne accompagnée */}
       <Grid item xs={12} sm={8}>
         <Paper sx={{ padding: 2 }}>
           <Typography variant="h6" gutterBottom>
@@ -179,6 +180,7 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
               Date de naissance: {getFormatDate(birthDate)}
             </Typography>
           </Paper>
+          <CustomFieldValuesDetails formModel="Beneficiary" idObject={id} />
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>

@@ -200,34 +200,12 @@ export default function ListBeneficiaries() {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
-          {/* <Item>
-            <TheFileField variant="outlined" label="Import"
-              fileValue={file}
-              onChange={(file) => {
-                setFile(file)
-                alert()
-                importData({
-                  variables: { 
-                              entity: 'Beneficiary',
-                              file: file,
-                              fields:[
-                                'name',
-                                'address',
-                                'zip_code',
-                                'city',
-                                'birth_date',
-                              ]
-                            }
-                          });
-              }}
-              />
-          </Item> */}
           <Link
             to="/online/ressources-humaines/beneficiaires/ajouter"
             className="no_style"
           >
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter un bénéficiaire
+              Ajouter une personne accompagnée
             </Button>
           </Link>
         </Box>
@@ -235,38 +213,6 @@ export default function ListBeneficiaries() {
       <Grid item xs={12}>
         <BeneficiaryFilter onFilterChange={handleFilterChange} />
       </Grid>
-      {/* <Grid item xs={12}>
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-          >
-            {loadingBeneficiaries && (
-              <Grid key={'pgrs'} item xs={12} sm={6} md={4}>
-                <ProgressService type="mediaCard" />
-              </Grid>
-            )}
-            {beneficiariesData?.beneficiaries?.nodes?.length < 1 &&
-              !loadingBeneficiaries && (
-                <Alert severity="warning">Aucun bénéficiaire trouvé.</Alert>
-              )}
-            {beneficiariesData?.beneficiaries?.nodes?.map(
-              (beneficiary, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <Item>
-                    <BeneficiaryItemCard
-                      beneficiary={beneficiary}
-                      onDeleteBeneficiary={onDeleteBeneficiary}
-                      onUpdateBeneficiaryState={onUpdateBeneficiaryState}
-                    />
-                  </Item>
-                </Grid>
-              ),
-            )}
-          </Grid>
-        </Box>
-      </Grid> */}
       <Grid item xs={12}>
         <TableListBeneficiaries
           loading={loadingBeneficiaries}

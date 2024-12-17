@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { CUSTOM_FIELD_BASIC_INFOS } from '../fragments/CustomFieldFragment';
+import { CUSTOM_FIELD_BASIC_INFOS, CUSTOM_FIELD_VALUE_DETAILS } from '../fragments/CustomFieldFragment';
 
 export const POST_CUSTOM_FIELD = gql`
   mutation CreateCustomField($customFieldData: CustomFieldInput!) {
@@ -50,3 +50,23 @@ export const DELETE_CUSTOM_FIELD = gql`
     }
   }
 `;
+
+export const PUT_CUSTOM_FIELD_VALUES = gql`
+  mutation UpdateCustomFieldValues(
+    $formModel: String!
+    $idObject: ID!
+    $customFieldValuesData: [CustomFieldValueInput]
+  ){
+    updateCustomFieldValues(
+      formModel: $formModel
+      idObject: $idObject
+      customFieldValuesData: $customFieldValuesData
+    ){
+      customFieldValues {
+        ...CustomFieldValueDetailsFragment
+      }
+    }
+  }
+  ${CUSTOM_FIELD_VALUE_DETAILS}
+`;
+

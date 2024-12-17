@@ -176,7 +176,7 @@ export default function ListBeneficiaryGroups() {
             className="no_style"
           >
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter un groupe de bénéficiaires
+              Ajouter un groupe de personnes accompagnées
             </Button>
           </Link>
         </Box>
@@ -199,7 +199,7 @@ export default function ListBeneficiaryGroups() {
             {beneficiaryGroupsData?.beneficiaryGroups?.nodes?.length < 1 &&
               !loadingBeneficiaryGroups && (
                 <Alert severity="warning">
-                  Aucun groupe de bénéficiaires trouvé.
+                  Aucun groupe de personnes accompagnées trouvé.
                 </Alert>
               )}
             {beneficiaryGroupsData?.beneficiaryGroups?.nodes?.map(

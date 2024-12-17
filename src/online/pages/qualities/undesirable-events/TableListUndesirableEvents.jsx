@@ -234,7 +234,7 @@ const headCells = [
       disablePadding: false,
       disableClickDetail: true,
       sortDisabled: true,
-      label: 'Bénéficiaire(s)',
+      label: 'Personne(s) accompagnée(s)',
       render: ({beneficiaries}) => beneficiaries && beneficiaries?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
         <ChipGroupWithPopover people={beneficiaries?.map((beneficiarie)=>beneficiarie?.beneficiary)} />
     </Stack>

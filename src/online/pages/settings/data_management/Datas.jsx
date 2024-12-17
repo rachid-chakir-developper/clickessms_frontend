@@ -50,6 +50,7 @@ const modulesToManage = [
   {
     title: 'Activités',
     datas: [
+      { name: "Status des personnes accompagnées", description: '', type: 'BeneficiaryStatus' },
       { name: "Motif de l'absence", description: '', type: 'AbsenceReason' },
     ],
   },

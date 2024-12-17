@@ -31,6 +31,7 @@ import {
   EXPENSE_TYPE_CHOICES,
   TRANSACTION_TYPE_CHOICES,
   PURCHASE_ORDER_STATUS_CHOICES,
+  TICKET_TYPE_CHOICES,
 } from './constants';
 
 export const getStatusColor = (status) => {
@@ -207,6 +208,10 @@ export const getTransactionTypeLabel = (type) => {
 
 export const getPurchaseOrderStatusLabel = (status) => {
   return PURCHASE_ORDER_STATUS_CHOICES.ALL.find((s) => s.value === status)?.label;
+};
+
+export const getTicketTypeLabel = (ticketType) => {
+  return TICKET_TYPE_CHOICES.ALL.find((type) => type.value === ticketType)?.label;
 };
 
 const intlNumFmt = new Intl.NumberFormat('fr-FR', {

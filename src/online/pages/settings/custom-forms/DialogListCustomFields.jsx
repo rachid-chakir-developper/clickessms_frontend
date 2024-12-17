@@ -44,7 +44,7 @@ export default function DialogListCustomFields({ open, onClose, customField }) {
     useLazyQuery(GET_CUSTOM_FIELDS);
   React.useEffect(() => {
     if (open) {
-      getCustomFields({ variables: { formModels: [customField.formModel] } });
+      getCustomFields({ variables: { customFieldFilter:{formModels: [customField.formModel] }} });
     }
   }, [open]);
   const [deleteCustomField, { loading: loadingDelete }] = useMutation(DELETE_CUSTOM_FIELD, {

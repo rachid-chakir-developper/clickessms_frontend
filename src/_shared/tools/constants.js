@@ -405,6 +405,7 @@ export const CSE_ROLE_CHOICES = {
 
 export const FIELD_TYPE_CHOICES = {
   TEXT: "TEXT",
+  TEXTAREA: "TEXTAREA",
   NUMBER: "NUMBER",
   DATE: "DATE",
   DATETIME: "DATETIME",
@@ -413,6 +414,7 @@ export const FIELD_TYPE_CHOICES = {
   SELECT_MULTIPLE: "SELECT_MULTIPLE",
   ALL: [
     { value: "TEXT", label: "Text" },
+    { value: "TEXTAREA", label: "Zone du text" },
     { value: "NUMBER", label: "Number" },
     { value: "DATE", label: "Date" },
     { value: "DATETIME", label: "Date et heure" },
@@ -550,5 +552,18 @@ export const PURCHASE_ORDER_STATUS_CHOICES = {
     { value: "REJECTED", label: "Rejeté" },
     { value: "PAID", label: "Payé" },
     { value: "UNPAID", label: "Non payé" },
+  ],
+};
+
+export const TICKET_TYPE_CHOICES = {
+  PLAN_ACTION: "PLAN_ACTION",
+  LUP: "LUP",
+  IT_SUPPORT: "IT_SUPPORT",
+  GENERAL: "GENERAL",
+  ALL: [
+    { value: "PLAN_ACTION", label: "Plan d'action" },
+    { value: "LUP", label: "Levée d'une non-conformité" },
+    { value: "IT_SUPPORT", label: "Support informatique" },
+    { value: "GENERAL", label: "Général" },
   ],
 };

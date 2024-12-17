@@ -26,7 +26,7 @@ export default function BeneficiaryAdmissionDocuments({beneficiaryAdmissionDocum
           </TimelineOppositeContent>
           <TimelineSeparator>
             <TimelineConnector />
-              <Tooltip title={beneficiaryAdmissionDocument?.document ? "Cliquez pour voir le doocument" : "Aucun doocument"}>
+              <Tooltip title={beneficiaryAdmissionDocument?.document ? "Cliquez pour voir le document" : "Aucun document"}>
                 <TimelineDot>
                     <FileOpen 
                       sx={{cursor: 'pointer'}}
