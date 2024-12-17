@@ -38,3 +38,25 @@ export const GET_DASHBOARD = gql`
   ${TASK_ACTION_BASIC_INFOS}
   ${UNDESIRABLE_EVENT_BASIC_INFOS}
 `;
+
+
+export const GET_DASHBOARD_ACTIVITY = gql`
+  query getDashboardActivity{
+    dashboardActivity{
+      activityTrackingMonth{
+        entriesCount
+        exitsCount
+        plannedExitsCount
+        presentsMonthCount
+        daysCount
+        objectiveNumber
+        daysCount
+        objectiveOccupancyRate
+        occupancyRate
+        valuation
+        objectiveValuation
+        gapValuation
+      }
+    }
+  }
+`;

@@ -214,13 +214,14 @@ export default function ListBeneficiaries() {
         <BeneficiaryFilter onFilterChange={handleFilterChange} />
       </Grid>
       <Grid item xs={12}>
-        <TableListBeneficiaries
-          loading={loadingBeneficiaries}
-          rows={beneficiariesData?.beneficiaries?.nodes || []}
-          totalCount={beneficiariesData?.beneficiaries?.totalCount}
-          onDeleteBeneficiary={onDeleteBeneficiary}
-        />
-      </Grid>
+          <TableListBeneficiaries
+            loading={loadingBeneficiaries}
+            rows={beneficiariesData?.beneficiaries?.nodes || []}
+            onDeleteBeneficiary={onDeleteBeneficiary}
+            onFilterChange={(newFilter) => handleFilterChange({ ...beneficiaryFilter, ...newFilter })}
+            paginator={paginator}
+          />
+        </Grid>
       <Grid item xs={12}>
         <PaginationControlled
           totalItems={beneficiariesData?.beneficiaries?.totalCount} // Nombre total d'éléments

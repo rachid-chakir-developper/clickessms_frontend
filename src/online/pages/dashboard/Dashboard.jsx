@@ -32,7 +32,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function Dashboard() {
+export default function Dashboard(){
   const {
     loading: loadingDashboard,
     data: dashboardData,

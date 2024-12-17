@@ -54,84 +54,85 @@ export default function CustomFieldValuesDetails({ formModel, idObject}) {
     }, [customFieldData]);
 
     // Gérer l'état de chargement et d'erreur
-    if (loadingFields) return <Typography>Chargement...</Typography>;
+    if (loadingFields) return <Typography>Chargement des champs personnalisés...</Typography>;
     if (fieldError) return <Typography variant="body2" color="error">Erreur de chargement des champs personnalisés.</Typography>;
 
-    return (
-        <Paper sx={{ padding: 2, marginTop: 1 }} variant="outlined">
-            <Box>
-                {customFieldsData?.customFields?.nodes?.map((field, index) => {
-                    const { fieldType, label, key, id: customField, options } = field;
-                    const currentValue = values.find((item) => item.customField === customField)?.value || ''; // Récupère la valeur actuelle
-                    switch (fieldType) {
-                    case 'TEXT':
-                        return (
-                            <Typography variant="body1" key={index}>
-                                {label}: {currentValue}
-                            </Typography>
-                        );
-                    case 'TEXTAREA':
-                        return (
-                            <Typography variant="body1" key={index}>
-                                {label}: {currentValue}
-                            </Typography>
-                        );
+    return (<>
+            {customFieldsData?.customFields?.nodes?.length > 0 && <Paper sx={{ padding: 2, marginTop: 1 }} variant="outlined">
+                <Box>
+                    {customFieldsData?.customFields?.nodes?.map((field, index) => {
+                        const { fieldType, label, key, id: customField, options } = field;
+                        const currentValue = values.find((item) => item.customField === customField)?.value || ''; // Récupère la valeur actuelle
+                        switch (fieldType) {
+                        case 'TEXT':
+                            return (
+                                <Typography variant="body1" key={index}>
+                                    {label}: {currentValue}
+                                </Typography>
+                            );
+                        case 'TEXTAREA':
+                            return (
+                                <Typography variant="body1" key={index}>
+                                    {label}: {currentValue}
+                                </Typography>
+                            );
 
-                    case 'NUMBER':
-                        return (
-                            <Typography variant="body1" key={index}>
-                                {label}: {currentValue}
-                            </Typography>
-                        );
+                        case 'NUMBER':
+                            return (
+                                <Typography variant="body1" key={index}>
+                                    {label}: {currentValue}
+                                </Typography>
+                            );
 
-                    case 'DATE':
-                        return (
-                            <Typography variant="body1" key={index}>
-                                {label}: {getFormatDate(currentValue)}
-                            </Typography>
-                        );
+                        case 'DATE':
+                            return (
+                                <Typography variant="body1" key={index}>
+                                    {label}: {getFormatDate(currentValue)}
+                                </Typography>
+                            );
 
-                    case 'DATETIME':
-                        return (
-                            <Typography variant="body1" key={index}>
-                                {label}: {getFormatDateTime(currentValue)}
-                            </Typography>
-                        );
+                        case 'DATETIME':
+                            return (
+                                <Typography variant="body1" key={index}>
+                                    {label}: {getFormatDateTime(currentValue)}
+                                </Typography>
+                            );
 
-                    case 'BOOLEAN':
-                        return (
-                            <Typography variant="body1" key={index}>
-                                {label}: {currentValue? "Oui" : "Non"}
-                            </Typography>
-                        );
+                        case 'BOOLEAN':
+                            return (
+                                <Typography variant="body1" key={index}>
+                                    {label}: {currentValue? "Oui" : "Non"}
+                                </Typography>
+                            );
 
-                    case 'SELECT':
-                        return (
-                            <Typography variant="body1" key={index}>
-                            {label}: 
-                            {options.map((option, idx) => (
-                                currentValue === option.value && <span key={idx}>{option.label}</span>
-                            ))}
-                            </Typography>
-                        );
-
-                    case 'SELECT_MULTIPLE':
-                        return (
-                            <Typography variant="body1" key={index}>
-                            {label}: 
-                            {options
-                                .filter(option => currentValue.includes(option.value)) // Filtrer les options sélectionnées
-                                .map((option, idx) => (
-                                <span key={idx}>{option.label}{idx < options.filter(option => currentValue.includes(option.value)).length - 1 ? ', ' : ''}</span>
+                        case 'SELECT':
+                            return (
+                                <Typography variant="body1" key={index}>
+                                {label}: 
+                                {options.map((option, idx) => (
+                                    currentValue === option.value && <span key={idx}>{option.label}</span>
                                 ))}
-                            </Typography>
-                        );
+                                </Typography>
+                            );
 
-                    default:
-                        return null;
-                    }
-                })}
-            </Box>
-        </Paper>
+                        case 'SELECT_MULTIPLE':
+                            return (
+                                <Typography variant="body1" key={index}>
+                                {label}: 
+                                {options
+                                    .filter(option => currentValue.includes(option.value)) // Filtrer les options sélectionnées
+                                    .map((option, idx) => (
+                                    <span key={idx}>{option.label}{idx < options.filter(option => currentValue.includes(option.value)).length - 1 ? ', ' : ''}</span>
+                                    ))}
+                                </Typography>
+                            );
+
+                        default:
+                            return null;
+                        }
+                    })}
+                </Box>
+            </Paper>}
+        </>
     );
 }

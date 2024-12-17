@@ -263,6 +263,19 @@ export default function TableListBeneficiaries({
         render: ({birthDate})=> getFormatDate(birthDate)
     },
     {
+        id: 'beneficiaryStatuses',
+        property: 'beneficiary_status_entries__beneficiary_status__name',
+        exportField: ['beneficiary_status_entries__beneficiary_status__name'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Status',
+        render: ({beneficiaryStatusEntries}) => beneficiaryStatusEntries && beneficiaryStatusEntries?.length > 0 && 
+        <AppLabel>{beneficiaryStatusEntries[beneficiaryStatusEntries?.length - 1]?.beneficiaryStatus?.name}</AppLabel>
+    },
+    {
         id: 'establishments',
         property: 'beneficiary_entries__establishments__name',
         exportField: ['beneficiary_entries__establishments__name'],

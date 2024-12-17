@@ -1,4 +1,3 @@
-import React from 'react';
 import { CircularProgress, Skeleton } from '@mui/material';
 import CardSkeleton from './skeletons/CardSkeleton';
 import MediaCardSkeleton from './skeletons/MediaCardSkeleton';
