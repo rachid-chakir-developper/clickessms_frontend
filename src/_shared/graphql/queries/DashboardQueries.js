@@ -43,19 +43,36 @@ export const GET_DASHBOARD = gql`
 export const GET_DASHBOARD_ACTIVITY = gql`
   query getDashboardActivity{
     dashboardActivity{
-      activityTrackingMonth{
-        entriesCount
-        exitsCount
-        plannedExitsCount
-        presentsMonthCount
-        daysCount
-        objectiveNumber
-        daysCount
-        objectiveOccupancyRate
-        occupancyRate
-        valuation
-        objectiveValuation
-        gapValuation
+      activityTracking{
+        activityTrackingMonth{
+          month
+          year
+          entriesCount
+          exitsCount
+          plannedExitsCount
+          presentsMonthCount
+          daysCount
+          objectiveCount
+          objectiveOccupancyRate
+          occupancyRate
+          valuation
+          objectiveValuation
+          gapValuation
+        }
+        activityTrackingAccumulation{
+          year
+          entriesCount
+          exitsCount
+          plannedExitsCount
+          presentsMonthCount
+          daysCount
+          objectiveCount
+          objectiveOccupancyRate
+          occupancyRate
+          valuation
+          objectiveValuation
+          gapValuation
+        }
       }
     }
   }

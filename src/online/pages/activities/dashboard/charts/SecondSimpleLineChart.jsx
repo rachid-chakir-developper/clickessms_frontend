@@ -6,7 +6,7 @@ const uData = [89.25, 75.5, 95.8, 100, 88.4, 70, 82.4];
 const pData = [95, 95, 95, 95, 95, 95, 95, 90, 90, 90, 90];
 const xLabels = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
-export default function SecondSimpleLineChart() {
+export default function SecondSimpleLineChart({data=[]}) {
     const valueFormatter = (value)=> `${value} jour`;
   return (
     <LineChart
@@ -21,11 +21,11 @@ export default function SecondSimpleLineChart() {
           }
         }
       series={[
-        { data: pData, label: 'Objectif', valueFormatter },
-        { data: uData, label: "Nombre de journée", valueFormatter },
+        { data: data.map(d=>d.objectiveOccupancyRate), label: 'Objectif TO', valueFormatter },
+        { data: data.map(d=>d.occupancyRate), label: "Taux d'occupation", valueFormatter },
       ]}
-      xAxis={[{ scaleType: 'point', data: xLabels }]}
-      yAxis={[{label: "Nombre de journée(jour)", valueFormatter}]}
+      xAxis={[{ scaleType: 'point', data: data.map(d=>d.month) }]}
+      yAxis={[{label: "Taux d'occupation(%)", valueFormatter}]}
     />
   );
 }

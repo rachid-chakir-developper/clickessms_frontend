@@ -6,8 +6,8 @@ const uData = [89.25, 75.5, 95.8, 100, 88.4, 70, 82.4];
 const pData = [95, 95, 95, 95, 95, 95, 95, 90, 90, 90, 90];
 const xLabels = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
-export default function SimpleLineChart() {
-    const valueFormatter = (value)=> `${value}%`;
+export default function SimpleLineChart({data=[]}) {
+    const valueFormatter = (value)=> `${value} jour`;
   return (
     <LineChart
       height={240}
@@ -21,11 +21,11 @@ export default function SimpleLineChart() {
           }
         }
       series={[
-        { data: pData, label: 'Objectif TO', valueFormatter },
-        { data: uData, label: "Taux d'occupation", valueFormatter },
+        { data: data.map(d=>d.objectiveCount), label: 'Objectif', valueFormatter },
+        { data: data.map(d=>d.daysCount), label: "Nombre de journée", valueFormatter },
       ]}
-      xAxis={[{ scaleType: 'point', data: xLabels }]}
-      yAxis={[{label: "Taux d'occupation(%)", valueFormatter}]}
+      xAxis={[{ scaleType: 'point', data: data.map(d=>d.month) }]}
+      yAxis={[{label: "Nombre de journée(jour)", valueFormatter}]}
     />
   );
 }

@@ -12,13 +12,14 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme } from '@mui/material/styles';
-import { Alert, LinearProgress } from '@mui/material';
+import { Alert, IconButton, LinearProgress } from '@mui/material';
 import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 
 import { useFeedBacks } from '../../_shared/context/feedbacks/FeedBacksProvider';
 import { LOGIN_USER } from '../../_shared/graphql/mutations/AuthMutations';
 import { useSessionDispatch } from '../../_shared/context/SessionProvider';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 function Copyright(props) {
   return (
@@ -43,6 +44,17 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const handleMouseUpPassword = (event) => {
+    event.preventDefault();
+  };
   const { setNotifyAlert } = useFeedBacks();
   const navigate = useNavigate();
   const dispatch = useSessionDispatch();
@@ -142,10 +154,25 @@ export default function SignInSide() {
               fullWidth
               name="password"
               label="Mot de passe"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               id="password"
               autoComplete="current-password"
               disabled={loading}
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    aria-label={
+                      showPassword ? 'Cacher le mot de passe' : 'Afficher le mot de passe'
+                    }
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    onMouseUp={handleMouseUpPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                ),
+              }}
             />
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

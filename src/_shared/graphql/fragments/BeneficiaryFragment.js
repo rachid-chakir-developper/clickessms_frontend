@@ -55,6 +55,7 @@ export const BENEFICIARY_ENTRY_DETAILS = gql`
   fragment BeneficiaryEntryFragment on BeneficiaryEntryType {
     id
     entryDate
+    dueDate
     releaseDate
     establishments{
       ...EstablishmentMiniInfosFragment

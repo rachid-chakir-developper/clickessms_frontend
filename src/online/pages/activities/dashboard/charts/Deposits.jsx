@@ -10,7 +10,7 @@ export default function Deposits({ data, title = 'Dépôts récents' }) {
     <React.Fragment>
       <Title>{title} {data?.date}</Title>
       <Typography component="p" variant="h4">
-        +16 563€
+        {data?.value}
       </Typography>
     </React.Fragment>
   );

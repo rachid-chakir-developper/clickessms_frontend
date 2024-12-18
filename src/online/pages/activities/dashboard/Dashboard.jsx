@@ -1,36 +1,12 @@
 import React from 'react';
-import { Grid, Paper } from '@mui/material';
-import styled from '@emotion/styled';
+import { Grid, Stack, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import { useQuery } from '@apollo/client';
+import { ViewList, ViewQuilt } from '@mui/icons-material';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import Deposits from './charts/Deposits';
-import MixedBarChart from './charts/MixedBarChart';
-import SimpleLineChart from './charts/SimpleLineChart';
-import SecondSimpleLineChart from './charts/SecondSimpleLineChart';
 import DashboardFilter from './DashboardFilter';
 import { GET_DASHBOARD_ACTIVITY } from '../../../../_shared/graphql/queries/DashboardQueries';
-
-const FirstItem = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  display: 'flex',
-  flexDirection: 'column',
-  // height: 240,
-  color: theme.palette.text.secondary,
-}));
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  marginBottom: theme.spacing(1),
-  textAlign: 'center',
-  display: 'flex',
-  flexDirection: 'column',
-  // minHeight: 240,
-  color: theme.palette.text.secondary,
-}));
+import DashboardGraph from './DashboardGraph';
+import DashboardTable from './charts/DashboardTable';
 
 export default function Dashboard() {
   const [employeeFilter, setDashboardFilter] = React.useState(null);
@@ -47,54 +23,45 @@ export default function Dashboard() {
   React.useEffect(() => {
     
   }, [employeeFilter]);
+  const [view, setView] = React.useState('graph');
+
+  const handleChange = (event, nextView) => {
+    setView(nextView);
+  };
   return (
     <>
       {loadingDashboardActivity && <ProgressService type="dashboard" />}
-      {!loadingDashboardActivity && (
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <DashboardFilter onFilterChange={handleFilterChange} />
+      {!loadingDashboardActivity && (<>
+          <Grid container spacing={0}>
+            <Grid item xs={12}>
+              <DashboardFilter onFilterChange={handleFilterChange} />
+            </Grid>
+            <Grid item xs={12}>
+              <Stack justifyContent="flex-end">
+                <ToggleButtonGroup
+                  size="small"
+                  value={view}
+                  exclusive
+                  onChange={handleChange}
+                  sx={{justifyContent:"flex-end"}}
+                > 
+                  <Tooltip title="Les graphes" >
+                    <ToggleButton value="graph" aria-label="quilt">
+                      <ViewQuilt />
+                    </ToggleButton>
+                  </Tooltip>
+                  <Tooltip title="Les tableaux" >
+                    <ToggleButton value="table" aria-label="list">
+                      <ViewList />
+                    </ToggleButton>
+                  </Tooltip>
+                </ToggleButtonGroup>
+              </Stack>
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={8} lg={8}>
-            <Item>
-              <SecondSimpleLineChart />
-            </Item>
-          </Grid>
-          <Grid item xs={12} md={4} lg={4}>
-            <Item>
-              <Deposits title="Valorisation (Cumul à fin)" data={dashboardActivityData?.dashboardActivity?.budgetMonth} />
-            </Item>
-            <Item>
-              <Deposits title="Valorisation de l'écart (Cumul à fin)" data={dashboardActivityData?.dashboardActivity?.budgetMonth} />
-            </Item>
-          </Grid>
-          <Grid item xs={12} md={8} lg={8}>
-            <Item>
-              <SimpleLineChart />
-            </Item>
-          </Grid>
-          <Grid item xs={12} md={4} lg={4}>
-            <Item>
-              <Deposits title="Valorisation (Cumul à fin)" data={dashboardActivityData?.dashboardActivity?.budgetMonth} />
-            </Item>
-            <Item>
-              <Deposits title="Valorisation de l'écart (Cumul à fin)" data={dashboardActivityData?.dashboardActivity?.budgetMonth} />
-            </Item>
-          </Grid>
-          <Grid item xs={12} md={8} lg={8}>
-            <Item>
-              <MixedBarChart />
-            </Item>
-          </Grid>
-          <Grid item xs={12} md={4} lg={4}>
-            <Item>
-              <Deposits title="Valorisation (Cumul à fin)" data={dashboardActivityData?.dashboardActivity?.budgetMonth} />
-            </Item>
-            <Item>
-              <Deposits title="Valorisation de l'écart (Cumul à fin)" data={dashboardActivityData?.dashboardActivity?.budgetMonth} />
-            </Item>
-          </Grid>
-        </Grid>
+          {view==='graph' && <DashboardGraph activityTracking={dashboardActivityData?.dashboardActivity?.activityTracking}/>}
+          {view==='table' && <DashboardTable activityTracking={dashboardActivityData?.dashboardActivity?.activityTracking}/>}
+        </>
       )}
     </>
   );

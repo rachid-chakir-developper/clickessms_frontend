@@ -132,7 +132,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       ...formik.values,
       beneficiaryEntries: [
         ...formik.values.beneficiaryEntries,
-        { establishments: [], internalReferents: [] , entryDate: dayjs(new Date()), releaseDate: null},
+        { establishments: [], internalReferents: [] , entryDate: dayjs(new Date()), dueDate: null, releaseDate: null},
       ],
     });
   };
@@ -306,6 +306,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
         beneficiaryCopy.beneficiaryEntries.forEach((item) => {
           let { __typename, ...itemCopy } = item;
           itemCopy.entryDate = itemCopy.entryDate ? dayjs(itemCopy.entryDate) : null
+          itemCopy.dueDate = itemCopy.dueDate ? dayjs(itemCopy.dueDate) : null
           itemCopy.releaseDate = itemCopy.releaseDate ? dayjs(itemCopy.releaseDate) : null
           items.push(itemCopy);
         });
@@ -780,10 +781,9 @@ const [getEmployees, {
                             <Item>
                               <TheAutocomplete
                                 options={employeesData?.employees?.nodes}
-onInput={(e) => {
-                          onGetEmployees(e.target.value)
-                        }}
-
+                                onInput={(e) => {
+                                  onGetEmployees(e.target.value)
+                                }}
                                 label="Référents internes"
                                 placeholder="Ajouter un référent interne"
                                 limitTags={3}
@@ -794,7 +794,7 @@ onInput={(e) => {
                               />
                             </Item>
                           </Grid>
-                          <Grid item xs={12} sm={6} md={3} >
+                          <Grid item xs={12} sm={6} md={2} >
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -807,7 +807,20 @@ onInput={(e) => {
                               />
                             </Item>
                           </Grid>
-                          <Grid item xs={12} sm={6} md={3} >
+                          <Grid item xs={12} sm={6} md={2} >
+                            <Item>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Date d’'échéance"
+                                value={item.dueDate}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`beneficiaryEntries.${index}.dueDate`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={2} >
                             <Item sx={{position: 'relative'}}>
                               <TheDesktopDatePicker
                                 variant="outlined"

@@ -312,23 +312,33 @@ export default function TableListBeneficiaries({
     },
     {
         id: 'entryDate',
-        property: 'entry_date',
-        exportField: 'entry_date',
+        property: 'beneficiary_entries__entry_date',
+        exportField: 'beneficiary_entries__entry_date',
         numeric: false,
         disablePadding: true,
         isDefault: true,
         label: "Date d'entrée",
-        render: ({entryDate})=> getFormatDate(entryDate)
+        render: ({beneficiaryEntries})=> getFormatDate(beneficiaryEntries[beneficiaryEntries?.length - 1]?.entryDate)
+    },
+    {
+        id: 'dueDate',
+        property: 'beneficiary_entries__due_date',
+        exportField: 'beneficiary_entries__due_date',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: "Date d'échéance",
+        render: ({beneficiaryEntries})=> getFormatDate(beneficiaryEntries[beneficiaryEntries?.length - 1]?.dueDate)
     },
     {
         id: 'releaseDate',
-        property: 'release_date',
-        exportField: 'release_date',
+        property: 'beneficiary_entries__release_date',
+        exportField: 'beneficiary_entries__release_date',
         numeric: false,
         disablePadding: true,
         isDefault: true,
         label: "Date de sortie",
-        render: ({releaseDate})=> getFormatDate(releaseDate)
+        render: ({beneficiaryEntries})=> getFormatDate(beneficiaryEntries[beneficiaryEntries?.length - 1]?.releaseDate)
     },
     {
         id: 'action',

@@ -8,28 +8,28 @@ const uData = [-500, -500, -500, 500, -500, -500, -500];
 
 const xLabels = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
-export default function MixedBarChart() {
+export default function MixedBarChart({data=[]}) {
     const valueFormatter = (value)=> `${value}€`;
     return (
         <BarChart
-        height={240}
-        margin={{ top: 5, right: 5, bottom: 60, left: 100 }}
-        sx={
-            {
-                [`.${axisClasses.left} .${axisClasses.label}`]: {
-                  // Move the y-axis label with CSS
-                  transform: 'translateX(-35px)',
-                },
+            height={240}
+            margin={{ right: 5, bottom: 60, left: 100 }}
+            sx={
+                {
+                    [`.${axisClasses.left} .${axisClasses.label}`]: {
+                    // Move the y-axis label with CSS
+                    transform: 'translateX(-35px)',
+                    },
+                }
             }
-          }
-        series={[
-            { data: pData, label: 'Valorisation', stack: 'stack1', valueFormatter },
-            { data: amtData, label: 'Objectif', stack: 'stack2', valueFormatter  },
-            { data: uData, label: "Valorisation de l'écart", stack: 'stack2', valueFormatter },
-        ]}
-        xAxis={[{ data: xLabels, scaleType:  'band', dataKey: 'month', label:'2024' }]}
-        yAxis={[{label: 'Valorisation(€)', valueFormatter}]}
-        grid={{ vertical: true, horizontal: true }}
+            series={[
+                { data: data.map(d=>d.objectiveValuation), label: 'Objectif', stack: 'stack1', valueFormatter  },
+                { data: data.map(d=>d.valuation), label: 'Valorisation', stack: 'stack2', valueFormatter },
+                { data: data.map(d=>d.gapValuation), label: "Valorisation de l'écart", stack: 'stack2', valueFormatter },
+            ]}
+            xAxis={[{ data: data.map(d=>d.month), scaleType:  'band', dataKey: 'month', label: data[0]?.year }]}
+            yAxis={[{label: 'Valorisation(€)', valueFormatter}]}
+            grid={{ vertical: true, horizontal: true }}
         />
     );
 }
