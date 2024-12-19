@@ -52,7 +52,7 @@ export const GET_DASHBOARD_ACTIVITY = gql`
           plannedExitsCount
           presentsMonthCount
           daysCount
-          objectiveCount
+          objectiveDaysCount
           objectiveOccupancyRate
           occupancyRate
           valuation
@@ -66,7 +66,49 @@ export const GET_DASHBOARD_ACTIVITY = gql`
           plannedExitsCount
           presentsMonthCount
           daysCount
-          objectiveCount
+          objectiveDaysCount
+          objectiveOccupancyRate
+          occupancyRate
+          valuation
+          objectiveValuation
+          gapValuation
+        }
+      }
+      activityTrackingEstablishments{
+        year
+        months
+        title
+        establishment{
+          id
+          name
+          logo
+        }
+        activityTrackingMonth{
+          month
+          year
+          entriesCount
+          exitsCount
+          plannedExitsCount
+          presentsMonthCount
+          daysCount
+          objectiveDaysCount
+          gapDaysCount
+          objectiveOccupancyRate
+          occupancyRate
+          valuation
+          objectiveValuation
+          gapValuation
+        }
+        activityTrackingAccumulation{
+          year
+          label
+          entriesCount
+          exitsCount
+          plannedExitsCount
+          presentsMonthCount
+          daysCount
+          objectiveDaysCount
+          gapDaysCount
           objectiveOccupancyRate
           occupancyRate
           valuation

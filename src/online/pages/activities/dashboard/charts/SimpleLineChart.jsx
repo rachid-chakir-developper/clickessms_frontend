@@ -21,7 +21,7 @@ export default function SimpleLineChart({data=[]}) {
           }
         }
       series={[
-        { data: data.map(d=>d.objectiveCount), label: 'Objectif', valueFormatter },
+        { data: data.map(d=>d.objectiveDaysCount), label: 'Objectif', valueFormatter },
         { data: data.map(d=>d.daysCount), label: "Nombre de journée", valueFormatter },
       ]}
       xAxis={[{ scaleType: 'point', data: data.map(d=>d.month) }]}

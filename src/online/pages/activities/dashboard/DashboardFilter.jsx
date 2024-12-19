@@ -31,8 +31,7 @@ const Item = styled(Stack)(({ theme }) => ({
 
 const DashboardFilter = ({ onFilterChange }) => {
   const [filterValues, setFilterValues] = useState({
-    startingDateTime: null,
-    endingDateTime: null,
+    year: null,
     establishments: null,
   });
 
@@ -47,7 +46,7 @@ const DashboardFilter = ({ onFilterChange }) => {
   const handleFilterClear = () => {
     // Pass the filter values to the parent component for handling the filtering logic
     const filterValuesInit = { 
-                            startingDateTime: null, endingDateTime: null, keyword: '', 
+                            year: null, keyword: '', 
                             establishments: null
                           }
     setFilterSelectedEstablishments([])
@@ -67,35 +66,24 @@ const DashboardFilter = ({ onFilterChange }) => {
   
   return (
     <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={2}>
+        <Grid item xs={12} sm={2} md={2}>
             <Item>
                 <TheDesktopDatePicker
-                    label="De"
+                    label="Année"
                     type="date"
-                    name="startingDateTime"
-                    value={filterValues.startingDateTime}
+                    name="year"
+                    openTo="year"
+                    views={['year']}
+                    format="YYYY"
+                    value={filterValues.year}
                     onChange={(e) => {
-                      setFilterValues({ ...filterValues, startingDateTime: e })
-                      onFilterChange({ ...filterValues, startingDateTime: e })
+                      setFilterValues({ ...filterValues, year: e })
+                      onFilterChange({ ...filterValues, year: e })
                     }}
                 />
             </Item>
         </Grid>
-        <Grid item xs={12} sm={6} md={2}>
-            <Item>
-                <TheDesktopDatePicker
-                    label="À"
-                    type="date"
-                    name="endingDateTime"
-                    value={filterValues.endingDateTime}
-                    onChange={(e) => {
-                      setFilterValues({ ...filterValues, endingDateTime: e })
-                      onFilterChange({ ...filterValues, endingDateTime: e })
-                    }}
-                />
-            </Item>
-        </Grid>
-        <Grid item xs={12} sm={6} md={8}>
+        <Grid item xs={12} sm={10} md={10}>
           <Item sx={{position: 'relative'}}>
             <TheAutocomplete
               options={establishmentsData?.establishments?.nodes}

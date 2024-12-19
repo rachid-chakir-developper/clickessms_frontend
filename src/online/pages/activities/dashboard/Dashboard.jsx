@@ -6,7 +6,7 @@ import ProgressService from '../../../../_shared/services/feedbacks/ProgressServ
 import DashboardFilter from './DashboardFilter';
 import { GET_DASHBOARD_ACTIVITY } from '../../../../_shared/graphql/queries/DashboardQueries';
 import DashboardGraph from './DashboardGraph';
-import DashboardTable from './charts/DashboardTable';
+import DashboardTable from './DashboardTable';
 
 export default function Dashboard() {
   const [employeeFilter, setDashboardFilter] = React.useState(null);
@@ -26,7 +26,7 @@ export default function Dashboard() {
   const [view, setView] = React.useState('graph');
 
   const handleChange = (event, nextView) => {
-    setView(nextView);
+    if(nextView) setView(nextView);
   };
   return (
     <>
@@ -60,7 +60,7 @@ export default function Dashboard() {
             </Grid>
           </Grid>
           {view==='graph' && <DashboardGraph activityTracking={dashboardActivityData?.dashboardActivity?.activityTracking}/>}
-          {view==='table' && <DashboardTable activityTracking={dashboardActivityData?.dashboardActivity?.activityTracking}/>}
+          {view==='table' && <DashboardTable activityTrackingEstablishments={dashboardActivityData?.dashboardActivity?.activityTrackingEstablishments}/>}
         </>
       )}
     </>

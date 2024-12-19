@@ -28,7 +28,7 @@ const DashboardGraph = ({ activityTracking }) => {
                     activityTracking?.activityTrackingMonth.map(item => ({
                         year: item.year,
                         month: item.month,
-                        objectiveCount: item.objectiveCount,
+                        objectiveDaysCount: item.objectiveDaysCount,
                         daysCount: item.daysCount,
                     }))
                     } />
@@ -38,7 +38,7 @@ const DashboardGraph = ({ activityTracking }) => {
                 <Item>
                 <Deposits title="Objectif (Cumul à fin)" data={{
                     date: activityTracking?.activityTrackingAccumulation?.year,
-                    value: activityTracking?.activityTrackingAccumulation?.objectiveCount + ' jour(s)'
+                    value: activityTracking?.activityTrackingAccumulation?.objectiveDaysCount + ' jour(s)'
                     }} />
                 </Item>
                 <Item>
