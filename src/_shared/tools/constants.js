@@ -567,3 +567,24 @@ export const TICKET_TYPE_CHOICES = {
     { value: "GENERAL", label: "Général" },
   ],
 };
+
+export const ROOM_TYPE_CHOICES = {
+  MEETING: "MEETING",
+  CONFERENCE: "CONFERENCE",
+  LOUNGE: "LOUNGE",
+  TRAINING: "TRAINING",
+  PHONE: "PHONE",
+  OFFICE: "OFFICE",
+  STUDIO: "STUDIO",
+  OTHER: "OTHER",
+  ALL: [
+    { value: "MEETING", label: "Salle de réunion" },
+    { value: "CONFERENCE", label: "Salle de conférence" },
+    { value: "LOUNGE", label: "Salle de pause" },
+    { value: "TRAINING", label: "Salle de formation" },
+    { value: "PHONE", label: "Cabine téléphonique" },
+    { value: "OFFICE", label: "Bureau privé" },
+    { value: "STUDIO", label: "Studio" },
+    { value: "OTHER", label: "Autre" },
+  ],
+};

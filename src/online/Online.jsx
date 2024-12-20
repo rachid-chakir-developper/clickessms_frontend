@@ -39,6 +39,7 @@ import { AuthorizationSystemProvider } from '../_shared/context/AuthorizationSys
 import Roberp from './pages/roberp/Roberp';
 import Sce from './pages/sce/Sce';
 import Computers from './pages/computers/Computers';
+import BuildingEstate from './pages/building_estate/BuildingEstate';
 
 const drawerWidth = 280;
 
@@ -203,6 +204,7 @@ export default function Online() {
             <Route path={`chat/*`} element={<Chat />} />
             <Route path={`account/*`} element={<Account />} />
             <Route path={`planning/*`} element={<Planning />} />
+            <Route path={`batiment-immobilier/*`} element={<BuildingEstate />} />
             <Route path={`roberp/*`} element={<Roberp />} />
           </Routes>
         </Box>

@@ -215,7 +215,7 @@ export default function AddBudgetForm({ idBudget, title }) {
                 <TheAutocomplete
                   options={establishmentsData?.establishments?.nodes}
                   label="Établissement / Service"
-                  placeholder="Ajouter un établissement ou service"
+                  placeholder="Choisissez un établissement ou un service"
                   multiple={false}
                   value={formik.values.establishment}
                   onChange={(e, newValue) =>

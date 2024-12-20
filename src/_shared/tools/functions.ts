@@ -32,6 +32,7 @@ import {
   TRANSACTION_TYPE_CHOICES,
   PURCHASE_ORDER_STATUS_CHOICES,
   TICKET_TYPE_CHOICES,
+  ROOM_TYPE_CHOICES,
 } from './constants';
 
 export const getStatusColor = (status) => {
@@ -213,6 +214,11 @@ export const getPurchaseOrderStatusLabel = (status) => {
 export const getTicketTypeLabel = (ticketType) => {
   return TICKET_TYPE_CHOICES.ALL.find((type) => type.value === ticketType)?.label;
 };
+
+export const getRoomTypeLabel = (roomType) => {
+  return ROOM_TYPE_CHOICES.ALL.find((type) => type.value === roomType)?.label;
+};
+
 
 const intlNumFmt = new Intl.NumberFormat('fr-FR', {
   style: 'currency',

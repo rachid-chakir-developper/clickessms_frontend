@@ -504,9 +504,8 @@ export const modules: Module[] = [
       {
         id: 'meeting-room',
         name: 'Salle de réunion',
-        path: '/online/administratif/sdr',
+        path: '/online/batiment-immobilier/salles',
         icon: <MeetingRoomIcon />,
-        disabled: true,
       },
     ],
   },
@@ -560,7 +559,7 @@ export const modules: Module[] = [
       {
         id: 'real-estate',
         name: 'Bâtiment / Immobilier',
-        path: '/online/partnerships/bâtiment-immobilier',
+        path: '/online/batiment-immobilier/batiment-immobilier',
         icon: <HomeWorkIcon />,
         disabled: true,
       },
