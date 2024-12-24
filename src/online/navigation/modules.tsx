@@ -195,9 +195,8 @@ export const modules: Module[] = [
       {
         id: 'idea-box',
         name: 'Boîte à idées',
-        path: '/online/audits/boîte-idées',
+        path: '/online/qualites/boite-idees',
         icon: <BatchPredictionIcon />,
-        disabled: true,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageQuality',
