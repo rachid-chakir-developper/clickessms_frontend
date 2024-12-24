@@ -9,7 +9,7 @@ export default function AddSpaceRoom() {
       idSpaceRoom={idSpaceRoom}
       title={
         idSpaceRoom && idSpaceRoom > 0
-          ? `Modifier le salle`
+          ? `Modifier la salle`
           : `Ajouter une salle`
       }
     />

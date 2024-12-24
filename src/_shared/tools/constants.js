@@ -531,6 +531,24 @@ export const EXPENSE_TYPE_CHOICES = {
   ],
 };
 
+export const EXPENSE_REPORT_STATUS_CHOICES = {
+  DRAFT: "DRAFT",
+  NEW: "NEW",
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+  REIMBURSED: "REIMBURSED",
+  ALL: [
+    { value: "DRAFT", label: "Brouillon" },
+    { value: "NEW", label: "Nouveau" },
+    { value: "PENDING", label: "En attente" },
+    { value: "APPROVED", label: "Approuvé" },
+    { value: "REJECTED", label: "Rejeté" },
+    { value: "REIMBURSED", label: "Remboursé" },
+  ],
+};
+
+
 export const TRANSACTION_TYPE_CHOICES = {
   CREDIT: "CREDIT",
   DEBIT: "DEBIT",

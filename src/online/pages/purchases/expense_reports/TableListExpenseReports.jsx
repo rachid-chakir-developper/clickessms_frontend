@@ -35,11 +35,9 @@ import EstablishmentChip from '../../companies/establishments/EstablishmentChip'
 import { render } from 'react-dom';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
-import { formatCurrencyAmount, getFormatDate, getFormatDateTime, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
-import PurchaseOrderStatusLabelMenu from './PurchaseOrderStatusLabelMenu';
+import { getFormatDate, getFormatDateTime, getPriorityLabel } from '../../../../_shared/tools/functions';
+import ExpenseReportStatusLabelMenu from './ExpenseReportStatusLabelMenu';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
-import { PURCHASE_ORDER_STATUS_CHOICES } from '../../../../_shared/tools/constants';
-import PrintButton from '../../../_shared/components/printing/PrintButton';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -100,15 +98,6 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
-      id: 'number',
-      property: 'number',
-      exportField: 'number',
-      numeric: false,
-      disablePadding: true,
-      isDefault: true,
-      label: 'Numéro',
-    },
-    {
       id: 'label',
       property: 'label',
       exportField: 'label',
@@ -138,51 +127,28 @@ const headCells = [
         isDefault: true,
         disableClickDetail: true,
         sortDisabled: true,
-        label: 'Demandé par',
+        label: 'Ajoutée par',
         render: ({employee}) => employee && <EmployeeChip employee={employee} />
     },
     {
-        id: 'generator',
-        property: 'generator__first_name',
-        exportField: ['generator__first_name', 'generator__last_name'],
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        disableClickDetail: true,
-        sortDisabled: true,
-        label: 'Généré par',
-        render: ({generator}) => generator && <EmployeeChip employee={generator} />
-    },
-    {
-        id: 'orderDateTime',
-        property: 'order_date_time',
-        exportField: 'order_date_time',
+        id: 'expenseDateTime',
+        property: 'expense_date_time',
+        exportField: 'expense_date_time',
         numeric: false,
         disablePadding: false,
         isDefault: true,
         label: 'Date',
-        render: ({orderDateTime})=> getFormatDate(orderDateTime)
+        render: ({expenseDateTime})=> getFormatDate(expenseDateTime)
     },
     {
-        id: 'totalTtc',
-        property: 'total_ttc',
-        exportField: 'total_ttc',
+        id: 'totalAmount',
+        property: 'total_amount',
+        exportField: 'total_amount',
         numeric: false,
         disablePadding: false,
         isDefault: true,
-        label: 'Montant.TTC',
-        render: ({totalTtc})=> formatCurrencyAmount(totalTtc)
-    },
-    {
-        id: 'expense',
-        property: 'expense__number',
-        exportField: ['expense__number', 'expense__label'],
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        disableClickDetail: true,
-        label: 'Source',
-        render: ({expense})=> expense && <><small><i>Dépense</i></small> <Tooltip title={expense.label}><Chip label={truncateText(expense.label, 20)} /></Tooltip></>
+        label: 'Montant',
+        render: ({totalAmount})=> <>{totalAmount}&nbsp;€</>
     },
     {
         id: 'status',
@@ -193,7 +159,7 @@ const headCells = [
         isDefault: true,
         disableClickDetail: true,
         label: 'Status',
-        render: (data)=> <PurchaseOrderStatusLabelMenu purchaseOrder={data} />
+        render: (data)=> <ExpenseReportStatusLabelMenu expenseReport={data} />
     },
     {
         id: 'description',
@@ -202,7 +168,6 @@ const headCells = [
         numeric: false,
         disablePadding: false,
         label: 'Description',
-        render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
     },
     {
         id: 'action',
@@ -306,11 +271,11 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les bons de commandes
+          Les notes de frais
         </Typography>
       )}
       <TableExportButton 
-        entity={'PurchaseOrder'}
+        entity={'ExpenseReport'}
         fileName={'Dépenses'}
         fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
         titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
@@ -332,10 +297,10 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListPurchaseOrders({
+export default function TableListExpenseReports({
   loading,
   rows,
-  onDeletePurchaseOrder,
+  onDeleteExpenseReport,
   onFilterChange,
   paginator,
 }) {
@@ -346,6 +311,17 @@ export default function TableListPurchaseOrders({
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
+
+  const { setDialogListLibrary } = useFeedBacks();
+  const onOpenDialogListLibrary = (folderParent) => {
+    setDialogListLibrary({
+      isOpen: true,
+      folderParent,
+      onClose: () => {
+        setDialogListLibrary({ isOpen: false });
+      },
+    });
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -430,7 +406,7 @@ export default function TableListPurchaseOrders({
                 <StyledTableRow>
                   <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucun bon de commande trouvé.
+                      Aucune note de frais trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -488,7 +464,7 @@ export default function TableListPurchaseOrders({
                           scope="row"
                           padding={column?.disablePadding ? "none" : "normal"}
                           key={index}
-                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/achats/bons-commandes/details/${row?.id}`)}}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/achats/notes-frais/details/${row?.id}`)}}
                         >
                         {column?.render ? column?.render(row) : row[column?.id]}
                         </StyledTableCell>
@@ -512,7 +488,7 @@ export default function TableListPurchaseOrders({
                         }}
                       >
                         <Link
-                          to={`/online/achats/bons-commandes/details/${row?.id}`}
+                          to={`/online/achats/notes-frais/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -520,12 +496,27 @@ export default function TableListPurchaseOrders({
                             Détails
                           </MenuItem>
                         </Link>
-                        {row?.status===PURCHASE_ORDER_STATUS_CHOICES.APPROVED && 
-                          <PrintButton options={{type: 'PurchaseOrder', data:row}}
-                          title = 'Imprimer le bon de commande.' apparence="menuItem" />}
                         <MenuItem
                           onClick={() => {
-                            onDeletePurchaseOrder(row?.id);
+                            onOpenDialogListLibrary(row?.folder);
+                            handleCloseMenu();
+                          }}
+                        >
+                          <Folder sx={{ mr: 2 }} />
+                          Bibliothèque
+                        </MenuItem>
+                        <Link
+                          to={`/online/achats/notes-frais/modifier/${row?.id}`}
+                          className="no_style"
+                        >
+                          <MenuItem onClick={handleCloseMenu}>
+                            <Edit sx={{ mr: 2 }} />
+                            Modifier
+                          </MenuItem>
+                        </Link>
+                        <MenuItem
+                          onClick={() => {
+                            onDeleteExpenseReport(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

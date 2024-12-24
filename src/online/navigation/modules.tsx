@@ -343,9 +343,8 @@ export const modules: Module[] = [
       {
         id: 'expense-reports',
         name: 'Notes de frais',
-        path: '/online/notes-frais',
+        path: '/online/achats/notes-frais',
         icon: <RequestQuoteIcon />,
-        disabled: true,
       },
       {
         id: 'schedule',
@@ -741,26 +740,24 @@ export const modules: Module[] = [
       {
         id: 'approved-suppliers',
         name: 'Fournisseurs vérifiés',
-        path: '/online/achats/fournisseurs-vérifiés',
+        path: '/online/achats/fournisseurs',
         icon: <HowToRegIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageFinance',
           }).authorized;
         },
-        disabled: true,
       },
       {
         id: 'contract-template',
         name: 'Base contrat',
-        path: '/online/achats/base-contrat',
+        path: '/online/achats/base-contrats',
         icon: <ContentPasteIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageFinance',
           }).authorized;
         },
-        disabled: true,
       },
       {
         id: 'competition',
