@@ -52,6 +52,8 @@ export const TRANSMISSION_EVENT_RECAP_DETAILS = gql`
   fragment TransmissionEventRecapDetailsFragment on TransmissionEventType {
     ...TransmissionEventBasicInfosFragment
     observation
+    createdAt
+    updatedAt
   }
   ${TRANSMISSION_EVENT_BASIC_INFOS}
 `;

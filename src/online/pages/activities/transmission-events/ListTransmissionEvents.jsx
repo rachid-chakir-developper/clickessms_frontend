@@ -1,13 +1,8 @@
 import * as React from 'react';
-import { experimentalStyled as styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { Button, Stack } from '@mui/material';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { Add } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
-
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import {
   DELETE_TRANSMISSION_EVENT,
   PUT_TRANSMISSION_EVENT_STATE,
@@ -16,22 +11,17 @@ import { GET_TRANSMISSION_EVENTS } from '../../../../_shared/graphql/queries/Tra
 import TransmissionEventFilter from './TransmissionEventFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
 import TableListTransmissionEvents from './TableListTransmissionEvents';
-
-const Item = styled(Stack)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(2),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
+import { Link } from 'react-router-dom';
+import { Box, Button } from '@mui/material';
+import { Add } from '@mui/icons-material';
 
 export default function ListTransmissionEvents() {
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const authorizationSystem = useAuthorizationSystem();
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [transmissionEventFilter, setTransmissionEventFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
     setTransmissionEventFilter(newFilter);
-    setPaginator({ ...paginator, page: 1 });
   };
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
@@ -49,7 +39,7 @@ export default function ListTransmissionEvents() {
 
   React.useEffect(() => {
     getTransmissionEvents();
-  }, [paginator]);
+  }, [transmissionEventFilter, paginator]);
 
   const [deleteTransmissionEvent, { loading: loadingDelete }] = useMutation(DELETE_TRANSMISSION_EVENT, {
     onCompleted: (datas) => {
@@ -62,7 +52,7 @@ export default function ListTransmissionEvents() {
       } else {
         setNotifyAlert({
           isOpen: true,
-          message: `Non Supprimé ! ${datas.deleteTransmissionEvent.message}.`,
+          message: `Non supprimé ! ${datas.deleteTransmissionEvent.message}.`,
           type: 'error',
         });
       }
@@ -93,7 +83,7 @@ export default function ListTransmissionEvents() {
       console.log(err);
       setNotifyAlert({
         isOpen: true,
-        message: 'Non Supprimé ! Veuillez réessayer.',
+        message: 'Non supprimé ! Veuillez réessayer.',
         type: 'error',
       });
     },
@@ -152,6 +142,7 @@ export default function ListTransmissionEvents() {
       },
     });
   };
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -171,14 +162,15 @@ export default function ListTransmissionEvents() {
           loading={loadingTransmissionEvents}
           rows={transmissionEventsData?.transmissionEvents?.nodes || []}
           onDeleteTransmissionEvent={onDeleteTransmissionEvent}
-          onUpdateTransmissionEventState={onUpdateTransmissionEventState}
+          onFilterChange={(newFilter) => handleFilterChange({ ...transmissionEventFilter, ...newFilter })}
+          paginator={paginator}
         />
       </Grid>
       <Grid item xs={12}>
         <PaginationControlled
           totalItems={transmissionEventsData?.transmissionEvents?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
-          currentPage={paginator.page}
+          currentPage={1}
           onChange={(page) => setPaginator({ ...paginator, page })}
         />
       </Grid>

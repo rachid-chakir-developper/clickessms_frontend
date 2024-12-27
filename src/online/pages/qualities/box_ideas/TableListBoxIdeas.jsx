@@ -115,15 +115,6 @@ const headCells = [
       label: 'Titre',
     },
     {
-        id: 'link',
-        property: 'link',
-        exportField: 'link',
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        label: 'Lien'
-    },
-    {
         id: 'description',
         property: 'description',
         exportField: 'description',
@@ -132,6 +123,15 @@ const headCells = [
         isDefault: true,
         label: 'Description',
         render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
+    },
+    {
+        id: 'link',
+        property: 'link',
+        exportField: 'link',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Lien'
     },
     {
         id: 'isActive',

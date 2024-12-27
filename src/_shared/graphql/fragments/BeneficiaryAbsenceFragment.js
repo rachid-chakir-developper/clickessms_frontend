@@ -56,6 +56,8 @@ export const BENEFICIARY_ABSENCE_RECAP_DETAILS = gql`
   fragment BeneficiaryAbsenceRecapDetailsFragment on BeneficiaryAbsenceType {
     ...BeneficiaryAbsenceBasicInfosFragment
     observation
+    createdAt
+    updatedAt
   }
   ${BENEFICIARY_ABSENCE_BASIC_INFOS}
 `;

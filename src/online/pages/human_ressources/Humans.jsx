@@ -5,6 +5,7 @@ import { Box } from '@mui/material';
 import Planning from '../planning/Planning';
 import Meetings from './meetings/Meetings';
 import EmployeeContracts from './employees/employee-contracts/EmployeeContracts';
+import BeneficiaryAdmissions from './beneficiary_admissions/BeneficiaryAdmissions';
 
 export default function Humans() {
   return (
@@ -12,6 +13,7 @@ export default function Humans() {
       <Routes>
         <Route path={`cr-entretiens/*`} element={<Meetings />} />
         <Route path={`beneficiaires/*`} element={<Beneficiaries />} />
+        <Route path={`admissions-beneficiaires/*`} element={<BeneficiaryAdmissions />} />
         <Route path={`employes/*`} element={<Employees />} />
         <Route path={`contrats/*`} element={<EmployeeContracts />} />
         <Route path={`planning/*`} element={<Planning />} />

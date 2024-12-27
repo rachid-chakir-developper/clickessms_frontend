@@ -48,6 +48,8 @@ export const POST_RECAP = gql`
     }
     description
     observation
+    createdAt
+    updatedAt
   }
   ${POST_BASIC_INFOS}
 `;

@@ -25,7 +25,7 @@ import {
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover} from '@mui/material';
+import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Stack, TablePagination } from '@mui/material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
@@ -35,10 +35,9 @@ import EstablishmentChip from '../../companies/establishments/EstablishmentChip'
 import { render } from 'react-dom';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
-import { formatCurrencyAmount, getFormatDate, getFormatDateTime, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
+import { getFormatDate, getFormatDateTime, getPriorityLabel } from '../../../../_shared/tools/functions';
+import BeneficiaryAdmissionStatusLabelMenu from './BeneficiaryAdmissionStatusLabelMenu';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
-import PrintButton from '../../../_shared/components/printing/PrintButton';
-import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -99,21 +98,62 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
-      id: 'number',
-      property: 'number',
-      exportField: 'number',
-      numeric: false,
-      disablePadding: true,
-      label: 'Numéro',
+        id: 'firstName',
+        property: 'first_name',
+        exportField: 'first_name',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Prénom',
     },
     {
-      id: 'title',
-      property: 'title',
-      exportField: 'title',
-      numeric: false,
-      disablePadding: true,
-      isDefault: true,
-      label: 'Titre',
+        id: 'lastName',
+        property: 'last_name',
+        exportField: 'last_name',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Nom de naissance',
+    },
+    {
+        id: 'preferredName',
+        property: 'preferred_name',
+        exportField: 'preferred_name',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Nom d’usage',
+    },
+    {
+        id: 'birthDate',
+        property: 'birth_date',
+        exportField: 'birth_date',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Date de naissance',
+        render: ({birthDate})=> getFormatDate(birthDate)
+    },
+    {
+        id: 'establishments',
+        property: 'establishments__name',
+        exportField: ['establishments__name'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Structure(s)',
+        render: ({establishments}) => establishments && establishments.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+        {establishments?.map((establishment, index) => {
+          return (
+            <EstablishmentChip
+              key={index}
+              establishment={establishment}
+            />
+          );
+        })}
+      </Stack>
     },
     {
         id: 'employee',
@@ -121,42 +161,32 @@ const headCells = [
         exportField: ['employee__first_name', 'employee__last_name'],
         numeric: false,
         disablePadding: false,
+        isDefault: true,
         disableClickDetail: true,
         sortDisabled: true,
-        label: 'Déclaré par',
+        label: 'Ajoutée par',
         render: ({employee}) => employee && <EmployeeChip employee={employee} />
     },
     {
-        id: 'beneficiary',
-        property: 'beneficiary__first_name',
-        exportField: ['beneficiary__first_name', 'beneficiary__last_name'],
+        id: 'expenseDateTime',
+        property: 'expense_date_time',
+        exportField: 'expense_date_time',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Date',
+        render: ({expenseDateTime})=> getFormatDate(expenseDateTime)
+    },
+    {
+        id: 'status',
+        property: 'status',
+        exportField: 'status',
         numeric: false,
         disablePadding: false,
         isDefault: true,
         disableClickDetail: true,
-        sortDisabled: true,
-        label: 'Personne accompagnée',
-        render: ({beneficiary}) => beneficiary && <BeneficiaryChip beneficiary={beneficiary} />
-    },
-    {
-        id: 'startingDateTime',
-        property: 'starting_date_time',
-        exportField: 'starting_date_time',
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        label: "Date de début",
-        render: ({startingDateTime})=> getFormatDate(startingDateTime)
-    },
-    {
-        id: 'endingDateTime',
-        property: 'ending_date_time',
-        exportField: 'ending_date_time',
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        label: "Date de fin",
-        render: ({endingDateTime})=> getFormatDate(endingDateTime)
+        label: 'Status',
+        render: (data)=> <BeneficiaryAdmissionStatusLabelMenu beneficiaryAdmission={data} />
     },
     {
         id: 'description',
@@ -164,9 +194,7 @@ const headCells = [
         exportField: 'description',
         numeric: false,
         disablePadding: false,
-        isDefault: true,
         label: 'Description',
-        render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
     },
     {
         id: 'action',
@@ -270,12 +298,12 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les projets personnalisés (PPA)
+          Les admissions
         </Typography>
       )}
       <TableExportButton 
-        entity={'PersonalizedProject'}
-        fileName={'Projets-personnalises'}
+        entity={'BeneficiaryAdmission'}
+        fileName={'Admissions-beneficiaires'}
         fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
         titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
@@ -296,10 +324,10 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListPersonalizedProjects({
+export default function TableListBeneficiaryAdmissions({
   loading,
   rows,
-  onDeletePersonalizedProject,
+  onDeleteBeneficiaryAdmission,
   onFilterChange,
   paginator,
 }) {
@@ -310,6 +338,17 @@ export default function TableListPersonalizedProjects({
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
+
+  const { setDialogListLibrary } = useFeedBacks();
+  const onOpenDialogListLibrary = (folderParent) => {
+    setDialogListLibrary({
+      isOpen: true,
+      folderParent,
+      onClose: () => {
+        setDialogListLibrary({ isOpen: false });
+      },
+    });
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -394,7 +433,7 @@ export default function TableListPersonalizedProjects({
                 <StyledTableRow>
                   <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucun projet personnalisé trouvé.
+                      Aucune admission trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -452,7 +491,7 @@ export default function TableListPersonalizedProjects({
                           scope="row"
                           padding={column?.disablePadding ? "none" : "normal"}
                           key={index}
-                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/activites/projets-personnalises/details/${row?.id}`)}}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/ressources-humaines/admissions-beneficiaires/details/${row?.id}`)}}
                         >
                         {column?.render ? column?.render(row) : row[column?.id]}
                         </StyledTableCell>
@@ -476,7 +515,7 @@ export default function TableListPersonalizedProjects({
                         }}
                       >
                         <Link
-                          to={`/online/activites/projets-personnalises/details/${row?.id}`}
+                          to={`/online/ressources-humaines/admissions-beneficiaires/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -484,8 +523,17 @@ export default function TableListPersonalizedProjects({
                             Détails
                           </MenuItem>
                         </Link>
+                        <MenuItem
+                          onClick={() => {
+                            onOpenDialogListLibrary(row?.folder);
+                            handleCloseMenu();
+                          }}
+                        >
+                          <Folder sx={{ mr: 2 }} />
+                          Bibliothèque
+                        </MenuItem>
                         <Link
-                          to={`/online/activites/projets-personnalises/modifier/${row?.id}`}
+                          to={`/online/ressources-humaines/admissions-beneficiaires/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -495,7 +543,7 @@ export default function TableListPersonalizedProjects({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeletePersonalizedProject(row?.id);
+                            onDeleteBeneficiaryAdmission(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

@@ -233,6 +233,17 @@ export const modules: Module[] = [
         },
       },
       {
+        id: 'beneficiary-admissions',
+        name: 'Les admissions',
+        path: '/online/ressources-humaines/admissions-beneficiaires',
+        icon: <AssignmentIndIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageActivity',
+          }).authorized;
+        },
+      },
+      {
         id: 'personalized-projects',
         name: 'Projets personnalisés ( PPA)',
         path: '/online/activites/projets-personnalises',

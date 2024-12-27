@@ -2,13 +2,15 @@ import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import { Box, Grid, Paper, Typography, Divider, Chip, Button } from '@mui/material';
+import { Box, Grid, Paper, Typography, Divider, Chip, Button, Stack, List } from '@mui/material';
 
 import { BENEFICIARY_ABSENCE_RECAP } from '../../../../_shared/graphql/queries/BeneficiaryAbsenceQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import { getFormatDateTime } from '../../../../_shared/tools/functions';
+import { getFormatDate, getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
 import { Edit } from '@mui/icons-material';
+import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -37,12 +39,19 @@ export default function BeneficiaryAbsenceDetails() {
   if (loadingBeneficiaryAbsence) return <ProgressService type="form" />;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
-        <Link
-          to={`/online/activites/absences-beneficiaires/modifier/${beneficiaryAbsenceData?.beneficiaryAbsence?.id}`}
-          className="no_style"
-        >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
+        <Box sx={{marginX: 2}}>
+          <Link
+            to={`/online/activites/absences-beneficiaires/liste`}
+            className="no_style"
+          >
+            <Button variant="text" startIcon={<List />}  size="small">
+              Retour à la Liste
+            </Button>
+          </Link>
+        </Box>
+        <Link to={`/online/activites/absences-beneficiaires/modifier/${beneficiaryAbsenceData?.beneficiaryAbsence?.id}`} className="no_style">
+          <Button variant="outlined" startIcon={<Edit />} size="small">
             Modifier
           </Button>
         </Link>
@@ -128,11 +137,11 @@ function BeneficiaryAbsenceMiniInfos({ beneficiaryAbsence }) {
                 </Typography>
                 <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
                 <Typography variant="body2" color="text.secondary">
-                  <b>Date début prévue: </b>{' '}
-                  {`${getFormatDateTime(beneficiaryAbsence?.startingDateTime)}`}{' '}
+                  <b>Date début: </b>{' '}
+                  {`${getFormatDate(beneficiaryAbsence?.startingDateTime)}`}{' '}
                   <br />
-                  <b>Date fin prévue: </b>{' '}
-                  {`${getFormatDateTime(beneficiaryAbsence?.endingDateTime)}`}
+                  <b>Date fin: </b>{' '}
+                  {`${getFormatDate(beneficiaryAbsence?.endingDateTime)}`}
                 </Typography>
               </Grid>
             </Grid>
@@ -161,7 +170,7 @@ function BeneficiaryAbsenceMiniInfos({ beneficiaryAbsence }) {
             sx={{ marginRight: 1 }}
           />
         ))}
-        <Chip label={beneficiaryAbsence?.otherReasons} />
+        {beneficiaryAbsence?.otherReasons && beneficiaryAbsence?.otherReasons!=='' && <Chip label={beneficiaryAbsence?.otherReasons} />}
       </Paper>
     </>
   );
@@ -179,18 +188,28 @@ function BeneficiaryAbsenceOtherInfos({ beneficiaryAbsence }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
-      <Typography gutterBottom variant="subtitle3" component="h3">
-        Les Personnes accompagnées
-      </Typography>
-      <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-        {beneficiaryAbsence?.beneficiaries?.map((beneficiary, index) => (
-          <Grid item xs={12} sm={12} md={12} key={index}>
-            <Item>
-              <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
-            </Item>
-          </Grid>
-        ))}
-      </Grid>
+      {beneficiaryAbsence?.employee && (
+          <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
+            <Typography variant="h6" gutterBottom>
+              Déclaré par:
+            </Typography>
+            <Stack direction="row" flexWrap='wrap' spacing={1}>
+            <EmployeeChip employee={beneficiaryAbsence?.employee} />
+            </Stack>
+          </Paper>
+      )}
+      {beneficiaryAbsence?.beneficiaries?.length > 0 && (
+          <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
+            <Typography variant="h6" gutterBottom>
+              Personnes accompagnées
+            </Typography>
+            <Stack direction="row" flexWrap='wrap' spacing={1}>
+              {beneficiaryAbsence?.beneficiaries?.map((beneficiary, index) => (
+                <BeneficiaryChip key={index} beneficiary={beneficiary?.beneficiary} />
+              ))}
+            </Stack>
+          </Paper>
+      )}
     </Paper>
   );
 }

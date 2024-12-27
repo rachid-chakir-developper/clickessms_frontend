@@ -33,6 +33,7 @@ import {
   PURCHASE_ORDER_STATUS_CHOICES,
   TICKET_TYPE_CHOICES,
   ROOM_TYPE_CHOICES,
+  BENEFICIARY_ADMISSION_STATUS_CHOICES,
 } from './constants';
 
 export const getStatusColor = (status) => {
@@ -217,6 +218,10 @@ export const getTicketTypeLabel = (ticketType) => {
 
 export const getRoomTypeLabel = (roomType) => {
   return ROOM_TYPE_CHOICES.ALL.find((type) => type.value === roomType)?.label;
+};
+
+export const getBeneficiaryAdmissionStatusLabel = (status) => {
+  return BENEFICIARY_ADMISSION_STATUS_CHOICES.ALL.find((s) => s.value === status)?.label;
 };
 
 

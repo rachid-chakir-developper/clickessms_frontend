@@ -18,11 +18,6 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
-  getFormatDate,
-  getStatusLabel,
-  getStatusLebelColor,
-} from '../../../../_shared/tools/functions';
-import {
   Article,
   Delete,
   Done,
@@ -30,11 +25,20 @@ import {
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
+import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Stack} from '@mui/material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import { render } from 'react-dom';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
+import { formatCurrencyAmount, getFormatDate, getFormatDateTime, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
+import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
+import PrintButton from '../../../_shared/components/printing/PrintButton';
+import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -94,36 +98,105 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  {
-    id: 'startingDateTime',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date',
-  },
-  {
-    id: 'beneficiary',
-    numeric: false,
-    disablePadding: false,
-    label: 'Personnes accompagnées',
-  },
-  {
-    id: 'reasons',
-    numeric: false,
-    disablePadding: false,
-    label: 'Motifs',
-  },
-  {
-    id: 'employee',
-    numeric: false,
-    disablePadding: false,
-    label: 'Déclaré par',
-  },
-  {
-    id: 'action',
-    numeric: true,
-    disablePadding: false,
-    label: 'Actions',
-  },
+    {
+      id: 'number',
+      property: 'number',
+      exportField: 'number',
+      numeric: false,
+      disablePadding: true,
+      label: 'Numéro',
+    },
+    {
+      id: 'title',
+      property: 'title',
+      exportField: 'title',
+      numeric: false,
+      disablePadding: true,
+      label: 'Titre',
+    },
+    {
+        id: 'beneficiaries',
+        property: 'beneficiaries__beneficiary__first_name',
+        exportField: ['beneficiaries__beneficiary__first_name', 'beneficiaries__beneficiary__last_name'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Personnes accompagnées',
+        render: ({beneficiaries}) => beneficiaries && beneficiaries.length > 0 && <ChipGroupWithPopover people={beneficiaries.map(b=>b.beneficiary)} />
+    },
+    {
+        id: 'startingDateTime',
+        property: 'starting_date_time',
+        exportField: 'starting_date_time',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: "Date de début",
+        render: ({startingDateTime})=> getFormatDate(startingDateTime)
+    },
+    {
+        id: 'endingDateTime',
+        property: 'ending_date_time',
+        exportField: 'ending_date_time',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: "Date de fin",
+        render: ({endingDateTime})=> getFormatDate(endingDateTime)
+    },
+    {
+        id: 'reasons',
+        property: 'reasons',
+        exportField: ['reasons__name', 'otherReasons'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: "Motifs",
+        render: ({reasons, otherReasons})=> <Stack direction="row" flexWrap='wrap' spacing={1}>
+        {reasons?.map((absenceReason, index) => {
+        return (
+            <Chip
+                key={index}
+                label={absenceReason?.name}
+                variant="outlined"
+            />
+        );
+        })}
+        {otherReasons && otherReasons !== '' && <Chip
+            label={otherReasons}
+            variant="filled"
+        />}
+    </Stack>
+    },
+    {
+        id: 'employee',
+        property: 'employee__first_name',
+        exportField: ['employee__first_name', 'employee__last_name'],
+        numeric: false,
+        disablePadding: false,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Déclaré par',
+        render: ({employee}) => employee && <EmployeeChip employee={employee} />
+    },
+    {
+        id: 'description',
+        property: 'description',
+        exportField: 'description',
+        numeric: false,
+        disablePadding: false,
+        label: 'Description',
+        render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
+    },
+    {
+        id: 'action',
+        numeric: true,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Actions',
+    },
 ];
 
 function EnhancedTableHead(props) {
@@ -134,9 +207,10 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    selectedColumns = []
   } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property, sortDisabled=false) => (event) => {
+    if(!sortDisabled) onRequestSort(event, property);
   };
 
   return (
@@ -153,7 +227,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </StyledTableCell>
-        {headCells.map((headCell) => (
+        {selectedColumns.map((headCell) => (
           <StyledTableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -161,9 +235,10 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+              hideSortIcon={headCell.sortDisabled}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.property, headCell?.sortDisabled)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -180,7 +255,10 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onFilterChange } = props;
+  const [selectedColumns, setSelectedColumns] = React.useState(
+    headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
+  );
 
   return (
     <Toolbar
@@ -217,7 +295,11 @@ function EnhancedTableToolbar(props) {
           Les absences
         </Typography>
       )}
-
+      <TableExportButton 
+        entity={'BeneficiaryAbsence'}
+        fileName={'Absences-beneficiaires'}
+        fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
+        titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>
@@ -225,11 +307,12 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <TableFilterButton headCells={headCells} 
+          onFilterChange={(currentColumns)=>{
+            setSelectedColumns(currentColumns);
+            onFilterChange(headCells?.filter(c=> currentColumns?.includes(c.id)))
+          }
+        }/>
       )}
     </Toolbar>
   );
@@ -238,7 +321,9 @@ function EnhancedTableToolbar(props) {
 export default function TableListBeneficiaryAbsences({
   loading,
   rows,
-  onDeleteBeneficiaryAbsence
+  onDeleteBeneficiaryAbsence,
+  onFilterChange,
+  paginator,
 }) {
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
@@ -246,23 +331,13 @@ export default function TableListBeneficiaryAbsences({
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const { setDialogListLibrary } = useFeedBacks();
-  const onOpenDialogListLibrary = (folderParent) => {
-    setDialogListLibrary({
-      isOpen: true,
-      folderParent,
-      onClose: () => {
-        setDialogListLibrary({ isOpen: false });
-      },
-    });
-  };
+  const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    onFilterChange({orderBy: `${isAsc ? '-' : ''}${property}`})
   };
 
   const handleSelectAllClick = (event) => {
@@ -308,17 +383,20 @@ export default function TableListBeneficiaryAbsences({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
+  const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+      <Paper sx={{ width: '100%', mb: 2 }} >
+        <EnhancedTableToolbar numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
+            border="0"
             size="medium"
           >
             <EnhancedTableHead
+              selectedColumns={selectedColumns}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -329,16 +407,16 @@ export default function TableListBeneficiaryAbsences({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                        Aucune absence trouvé.
+                      Aucune absence trouvée.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -388,67 +466,20 @@ export default function TableListBeneficiaryAbsences({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell align="left"
-                      onClick={()=> navigate(`/online/activites/absences-beneficiaires/details/${row?.id}`)}
-                    >{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.beneficiaries?.map((beneficiarie, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={`${beneficiarie?.beneficiary?.firstName} ${beneficiarie?.beneficiary?.lastName}`}
-                                  src={
-                                    beneficiarie?.beneficiary?.photo
-                                      ? beneficiarie?.beneficiary?.photo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={`${beneficiarie?.beneficiary?.firstName} ${beneficiarie?.beneficiary?.lastName}`}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                        <Stack direction="row" flexWrap='wrap' spacing={1}>
-                            {row?.reasons?.map((absenceReason, index) => {
-                            return (
-                                <Chip
-                                    key={index}
-                                    label={absenceReason?.name}
-                                    variant="outlined"
-                                />
-                            );
-                            })}
-                            {row?.otherReasons && row?.otherReasons !== '' && <Chip
-                                label={row?.otherReasons}
-                                variant="filled"
-                            />}
-                        </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left"> 
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
-                              src={
-                                row?.employee?.photo
-                                  ? row?.employee?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
-                          variant="outlined"
-                        />
-                        </Stack>
-                    </StyledTableCell>
+                    {
+                      selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
+                        return <StyledTableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding={column?.disablePadding ? "none" : "normal"}
+                          key={index}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/activites/absences-beneficiaires/details/${row?.id}`)}}
+                        >
+                        {column?.render ? column?.render(row) : row[column?.id]}
+                        </StyledTableCell>
+                      })
+                    }
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -475,15 +506,6 @@ export default function TableListBeneficiaryAbsences({
                             Détails
                           </MenuItem>
                         </Link>
-                        <MenuItem
-                          onClick={() => {
-                            onOpenDialogListLibrary(row?.folder);
-                            handleCloseMenu();
-                          }}
-                        >
-                          <Folder sx={{ mr: 2 }} />
-                          Bibliothèque
-                        </MenuItem>
                         <Link
                           to={`/online/activites/absences-beneficiaires/modifier/${row?.id}`}
                           className="no_style"
@@ -514,7 +536,7 @@ export default function TableListBeneficiaryAbsences({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={6} />
+                  <StyledTableCell colSpan={selectedColumns.length + 1} />
                 </StyledTableRow>
               )}
             </TableBody>

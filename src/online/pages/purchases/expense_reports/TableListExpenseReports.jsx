@@ -276,7 +276,7 @@ function EnhancedTableToolbar(props) {
       )}
       <TableExportButton 
         entity={'ExpenseReport'}
-        fileName={'Dépenses'}
+        fileName={'Notes-frais'}
         fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
         titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (

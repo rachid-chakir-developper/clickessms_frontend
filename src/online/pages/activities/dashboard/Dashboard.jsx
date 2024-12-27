@@ -23,7 +23,7 @@ export default function Dashboard() {
   React.useEffect(() => {
     
   }, [employeeFilter]);
-  const [view, setView] = React.useState('graph');
+  const [view, setView] = React.useState('table');
 
   const handleChange = (event, nextView) => {
     if(nextView) setView(nextView);

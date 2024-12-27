@@ -606,3 +606,21 @@ export const ROOM_TYPE_CHOICES = {
     { value: "OTHER", label: "Autre" },
   ],
 };
+
+export const BENEFICIARY_ADMISSION_STATUS_CHOICES = {
+  DRAFT: "DRAFT",
+  NEW: "NEW",
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+  CANCELED: "CANCELED",
+  ALL: [
+    { value: "DRAFT", label: "Brouillon" },
+    { value: "NEW", label: "Nouveau" },
+    { value: "PENDING", label: "En attente" },
+    { value: "APPROVED", label: "Approuvé" },
+    { value: "REJECTED", label: "Rejeté" },
+    { value: "CANCELED", label: "Annulé" },
+  ],
+};
+

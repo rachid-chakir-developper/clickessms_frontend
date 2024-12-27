@@ -57,11 +57,10 @@ export default function TheAutocomplete({
       onChange={onChange}
       renderOption={(props, option, { selected }) =>
         multiple ? (
-          <li {...props}>
+          <Box {...props}>
             <Checkbox
               icon={icon}
               checkedIcon={checkedIcon}
-              s
               checked={selected}
             />
             <Box
@@ -81,7 +80,7 @@ export default function TheAutocomplete({
                 ? `${option?.name}`
                 : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`}
             </Box>
-          </li>
+          </Box>
         ) : (
           <Box
             component="li"
