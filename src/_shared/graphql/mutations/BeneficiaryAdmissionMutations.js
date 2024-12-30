@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 import { BENEFICIARY_ADMISSION_BASIC_INFOS } from '../fragments/BeneficiaryAdmissionFragment';
-import { PURCHASE_ORDER_BASIC_INFOS } from '../fragments/PurchaseOrderFragment';
+import { BENEFICIARY_BASIC_INFOS } from '../fragments/BeneficiaryFragment';
 
 export const POST_BENEFICIARY_ADMISSION = gql`
   mutation CreateBeneficiaryAdmission($beneficiaryAdmissionData: BeneficiaryAdmissionInput!, $files : [MediaInput]) {
@@ -56,17 +56,17 @@ export const PUT_BENEFICIARY_ADMISSION_FIELDS = gql`
   ${BENEFICIARY_ADMISSION_BASIC_INFOS}
 `;
 
-export const GENERATE_PURCHASE_ORDER_FROM_BENEFICIARY_ADMISSION = gql`
-  mutation GeneratePurchaseOrder($idBeneficiaryAdmission: ID!, $idPurchaseOrder: ID) {
-    generatePurchaseOrder(idBeneficiaryAdmission: $idBeneficiaryAdmission, idPurchaseOrder: $idPurchaseOrder) {
+export const GENERATE_BENEFICIARY_FROM_BENEFICIARY_ADMISSION = gql`
+  mutation GenerateBeneficiary($idBeneficiaryAdmission: ID!) {
+    generateBeneficiary(idBeneficiaryAdmission: $idBeneficiaryAdmission) {
       success
       message
-      purchaseOrder{
-        ...PurchaseOrderBasicInfosFragment
+      beneficiary{
+        ...BeneficiaryBasicInfosFragment
       }
     }
   }
-  ${PURCHASE_ORDER_BASIC_INFOS}
+  ${BENEFICIARY_BASIC_INFOS}
 `;
 
 export const DELETE_BENEFICIARY_ADMISSION = gql`

@@ -157,7 +157,7 @@ function BeneficiaryAdmissionMiniInfos({ beneficiaryAdmission }) {
             <Typography variant="body2" color="textSecondary">
               <b>Status :</b>
             </Typography>
-            <BeneficiaryAdmissionStatusLabelMenu beneficiaryAdmission={beneficiaryAdmission} openChangeReason={openChangeReason}/>
+            <BeneficiaryAdmissionStatusLabelMenu beneficiaryAdmission={beneficiaryAdmission} openChangeReason={openChangeReason} setOpenChangeReason={setOpenChangeReason}/>
             <Tooltip title="Cliquez pour modifier" placement="top-start">
               <Typography variant="body2" color="textSecondary" sx={{ my: 2 }} onClick={()=>setOpenChangeReason(true)}>
                 <b>Motif :</b> {statusReason}

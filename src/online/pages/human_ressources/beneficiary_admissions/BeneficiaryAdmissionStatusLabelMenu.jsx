@@ -9,9 +9,10 @@ import { useSession } from '../../../../_shared/context/SessionProvider';
 import InputSendComment from './beneficiary_admissions-tabs/beneficiary_admission-chat/InputSendComment';
 import { BENEFICIARY_ADMISSION_STATUS_CHOICES } from '../../../../_shared/tools/constants';
 import { Link } from 'react-router-dom';
+import GenerateBeneficiaryButton from './GenerateBeneficiaryButton';
 
 
-export default function BeneficiaryAdmissionStatusLabelMenu({beneficiaryAdmission , openChangeReason}) {
+export default function BeneficiaryAdmissionStatusLabelMenu({beneficiaryAdmission , openChangeReason, setOpenChangeReason}) {
   const { user } = useSession();
   const authorizationSystem = useAuthorizationSystem();
   const canManageActivity = authorizationSystem.requestAuthorization({
@@ -79,10 +80,11 @@ export default function BeneficiaryAdmissionStatusLabelMenu({beneficiaryAdmissio
   const [openDialog, setOpenDialog] = React.useState(false);
   const handleCloseDialog = () => {
     setOpenDialog(false);
+    setOpenChangeReason(false)
   };
 
   React.useEffect(()=>{
-    if(openChangeReason && !openDialog) setOpenDialog(true);
+    if(openChangeReason && !openDialog && canManageActivity) setOpenDialog(true);
   }, [openChangeReason])
 
   return (
@@ -110,6 +112,7 @@ export default function BeneficiaryAdmissionStatusLabelMenu({beneficiaryAdmissio
             </Link>
           </Tooltip>
         }
+        {beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.APPROVED && <GenerateBeneficiaryButton beneficiaryAdmission={beneficiaryAdmission} />}
       </Box>
 
         {/* Modal pour demander le motif */}

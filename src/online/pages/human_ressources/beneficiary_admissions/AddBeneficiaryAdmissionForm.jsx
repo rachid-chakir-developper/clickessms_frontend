@@ -74,7 +74,6 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
   const formik = useFormik({
     initialValues: {
       number: '',
-      number: '',
       firstName: '',
       lastName: '',
       gender: null,
