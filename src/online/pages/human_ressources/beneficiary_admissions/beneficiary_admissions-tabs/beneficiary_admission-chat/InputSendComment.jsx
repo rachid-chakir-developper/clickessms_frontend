@@ -17,49 +17,49 @@ export default function InputSendComment({type, beneficiaryAdmission, onCommentS
             console.warn(err)
         },
     })
-  const [newComment, setNewComment] = useState('');
+    const [newComment, setNewComment] = useState('');
 
-  const handleSendComment = () => {
-    if (newComment.trim() === '') return;
-    createComment({ 
-        variables: {
-            beneficiaryAdmissionId : beneficiaryAdmission?.id,
-            commentData : {text: newComment},
-        } 
-    })
-    setNewComment('');
-  };
+    const handleSendComment = () => {
+        if (newComment.trim() === '') return;
+        createComment({ 
+            variables: {
+                beneficiaryAdmissionId : beneficiaryAdmission?.id,
+                commentData : {text: newComment},
+            } 
+        })
+        setNewComment('');
+    };
 
-  return (
-        <Box style={{ display: 'flex', alignItems: 'center', marginTop: 20 }}>
-            <TextField
-                fullWidth
-                multiline
-                variant="outlined"
-                label="Tapez votre commentaire..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-            />
-            {
-                type !== 'iconButton' ? <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSendComment}
-                    endIcon={<SendIcon />}
-                    style={{ marginLeft: 8 }}
-                >
-                Envoyer
-                </Button> :
-                <Tooltip title="Envoyer">
-                    <IconButton
+    return (
+            <Box style={{ display: 'flex', alignItems: 'center', marginTop: 20 }}>
+                <TextField
+                    fullWidth
+                    multiline
+                    variant="outlined"
+                    label="Tapez votre commentaire..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                />
+                {
+                    type !== 'iconButton' ? <Button
+                        variant="contained"
                         color="primary"
                         onClick={handleSendComment}
+                        endIcon={<SendIcon />}
                         style={{ marginLeft: 8 }}
                     >
-                    <Send />
-                </IconButton>
-            </Tooltip>
-            }
-        </Box>
-  );
+                    Envoyer
+                    </Button> :
+                    <Tooltip title="Envoyer">
+                        <IconButton
+                            color="primary"
+                            onClick={handleSendComment}
+                            style={{ marginLeft: 8 }}
+                        >
+                        <Send />
+                    </IconButton>
+                </Tooltip>
+                }
+            </Box>
+    );
 };

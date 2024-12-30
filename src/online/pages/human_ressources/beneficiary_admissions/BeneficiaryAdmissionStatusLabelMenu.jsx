@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, Tooltip, Typography } from '@mui/material';
-import { Block, Cancel, Done, Drafts, Euro, HourglassEmpty, HourglassFull, HourglassTop, Pending, Print, ReceiptLong, TaskAlt } from '@mui/icons-material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, TextField, Tooltip, Typography } from '@mui/material';
+import { Block, Cancel, Done, Drafts, Euro, HourglassEmpty, HourglassFull, HourglassTop, Pending, Print, ReceiptLong, Send, TaskAlt } from '@mui/icons-material';
 import { useMutation } from '@apollo/client';
 import CustomizedStatusLabelMenu from '../../../../_shared/components/app/menu/CustomizedStatusLabelMenu';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
@@ -11,7 +11,7 @@ import { BENEFICIARY_ADMISSION_STATUS_CHOICES } from '../../../../_shared/tools/
 import { Link } from 'react-router-dom';
 
 
-export default function BeneficiaryAdmissionStatusLabelMenu({beneficiaryAdmission}) {
+export default function BeneficiaryAdmissionStatusLabelMenu({beneficiaryAdmission , openChangeReason}) {
   const { user } = useSession();
   const authorizationSystem = useAuthorizationSystem();
   const canManageActivity = authorizationSystem.requestAuthorization({
@@ -45,7 +45,10 @@ export default function BeneficiaryAdmissionStatusLabelMenu({beneficiaryAdmissio
     const [updateBeneficiaryAdmissionFields, { loading: loadingPut }] = useMutation(PUT_BENEFICIARY_ADMISSION_FIELDS, {
       onCompleted: (data) => {
         console.log(data);
-        if(data.updateBeneficiaryAdmissionFields.success) setOpenDialog(true);
+        if(data.updateBeneficiaryAdmissionFields.success){
+          if(!openDialog) setOpenDialog(true);
+          else handleCloseDialog()
+        }
       },
       update(cache, { data: { updateBeneficiaryAdmissionFields } }) {
         const updatedBeneficiaryAdmission = updateBeneficiaryAdmissionFields.beneficiaryAdmission;
@@ -78,6 +81,10 @@ export default function BeneficiaryAdmissionStatusLabelMenu({beneficiaryAdmissio
     setOpenDialog(false);
   };
 
+  React.useEffect(()=>{
+    if(openChangeReason && !openDialog) setOpenDialog(true);
+  }, [openChangeReason])
+
   return (
     <Box>
       <Box display="flex" alignItems="center">
@@ -105,11 +112,11 @@ export default function BeneficiaryAdmissionStatusLabelMenu({beneficiaryAdmissio
         }
       </Box>
 
-        {/* Modal pour demander le commentaire */}
+        {/* Modal pour demander le motif */}
         <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth={true} maxWidth="md">
-          <DialogTitle>Ajouter un commentaire</DialogTitle>
+          <DialogTitle>Ajouter un motif</DialogTitle>
           <DialogContent>
-            <InputSendComment type="iconButton" beneficiaryAdmission={beneficiaryAdmission} onCommentSent={handleCloseDialog}/>
+            <InputSendStatusReason type="iconButton" beneficiaryAdmission={beneficiaryAdmission} updateBeneficiaryAdmissionFields={updateBeneficiaryAdmissionFields}/>
           </DialogContent>
           <DialogActions>
               <Button color="inherit" onClick={handleCloseDialog}>Annuler</Button>
@@ -118,3 +125,46 @@ export default function BeneficiaryAdmissionStatusLabelMenu({beneficiaryAdmissio
     </Box>
   );
 }
+
+
+function InputSendStatusReason({type, beneficiaryAdmission, updateBeneficiaryAdmissionFields}){
+  const [newStatusReason, setNewStatusReason] = React.useState(beneficiaryAdmission?.statusReason || '');
+  const handleSendStatusReason = () => {
+      if (newStatusReason.trim() === '') return;
+      updateBeneficiaryAdmissionFields({ variables: {id: beneficiaryAdmission?.id, beneficiaryAdmissionData: {statusReason: newStatusReason}} })
+      setNewStatusReason('');
+  };
+
+  return (
+          <Box style={{ display: 'flex', alignItems: 'center', marginTop: 20 }}>
+              <TextField
+                  fullWidth
+                  multiline
+                  variant="outlined"
+                  label="Tapez votre motif..."
+                  value={newStatusReason}
+                  onChange={(e) => setNewStatusReason(e.target.value)}
+              />
+              {
+                  type !== 'iconButton' ? <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleSendStatusReason}
+                      endIcon={<SendIcon />}
+                      style={{ marginLeft: 8 }}
+                  >
+                  Valider
+                  </Button> :
+                  <Tooltip title="Envoyer">
+                      <IconButton
+                          color="primary"
+                          onClick={handleSendStatusReason}
+                          style={{ marginLeft: 8 }}
+                      >
+                      <Send />
+                  </IconButton>
+              </Tooltip>
+              }
+          </Box>
+  );
+};

@@ -35,7 +35,7 @@ import EstablishmentChip from '../../companies/establishments/EstablishmentChip'
 import { render } from 'react-dom';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
-import { getFormatDate, getFormatDateTime, getPriorityLabel } from '../../../../_shared/tools/functions';
+import { getFormatDate, getFormatDateTime, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
 import BeneficiaryAdmissionStatusLabelMenu from './BeneficiaryAdmissionStatusLabelMenu';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 
@@ -189,12 +189,22 @@ const headCells = [
         render: (data)=> <BeneficiaryAdmissionStatusLabelMenu beneficiaryAdmission={data} />
     },
     {
+        id: 'statusReason',
+        property: 'status_reason',
+        exportField: 'status_reason',
+        numeric: false,
+        disablePadding: false,
+        label: 'Motif',
+        render: ({statusReason})=> <Tooltip title={statusReason}>{truncateText(statusReason, 160)}</Tooltip>
+    },
+    {
         id: 'description',
         property: 'description',
         exportField: 'description',
         numeric: false,
         disablePadding: false,
         label: 'Description',
+        render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
     },
     {
         id: 'action',

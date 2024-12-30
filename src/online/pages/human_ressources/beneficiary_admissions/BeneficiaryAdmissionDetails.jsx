@@ -19,17 +19,22 @@ import {
   ListItem,
   ListItemText,
   Alert,
+  Tooltip,
 } from '@mui/material';
 
 import { GET_BENEFICIARY_ADMISSION_RECAP } from '../../../../_shared/graphql/queries/BeneficiaryAdmissionQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import {
   formatCurrencyAmount,
+  getFormatDate,
   getFormatDateTime,
 } from '../../../../_shared/tools/functions';
 import BeneficiaryAdmissionStatusLabelMenu from './BeneficiaryAdmissionStatusLabelMenu';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import { Edit } from '@mui/icons-material';
+import BeneficiaryAdmissionTabs from './beneficiary_admissions-tabs/BeneficiaryAdmissionTabs';
+import FinancierChip from '../../partnerships/financiers/FinancierChip';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -75,29 +80,24 @@ export default function BeneficiaryAdmissionDetails() {
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={3} columnSpacing={{ xs: 2, sm: 3, md: 4 }}>
           {/* Mini Information Section */}
-          <Grid item xs={12} sm={7}>
+          {beneficiaryAdmissionData?.beneficiaryAdmission && <Grid item xs={12} sm={7}>
             <BeneficiaryAdmissionMiniInfos beneficiaryAdmission={beneficiaryAdmissionData?.beneficiaryAdmission} />
-          </Grid>
+          </Grid>}
 
           {/* Other Information Section */}
           <Grid item xs={12} sm={5}>
             <BeneficiaryAdmissionOtherInfos beneficiaryAdmission={beneficiaryAdmissionData?.beneficiaryAdmission} />
           </Grid>
 
-          {/* BeneficiaryAdmission Items Section */}
-          <Grid item xs={12}>
-            <BeneficiaryAdmissionItems beneficiaryAdmission={beneficiaryAdmissionData?.beneficiaryAdmission} />
-          </Grid>
-
-          <Grid item xs={12} sx={{ my: 3 }}>
-            <Divider />
-          </Grid>
+          {beneficiaryAdmissionData?.beneficiaryAdmission && <Grid item xs={12} sm={12}>
+            <BeneficiaryAdmissionInfosPerso beneficiaryAdmission={beneficiaryAdmissionData?.beneficiaryAdmission} />
+          </Grid>}
 
           {/* Description Section */}
           <Grid item xs={12} sm={12}>
             <Paper sx={{ padding: 3, marginBottom: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle2" component="h3">
-                Description de la admission
+                Description de la demande
               </Typography>
               <Typography variant="body1" component="div">
                 {beneficiaryAdmissionData?.beneficiaryAdmission?.description || ''}
@@ -106,11 +106,11 @@ export default function BeneficiaryAdmissionDetails() {
           </Grid>
 
           {/* Comments and Tabs Section */}
-          {/* <Grid item xs={12}>
+          <Grid item xs={12}>
             <Paper sx={{ padding: 3 }}>
               <BeneficiaryAdmissionTabs beneficiaryAdmission={beneficiaryAdmissionData?.beneficiaryAdmission} />
             </Paper>
-          </Grid> */}
+          </Grid>
         </Grid>
       </Box>
     </>
@@ -125,6 +125,14 @@ const Img = styled('img')({
 });
 
 function BeneficiaryAdmissionMiniInfos({ beneficiaryAdmission }) {
+  const {
+    id,
+    number,
+    statusReason,
+    createdAt,
+    updatedAt
+  } = beneficiaryAdmission;
+  const [openChangeReason, setOpenChangeReason] = React.useState(false);
   return (
     <Paper
       variant="outlined"
@@ -135,39 +143,104 @@ function BeneficiaryAdmissionMiniInfos({ beneficiaryAdmission }) {
       }}
     >
       <Grid container spacing={3}>
-        {beneficiaryAdmission?.image && beneficiaryAdmission?.image !== '' && (
-          <Grid item>
-            <ButtonBase sx={{ width: 128, height: 128 }}>
-              <Img alt="image" src={beneficiaryAdmission?.image} />
-            </ButtonBase>
-          </Grid>
-        )}
         <Grid item xs={12} sm container direction="column" spacing={2}>
           <Grid item xs>
-            <Typography variant="h5" gutterBottom>
-              {beneficiaryAdmission?.label}
-            </Typography>
             <Typography variant="subtitle1" color="textSecondary">
-              Référence : <b>{beneficiaryAdmission?.number}</b>
+              Référence : <b>{number}</b>
             </Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems:'center'}}>
-              <Typography variant="subtitle1" color="textSecondary">
-                Montant total : <b>{formatCurrencyAmount(beneficiaryAdmission?.totalAmount)}</b>
-              </Typography>
-              <Alert sx={{marginLeft: 2}} severity={beneficiaryAdmission?.isAmountAccurate ? "success" : "warning"}>{beneficiaryAdmission?.isAmountAccurate ? "Montant précis" : "Montant non précis"}</Alert>
-              <Alert sx={{marginLeft: 2}} severity="info">{beneficiaryAdmission?.isPlannedInBudget ? "Prévu au budget" : "Non prévu au budget"}</Alert>
-            </Box>
             <Divider sx={{ my: 2 }} />
             <Typography variant="body2" color="textSecondary">
-              <b>Créé le :</b> {getFormatDateTime(beneficiaryAdmission?.createdAt)} <br />
-              <b>Dernière modification :</b> {getFormatDateTime(beneficiaryAdmission?.updatedAt)}
+              <b>Créé le :</b> {getFormatDateTime(createdAt)} <br />
+              <b>Dernière modification :</b> {getFormatDateTime(updatedAt)}
             </Typography>
             <Divider sx={{ my: 2 }} />
             <Typography variant="body2" color="textSecondary">
               <b>Status :</b>
             </Typography>
-            <BeneficiaryAdmissionStatusLabelMenu beneficiaryAdmission={beneficiaryAdmission} />
+            <BeneficiaryAdmissionStatusLabelMenu beneficiaryAdmission={beneficiaryAdmission} openChangeReason={openChangeReason}/>
+            <Tooltip title="Cliquez pour modifier" placement="top-start">
+              <Typography variant="body2" color="textSecondary" sx={{ my: 2 }} onClick={()=>setOpenChangeReason(true)}>
+                <b>Motif :</b> {statusReason}
+              </Typography>
+            </Tooltip>
           </Grid>
+        </Grid>
+      </Grid>
+    </Paper>
+  );
+}
+
+function BeneficiaryAdmissionInfosPerso({ beneficiaryAdmission }) {
+  const {
+    id,
+    number,
+    firstName,
+    lastName,
+    preferredName,
+    gender,
+    birthDate,
+    latitude,
+    longitude,
+    city,
+    zipCode,
+    address,
+    additionalAddress,
+    mobile,
+    fix,
+    fax,
+    email,
+    webSite,
+    otherContacts,
+    createdAt,
+    updatedAt
+  } = beneficiaryAdmission;
+
+  return (
+    <Paper
+      variant="outlined"
+      sx={{
+        p: 3,
+        backgroundColor: (theme) =>
+          theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+      }}
+    >
+      <Grid container spacing={3}>
+        <Grid item xs={4}>
+          <Typography variant="body1" color="textSecondary">
+            <b>Informations personnelles :</b>
+          </Typography>
+          <Divider sx={{ my: 2 }} />
+          <Typography variant="body2" color="textSecondary">
+            <b>Prénom :</b> {firstName || '-'} <br />
+            <b>Nom de naissance :</b> {lastName || '-'} <br />
+            <b>Nom d’usage :</b> {preferredName || '-'} <br />
+            <b>Genre :</b> {gender?.name || '-'} <br />
+            <b>Date de naissance :</b> {getFormatDate(birthDate) || '-'}
+          </Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Typography variant="body1" color="textSecondary">
+            <b>Adresse :</b>
+          </Typography>
+          <Divider sx={{ my: 2 }} />
+          <Typography variant="body2" color="textSecondary">
+            {address || '-'}, {additionalAddress || '-'} <br />
+            {city || '-'}, {zipCode || '-'} <br />
+          </Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Typography variant="body1" color="textSecondary">
+            <b>Contacts :</b>
+          </Typography>
+          <Divider sx={{ my: 2 }} />
+          <Typography variant="body2" color="textSecondary">
+            <b>Mobile :</b> {mobile || '-'} <br />
+            <b>Fix :</b> {fix || '-'} <br />
+            <b>Fax :</b> {fax || '-'} <br />
+            <b>Email :</b> {email || '-'} <br />
+            <b>Site Web :</b> {webSite || '-'} <br />
+            <b>Autres Contacts :</b> {otherContacts || '-'}
+          </Typography>
         </Grid>
       </Grid>
     </Paper>
@@ -186,59 +259,36 @@ function BeneficiaryAdmissionOtherInfos({ beneficiaryAdmission }) {
     >
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          {beneficiaryAdmission?.establishment && (
-            <Paper sx={{ padding: 2, marginBottom: 2 }} variant="outlined">
-              <Typography variant="h6" gutterBottom>
-                Structure concernée
-              </Typography>
-              <EstablishmentChip establishment={beneficiaryAdmission.establishment} />
-            </Paper>
-          )}
           {beneficiaryAdmission?.employee && (
-            <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography variant="h6" gutterBottom>
+            <Paper sx={{ padding: 1, display: 'flex' }} variant="outlined">
+              <Typography variant="body1" color="textSecondary" gutterBottom>
                 Demandé par :
               </Typography>
               <EmployeeChip employee={beneficiaryAdmission?.employee} />
             </Paper>
           )}
+          {beneficiaryAdmission?.financier && (
+            <Paper sx={{ padding: 1, marginY:1, display: 'flex' }} variant="outlined">
+              <Typography variant="body1" color="textSecondary" gutterBottom>
+                Financeur :
+              </Typography>
+              <FinancierChip financier={beneficiaryAdmission?.financier} />
+            </Paper>
+          )}
+          {beneficiaryAdmission?.establishments.length > 0 && (
+              <Paper sx={{ padding: 1 }} variant="outlined">
+                <Typography variant="body1" color="textSecondary" gutterBottom>
+                  Les structures concernées
+                </Typography>
+                <Stack direction="row" flexWrap='wrap' spacing={1}>
+                  {beneficiaryAdmission?.establishments?.map((establishment, index) => (
+                    <EstablishmentChip key={index} establishment={establishment} />
+                  ))}
+                </Stack>
+              </Paper>
+          )}
         </Grid>
       </Grid>
-    </Paper>
-  );
-}
-
-function BeneficiaryAdmissionItems({ beneficiaryAdmission }) {
-  return (
-    <Paper
-      variant="outlined"
-      sx={{
-        p: 3,
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-      }}
-    >
-      {beneficiaryAdmission?.beneficiaryAdmissionItems.length > 0 ? (
-        <>
-          <Typography variant="h6" gutterBottom>
-            Détail des admissions
-          </Typography>
-          <List sx={{ width: '100%' }}>
-            {beneficiaryAdmission?.beneficiaryAdmissionItems?.map((beneficiaryAdmissionItem, index) => (
-              <ListItem key={index} sx={{ background: index % 2 === 0 ? '#f9f9f9' : '#fff' }}>
-                <ListItemText
-                  primary={beneficiaryAdmissionItem?.accountingNature?.name}
-                  secondary={`${formatCurrencyAmount(beneficiaryAdmissionItem?.amount)} / Quantité: ${beneficiaryAdmissionItem?.quantity} / ${beneficiaryAdmissionItem?.description}`}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </>
-      ) : (
-        <Typography variant="body2" color="textSecondary">
-          Aucun article de admission ajouté.
-        </Typography>
-      )}
     </Paper>
   );
 }

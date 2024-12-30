@@ -19,6 +19,7 @@ export const BENEFICIARY_ADMISSION_BASIC_INFOS = gql`
     email
     birthDate
     status
+    statusReason
     establishments{
       ...EstablishmentMiniInfosFragment
     }

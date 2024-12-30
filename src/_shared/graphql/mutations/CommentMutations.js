@@ -8,6 +8,7 @@ export const POST_COMMENT = gql`
     $taskId: ID
     $taskActionId: ID
     $expenseId: ID
+    $beneficiaryAdmissionId: ID
     $commentData: CommentInput!
     $image: Upload
   ) {
@@ -17,6 +18,7 @@ export const POST_COMMENT = gql`
       taskId: $taskId
       taskActionId: $taskActionId
       expenseId: $expenseId
+      beneficiaryAdmissionId: $beneficiaryAdmissionId
       commentData: $commentData
       image: $image
     ) {

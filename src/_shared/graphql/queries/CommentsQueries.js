@@ -140,4 +140,26 @@ export const GET_EXPENSE_COMMENTS = gql`
   ${COMMENT_BASIC_INFOS}
 `;
 
+export const GET_BENEFICIARY_ADMISSION_COMMENTS = gql`
+  query GetBeneficiaryAdmissionComments(
+    $beneficiaryAdmissionId: ID
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    beneficiaryAdmissionComments(
+      beneficiaryAdmissionId: $beneficiaryAdmissionId
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
+      totalCount
+      nodes {
+        ...CommentBasicInfosFragment
+      }
+    }
+  }
+  ${COMMENT_BASIC_INFOS}
+`;
+
 // Add more comment-related queries here
