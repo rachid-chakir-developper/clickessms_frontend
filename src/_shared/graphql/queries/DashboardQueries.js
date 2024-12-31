@@ -119,6 +119,7 @@ export const GET_DASHBOARD_ACTIVITY = gql`
       activitySynthesis{
         year
         months
+        monthTotals
         activitySynthesisEstablishments{
           year
           months
@@ -139,6 +140,19 @@ export const GET_DASHBOARD_ACTIVITY = gql`
             totalApproved
             totalRejected
             totalCanceled
+          }
+        }
+      }
+      activityMonth{
+        year
+        month
+        activityMonthEstablishments{
+          year
+          title
+          establishment{
+            id
+            name
+            logo
           }
         }
       }

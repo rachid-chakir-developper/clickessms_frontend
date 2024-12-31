@@ -8,6 +8,7 @@ import { GET_DASHBOARD_ACTIVITY } from '../../../../_shared/graphql/queries/Dash
 import DashboardGraph from './DashboardGraph';
 import DashboardTable from './DashboardTable';
 import SynthesisTable from './SynthesisTable';
+import ActivityTable from './ActivityTable';
 
 export default function Dashboard() {
   const [employeeFilter, setDashboardFilter] = React.useState(null);
@@ -61,6 +62,11 @@ export default function Dashboard() {
                       <ViewList />
                     </ToggleButton>
                   </Tooltip>
+                  <Tooltip title="L'activité" >
+                    <ToggleButton value="activity" aria-label="list">
+                      <ViewList />
+                    </ToggleButton>
+                  </Tooltip>
                 </ToggleButtonGroup>
               </Stack>
             </Grid>
@@ -68,6 +74,7 @@ export default function Dashboard() {
           {view==='graph' && <DashboardGraph activityTracking={dashboardActivityData?.dashboardActivity?.activityTracking}/>}
           {view==='table' && <DashboardTable activityTrackingEstablishments={dashboardActivityData?.dashboardActivity?.activityTrackingEstablishments}/>}
           {view==='synthesis' && <SynthesisTable activitySynthesis={dashboardActivityData?.dashboardActivity?.activitySynthesis}/>}
+          {view==='activity' && <ActivityTable activitySynthesis={dashboardActivityData?.dashboardActivity?.activitySynthesis}/>}
         </>
       )}
     </>
