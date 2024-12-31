@@ -116,6 +116,32 @@ export const GET_DASHBOARD_ACTIVITY = gql`
           gapValuation
         }
       }
+      activitySynthesis{
+        year
+        months
+        activitySynthesisEstablishments{
+          year
+          months
+          title
+          establishment{
+            id
+            name
+            logo
+          }
+          activitySynthesisMonth{
+            countReceived
+            countApproved
+            countRejected
+            countCanceled
+          }
+          activityTotalSynthesisMonth{
+            totalReceived
+            totalApproved
+            totalRejected
+            totalCanceled
+          }
+        }
+      }
     }
   }
 `;
