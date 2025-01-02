@@ -33,7 +33,7 @@ const ActivityTable = ({activityMonth}) => {
   return (
     <Paper sx={{ padding: "20px", marginY: 3 }}>
       <Typography variant="h6" gutterBottom align="center">
-        Capacité CD27
+        {activityMonth?.title}
       </Typography>
       <TableContainer>
         <Table>

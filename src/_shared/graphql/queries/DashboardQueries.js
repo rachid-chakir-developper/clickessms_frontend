@@ -145,6 +145,7 @@ export const GET_DASHBOARD_ACTIVITY = gql`
         }
       }
       activityMonth{
+        title
         year
         month
         activityMonthEstablishments{
