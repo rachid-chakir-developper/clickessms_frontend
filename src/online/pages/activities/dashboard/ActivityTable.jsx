@@ -8,9 +8,12 @@ import {
   TableRow,
   Typography,
   Paper,
+  Alert,
 } from "@mui/material";
+import { getFormatDate } from "../../../../_shared/tools/functions";
+import EstablishmentChip from "../../companies/establishments/EstablishmentChip";
 
-const ActivityTable = () => {
+const ActivityTable = ({activityMonth}) => {
   const data = {
     groups: [
       { name: "Groupe A", capacity: 12, outside: 0, occupied: 10, available: 2, ages: "15-17 ans" },
@@ -26,7 +29,7 @@ const ActivityTable = () => {
       // Ajoutez plus de données ici
     ],
   };
-
+  const activityMonthEstablishments = activityMonth?.activityMonthEstablishments || []
   return (
     <Paper sx={{ padding: "20px", marginY: 3 }}>
       <Typography variant="h6" gutterBottom align="center">
@@ -45,29 +48,29 @@ const ActivityTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.groups.map((group, index) => (
-              <TableRow key={index}>
-                <TableCell>{group.name}</TableCell>
-                <TableCell align="center">{group.capacity}</TableCell>
-                <TableCell align="center">{group.outside}</TableCell>
-                <TableCell align="center">{group.occupied}</TableCell>
+          {activityMonthEstablishments?.map((activityMonthEstablishment, indexE) => (
+              <TableRow key={indexE}>
+                <TableCell>{activityMonthEstablishment?.establishment?.name}</TableCell>
+                <TableCell align="center">{activityMonthEstablishment?.capacity}</TableCell>
+                <TableCell align="center">{activityMonthEstablishment?.countOutsidePlacesDepartment}</TableCell>
+                <TableCell align="center">{activityMonthEstablishment?.countOccupiedPlaces}</TableCell>
                 <TableCell
                   align="center"
                   sx={{
-                    color: group.available < 0 ? "red" : "green",
+                    color: activityMonthEstablishment?.countAvailablePlaces < 0 ? "red" : "green",
                   }}
                 >
-                  {group.available}
+                  {activityMonthEstablishment?.countAvailablePlaces}
                 </TableCell>
-                <TableCell align="center">{group.ages}</TableCell>
+                <TableCell align="center">{activityMonthEstablishment?.agesText}</TableCell>
               </TableRow>
             ))}
             <TableRow sx={{ backgroundColor: "#ffe0b2" }}>
-              <TableCell>Sous-total</TableCell>
-              <TableCell align="center">{data.totals.capacity}</TableCell>
-              <TableCell align="center">{data.totals.outside}</TableCell>
-              <TableCell align="center">{data.totals.occupied}</TableCell>
-              <TableCell align="center">{data.totals.available}</TableCell>
+              <TableCell>Total</TableCell>
+              <TableCell align="center">-</TableCell>
+              <TableCell align="center">-</TableCell>
+              <TableCell align="center">-</TableCell>
+              <TableCell align="center">-</TableCell>
               <TableCell />
             </TableRow>
           </TableBody>
@@ -81,22 +84,58 @@ const ActivityTable = () => {
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#424242", color: "#ffffff" }}>
+              <TableCell sx={{ color: "white" }}>Service</TableCell>
               <TableCell sx={{ color: "white" }}>Nom Prénom</TableCell>
               <TableCell sx={{ color: "white" }}>Date de naissance</TableCell>
               <TableCell sx={{ color: "white" }}>Date d'entrée dans le service</TableCell>
               <TableCell sx={{ color: "white" }}>Date de sortie</TableCell>
+              <TableCell sx={{ color: "white" }}>Date d'échéance</TableCell>
               <TableCell sx={{ color: "white" }}>IEF</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.presentList.map((person, index) => (
-              <TableRow key={index}>
-                <TableCell>{person.name}</TableCell>
-                <TableCell>{person.dob}</TableCell>
-                <TableCell>{person.entryDate}</TableCell>
-                <TableCell>{person.exitDate}</TableCell>
-                <TableCell>{person.counselor}</TableCell>
-              </TableRow>
+            {activityMonthEstablishments?.map((activityMonthEstablishment, indexE) => (
+              <React.Fragment key={indexE}>
+                {/* Ligne pour afficher le nom de l'établissement */}
+                <TableRow style={{ backgroundColor: '#f1f1f1', fontWeight: 'bold' }}>
+                  <TableCell colSpan={7}>
+                    {activityMonthEstablishment?.establishment ? 
+                              <EstablishmentChip establishment={activityMonthEstablishment?.establishment} /> 
+                              : <Typography variant="h6" gutterBottom>{activityMonthEstablishment?.title}</Typography>}
+                  </TableCell>
+                </TableRow>
+                {activityMonthEstablishment?.beneficiaryEntries?.length < 1 && <TableRow>
+                  <TableCell colSpan={7}><Alert severity="warning">Aucune entrée trouvée.</Alert></TableCell>
+                </TableRow>}
+
+                {/* Lignes des bénéficiaires */}
+                {activityMonthEstablishment?.beneficiaryEntries?.map((beneficiaryEntry, indexB) => {
+                  const beneficiary = beneficiaryEntry?.beneficiary;
+                  return (
+                    <TableRow key={indexB}>
+                      <TableCell></TableCell>
+                      <TableCell>
+                        {`${beneficiary?.firstName} ${
+                          beneficiary?.preferredName && beneficiary?.preferredName !== ''
+                            ? beneficiary?.preferredName
+                            : beneficiary?.lastName
+                        }`}
+                      </TableCell>
+                      <TableCell>{getFormatDate(beneficiary?.birthDate)}</TableCell>
+                      <TableCell>{getFormatDate(beneficiaryEntry?.entryDate)}</TableCell>
+                      <TableCell>{getFormatDate(beneficiaryEntry?.releaseDate)}</TableCell>
+                      <TableCell>{getFormatDate(beneficiaryEntry?.dueDate)}</TableCell>
+                      <TableCell></TableCell>
+                    </TableRow>
+                  );
+                })}
+                <TableRow sx={{ backgroundColor: "#fdfdfd", fontWeight: 'bold'  }}>
+                  <TableCell sx={{ fontWeight: 'bold'  }}>TOTAL: {activityMonthEstablishment?.establishment?.name}</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold'  }} colSpan={3}>
+                    Nombre de présent : {activityMonthEstablishment?.countOccupiedPlaces} / Nombre de places libre : {activityMonthEstablishment?.countAvailablePlaces}</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold'  }} colSpan={3}>0 sorties d'ici la fin du mois</TableCell>
+                </TableRow>
+              </React.Fragment>
             ))}
           </TableBody>
         </Table>

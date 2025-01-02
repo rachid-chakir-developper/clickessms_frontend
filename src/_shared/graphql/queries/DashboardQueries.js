@@ -3,6 +3,7 @@ import { TASK_BASIC_INFOS } from '../fragments/TaskFragment';
 import { EMPLOYEE_BASIC_INFOS } from '../fragments/EmployeeFragment';
 import { TASK_ACTION_BASIC_INFOS } from '../fragments/TaskActionFragment';
 import { UNDESIRABLE_EVENT_BASIC_INFOS } from '../fragments/UndesirableEventFragment';
+import { BENEFICIARY_ENTRY_DETAILS, BENEFICIARY_MINI_INFOS } from '../fragments/BeneficiaryFragment';
 
 export const GET_DASHBOARD = gql`
   query {
@@ -154,8 +155,21 @@ export const GET_DASHBOARD_ACTIVITY = gql`
             name
             logo
           }
+          capacity
+          countOutsidePlacesDepartment
+          countOccupiedPlaces
+          countAvailablePlaces
+          agesText
+          beneficiaryEntries{
+            beneficiary{
+              ...BeneficiaryMiniInfosFragment
+            }
+            ...BeneficiaryEntryFragment
+          }
         }
       }
     }
   }
+  ${BENEFICIARY_MINI_INFOS}
+  ${BENEFICIARY_ENTRY_DETAILS}
 `;

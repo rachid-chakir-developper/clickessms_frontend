@@ -74,7 +74,7 @@ export default function Dashboard() {
           {view==='graph' && <DashboardGraph activityTracking={dashboardActivityData?.dashboardActivity?.activityTracking}/>}
           {view==='table' && <DashboardTable activityTrackingEstablishments={dashboardActivityData?.dashboardActivity?.activityTrackingEstablishments}/>}
           {view==='synthesis' && <SynthesisTable activitySynthesis={dashboardActivityData?.dashboardActivity?.activitySynthesis}/>}
-          {view==='activity' && <ActivityTable activitySynthesis={dashboardActivityData?.dashboardActivity?.activitySynthesis}/>}
+          {view==='activity' && <ActivityTable activityMonth={dashboardActivityData?.dashboardActivity?.activityMonth}/>}
         </>
       )}
     </>

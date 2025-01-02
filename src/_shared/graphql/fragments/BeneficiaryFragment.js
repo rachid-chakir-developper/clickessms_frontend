@@ -31,6 +31,7 @@ export const BENEFICIARY_MINI_INFOS = gql`
     preferredName
     firstName
     lastName
+    birthDate
     email
     photo
     coverImage
@@ -71,7 +72,6 @@ export const BENEFICIARY_ENTRY_DETAILS = gql`
 export const BENEFICIARY_BASIC_INFOS = gql`
   fragment BeneficiaryBasicInfosFragment on BeneficiaryType {
     ...BeneficiaryMiniInfosFragment
-    birthDate
     beneficiaryStatusEntries{
       ...BeneficiaryStatusEntryFragment
     }
