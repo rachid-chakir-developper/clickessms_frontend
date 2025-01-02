@@ -42,8 +42,8 @@ export const GET_DASHBOARD = gql`
 
 
 export const GET_DASHBOARD_ACTIVITY = gql`
-  query getDashboardActivity{
-    dashboardActivity{
+  query getDashboardActivity($dashboardActivityFilter: DashboardActivityFilterInput){
+    dashboardActivity(dashboardActivityFilter: $dashboardActivityFilter){
       activityTracking{
         activityTrackingMonth{
           month

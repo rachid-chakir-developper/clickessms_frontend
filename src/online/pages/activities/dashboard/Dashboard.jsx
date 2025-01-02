@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Stack, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { ViewList, ViewQuilt } from '@mui/icons-material';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import DashboardFilter from './DashboardFilter';
@@ -11,20 +11,21 @@ import SynthesisTable from './SynthesisTable';
 import ActivityTable from './ActivityTable';
 
 export default function Dashboard() {
-  const [employeeFilter, setDashboardFilter] = React.useState(null);
+  const [dashboardActivityFilter, setDashboardActivityFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
-    setDashboardFilter(newFilter);
+    newFilter.year = new Date(newFilter.year).getFullYear()
+    setDashboardActivityFilter(newFilter);
   };
-  const {
+  const [getDashboardActivityFilter, {
     loading: loadingDashboardActivity,
     data: dashboardActivityData,
     error: dashboardActivityError,
-  } = useQuery(GET_DASHBOARD_ACTIVITY, { fetchPolicy: 'network-only' });
+  }] = useLazyQuery(GET_DASHBOARD_ACTIVITY, { variables:{dashboardActivityFilter}, fetchPolicy: 'network-only' });
 
   React.useEffect(() => {
-    
-  }, [employeeFilter]);
+    getDashboardActivityFilter()
+  }, [dashboardActivityFilter]);
   const [view, setView] = React.useState('table');
 
   const handleChange = (event, nextView) => {
@@ -32,8 +33,6 @@ export default function Dashboard() {
   };
   return (
     <>
-      {loadingDashboardActivity && <ProgressService type="dashboard" />}
-      {!loadingDashboardActivity && (<>
           <Grid container spacing={0}>
             <Grid item xs={12}>
               <DashboardFilter onFilterChange={handleFilterChange} />
@@ -71,6 +70,9 @@ export default function Dashboard() {
               </Stack>
             </Grid>
           </Grid>
+          
+          {loadingDashboardActivity && <ProgressService type="dashboard" />}
+          {!loadingDashboardActivity && (<>
           {view==='graph' && <DashboardGraph activityTracking={dashboardActivityData?.dashboardActivity?.activityTracking}/>}
           {view==='table' && <DashboardTable activityTrackingEstablishments={dashboardActivityData?.dashboardActivity?.activityTrackingEstablishments}/>}
           {view==='synthesis' && <SynthesisTable activitySynthesis={dashboardActivityData?.dashboardActivity?.activitySynthesis}/>}

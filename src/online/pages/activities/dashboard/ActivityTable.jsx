@@ -14,21 +14,6 @@ import { getFormatDate } from "../../../../_shared/tools/functions";
 import EstablishmentChip from "../../companies/establishments/EstablishmentChip";
 
 const ActivityTable = ({activityMonth}) => {
-  const data = {
-    groups: [
-      { name: "Groupe A", capacity: 12, outside: 0, occupied: 10, available: 2, ages: "15-17 ans" },
-      { name: "Groupe B", capacity: 11, outside: 1, occupied: 11, available: 0, ages: "12-15 ans" },
-      { name: "Groupe C", capacity: 11, outside: 1, occupied: 8, available: 3, ages: "6-12 ans" },
-      { name: "Groupe grands mineurs - Jeunes Majeurs", capacity: 12, outside: 0, occupied: 8, available: 4, ages: "17-20 ans" },
-    ],
-    totals: { capacity: 46, outside: 2, occupied: 37, available: 9 },
-    presentList: [
-      { name: "ANDRE Loeiza", dob: "29/05/2008", entryDate: "19/01/2024", exitDate: "31/01/2025", counselor: "Mme FRERET" },
-      { name: "DEPRUN Rachel", dob: "22/09/2006", entryDate: "01/03/2024", exitDate: "21/09/2025", counselor: "Mme BROSSET" },
-      { name: "FIQUET Abigaelle", dob: "13/06/2007", entryDate: "21/12/2018", exitDate: "13/06/2025", counselor: "Mme NOLTINCX" },
-      // Ajoutez plus de données ici
-    ],
-  };
   const activityMonthEstablishments = activityMonth?.activityMonthEstablishments || []
   return (
     <Paper sx={{ padding: "20px", marginY: 3 }}>
