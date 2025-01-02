@@ -14,7 +14,7 @@ export default function Dashboard() {
   const [dashboardActivityFilter, setDashboardActivityFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
-    newFilter.year = new Date(newFilter.year).getFullYear()
+    if(newFilter) newFilter.year = newFilter.year ? new Date(newFilter.year).getFullYear() : null
     setDashboardActivityFilter(newFilter);
   };
   const [getDashboardActivityFilter, {
