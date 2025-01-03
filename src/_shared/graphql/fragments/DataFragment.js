@@ -8,6 +8,7 @@ export const DATA_BASIC_INFOS = gql`
     id
     number
     code
+    isConsidered
     name
     description
   }

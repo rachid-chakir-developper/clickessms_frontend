@@ -5,11 +5,17 @@ export const POST_DATA = gql`
   mutation createData(
     $name: String!
     $code: String
+    $isConsidered: Boolean
     $description: String
     $typeData: String!
     $parentId: ID
   ) {
-    createData(name: $name, code: $code, description: $description, typeData: $typeData, parentId: $parentId) {
+    createData(name: $name,
+    code: $code,
+    isConsidered: $isConsidered,
+    description: $description,
+    typeData: $typeData,
+    parentId: $parentId) {
       data {
         ...DataBasicInfosFragment
       }
@@ -22,6 +28,7 @@ export const PUT_DATA = gql`
     $id: ID!
     $name: String!
     $code: String
+    $isConsidered: Boolean
     $description: String
     $typeData: String!
   ) {
@@ -29,6 +36,7 @@ export const PUT_DATA = gql`
       id: $id
       name: $name
       code: $code, 
+      isConsidered: $isConsidered,
       description: $description
       typeData: $typeData
     ) {

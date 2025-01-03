@@ -171,6 +171,18 @@ const headCells = [
     </Stack>
     },
     {
+        id: 'isConsidered',
+        property: 'is_considered',
+        exportField: 'is_considered',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Pris en compte',
+        render: ({isConsidered}) => isConsidered ? <AppLabel color="success">Oui</AppLabel> : <AppLabel color="error">Non</AppLabel>
+    },
+    {
         id: 'employee',
         property: 'employee__first_name',
         exportField: ['employee__first_name', 'employee__last_name'],

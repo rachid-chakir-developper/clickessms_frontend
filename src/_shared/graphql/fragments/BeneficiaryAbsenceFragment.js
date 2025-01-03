@@ -29,6 +29,7 @@ export const BENEFICIARY_ABSENCE_BASIC_INFOS = gql`
       description
     }
     otherReasons
+    isConsidered
     beneficiaries {
       ...BeneficiaryAbsenceItemTypeFragment
     }

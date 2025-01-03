@@ -19,6 +19,7 @@ import {
 } from '../../../../_shared/graphql/mutations/DataMutations';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
+import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -45,7 +46,7 @@ export default function DialogAddData({ open, onClose, data, dataToEdit }) {
       .required(`Le nom est obligatoire`),
   });
   const formik = useFormik({
-    initialValues: { nom: '' },
+    initialValues: { nom: '', isConsidered: null },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       handleOk(values);
@@ -122,6 +123,7 @@ export default function DialogAddData({ open, onClose, data, dataToEdit }) {
         variables: {
           id: dataToEdit.id,
           name: dataForm.name,
+          isConsidered: dataForm.isConsidered,
           typeData: data.type,
         },
       });
@@ -129,20 +131,21 @@ export default function DialogAddData({ open, onClose, data, dataToEdit }) {
       createData({
         variables: {
           name: dataForm.name,
+          isConsidered: dataForm.isConsidered,
           typeData: data.type,
         },
       });
   };
   React.useEffect(() => {
     if (open) {
-      formik.setValues({ name: '' });
+      formik.setValues({ name: '', isConsidered: null });
       if (dataToEdit) {
-        formik.setValues({ ...formik.values, name: dataToEdit.name });
+        formik.setValues({ ...formik.values, name: dataToEdit.name, isConsidered: dataToEdit.isConsidered });
       }
     }
   }, [open]);
   return (
-    <div>
+    <>
       <BootstrapDialog
         onClose={onClose}
         aria-labelledby="customized-dialog-title"
@@ -185,6 +188,20 @@ export default function DialogAddData({ open, onClose, data, dataToEdit }) {
                   />
                 </Item>
               </Grid>
+              <Grid item xs={12} sm={12} md={12}>
+                <Item>
+                  <TheSwitch
+                    variant="outlined"
+                    label="Est pris en compte dans le calcul"
+                    checked={formik.values.isConsidered}
+                    value={formik.values.isConsidered}
+                    onChange={(e) =>
+                      formik.setFieldValue('isConsidered', e.target.checked)
+                    }
+                    disabled={loadingPost || loadingPut}
+                  />
+                </Item>
+              </Grid>
             </Grid>
           </DialogContent>
           <DialogActions>
@@ -198,6 +215,6 @@ export default function DialogAddData({ open, onClose, data, dataToEdit }) {
           </DialogActions>
         </form>
       </BootstrapDialog>
-    </div>
+    </>
   );
 }

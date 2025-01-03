@@ -23,6 +23,7 @@ import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutoc
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import SelectCheckmarks from '../../../../_shared/components/form-fields/SelectCheckmarks';
 import { GET_DATAS_BENEFICIARY_ABSENCE } from '../../../../_shared/graphql/queries/DataQueries';
+import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -51,6 +52,7 @@ export default function AddBeneficiaryAbsenceForm({
       employee: null,
       reasons: [],
       otherReasons: '',
+      isConsidered: null,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -291,10 +293,9 @@ const [getEmployees, {
               <Item>
                 <TheAutocomplete
                   options={employeesData?.employees?.nodes}
-onInput={(e) => {
+                          onInput={(e) => {
                           onGetEmployees(e.target.value)
                         }}
-
                   label="Pour quel employé ?"
                   placeholder="Choisissez un employé ?"
                   multiple={false}
@@ -331,8 +332,12 @@ onInput={(e) => {
                   placeholder="Ajouter un motif"
                   limitTags={3}
                   value={formik.values.reasons}
-                  onChange={(e, newValue) =>
+                  onChange={(e, newValue) =>{
                     formik.setFieldValue('reasons', newValue)
+                    const r = newValue?.filter((r)=>r.isConsidered)
+                    if(r.length > 0) formik.setFieldValue('isConsidered', true)
+                    else formik.setFieldValue('isConsidered', false)
+                  }
                   }
                 />
               </Item>
@@ -345,6 +350,18 @@ onInput={(e) => {
                     formik.setFieldValue('otherReasons', e.target.value)
                   }
                   helperText="Si vous ne trouvez pas le motif dans la liste dessus."
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="Est pris en compte dans le calcul"
+                  checked={formik.values.isConsidered}
+                  value={formik.values.isConsidered}
+                  onChange={(e) =>
+                    formik.setFieldValue('isConsidered', e.target.checked)
+                  }
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
