@@ -4,6 +4,7 @@ import { EMPLOYEE_BASIC_INFOS } from '../fragments/EmployeeFragment';
 import { TASK_ACTION_BASIC_INFOS } from '../fragments/TaskActionFragment';
 import { UNDESIRABLE_EVENT_BASIC_INFOS } from '../fragments/UndesirableEventFragment';
 import { BENEFICIARY_ENTRY_DETAILS, BENEFICIARY_MINI_INFOS } from '../fragments/BeneficiaryFragment';
+import { BENEFICIARY_ADMISSION_MINI_INFOS } from '../fragments/BeneficiaryAdmissionFragment';
 
 export const GET_DASHBOARD = gql`
   query {
@@ -135,6 +136,18 @@ export const GET_DASHBOARD_ACTIVITY = gql`
             countApproved
             countRejected
             countCanceled
+            beneficiaryEntries{
+              beneficiary{
+                ...BeneficiaryMiniInfosFragment
+              }
+              ...BeneficiaryEntryFragment
+            }
+            beneficiaryAdmissions{
+              beneficiary{
+                ...BeneficiaryMiniInfosFragment
+              }
+              ...BeneficiaryAdmissionMiniInfosFragment
+            }
           }
           activityTotalSynthesisMonth{
             totalReceived
@@ -173,4 +186,5 @@ export const GET_DASHBOARD_ACTIVITY = gql`
   }
   ${BENEFICIARY_MINI_INFOS}
   ${BENEFICIARY_ENTRY_DETAILS}
+  ${BENEFICIARY_ADMISSION_MINI_INFOS}
 `;

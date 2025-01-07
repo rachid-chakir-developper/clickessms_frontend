@@ -42,7 +42,7 @@ export const POST_FILE = gql`
   ${FILE_MINI_INFOS}
 `;
 export const PUT_FILE = gql`
-  mutation updateFile($id: ID!, $fileUpload: Upload!, $fileData: FileInput!) {
+  mutation updateFile($id: ID!, $fileUpload: Upload, $fileData: FileInput!) {
     updateFile(id: $id, fileUpload: $fileUpload, fileData: $fileData) {
       file {
         ...FileMiniInfosFragment

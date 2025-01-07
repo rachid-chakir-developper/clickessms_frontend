@@ -9,6 +9,7 @@ import DashboardGraph from './DashboardGraph';
 import DashboardTable from './DashboardTable';
 import SynthesisTable from './SynthesisTable';
 import ActivityTable from './ActivityTable';
+import SynthesisEstablishmentsTable from './SynthesisEstablishmentsTable';
 
 export default function Dashboard() {
   const [dashboardActivityFilter, setDashboardActivityFilter] = React.useState(null);
@@ -62,6 +63,11 @@ export default function Dashboard() {
                       <ViewList />
                     </ToggleButton>
                   </Tooltip>
+                  <Tooltip title="La synthese des structures" >
+                    <ToggleButton value="synthesisEstablishment" aria-label="list">
+                      <ViewList />
+                    </ToggleButton>
+                  </Tooltip>
                   <Tooltip title="L'activité" >
                     <ToggleButton value="activity" aria-label="list">
                       <ViewList />
@@ -77,6 +83,7 @@ export default function Dashboard() {
           {view==='graph' && <DashboardGraph activityTrackingEstablishments={dashboardActivityData?.dashboardActivity?.activityTrackingEstablishments}/>}
           {view==='table' && <DashboardTable activityTrackingEstablishments={dashboardActivityData?.dashboardActivity?.activityTrackingEstablishments}/>}
           {view==='synthesis' && <SynthesisTable activitySynthesis={dashboardActivityData?.dashboardActivity?.activitySynthesis}/>}
+          {view==='synthesisEstablishment' && <SynthesisEstablishmentsTable activitySynthesis={dashboardActivityData?.dashboardActivity?.activitySynthesis}/>}
           {view==='activity' && <ActivityTable activityMonth={dashboardActivityData?.dashboardActivity?.activityMonth}/>}
         </>
       )}

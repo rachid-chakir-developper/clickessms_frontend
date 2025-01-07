@@ -5,8 +5,8 @@ import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 import { EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
 import { FINANCIER_BASIC_INFOS } from './FinancierFragment';
 
-export const BENEFICIARY_ADMISSION_BASIC_INFOS = gql`
-  fragment BeneficiaryAdmissionBasicInfosFragment on BeneficiaryAdmissionType {
+export const BENEFICIARY_ADMISSION_MINI_INFOS = gql`
+  fragment BeneficiaryAdmissionMiniInfosFragment on BeneficiaryAdmissionType {
     id
     number
     gender{
@@ -20,14 +20,21 @@ export const BENEFICIARY_ADMISSION_BASIC_INFOS = gql`
     birthDate
     status
     statusReason
+    financier{
+      ...FinancierBasicInfosFragment
+    }
+  }
+  ${FINANCIER_BASIC_INFOS}
+`;
+
+export const BENEFICIARY_ADMISSION_BASIC_INFOS = gql`
+  fragment BeneficiaryAdmissionBasicInfosFragment on BeneficiaryAdmissionType {
+    ...BeneficiaryAdmissionMiniInfosFragment
     establishments{
       ...EstablishmentMiniInfosFragment
     }
     employee {
       ...EmployeeBasicInfosFragment
-    }
-    financier{
-      ...FinancierBasicInfosFragment
     }
     folder {
       id
@@ -35,9 +42,9 @@ export const BENEFICIARY_ADMISSION_BASIC_INFOS = gql`
       name
     }
   }
+  ${BENEFICIARY_ADMISSION_MINI_INFOS}
   ${ESTABLISHMENT_MINI_INFOS}
   ${EMPLOYEE_BASIC_INFOS}
-    ${FINANCIER_BASIC_INFOS}
 `;
 
 
