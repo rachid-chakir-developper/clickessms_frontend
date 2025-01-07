@@ -15,6 +15,7 @@ export default function Dashboard() {
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
     if(newFilter) newFilter.year = newFilter.year ? new Date(newFilter.year).getFullYear() : null
+    if(newFilter) newFilter.month = newFilter.month ? new Date(newFilter.month).getMonth()+1 : null
     setDashboardActivityFilter(newFilter);
   };
   const [getDashboardActivityFilter, {
@@ -35,7 +36,7 @@ export default function Dashboard() {
     <>
           <Grid container spacing={0}>
             <Grid item xs={12}>
-              <DashboardFilter onFilterChange={handleFilterChange} />
+              <DashboardFilter onFilterChange={handleFilterChange} isDisplayMonth={view==="activity"}/>
             </Grid>
             <Grid item xs={12}>
               <Stack justifyContent="flex-end">
@@ -73,7 +74,7 @@ export default function Dashboard() {
           
           {loadingDashboardActivity && <ProgressService type="dashboard" />}
           {!loadingDashboardActivity && (<>
-          {view==='graph' && <DashboardGraph activityTracking={dashboardActivityData?.dashboardActivity?.activityTracking}/>}
+          {view==='graph' && <DashboardGraph activityTrackingEstablishments={dashboardActivityData?.dashboardActivity?.activityTrackingEstablishments}/>}
           {view==='table' && <DashboardTable activityTrackingEstablishments={dashboardActivityData?.dashboardActivity?.activityTrackingEstablishments}/>}
           {view==='synthesis' && <SynthesisTable activitySynthesis={dashboardActivityData?.dashboardActivity?.activitySynthesis}/>}
           {view==='activity' && <ActivityTable activityMonth={dashboardActivityData?.dashboardActivity?.activityMonth}/>}

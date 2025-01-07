@@ -29,9 +29,10 @@ const Item = styled(Stack)(({ theme }) => ({
     color: theme.palette.text.secondary,
   }));
 
-const DashboardFilter = ({ onFilterChange }) => {
+const DashboardFilter = ({ onFilterChange, isDisplayMonth=false }) => {
   const [filterValues, setFilterValues] = useState({
     year: null,
+    month: null,
     establishments: null,
   });
 
@@ -46,7 +47,7 @@ const DashboardFilter = ({ onFilterChange }) => {
   const handleFilterClear = () => {
     // Pass the filter values to the parent component for handling the filtering logic
     const filterValuesInit = { 
-                            year: null, keyword: '', 
+                            year: null, month: null, keyword: '', 
                             establishments: null
                           }
     setFilterSelectedEstablishments([])
@@ -67,23 +68,40 @@ const DashboardFilter = ({ onFilterChange }) => {
   return (
     <Grid container spacing={2}>
         <Grid item xs={12} sm={2} md={2}>
-            <Item>
-                <TheDesktopDatePicker
-                    label="Année"
-                    type="date"
-                    name="year"
-                    openTo="year"
-                    views={['year']}
-                    format="YYYY"
-                    value={filterValues.year}
-                    onChange={(e) => {
-                      setFilterValues({ ...filterValues, year: e })
-                      onFilterChange({ ...filterValues, year: e })
-                    }}
-                />
-            </Item>
+          <Item>
+              <TheDesktopDatePicker
+                  label="Année"
+                  type="date"
+                  name="year"
+                  openTo="year"
+                  views={['year']}
+                  format="YYYY"
+                  value={filterValues.year}
+                  onChange={(e) => {
+                    setFilterValues({ ...filterValues, year: e })
+                    onFilterChange({ ...filterValues, year: e })
+                  }}
+              />
+          </Item>
         </Grid>
-        <Grid item xs={12} sm={10} md={10}>
+        {isDisplayMonth && <Grid item xs={12} sm={2} md={2}>
+          <Item>
+              <TheDesktopDatePicker
+                  label="Mois"
+                  type="date"
+                  name="month"
+                  openTo="month"
+                  views={['month']}
+                  format="MMMM"
+                  value={filterValues.month}
+                  onChange={(e) => {
+                    setFilterValues({ ...filterValues, month: e })
+                    onFilterChange({ ...filterValues, month: e })
+                  }}
+              />
+          </Item>
+        </Grid>}
+        <Grid item xs={12} sm={isDisplayMonth ? 8 : 10} md={isDisplayMonth ? 8 : 10}>
           <Item sx={{position: 'relative'}}>
             <TheAutocomplete
               options={establishmentsData?.establishments?.nodes}
