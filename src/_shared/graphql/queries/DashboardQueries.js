@@ -138,6 +138,8 @@ export const GET_DASHBOARD_ACTIVITY = gql`
             countApproved
             countRejected
             countCanceled
+            countOccupiedPlaces
+            countAvailablePlaces
             beneficiaryEntries{
               beneficiary{
                 ...BeneficiaryMiniInfosFragment

@@ -86,8 +86,12 @@ const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) =>
                                 </TableRow>)
                             }
                             )}
-                            <TableRow>
-                            </TableRow>
+                            {activitySynthesisMonthItem?.countAvailablePlaces > 0 && <TableRow>
+                                <TableCell style={{ color: "red"}}>
+                                    {activitySynthesisMonthItem?.countAvailablePlaces}{" "}
+                                    {activitySynthesisMonthItem?.countAvailablePlaces === 1 ? "place disponible" : "places disponibles"}
+                                </TableCell>
+                            </TableRow>}
                         </TableBody>
                         </Table>
                     </TableContainer>
