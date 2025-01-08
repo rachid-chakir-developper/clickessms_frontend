@@ -11,7 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
-import { Alert, Avatar, Box, ListItemIcon } from '@mui/material';
+import { Alert, Avatar, Box, ListItemIcon, Tooltip } from '@mui/material';
 import {
   Add,
   ArrowBackIos,
@@ -30,6 +30,7 @@ import {
   DELETE_FOLDER,
 } from '../../../../_shared/graphql/mutations/MediaMutations';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { truncateText } from '../../../../_shared/tools/functions';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -334,10 +335,12 @@ export default function DialogListLibrary({
                   <ListItemIcon>
                     <Folder />
                   </ListItemIcon>
-                  <ListItemText
-                    primary={folderItem?.name}
-                    secondary={folderItem?.description}
-                  />
+                  <Tooltip title={folderItem?.description} placement="bottom-start">
+                    <ListItemText
+                      primary={folderItem?.name}
+                      secondary={truncateText(folderItem?.description, 160)}
+                    />
+                  </Tooltip>
                 </ListItem>
                 <Divider />
               </div>
@@ -395,10 +398,12 @@ export default function DialogListLibrary({
                     )}
                     {file?.fileType === 'VIDEO' && <PlayCircleOutline />}
                   </ListItemIcon>
-                  <ListItemText
-                    primary={file?.name}
-                    secondary={file?.description}
-                  />
+                  <Tooltip title={file?.description} placement="bottom-start">
+                    <ListItemText
+                      primary={file?.name}
+                      secondary={truncateText(file?.description, 180)}
+                    />
+                  </Tooltip>
                 </ListItem>
                 <Divider />
               </div>

@@ -29,6 +29,7 @@ import TheDesktopDatePicker from '../../../../../_shared/components/form-fields/
 import CustomFieldValue from '../../../../../_shared/components/form-fields/costum-fields/CustomFieldValue';
 import DialogAddData from '../../../settings/data_management/DialogAddData';
 import { Add, Close } from '@mui/icons-material';
+import CustomFieldValues from '../../../../../_shared/components/form-fields/costum-fields/CustomFieldValues';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -42,6 +43,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
+  const [triggerSave, setTriggerSave] = React.useState(false);
   const validationSchema = yup.object({});
   const formik = useFormik({
     initialValues: {
@@ -64,12 +66,15 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
       missions :[],
       establishments :[],
       replacedEmployees: [],
-      customFieldValues: []
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
+      if (activeStep === 2) {
+          setTriggerSave(true);
+          setTimeout(() => setTriggerSave(false), 100);
+          return
+      }
       let { document,  ...employeeContractCopy } = values;
-      employeeContractCopy.customFieldValues = null
       employeeContractCopy.employee = employeeContractCopy.employee ? employeeContractCopy.employee.id : null;
       employeeContractCopy.establishments = employeeContractCopy.establishments.map((i) => i?.id);
       employeeContractCopy.missions = employeeContractCopy.missions.map((i) => i?.id);
@@ -213,7 +218,7 @@ const [getEmployees, {
   const [getEmployeeContract, { loading: loadingEmployeeContract }] = useLazyQuery(GET_EMPLOYEE_CONTRACT, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, folder, leaveDayInfos, ...employeeContractCopy } = data.employeeContract;
+      let { __typename, folder, leaveDayInfos, customFieldValues, ...employeeContractCopy } = data.employeeContract;
       employeeContractCopy.startingDate = employeeContractCopy.startingDate ? dayjs(employeeContractCopy.startingDate) : null;
       employeeContractCopy.endingDate = employeeContractCopy.endingDate ? dayjs(employeeContractCopy.endingDate) : null;
       employeeContractCopy.establishments =
@@ -277,7 +282,7 @@ const [getEmployees, {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if(activeStep >= 3) navigate('/online/parc-automobile/vehicules/liste');
+    if(activeStep >= 2) navigate('/online/ressources-humaines/contrats/liste');
     else if (formik.values.id)
       setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });
@@ -522,18 +527,6 @@ const [getEmployees, {
                       />
                     </Item>
                   </Grid>
-                  <Grid item xs={12} sm={12} md={12}>
-                    <Item>
-                      {/* <CustomFieldValue
-                          formModel="EmployeeContract"
-                          initialValues={formik.values.customFieldValues}
-                          onChange={(newValues)=>{
-                            formik.setFieldValue(`customFieldValues`, newValues)
-                          }}
-                          disabled={loadingPost || loadingPut}
-                        /> */}
-                    </Item>
-                  </Grid>
                 </Grid>
               </StepContent>
             </Step>
@@ -656,6 +649,33 @@ const [getEmployees, {
                               Ajouter un employé à remplacer
                           </Button>
                       </Box>
+                  </Grid>
+                </Grid>
+              </StepContent>
+            </Step>
+            <Step>
+              <StepLabel
+                onClick={() => onGoToStep(2)}
+                optional={
+                  <Typography variant="caption">Autres informations</Typography>
+                }
+              >
+                Autres informations
+              </StepLabel>
+              <StepContent>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  <Grid item xs={12} sm={12} md={12} >
+                    <CustomFieldValues 
+                      formModel="EmployeeContract"
+                      idObject={formik.values.id}
+                      disabled={loadingPost || loadingPut}
+                      triggerSave={triggerSave}
+                      onSaved={(data, err)=> {if(data) handleNext()}}
+                    />
                   </Grid>
                 </Grid>
               </StepContent>

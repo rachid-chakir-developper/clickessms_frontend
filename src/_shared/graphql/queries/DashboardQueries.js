@@ -132,6 +132,8 @@ export const GET_DASHBOARD_ACTIVITY = gql`
             logo
           }
           activitySynthesisMonth{
+            year
+            month
             countReceived
             countApproved
             countRejected

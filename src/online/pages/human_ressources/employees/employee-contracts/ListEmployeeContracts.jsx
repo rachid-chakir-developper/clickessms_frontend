@@ -27,7 +27,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListEmployeeContracts() {
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [employeeContractFilter, setEmployeeContractFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
@@ -222,6 +222,8 @@ export default function ListEmployeeContracts() {
           rows={employeeContractsData?.employeeContracts?.nodes || []}
           onDeleteEmployeeContract={onDeleteEmployeeContract}
           onUpdateEmployeeContractState={onUpdateEmployeeContractState}
+          onFilterChange={(newFilter) => handleFilterChange({ ...employeeContractFilter, ...newFilter })}
+          paginator={paginator}
         />
       </Grid>
       <Grid item xs={12}>

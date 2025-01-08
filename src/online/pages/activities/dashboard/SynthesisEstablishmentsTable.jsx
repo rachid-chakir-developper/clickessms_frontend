@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -10,10 +10,16 @@ import {
   Typography,
   Grid,
   Box,
+  ToggleButtonGroup,
+  ToggleButton,
+  Tab,
 } from "@mui/material";
 import EstablishmentChip from "../../companies/establishments/EstablishmentChip";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { BENEFICIARY_ADMISSION_STATUS_CHOICES } from "../../../../_shared/tools/constants";
 
-const SynthesisEstablishmentsTableItem = ({activitySynthesisEstablishment}) => {
+const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) => {
+    const {activitySynthesisMonth=[]} = activitySynthesisEstablishment
   const dataEffectif = [
     { nom: "ARANDA Nolan", admission: false },
     { nom: "BELLOUR Emma", admission: false },
@@ -42,93 +48,133 @@ const SynthesisEstablishmentsTableItem = ({activitySynthesisEstablishment}) => {
     },
   ];
 
-  return (
-    <Box sx={{ padding: 2 }}>
-        <Typography variant="subtitle2" gutterBottom>Année : {activitySynthesisEstablishment?.year}</Typography>
-        {activitySynthesisEstablishment?.establishment ? 
-        <EstablishmentChip establishment={activitySynthesisEstablishment?.establishment} /> 
-        : <Typography variant="h6" gutterBottom>{activitySynthesisEstablishment?.title}</Typography>}
-        <Grid container spacing={2} sx={{marginY: 1}}>
-            {/* Tableau 1 : Effectif */}
-            <Grid item xs={3}>
-            <TableContainer component={Paper}>
-                <Typography
-                variant="subtitle1"
-                align="center"
-                sx={{ fontWeight: "bold", py: 1 }}
-                >
-                Effectif au 31/01/2024
-                </Typography>
-                <Table>
-                <TableBody>
-                    {dataEffectif.map((row, index) => (
-                    <TableRow key={index}>
-                        <TableCell style={{ color: row.admission ? "green" : "red" }}>
-                        {row.nom}
-                        </TableCell>
-                    </TableRow>
-                    ))}
-                    <TableRow>
-                    <TableCell style={{ color: "red" }}>4 places</TableCell>
-                    </TableRow>
-                </TableBody>
-                </Table>
-            </TableContainer>
-            </Grid>
+    return (
+        <Box>
+        <Typography variant="subtitle2" gutterBottom>
+            Année : {activitySynthesisEstablishment?.year}
+        </Typography>
+        {activitySynthesisEstablishment?.establishment ? (
+            <EstablishmentChip establishment={activitySynthesisEstablishment?.establishment} />
+        ) : (
+            <Typography variant="h6" gutterBottom>
+            {activitySynthesisEstablishment?.title}
+            </Typography>
+        )}
+        {activitySynthesisMonth.map((activitySynthesisMonthItem, indexM) => ( 
+            <Grid container spacing={2} sx={{ padding:1, marginY: 1, backgroundColor: indexM % 2 === 0 ? "#f7f7f7" : "#e0e0e0" }} key={indexM} >
+                {/* Tableau 1 : Effectif */}
+                <Grid item xs={3}>
+                    <TableContainer component={Paper}>
+                        <Typography
+                            variant="subtitle1"
+                            sx={{ fontWeight: "bold", p: 1 }}
+                        >
+                        Effectif:  {activitySynthesisMonthItem?.month} {activitySynthesisMonthItem?.year}
+                        </Typography>
+                        <Table>
+                        <TableBody>
+                            {activitySynthesisMonthItem?.beneficiaryEntries?.map((beneficiaryEntry, index) => {
+                                const beneficiary = beneficiaryEntry?.beneficiary;
+                                 return (<TableRow key={index}>
+                                    <TableCell>
+                                        {`${beneficiary?.firstName} ${
+                                            beneficiary?.preferredName && beneficiary?.preferredName !== ''
+                                                ? beneficiary?.preferredName
+                                                : beneficiary?.lastName
+                                        }`}
+                                    </TableCell>
+                                </TableRow>)
+                            }
+                            )}
+                            <TableRow>
+                            </TableRow>
+                        </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Grid>
 
-            {/* Tableau 2 : Demandes */}
-            <Grid item xs={9}>
-            <TableContainer component={Paper}>
-                <Typography
-                variant="subtitle1"
-                align="center"
-                sx={{ fontWeight: "bold", py: 1 }}
-                >
-                Demandes d'admission
-                </Typography>
-                <Table>
-                <TableHead>
-                    <TableRow>
-                    <TableCell>Date de demande</TableCell>
-                    <TableCell>Nom - Prénom</TableCell>
-                    <TableCell>Admission le</TableCell>
-                    <TableCell>Refus le</TableCell>
-                    <TableCell>Motif</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {dataDemandes.map((demande, index) => (
-                    <TableRow key={index}>
-                        <TableCell>{demande.dateDemande}</TableCell>
-                        <TableCell>{demande.nom}</TableCell>
-                        <TableCell style={{ color: demande.admission ? "green" : "" }}>
-                        {demande.admission || ""}
-                        </TableCell>
-                        <TableCell style={{ color: demande.refus ? "red" : "" }}>
-                        {demande.refus || ""}
-                        </TableCell>
-                        <TableCell>{demande.motif || ""}</TableCell>
-                    </TableRow>
-                    ))}
-                </TableBody>
-                </Table>
-            </TableContainer>
+                {/* Tableau 2 : Demandes */}
+                <Grid item xs={9}>
+                <TableContainer component={Paper}>
+                    <Typography
+                    variant="subtitle1"
+                    align="center"
+                    sx={{ fontWeight: "bold", py: 1 }}
+                    >
+                    Demandes d'admission
+                    </Typography>
+                    <Table>
+                    <TableHead>
+                        <TableRow>
+                        <TableCell>Date de demande</TableCell>
+                        <TableCell>Nom - Prénom</TableCell>
+                        <TableCell>Admission le</TableCell>
+                        <TableCell>Refus le</TableCell>
+                        <TableCell>Motif</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {activitySynthesisMonthItem?.beneficiaryAdmissions?.map((beneficiaryAdmission, index) => {
+                            const beneficiary = beneficiaryEntry?.beneficiary ? beneficiaryAdmission?.beneficiary : beneficiaryAdmission;
+                            return (<TableRow key={index}>
+                                <TableCell>beneficiaryAdmission</TableCell>
+                                <TableCell>
+                                    {`${beneficiary?.firstName} ${
+                                        beneficiary?.preferredName && beneficiary?.preferredName !== ''
+                                            ? beneficiary?.preferredName
+                                            : beneficiary?.lastName
+                                    }`}</TableCell>
+                                <TableCell style={{ color: beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.APPROVED ? "green" : "" }}>
+                                {'demande.dateadmission' || ""}
+                                </TableCell>
+                                <TableCell style={{ color: beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.REJECTED ? "red" : "" }}>
+                                {'demande.daterefus' || ""}
+                                </TableCell>
+                                <TableCell>{beneficiaryAdmission.statusReason || ""}</TableCell>
+                            </TableRow>)
+                            }
+                        )}
+                    </TableBody>
+                    </Table>
+                </TableContainer>
+                </Grid>
             </Grid>
-        </Grid>
-    </Box>
-  );
+        ))}
+        </Box>
+    );
 };
 
-
 const SynthesisEstablishmentsTable = ({ activitySynthesis }) => {
-    const {activitySynthesisEstablishments=[]} = activitySynthesis
-    return (
+  const { activitySynthesisEstablishments = [] } = activitySynthesis;
+
+  // État pour gérer l'onglet actif
+  const [selectedEstablishment, setSelectedEstablishment] = useState(
+    activitySynthesisEstablishments[0]?.id || 0
+  );
+
+  const handleChange = (event, newValue) => {
+    setSelectedEstablishment(newValue);
+  };
+
+  return (
         <Box sx={{ flexGrow: 1, marginTop: 2 }}>
-            {activitySynthesisEstablishments?.map((activitySynthesisEstablishment, index) => (
-                <Box key={index} sx={{backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#e0e0e0"}}>
-                    <SynthesisEstablishmentsTableItem activitySynthesisEstablishment={activitySynthesisEstablishment} />
+            <TabContext value={selectedEstablishment}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <TabList onChange={handleChange} aria-label="lab API tabs example" 
+                        variant="scrollable"
+                        scrollButtons="auto">
+                        {activitySynthesisEstablishments.map((establishment, index) => (
+                            <Tab label={establishment.establishment?.name || `Établissement ${index + 1}`} key={index} value={index} />
+                        ))}
+                    </TabList>
                 </Box>
-            ))}
+                {/* Contenu de l'établissement sélectionné */}
+                {activitySynthesisEstablishments.map((activitySynthesisEstablishment, index) => (
+                    <TabPanel key={index} value={index}>
+                        <SynthesisEstablishmentsTableItem activitySynthesisEstablishment={activitySynthesisEstablishment} />
+                    </TabPanel>
+                ))}
+            </TabContext>
         </Box>
     );
 };

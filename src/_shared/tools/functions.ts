@@ -18,6 +18,7 @@ import {
   LEAVE_TYPE_CHOICES,
   CALL_TYPES,
   LETTER_TYPES,
+  CONTRACT_TYPES,
   MSG_NOTIF_TYPES,
   FEEDBACK_MODULES,
   CSE_ROLE_CHOICES,
@@ -158,6 +159,10 @@ export const getCallTypeLabel = (type) => {
 export const getLetterTypeLabel = (type) => {
   return LETTER_TYPES.ALL.find((t) => t.value == type)?.label;
 };
+export const getContractTypeLabel = (type) => {
+  return CONTRACT_TYPES.ALL.find((t) => t.value === type)?.label;
+};
+
 export const getMessageNotificationTypeLabel = (type) => {
   return MSG_NOTIF_TYPES.ALL.find((t) => t.value == type)?.label;
 };
