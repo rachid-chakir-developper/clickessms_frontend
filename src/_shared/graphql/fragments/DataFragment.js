@@ -34,33 +34,6 @@ export const ACCOUNTING_NATURE_MINI_INFOS = gql`
 export const ACCOUNTING_NATURE_BASIC_INFOS = gql`
   fragment AccountingNatureBasicInfosFragment on AccountingNatureType {
     ...AccountingNatureMiniInfosFragment
-    children{
-      ...AccountingNatureMiniInfosFragment
-      children{
-        ...AccountingNatureMiniInfosFragment
-        children{
-          ...AccountingNatureMiniInfosFragment
-          children{
-            ...AccountingNatureMiniInfosFragment
-            children{
-              ...AccountingNatureMiniInfosFragment
-              children{
-                ...AccountingNatureMiniInfosFragment
-                children{
-                  ...AccountingNatureMiniInfosFragment
-                  children{
-                    ...AccountingNatureMiniInfosFragment
-                    children{
-                      ...AccountingNatureMiniInfosFragment
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
   }
   ${ACCOUNTING_NATURE_MINI_INFOS}
 `;

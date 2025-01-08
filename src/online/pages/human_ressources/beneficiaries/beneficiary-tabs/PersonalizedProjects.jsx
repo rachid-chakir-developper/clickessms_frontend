@@ -132,7 +132,7 @@ export default function PersonalizedProjects({beneficiary}) {
         <PaginationControlled
           totalItems={personalizedProjectsData?.personalizedProjects?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
-          currentPage={1}
+          currentPage={paginator.page}
           onChange={(page) => setPaginator({ ...paginator, page })}
         />
       </Grid>

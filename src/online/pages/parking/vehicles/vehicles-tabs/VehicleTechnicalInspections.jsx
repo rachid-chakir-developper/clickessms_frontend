@@ -132,7 +132,7 @@ export default function VehicleTechnicalInspections({vehicle}) {
         <PaginationControlled
           totalItems={vehicleTechnicalInspectionsData?.vehicleTechnicalInspections?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
-          currentPage={1}
+          currentPage={paginator.page}
           onChange={(page) => setPaginator({ ...paginator, page })}
         />
       </Grid>

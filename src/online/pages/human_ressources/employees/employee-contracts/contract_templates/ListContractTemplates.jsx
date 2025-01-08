@@ -38,6 +38,7 @@ export default function ListContractTemplates() {
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
     setContractTemplateFilter(newFilter);
+    setPaginator({ ...paginator, page: 1 });
   };
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
@@ -55,7 +56,7 @@ export default function ListContractTemplates() {
 
   React.useEffect(() => {
     getContractTemplates();
-  }, [contractTemplateFilter, paginator]);
+  }, [paginator]);
   const [deleteContractTemplate, { loading: loadingDelete }] = useMutation(
     DELETE_CONTRACT_TEMPLATE,
     {
@@ -225,7 +226,7 @@ export default function ListContractTemplates() {
         <PaginationControlled
           totalItems={contractTemplatesData?.contractTemplates?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
-          currentPage={1}
+          currentPage={paginator.page}
           onChange={(page) => setPaginator({ ...paginator, page })}
         />
       </Grid>

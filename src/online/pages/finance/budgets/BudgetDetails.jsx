@@ -24,6 +24,7 @@ import EstablishmentItemCard from '../../companies/establishments/EstablishmentI
 import BudgetStatusLabelMenu from './BudgetStatusLabelMenu';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import { Edit } from '@mui/icons-material';
+import AccountingNatureTreeViewForm from './AccountingNatureTreeViewForm';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -57,7 +58,7 @@ export default function BudgetDetails() {
         to={`/online/finance/budgets/modifier/${budgetData?.budget?.id}`}
         className="no_style"
       >
-        <Button variant="outlined" endIcon={<Edit />}>
+        <Button variant="outlined" endIcon={<Edit />} size="small">
           Modifier
         </Button>
       </Link>
@@ -92,6 +93,11 @@ export default function BudgetDetails() {
                 {budgetData?.budget?.observation}
               </Typography>
             </Paper>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12}>
+            <Item>
+              <AccountingNatureTreeViewForm budget={budgetData?.budget} disabled={true}/>
+            </Item>
           </Grid>
         </Grid>
       </Box>

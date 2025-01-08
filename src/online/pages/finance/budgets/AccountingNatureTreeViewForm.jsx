@@ -16,6 +16,8 @@ import TheTextField from '../../../../_shared/components/form-fields/TheTextFiel
 import { PUT_ACCOUNTING_NATURE_BUDGET } from '../../../../_shared/graphql/mutations/BudgetMutations';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
+import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
+import AccountingNatureTreeViewFilter from './AccountingNatureTreeViewFilter';
 
 const CustomTreeItemStyled = styled(TreeItem2)(({ theme }) => ({
   color: theme.palette.grey[200],
@@ -50,7 +52,7 @@ const CustomTreeItemStyled = styled(TreeItem2)(({ theme }) => ({
 }));
 
 // Composant pour afficher les actions (Ajouter, Modifier et Supprimer)
-function CustomLabel({ children, className, numberOfChildren, amountAllocated, managers=[], accountingNatureId, budgetId }) {
+function CustomLabel({ children, className, numberOfChildren, amountAllocated, managers=[], accountingNatureId, budgetId, disabled=false }) {
   const [amountAllocatedValue, setAmountAllocatedValue] = React.useState(amountAllocated);
   const [managersValue, setManagersValue] = React.useState(managers);
 
@@ -144,6 +146,7 @@ function CustomLabel({ children, className, numberOfChildren, amountAllocated, m
 
       <Stack direction="row" spacing={1} alignItems="center">
         <TheTextField
+          disabled={disabled}
           variant="outlined"
           type="number"
           size="small"
@@ -201,6 +204,7 @@ function CustomLabel({ children, className, numberOfChildren, amountAllocated, m
           onKeyDown={(e) => e.stopPropagation()}
           onBlur={(e) => e.stopPropagation()}
           onClick={(e) => e.stopPropagation()}
+          disabled={disabled}
         />
       </Stack>
     </Stack>
@@ -212,6 +216,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const {
     itemData,
     budget,
+    disabled,
     handleLoadChildren,
     ...rest // Spread only the remaining props
   } = props;
@@ -220,7 +225,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const hasChildren = itemData?.childrenNumber > 0;
   const amountAllocated = itemData?.amountAllocated || null;
   const managers = itemData?.managers || [];
-
+  
   const handleExpand = () => {
     if (hasChildren) {
       handleLoadChildren(props.itemId);
@@ -240,8 +245,9 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
           numberOfChildren: childrenNumber,
           amountAllocated: amountAllocated,
           managers: managers,
-          accountingNatureId :itemData.id,
-          budgetId :budget.id,
+          accountingNatureId :itemData?.id,
+          budgetId :budget?.id,
+          disabled: disabled,
         },
       }}
     />
@@ -250,9 +256,14 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
 
 
 // Composant principal
-export default function AccountingNatureTreeViewForm({budget}) {
-
-
+export default function AccountingNatureTreeViewForm({budget, disabled=false}) {
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
+  const [accountingNatureFilter, setAccountingNatureFilter] = React.useState(null);
+  const handleFilterChange = (newFilter) => {
+    console.log('newFilter', newFilter);
+    setAccountingNatureFilter(newFilter);
+    setPaginator({ ...paginator, page: 1 });
+  };
   const [
     getAccountingNatures,
     {
@@ -263,13 +274,21 @@ export default function AccountingNatureTreeViewForm({budget}) {
   ] = useLazyQuery(GET_ACCOUNTING_NATURES);
 
   React.useEffect(() => {
-    if(budget) getAccountingNatures({variables: { accountingNatureFilter: {budget : budget?.id}}});
-  }, [budget]);
+    if(budget) getAccountingNatures(
+      {
+        variables: 
+        { 
+          accountingNatureFilter: {...accountingNatureFilter, budget : budget?.id},
+          page: paginator.page,
+          limit: paginator.limit
+        }
+    });
+  }, [budget, paginator]);
 
   // Création d'un index pour les données
   const accountingNaturesIndex = React.useMemo(() => {
     const nodes = accountingNaturesData?.accountingNatures?.nodes || [];
-  
+    
     // Fonction récursive pour parcourir les enfants et construire l'index
     const buildIndex = (nodes, acc) => {
       nodes.forEach((node) => {
@@ -280,15 +299,16 @@ export default function AccountingNatureTreeViewForm({budget}) {
       });
       return acc;
     };
-  
-    return buildIndex(nodes, {});
+    const gg = buildIndex(nodes, {})
+    return gg;
   }, [accountingNaturesData]);
 
-  if(loadingAccountingNatures) return(
-    <ProgressService type="text" />
-  )
   return (
     <Box sx={{ minHeight: 200, minWidth: 350 }}>
+      <Box sx={{ backgroundColor: '#f7f7f7', padding:2, marginBottom: 4 }}>
+        <AccountingNatureTreeViewFilter onFilterChange={handleFilterChange} />
+      </Box>
+      {loadingAccountingNatures && <ProgressService type="text" />}
       {accountingNaturesData?.accountingNatures?.nodes?.length < 1 && !loadingAccountingNatures && (
         <Alert severity="warning">
           Aucune nature trouvée.
@@ -300,6 +320,7 @@ export default function AccountingNatureTreeViewForm({budget}) {
           item: (props) => (
             <CustomTreeItem
               {...props}
+              disabled={disabled}
               budget={budget}
               itemData={accountingNaturesIndex[props.itemId]}
               handleLoadChildren={(parentId) => {
@@ -311,6 +332,14 @@ export default function AccountingNatureTreeViewForm({budget}) {
         }}
         getItemLabel={(item) => `${item.code} - ${item.name}`}
       />
+      <Box sx={{ backgroundColor: '#f7f7f7', padding:2, marginTop: 6 }}>
+        <PaginationControlled
+          totalItems={accountingNaturesData?.accountingNatures?.totalCount} // Nombre total d'éléments
+          itemsPerPage={paginator.limit} // Nombre d'éléments par page
+          currentPage={paginator.page}
+          onChange={(page) => setPaginator({ ...paginator, page })}
+        />
+      </Box>
     </Box>
   );
 }

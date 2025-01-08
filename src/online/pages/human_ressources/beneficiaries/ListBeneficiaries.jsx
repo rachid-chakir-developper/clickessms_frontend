@@ -35,6 +35,7 @@ export default function ListBeneficiaries() {
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
     setBeneficiaryrFilter(newFilter);
+    setPaginator({ ...paginator, page: 1 });
   };
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const [
@@ -55,7 +56,7 @@ export default function ListBeneficiaries() {
 
   React.useEffect(() => {
     getBeneficiaries();
-  }, [beneficiaryFilter, paginator]);
+  }, [paginator]);
 
   const [deleteBeneficiary, { loading: loadingDelete }] = useMutation(
     DELETE_BENEFICIARY,
@@ -226,7 +227,7 @@ export default function ListBeneficiaries() {
         <PaginationControlled
           totalItems={beneficiariesData?.beneficiaries?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
-          currentPage={1}
+          currentPage={paginator.page}
           onChange={(page) => setPaginator({ ...paginator, page })}
         />
       </Grid>

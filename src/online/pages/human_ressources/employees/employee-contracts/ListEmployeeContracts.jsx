@@ -32,6 +32,7 @@ export default function ListEmployeeContracts() {
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
     setEmployeeContractFilter(newFilter);
+    setPaginator({ ...paginator, page: 1 });
   };
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
@@ -53,7 +54,7 @@ export default function ListEmployeeContracts() {
 
   React.useEffect(() => {
     getEmployeeContracts();
-  }, [employeeContractFilter, paginator]);
+  }, [paginator]);
 
   const [deleteEmployeeContract, { loading: loadingDelete }] = useMutation(
     DELETE_EMPLOYEE_CONTRACT,
@@ -230,7 +231,7 @@ export default function ListEmployeeContracts() {
         <PaginationControlled
           totalItems={employeeContractsData?.employeeContracts?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
-          currentPage={1}
+          currentPage={paginator.page}
           onChange={(page) => setPaginator({ ...paginator, page })}
         />
       </Grid>

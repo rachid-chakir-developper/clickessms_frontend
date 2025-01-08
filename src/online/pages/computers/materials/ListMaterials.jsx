@@ -170,7 +170,7 @@ export default function ListMaterials() {
         <PaginationControlled
           totalItems={materialsData?.materials?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
-          currentPage={1}
+          currentPage={paginator.page}
           onChange={(page) => setPaginator({ ...paginator, page })}
         />
       </Grid>
