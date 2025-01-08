@@ -83,7 +83,7 @@ const SynthesisTable = ({activitySynthesis}) => {
                                 return (
                                     <React.Fragment key={indexA}>
                                         {[
-                                            "Dispo",
+                                            "countAvailablePlaces",
                                             "countReceived",
                                             "countApproved",
                                             "countRejected",
@@ -108,7 +108,7 @@ const SynthesisTable = ({activitySynthesis}) => {
                         return (
                             <React.Fragment key={indexA}>
                                 {[
-                                    "Dispo",
+                                    "totalAvailablePlaces",
                                     "totalReceived",
                                     "totalApproved",
                                     "totalRejected",

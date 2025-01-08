@@ -158,6 +158,7 @@ export const GET_DASHBOARD_ACTIVITY = gql`
             totalApproved
             totalRejected
             totalCanceled
+            totalAvailablePlaces
           }
         }
       }
