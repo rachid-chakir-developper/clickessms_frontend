@@ -29,6 +29,8 @@ import {
   EXPENSE_STATUS_CHOICES,
   EXPENSE_ITEM_STATUS_CHOICES,
   PAYMENT_METHOD,
+  INVOICE_TYPES,
+  INVOICE_STATUS,
   EXPENSE_TYPE_CHOICES,
   TRANSACTION_TYPE_CHOICES,
   PURCHASE_ORDER_STATUS_CHOICES,
@@ -199,6 +201,42 @@ export const getExpenseStatusLabel = (status) => {
 
 export const getExpenseItemStatusLabel = (status) => {
   return EXPENSE_ITEM_STATUS_CHOICES.ALL.find((s) => s.value === status)?.label;
+};
+
+export const getInvoiceTypeLabel = (type) => {
+  return INVOICE_TYPES.ALL.find((t) => t.value === type)?.label || "Type de facture inconnu";
+};
+
+export const getInvoiceTypeColor = (type) => {
+  switch (type) {
+      case "STANDARD":
+          return 'blue'; // Facture Standard
+      case "DEPOSIT":
+          return 'green'; // Facture d'Acompte
+      default:
+          return 'gray'; // Type inconnu ou par défaut
+  }
+};
+
+export const getInvoiceStatusLabel = (status) => {
+  return INVOICE_STATUS.ALL.find((s) => s.value === status)?.label || "Statut inconnu";
+};
+
+export const getInvoiceStatusColor = (status) => {
+  switch (status) {
+    case "DRAFT":
+      return 'gray'; // Brouillon
+    case "VALIDATED":
+      return 'blue'; // Validé
+    case "PARTIALLY_PAID":
+      return 'orange'; // Semi Réglée
+    case "PAID":
+      return 'green'; // Réglée
+    case "CANCELED":
+      return 'darkred'; // Annulé
+    default:
+      return 'gray'; // Statut inconnu ou par défaut
+  }
 };
 
 export const getPaymentMethodLabel = (method) => {

@@ -489,6 +489,31 @@ export const EXPENSE_ITEM_STATUS_CHOICES = {
   ],
 };
 
+export const INVOICE_TYPES = {
+  STANDARD: "STANDARD",
+  DEPOSIT: "DEPOSIT",
+  ALL: [
+      { value: "STANDARD", label: "Facture Standard" },
+      { value: "DEPOSIT", label: "Facture d'Acompte" }
+  ]
+};
+
+
+export const INVOICE_STATUS = {
+  DRAFT: "DRAFT",
+  VALIDATED: "VALIDATED", // État Validé
+  PARTIALLY_PAID: "PARTIALLY_PAID", // État Semi Réglée
+  PAID: "PAID",
+  CANCELED: "CANCELED",
+  ALL: [
+      { value: "DRAFT", label: "Brouillon" },
+      { value: "VALIDATED", label: "Validée" },
+      { value: "PARTIALLY_PAID", label: "Semi Réglée" },
+      { value: "PAID", label: "Réglée" },
+      { value: "CANCELED", label: "Annulée" },
+  ]
+};
+
 export const PAYMENT_METHOD = {
   CREDIT_CARD: "CREDIT_CARD",
   CHECK: "CHECK",

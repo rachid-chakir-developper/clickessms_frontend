@@ -606,9 +606,8 @@ export const modules: Module[] = [
       {
         id: 'billing',
         name: 'Facturation de l’activité',
-        path: '/online/finance/facturation-activite',
+        path: '/online/ventes/factures',
         icon: <RequestQuoteIcon />,
-        disabled: true,
       },
       {
         id: 'budget',
