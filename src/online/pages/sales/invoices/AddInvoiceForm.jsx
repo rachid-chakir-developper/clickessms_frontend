@@ -45,7 +45,6 @@ export default function AddInvoiceForm({ idInvoice, title }) {
       year: dayjs(new Date()),
       month: dayjs(new Date()),
       invoiceType: INVOICE_TYPES.STANDARD,
-      document: undefined,
       number: '',
       title: '',
       emissionDate: dayjs(new Date()),
@@ -58,6 +57,8 @@ export default function AddInvoiceForm({ idInvoice, title }) {
       establishmentName: '',
       establishmentTvaNumber: '',
       establishmentInfos: '',
+      establishmentCapacity: 0,
+      establishmentUnitPrice: 0,
       financier: null,
       clientName: '',
       clientTvaNumber: '',
@@ -72,7 +73,9 @@ export default function AddInvoiceForm({ idInvoice, title }) {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let { document, ...invoiceCopy } = values;
+      let invoiceCopy = {...values};
+      invoiceCopy.year = invoiceCopy.year ? new Date(invoiceCopy.year).getFullYear() : null
+      invoiceCopy.month = invoiceCopy.month ? new Date(invoiceCopy.month).getMonth()+1 : null
       invoiceCopy.establishment = invoiceCopy.establishment ? invoiceCopy.establishment.id : null;
       invoiceCopy.financier = invoiceCopy.financier ? invoiceCopy.financier.id : null;
       if (!invoiceCopy?.invoiceItems) invoiceCopy['invoiceItems'] = [];
@@ -88,13 +91,11 @@ export default function AddInvoiceForm({ idInvoice, title }) {
         onUpdateInvoice({
           id: invoiceCopy.id,
           invoiceData: invoiceCopy,
-          document: document,
         });
       } else
         createInvoice({
           variables: {
             invoiceData: invoiceCopy,
-            document: document,
           },
         });
     },
@@ -244,7 +245,9 @@ export default function AddInvoiceForm({ idInvoice, title }) {
     {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
-        let { __typename, folder, ...invoiceCopy } = data.invoice;
+        let { __typename, ...invoiceCopy } = data.invoice;
+        invoiceCopy.year = invoiceCopy.year ? dayjs(new Date()).set('year', Number(invoiceCopy.year)) : null;
+        invoiceCopy.month = invoiceCopy.month ? dayjs(new Date()).set('month', Number(invoiceCopy.month)-1) : null;
         invoiceCopy.emissionDate = invoiceCopy.emissionDate ? dayjs(invoiceCopy.emissionDate) : null;
         invoiceCopy.dueDate = invoiceCopy.dueDate ? dayjs(invoiceCopy.dueDate) : null;
         
@@ -252,7 +255,7 @@ export default function AddInvoiceForm({ idInvoice, title }) {
         let items = [];
         invoiceCopy.invoiceItems.forEach((item) => {
           let { __typename, ...itemCopy } = item;
-          itemCopy.birthDate = itemCopy.emissionDate ? dayjs(itemCopy.birthDate) : null;
+          itemCopy.birthDate = itemCopy.birthDate ? dayjs(itemCopy.birthDate) : null;
           itemCopy.entryDate = itemCopy.entryDate ? dayjs(itemCopy.entryDate) : null;
           itemCopy.releaseDate = itemCopy.releaseDate ? dayjs(itemCopy.releaseDate) : null;
           items.push(itemCopy);
@@ -330,7 +333,7 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                       helperText: formik.touched.year ? formik.errors.year : ''
                     },
                   }}
-                  disabled={loadingPost}
+                  disabled={loadingPost || loadingPut || isNotEditable}
                 />
               </Item>
             </Grid>
@@ -353,7 +356,7 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                       helperText: formik.touched.month ? formik.errors.month : ''
                     },
                   }}
-                  disabled={loadingPost}
+                  disabled={loadingPost || loadingPut || isNotEditable}
                 />
               </Item>
             </Grid>
@@ -410,7 +413,7 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                   onBlur={formik.handleBlur}
                   error={formik.touched.establishment && Boolean(formik.errors.establishment)}
                   helperText={formik.touched.establishment && formik.errors.establishment}
-                  disabled={loadingPost}
+                  disabled={loadingPost || loadingPut || isNotEditable}
                 />
               </Item>
             </Grid>
@@ -448,7 +451,7 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                   onBlur={formik.handleBlur}
                   error={formik.touched.financier && Boolean(formik.errors.financier)}
                   helperText={formik.touched.financier && formik.errors.financier}
-                  disabled={loadingPost}
+                  disabled={loadingPost || loadingPut || isNotEditable}
                 />
               </Item>
             </Grid>
@@ -483,6 +486,12 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                 <TheTextField
                   variant="outlined"
                   label="Prix de journée"
+                  type="number"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="start">€</InputAdornment>
+                    ),
+                  }}
                   value={formik.values.establishmentUnitPrice}
                   onChange={(e) =>
                     formik.setFieldValue('establishmentUnitPrice', e.target.value)

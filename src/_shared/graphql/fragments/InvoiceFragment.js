@@ -4,6 +4,7 @@ import { gql } from '@apollo/client';
 import { BENEFICIARY_MINI_INFOS } from './BeneficiaryFragment';
 import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 import { FINANCIER_MINI_INFOS } from './FinancierFragment';
+import { SIGNATURE_DETAILS } from './FeedbackFragment';
 
 
 export const INVOICE_MINI_INFOS = gql`
@@ -13,30 +14,34 @@ export const INVOICE_MINI_INFOS = gql`
     title
     status
     invoiceType
+    year
+    month
   }
 `;
 
 export const INVOICE_BASIC_INFOS = gql`
   fragment InvoiceBasicInfosFragment on InvoiceType {
     ...InvoiceMiniInfosFragment
-    description
     emissionDate
     dueDate
     financier{
     ...FinancierMiniInfosFragment
     }
+    clientNumber
+    clientName
+    clientTvaNumber
+    clientInfos
     establishment{
       ...EstablishmentMiniInfosFragment
     }
-    establishmentTvaNumber
+    establishmentNumber
     establishmentName
+    establishmentTvaNumber
     establishmentInfos
-    establishmentAddress
-    clientTvaNumber
-    clientName
-    clientInfos
-    clientAddress
+    establishmentCapacity
+	  establishmentUnitPrice
     paymentMethod
+    description
     totalHt
     tva
     discount
@@ -49,30 +54,31 @@ export const INVOICE_BASIC_INFOS = gql`
 
 
 export const INVOICE_ITEM_DETAILS = gql`
-    fragment InvoiceItemFragment on InvoiceItemType {
-        beneficiary{
-            ...BeneficiaryMiniInfosFragment
-        }
-        establishment{
-            ...EstablishmentMiniInfosFragment
-        }
-        establishmentName
-        preferredName
-        firstName
-        lastName
-        birthDate
-        entryDate
-        releaseDate
-        description
-        unitPrice
-        quantity
-        tva
-        discount
-        amountHt
-        amountTtc
+  fragment InvoiceItemFragment on InvoiceItemType {
+    beneficiary{
+        ...BeneficiaryMiniInfosFragment
     }
-    ${BENEFICIARY_MINI_INFOS}
-    ${ESTABLISHMENT_MINI_INFOS}
+    establishment{
+        ...EstablishmentMiniInfosFragment
+    }
+        establishmentNumber
+    establishmentName
+    preferredName
+    firstName
+    lastName
+    birthDate
+    entryDate
+    releaseDate
+    description
+    unitPrice
+    quantity
+    tva
+    discount
+    amountHt
+    amountTtc
+  }
+  ${BENEFICIARY_MINI_INFOS}
+  ${ESTABLISHMENT_MINI_INFOS}
 `;
 
 export const INVOICE_DETAILS = gql`
@@ -92,9 +98,13 @@ export const INVOICE_RECAP = gql`
     invoiceItems{
       ...InvoiceItemFragment
     }
+    signatures{
+      ...SignatureTypeFragment
+    }
     createdAt
     updatedAt
   }
   ${INVOICE_BASIC_INFOS}
+  ${SIGNATURE_DETAILS}
   ${INVOICE_ITEM_DETAILS}
 `;

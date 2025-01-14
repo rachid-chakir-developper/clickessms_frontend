@@ -48,6 +48,7 @@ export default function AddEmployeeForm({ idEmployee, title }) {
     initialValues: {
       photo: undefined,
       coverImage: undefined,
+      signature: undefined,
       number: '',
       registrationNumber: '',
       firstName: '',
@@ -82,14 +83,14 @@ export default function AddEmployeeForm({ idEmployee, title }) {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let { photo, ...employeeFormCopy } = values;
-      let { coverImage, ...employeeCopy } = employeeFormCopy;
+      let { photo, coverImage, signature, ...employeeCopy } = values;
       if (idEmployee && idEmployee != '') {
         onUpdateEmployee({
           id: employeeCopy.id,
           employeeData: employeeCopy,
           photo: photo,
           coverImage: coverImage,
+          signature: signature
         });
       } else
         createEmployee({
@@ -97,6 +98,7 @@ export default function AddEmployeeForm({ idEmployee, title }) {
             employeeData: employeeCopy,
             photo: photo,
             coverImage: coverImage,
+            signature: signature,
           },
         });
     },
@@ -508,6 +510,19 @@ export default function AddEmployeeForm({ idEmployee, title }) {
                   value={formik.values.bankName}
                   onChange={(e) =>
                     formik.setFieldValue('bankName', e.target.value)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={2} sm={4} md={4}>
+              <Item>
+                <ImageFileField
+                  variant="outlined"
+                  label="Signature"
+                  imageValue={formik.values.signature}
+                  onChange={(imageFile) =>
+                    formik.setFieldValue('signature', imageFile)
                   }
                   disabled={loadingPost || loadingPut}
                 />

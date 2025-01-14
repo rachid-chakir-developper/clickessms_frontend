@@ -6,11 +6,13 @@ export const POST_EMPLOYEE = gql`
     $employeeData: EmployeeInput!
     $photo: Upload
     $coverImage: Upload
+    $signature: Upload
   ) {
     createEmployee(
       employeeData: $employeeData
       photo: $photo
       coverImage: $coverImage
+      signature: $signature
     ) {
       employee {
         ...EmployeeBasicInfosFragment
@@ -26,12 +28,14 @@ export const PUT_EMPLOYEE = gql`
     $employeeData: EmployeeInput!
     $photo: Upload
     $coverImage: Upload
+    $signature: Upload
   ) {
     updateEmployee(
       id: $id
       employeeData: $employeeData
       photo: $photo
       coverImage: $coverImage
+      signature: $signature
     ) {
       employee {
         ...EmployeeBasicInfosFragment

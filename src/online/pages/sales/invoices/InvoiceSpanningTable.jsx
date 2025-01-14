@@ -103,7 +103,7 @@ export default function InvoiceSpanningTable(
 
     return (
         <TableContainer>
-            <Table sx={{ minWidth: 1700 }} aria-label="spanning table">
+            <Table sx={{ minWidth: 1800 }} aria-label="spanning table">
                 <TableHead>
                     {/* <TableRow>
                         <StyledTableCell align="center" colSpan={7}>
@@ -121,8 +121,8 @@ export default function InvoiceSpanningTable(
                         <StyledTableCell align="center" sx={{width: 140}}>Apjm</StyledTableCell>
                         <StyledTableCell align="center" sx={{width: 140}}>Garde</StyledTableCell>
                         <StyledTableCell align="center" sx={{width: 140}}>Plt direct</StyledTableCell>
-                        <StyledTableCell align="center" sx={{width: 150}}>Nbr jour.</StyledTableCell>
-                        <StyledTableCell align="right"  sx={{width: 180}}>Nbr joru.</StyledTableCell>
+                        <StyledTableCell align="center" sx={{width: 160}}>Nbr jour.</StyledTableCell>
+                        <StyledTableCell align="right"  sx={{width: 190}}>Prix joru.</StyledTableCell>
                         <StyledTableCell align="right" sx={{minWidth: 170}}>Toutaux</StyledTableCell>
                     </TableRow>
                 </TableHead>

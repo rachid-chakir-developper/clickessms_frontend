@@ -48,7 +48,7 @@ export default function PrintingModal({ printingModal, setPrintingModal }) {
   });
 
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="md">
+    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="lg">
       <DialogContent>
         <Stack
           sx={{

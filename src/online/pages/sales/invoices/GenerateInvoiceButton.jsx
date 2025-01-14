@@ -103,9 +103,9 @@ function DialogGenerateInvoice({ open, onClose, onConfirm }) {
 
           cache.modify({
             fields: {
-              invoices(existingInvoices = { totalCount: 0, nodes: [] }) {
+              invoices(existingInvoices = { totalCount: 0, nodes: [] }, { readField }) {
                 const existingInvoiceIndex = existingInvoices.nodes.findIndex(
-                  (invoice) => invoice.id === newInvoice.id
+                  (invoice) => readField('id', invoice) === newInvoice.id
                 );
 
                 let updatedInvoices;

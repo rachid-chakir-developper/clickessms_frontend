@@ -39,6 +39,7 @@ export const EMPLOYEE_MINI_INFOS = gql`
 export const EMPLOYEE_BASIC_INFOS = gql`
   fragment EmployeeBasicInfosFragment on EmployeeType {
     ...EmployeeMiniInfosFragment
+    signature
     socialSecurityNumber
     birthDate
     currentContract{
