@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import { Stack, Box, Typography, Button, Divider, FormControl, InputLabel, Select, MenuItem, InputAdornment } from '@mui/material';
+import { Stack, Box, Typography, Button, Divider, FormControl, InputLabel, Select, MenuItem, InputAdornment, Stepper, Step, StepLabel, StepContent } from '@mui/material';
 import dayjs from 'dayjs';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -32,6 +32,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function AddBudgetForm({ idBudget, title }) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({
@@ -55,7 +56,7 @@ export default function AddBudgetForm({ idBudget, title }) {
     onSubmit: (values) => {
       let budgetCopy = {...values};
       budgetCopy.establishment = budgetCopy.establishment ? budgetCopy.establishment.id : null;
-      if (idBudget && idBudget != '') {
+      if (budgetCopy?.id && budgetCopy?.id != '') {
         onUpdateBudget({
           id: budgetCopy.id,
           budgetData: budgetCopy,
@@ -78,7 +79,8 @@ export default function AddBudgetForm({ idBudget, title }) {
       });
       let { __typename, ...budgetCopy } = data.createBudget.budget;
       //   formik.setValues(budgetCopy);
-      navigate('/online/finance/budgets/liste');
+      formik.setFieldValue('id', budgetCopy.id);
+      handleNext();
     },
     update(cache, { data: { createBudget } }) {
       const newBudget = createBudget.budget;
@@ -113,7 +115,7 @@ export default function AddBudgetForm({ idBudget, title }) {
       });
       let { __typename, ...budgetCopy } = data.updateBudget.budget;
       //   formik.setValues(budgetCopy);
-      navigate('/online/finance/budgets/liste');
+      handleNext();
     },
     update(cache, { data: { updateBudget } }) {
       const updatedBudget = updateBudget.budget;
@@ -185,7 +187,41 @@ export default function AddBudgetForm({ idBudget, title }) {
     if (idBudget) {
       getBudget({ variables: { id: idBudget } });
     }
-  }, [idBudget]);
+  }, [idBudget]); 
+  React.useEffect(() => {
+    if (searchParams.get('id') && !idBudget) {
+      getBudget({ variables: { id: searchParams.get('id') } });
+    }
+  }, []);
+
+  const [activeStep, setActiveStep] = React.useState(
+    searchParams.get('step') ? Number(searchParams.get('step')) : 0,
+  );
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if(activeStep >= 1) navigate('/online/finance/budgets/liste');
+    else if (formik.values.id)
+      setSearchParams({ step: activeStep + 1, id: formik.values.id });
+    else setSearchParams({ step: activeStep + 1 });
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    if (formik.values.id)
+      setSearchParams({ step: activeStep + 1, id: formik.values.id });
+    else setSearchParams({ step: activeStep + 1 });
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+  const onGoToStep = (step = 0) => {
+    if (formik.values.id) {
+      setActiveStep(step);
+      setSearchParams({ step, id: formik.values.id });
+    }
+  };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
@@ -194,87 +230,137 @@ export default function AddBudgetForm({ idBudget, title }) {
       {loadingBudget && <ProgressService type="form" />}
       {!loadingBudget && (
         <form onSubmit={formik.handleSubmit}>
+          <Stepper
+            activeStep={activeStep}
+            orientation="vertical"
+            nonLinear={idBudget ? true : false}
+          >
+            <Step>
+              <StepLabel
+                onClick={() => onGoToStep(0)}
+                optional={
+                  <Typography variant="caption">Informations générales</Typography>
+                }
+              >
+                Informations générales
+              </StepLabel>
+              <StepContent>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  <Grid item xs={12} sm={6} md={4}>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Libellé"
+                        value={formik.values.name}
+                        onChange={(e) => formik.setFieldValue('name', e.target.value)}
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <Item>
+                      <TheAutocomplete
+                        options={establishmentsData?.establishments?.nodes}
+                        label="Établissement / Service"
+                        placeholder="Choisissez un établissement ou un service"
+                        multiple={false}
+                        value={formik.values.establishment}
+                        onChange={(e, newValue) =>
+                          formik.setFieldValue('establishment', newValue)
+                        }
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} >
+                    <Item>
+                      <TheDesktopDatePicker
+                        label="Année"
+                        format="YYYY"
+                        views={['year']}
+                        value={formik.values.startingDate}
+                        onChange={(date) =>
+                          formik.setFieldValue('startingDate', date)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Montant prévu"
+                        type="number"
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="start">€</InputAdornment>
+                          ),
+                        }}
+                        value={formik.values.amountAllocated}
+                        onChange={(e) =>
+                          formik.setFieldValue('amountAllocated', e.target.value)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={8}>
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Description"
+                        multiline
+                        rows={4}
+                        value={formik.values.description}
+                        onChange={(e) =>
+                          formik.setFieldValue('description', e.target.value)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                </Grid>
+              </StepContent>
+            </Step>
+            <Step>
+              <StepLabel
+                onClick={() => onGoToStep(1)}
+                optional={
+                  <Typography variant="caption">Détails</Typography>
+                }
+              >
+                Détails
+              </StepLabel>
+              <StepContent>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  <Grid item xs={12} sm={12} md={12}>
+                    <Item>
+                      <AccountingNatureTreeViewForm budget={formik.values} />
+                    </Item>
+                  </Grid>
+                </Grid>
+              </StepContent>
+            </Step>
+          </Stepper>
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid item xs={12} sm={6} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Libellé"
-                  value={formik.values.name}
-                  onChange={(e) => formik.setFieldValue('name', e.target.value)}
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Item>
-                <TheAutocomplete
-                  options={establishmentsData?.establishments?.nodes}
-                  label="Établissement / Service"
-                  placeholder="Choisissez un établissement ou un service"
-                  multiple={false}
-                  value={formik.values.establishment}
-                  onChange={(e, newValue) =>
-                    formik.setFieldValue('establishment', newValue)
-                  }
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4} >
-              <Item>
-                <TheDesktopDatePicker
-                  label="Année"
-                  format="YYYY"
-                  views={['year']}
-                  value={formik.values.startingDate}
-                  onChange={(date) =>
-                    formik.setFieldValue('startingDate', date)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Montant prévu"
-                  type="number"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="start">€</InputAdornment>
-                    ),
-                  }}
-                  value={formik.values.amountAllocated}
-                  onChange={(e) =>
-                    formik.setFieldValue('amountAllocated', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={8}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Description"
-                  multiline
-                  rows={4}
-                  value={formik.values.description}
-                  onChange={(e) =>
-                    formik.setFieldValue('description', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12} >
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
-                <Link to="/online/finance/budgets/liste" className="no_style">
+                {activeStep===0 && <><Link
+                  to="/online/finance/budgets/liste"
+                  className="no_style"
+                >
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>
                     Annuler
                   </Button>
@@ -285,12 +371,15 @@ export default function AddBudgetForm({ idBudget, title }) {
                   disabled={!formik.isValid || loadingPost || loadingPut}
                 >
                   Valider
-                </Button>
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={12} md={12}>
-              <Item>
-                <AccountingNatureTreeViewForm budget={formik.values} />
+                </Button></>}
+                {activeStep!==0 && <Link
+                  to="/online/finance/budgets/liste"
+                  className="no_style"
+                >
+                  <Button variant="contained" sx={{ marginRight: '10px' }}>
+                  Terminer
+                  </Button>
+                </Link>}
               </Item>
             </Grid>
           </Grid>

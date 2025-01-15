@@ -10,6 +10,7 @@ import {
   Typography,
   Divider,
   Button,
+  List,
 } from '@mui/material';
 
 import { BUDGET_RECAP } from '../../../../_shared/graphql/queries/BudgetQueries';
@@ -53,16 +54,23 @@ export default function BudgetDetails() {
   if (loadingBudget) return <ProgressService type="form" />;
   return (
     <>
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1}}>
-      <Link
-        to={`/online/finance/budgets/modifier/${budgetData?.budget?.id}`}
-        className="no_style"
-      >
-        <Button variant="outlined" endIcon={<Edit />} size="small">
-          Modifier
-        </Button>
-      </Link>
-    </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
+        <Box sx={{marginX: 2}}>
+          <Link
+            to={`/online/finance/budgets/liste`}
+            className="no_style"
+          >
+            <Button variant="text" startIcon={<List />}  size="small">
+              Retour à la Liste
+            </Button>
+          </Link>
+        </Box>
+        <Link to={`/online/finance/budgets/modifier/${budgetData?.budget?.id}`} className="no_style">
+          <Button variant="outlined" startIcon={<Edit />} size="small">
+            Modifier
+          </Button>
+        </Link>
+      </Box>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
