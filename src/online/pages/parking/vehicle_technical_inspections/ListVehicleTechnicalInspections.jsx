@@ -25,7 +25,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListVehicleTechnicalInspections() {
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [vehicleTechnicalInspectionFilter, setVehicleTechnicalInspectionFilter] =
     React.useState(null);
   const handleFilterChange = (newFilter) => {

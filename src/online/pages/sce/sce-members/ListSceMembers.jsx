@@ -33,7 +33,7 @@ export default function ListSceMembers() {
     type: 'manageSce',
   }).authorized;
 
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 18 });
   const [sceMemberFilter, setSceMemberrFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);

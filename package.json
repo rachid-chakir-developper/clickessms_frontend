@@ -56,6 +56,8 @@
     "dayjs": "^1.11.10",
     "formik": "^2.4.5",
     "graphql": "^16.8.1",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.2",
     "moment": "^2.30.1",
     "quill-image-resize-module-react": "^3.0.0",
     "quill-resize-image": "^1.0.5",

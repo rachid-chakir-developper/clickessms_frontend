@@ -27,7 +27,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListGovernanceMembers() {
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 18 });
   const [governanceMemberFilter, setGovernanceMemberrFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);

@@ -27,7 +27,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListTheObjects() {
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [theObjectFilter, setTheObjectFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);

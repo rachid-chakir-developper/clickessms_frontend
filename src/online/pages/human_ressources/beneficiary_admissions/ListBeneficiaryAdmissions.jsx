@@ -33,7 +33,7 @@ export default function ListBeneficiaryAdmissions() {
   const canManageActivity = authorizationSystem.requestAuthorization({
     type: 'manageActivity',
   }).authorized;
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [beneficiaryAdmissionFilter, setBeneficiaryAdmissionFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);

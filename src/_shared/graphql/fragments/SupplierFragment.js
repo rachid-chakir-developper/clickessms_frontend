@@ -11,6 +11,7 @@ export const SUPPLIER_PHONE_INFOS = gql`
     fix
     email
     photo
+    isVerified
     isActive
   }
 `;
@@ -24,6 +25,7 @@ export const SUPPLIER_MINI_INFOS = gql`
     email
     photo
     coverImage
+    isVerified
     isActive
   }
 `;

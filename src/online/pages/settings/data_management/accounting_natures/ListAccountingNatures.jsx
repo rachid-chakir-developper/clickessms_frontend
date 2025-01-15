@@ -27,7 +27,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListAccountingNatures() {
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [accountingNatureFilter, setAccountingNatureFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter)

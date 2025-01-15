@@ -33,7 +33,7 @@ export default function ListExpenseReports() {
   const canManageFinance = authorizationSystem.requestAuthorization({
     type: 'manageFinance',
   }).authorized;
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [expenseReportFilter, setExpenseReportFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);

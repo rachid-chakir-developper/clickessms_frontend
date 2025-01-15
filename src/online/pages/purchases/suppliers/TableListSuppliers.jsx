@@ -165,13 +165,22 @@ const headCells = [
         label: 'Adresse',
     },
     {
+        id: 'isVerified',
+        property: 'is_verified',
+        exportField: 'is_verified',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'État',
+        render: ({isVerified})=> isVerified ? <AppLabel color="success">Verifié</AppLabel> : <AppLabel color="warning">Non verifié</AppLabel>
+    },
+    {
         id: 'isActive',
         property: 'is_active',
         exportField: 'is_active',
         numeric: false,
         disablePadding: true,
-        isDefault: true,
-        label: 'État',
+        label: 'Status',
         render: ({isActive})=> isActive ? <AppLabel color="success">Actif</AppLabel> : <AppLabel color="warning">Inactif</AppLabel>
     },
     {

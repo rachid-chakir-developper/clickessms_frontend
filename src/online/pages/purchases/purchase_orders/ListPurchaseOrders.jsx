@@ -11,9 +11,15 @@ import { GET_PURCHASE_ORDERS } from '../../../../_shared/graphql/queries/Purchas
 import PurchaseOrderFilter from './PurchaseOrderFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
 import TableListPurchaseOrders from './TableListPurchaseOrders';
+import { Link } from 'react-router-dom';
+import { Add } from '@mui/icons-material';
+import { Box, Button } from '@mui/material';
 
 export default function ListPurchaseOrders() {
   const authorizationSystem = useAuthorizationSystem();
+  const canManageFinance = authorizationSystem.requestAuthorization({
+    type: 'manageFinance',
+  }).authorized;
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [purchaseOrderFilter, setPurchaseOrderFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
@@ -142,6 +148,19 @@ export default function ListPurchaseOrders() {
 
   return (
     <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
+          <Link
+            to="/online/achats/depenses-engagements/liste"
+            className="no_style"
+          >
+            <Button variant="outlined" endIcon={<Add />}
+            sx={{ mx: 3 }}>
+              Demander une dépense
+            </Button>
+          </Link>
+        </Box>
+      </Grid>
       <Grid item xs={12}>
         <PurchaseOrderFilter onFilterChange={handleFilterChange} />
       </Grid>

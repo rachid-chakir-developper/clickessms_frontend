@@ -30,7 +30,7 @@ const Item = styled(Stack)(({ theme }) => ({
 
 export default function ListEstablishments() {
   let { idParent } = useParams();
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [establishmentFilter, setEstablishmentFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);

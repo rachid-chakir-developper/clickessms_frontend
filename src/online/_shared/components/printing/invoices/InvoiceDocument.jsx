@@ -5,7 +5,7 @@ import { useLazyQuery} from '@apollo/client';
 import { GET_INVOICE_RECAP } from '../../../../../_shared/graphql/queries/InvoiceQueries';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import { useSession } from '../../../../../_shared/context/SessionProvider';
-import { getFormatDate } from '../../../../../_shared/tools/functions';
+import { formatCurrencyAmount, getFormatDate } from '../../../../../_shared/tools/functions';
 import InvoiceSpanningDocument from './InvoiceSpanningDocument';
 import AmountInWords from '../../../../../_shared/components/money/AmountInWords';
 
@@ -30,7 +30,7 @@ export default function InvoiceDocument({invoice}) {
                     
                     <Grid container spacing={0.5}>
                         <Grid item xs={4}>
-                            <Box sx={{paddingTop: 0}}>
+                            <Box sx={{paddingTop: 8}}>
                                 <Paper sx={{ padding : 2}} variant="outlined">
                                     <Typography>Monsieur le Président du</Typography>
                                     <Typography sx={{fontWeight: 700}}>{invoiceData?.invoice?.clientName}</Typography>
@@ -40,18 +40,33 @@ export default function InvoiceDocument({invoice}) {
                         </Grid>
                         <Grid item xs={4}>
                             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent : 'center', alignItems: 'center'}}>
-                                {invoiceData?.invoice?.logo && <img src={invoiceData?.invoice?.logo} alt={invoiceData?.invoice?.establishmentName} height={100} />}
-                                <Typography sx={{fontWeight: 700}}>{invoiceData?.invoice?.establishmentName}</Typography>
+                                {invoiceData?.invoice?.companyLogoBase64Encoded && <img src={invoiceData?.invoice?.companyLogoBase64Encoded} height={100} />}
+                                <Typography sx={{fontWeight: 700, fontStyle: 'italic'}}>{invoiceData?.invoice?.companyName}</Typography>
                             </Box>
                         </Grid>
                         <Grid item xs={4}>
                             <Box sx={{paddingTop: 6}}>
                                 <Paper sx={{ padding : 2}} variant="elevation" elevation={0}>
-                                    <Typography sx={{ fontSize: 22, fontWeight: 700, fontStyle: 'italic'}}>FACTURE</Typography>
+                                    <Typography sx={{ fontSize: 22, fontWeight: 700, fontStyle: 'italic'}}>
+                                        FACTURE, {`${invoiceData?.invoice?.monthText} ${invoiceData?.invoice?.year}`}
+                                    </Typography>
                                     <Typography>
                                         N° : <b>{invoiceData?.invoice?.number}</b><br />
                                         Date : <b>{getFormatDate(invoiceData?.invoice?.emissionDate)}</b><br />
                                         Date d'échéance : <b>{getFormatDate(invoiceData?.invoice?.dueDate)}</b>
+                                    </Typography>
+                                </Paper>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Box sx={{paddingTop: 4}}>
+                                <Paper sx={{ padding : 0}} variant="elevation" elevation={0}>
+                                    <Typography  sx={{fontWeight: 700, fontSize: 20}}>
+                                        {invoiceData?.invoice?.establishmentName}
+                                    </Typography>
+                                    <Typography>
+                                        Capacité : <b>{invoiceData?.invoice?.establishmentCapacity}</b> et 
+                                        Prix de journée : <b>{formatCurrencyAmount(invoiceData?.invoice?.establishmentUnitPrice)}</b>
                                     </Typography>
                                 </Paper>
                             </Box>

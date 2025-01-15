@@ -32,7 +32,7 @@ export default function ListContractTemplates() {
   const canManageSceModules = authorizationSystem.requestAuthorization({
     type: 'manageSceModules',
   }).authorized;
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   
   const [contractTemplateFilter, setContractTemplateFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {

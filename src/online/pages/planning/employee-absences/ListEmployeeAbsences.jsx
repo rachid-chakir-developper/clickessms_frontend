@@ -27,7 +27,7 @@ const Item = styled(Stack)(({ theme }) => ({
 
 export default function ListEmployeeAbsences() {
   const authorizationSystem = useAuthorizationSystem();
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [employeeAbsenceFilter, setEmployeeAbsenceFilter] =
     React.useState(null);
   const handleFilterChange = (newFilter) => {

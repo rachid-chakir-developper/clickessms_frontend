@@ -27,6 +27,7 @@ import {
   PUT_SUPPLIER,
 } from '../../../../_shared/graphql/mutations/SupplierMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -44,6 +45,7 @@ export default function AddSupplierForm({ idSupplier, title }) {
   });
   const formik = useFormik({
     initialValues: {
+      isVerified: false,
       photo: undefined,
       coverImage: undefined,
       number: '',
@@ -212,28 +214,7 @@ export default function AddSupplierForm({ idSupplier, title }) {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid item xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Référence"
-                  value={formik.values.number}
-                  disabled
-                />
-              </Item>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Référence sur SAGE"
-                  value={formik.values.externalNumber}
-                  onChange={(e) =>
-                    formik.setFieldValue('externalNumber', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={4} md={4}>
               <Item>
                 <ImageFileField
                   variant="outlined"
@@ -246,20 +227,37 @@ export default function AddSupplierForm({ idSupplier, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={6} md={6}>
               <Item>
-                <ImageFileField
+                <TheTextField
                   variant="outlined"
-                  label="Photo de couverture"
-                  imageValue={formik.values.coverImage}
-                  onChange={(imageFile) =>
-                    formik.setFieldValue('coverImage', imageFile)
+                  label="Nom"
+                  id="name"
+                  value={formik.values.name}
+                  required
+                  onChange={(e) => formik.setFieldValue('name', e.target.value)}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.name && Boolean(formik.errors.name)}
+                  helperText={formik.touched.name && formik.errors.name}
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={2} md={2}>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="Verifié ?"
+                  checked={formik.values.isVerified}
+                  value={formik.values.isVerified}
+                  onChange={(e) =>
+                    formik.setFieldValue('isVerified', e.target.checked)
                   }
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={4} md={4}>
               <Item>
                 <FormControl fullWidth>
                   <InputLabel>Type de fournisseur</InputLabel>
@@ -276,23 +274,7 @@ export default function AddSupplierForm({ idSupplier, title }) {
                 </FormControl>
               </Item>
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Nom"
-                  id="name"
-                  value={formik.values.name}
-                  required
-                  onChange={(e) => formik.setFieldValue('name', e.target.value)}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.name && Boolean(formik.errors.name)}
-                  helperText={formik.touched.name && formik.errors.name}
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={4} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -308,7 +290,7 @@ export default function AddSupplierForm({ idSupplier, title }) {
             <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={4} md={4}>
               <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
                 <Grid item xs={12} sm={12} md={12}>
                   <Item>
@@ -369,7 +351,7 @@ export default function AddSupplierForm({ idSupplier, title }) {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={4} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -400,7 +382,7 @@ export default function AddSupplierForm({ idSupplier, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={4} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -438,7 +420,7 @@ export default function AddSupplierForm({ idSupplier, title }) {
             <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={4} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -449,7 +431,7 @@ export default function AddSupplierForm({ idSupplier, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={4} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -460,7 +442,7 @@ export default function AddSupplierForm({ idSupplier, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={4} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"

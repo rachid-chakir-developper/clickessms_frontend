@@ -29,7 +29,7 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListUsers() {
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [userFilter, setUserFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);

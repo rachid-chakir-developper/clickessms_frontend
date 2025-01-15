@@ -33,7 +33,7 @@ export default function ListPosts() {
   const canManageSceModules = authorizationSystem.requestAuthorization({
     type: 'manageSceModules',
   }).authorized;
-  const [paginator, setPaginator] = React.useState({ page: 1, limit: 10 });
+  const [paginator, setPaginator] = React.useState({ page: 1, limit: 18 });
   
   const [postFilter, setPostFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
