@@ -103,7 +103,7 @@ export default function InvoiceSpanningTable(
 
     return (
         <TableContainer>
-            <Table sx={{ minWidth: 1800 }} aria-label="spanning table">
+            <Table sx={{ minWidth: 1200 }} aria-label="spanning table">
                 <TableHead>
                     {/* <TableRow>
                         <StyledTableCell align="center" colSpan={7}>
@@ -112,18 +112,18 @@ export default function InvoiceSpanningTable(
                         <StyledTableCell align="right">Prix</StyledTableCell>
                     </TableRow> */}
                     <TableRow>
-                        <StyledTableCell sx={{minWidth: 200}}>Noms</StyledTableCell>
-                        <StyledTableCell sx={{minWidth: 200}}>Prénoms</StyledTableCell>
-                        <StyledTableCell sx={{minWidth: 190}}>Date nai.</StyledTableCell>
-                        <StyledTableCell sx={{minWidth: 190}}>Date adm.</StyledTableCell>
-                        <StyledTableCell sx={{minWidth: 190}}>Date sor.</StyledTableCell>
-                        <StyledTableCell align="center" sx={{width: 140}}>Ap.</StyledTableCell>
+                        <StyledTableCell sx={{minWidth: 240}}>Nom</StyledTableCell>
+                        <StyledTableCell sx={{minWidth: 240}}>Prénom</StyledTableCell>
+                        <StyledTableCell sx={{minWidth: 190}}>Date&nbsp;naissance</StyledTableCell>
+                        <StyledTableCell sx={{minWidth: 190}}>Date&nbsp;admission</StyledTableCell>
+                        <StyledTableCell sx={{minWidth: 190}}>Date&nbsp;sortie</StyledTableCell>
+                        {/* <StyledTableCell align="center" sx={{width: 140}}>Ap.</StyledTableCell>
                         <StyledTableCell align="center" sx={{width: 140}}>Apjm</StyledTableCell>
                         <StyledTableCell align="center" sx={{width: 140}}>Garde</StyledTableCell>
-                        <StyledTableCell align="center" sx={{width: 140}}>Plt direct</StyledTableCell>
-                        <StyledTableCell align="center" sx={{width: 160}}>Nbr jour.</StyledTableCell>
-                        <StyledTableCell align="right"  sx={{width: 190}}>Prix joru.</StyledTableCell>
-                        <StyledTableCell align="right" sx={{minWidth: 170}}>Toutaux</StyledTableCell>
+                        <StyledTableCell align="center" sx={{width: 140}}>Plt direct</StyledTableCell> */}
+                        <StyledTableCell sx={{width: 160}}>Nbr&nbsp;journée</StyledTableCell>
+                        <StyledTableCell sx={{width: 200}}>Prix&nbsp;journée</StyledTableCell>
+                        <StyledTableCell align="right" sx={{minWidth: 170}}>Total</StyledTableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -229,7 +229,7 @@ export default function InvoiceSpanningTable(
                                 />
                             </Item>
                         </StyledTableCell>
-                        <StyledTableCell align="center">
+                        {/* <StyledTableCell align="center">
                             <Item>
                                 <TheTextField
                                     variant="outlined"
@@ -276,7 +276,7 @@ export default function InvoiceSpanningTable(
                                     disabled={disabled}
                                 />
                             </Item>
-                        </StyledTableCell>
+                        </StyledTableCell> */}
                         <StyledTableCell align="center">
                             <Item>
                                 <TheTextField
@@ -306,7 +306,7 @@ export default function InvoiceSpanningTable(
                 ))}
                 
                     {!isNotEditable && <TableRow sx={{borderStyle: 'dashed', borderWidth: 2, borderColor: '#f1f1f1', backgroundColor: '#fcfcfc'}}>
-                        <StyledTableCell align="left" colSpan={6} onClick={addItem}>
+                        <StyledTableCell align="left" colSpan={4} onClick={addItem}>
                             <Button
                                 variant="outlined"
                                 size="small"
@@ -317,12 +317,12 @@ export default function InvoiceSpanningTable(
                                 Ajouter une personne accompagnée
                             </Button>
                         </StyledTableCell>
-                        <StyledTableCell align="right" colSpan={6} onClick={addItem} sx={{color: '#c1c1c1', fontStyle: 'italic'}}>Cliquez pour ajouter une personne accompagnée</StyledTableCell>
+                        <StyledTableCell align="right" colSpan={4} onClick={addItem} sx={{color: '#c1c1c1', fontStyle: 'italic'}}>Cliquez pour ajouter une personne accompagnée</StyledTableCell>
                     </TableRow>}
                     <TableRow>
-                        <StyledTableCell rowSpan={3} colSpan={7} sx={{ border: 0 }}>
+                        <StyledTableCell rowSpan={3} colSpan={5} sx={{ border: 0 }}>
                         </StyledTableCell>
-                        <StyledTableCell colSpan={5} sx={{padding: theme => theme.spacing(0)}}>
+                        <StyledTableCell colSpan={3} sx={{padding: theme => theme.spacing(0)}}>
                             <Table>
                                 <TableBody>
                                     <TableRow sx={{ backgroundColor: theme => theme.palette.grey[400] }}>

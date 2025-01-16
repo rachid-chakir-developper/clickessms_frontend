@@ -77,11 +77,11 @@ const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) =>
                                 const beneficiary = beneficiaryEntry?.beneficiary;
                                  return (<TableRow key={index}>
                                     <TableCell>
-                                        {`${beneficiary?.firstName} ${
+                                        {`${
                                             beneficiary?.preferredName && beneficiary?.preferredName !== ''
                                                 ? beneficiary?.preferredName
                                                 : beneficiary?.lastName
-                                        }`}
+                                        } ${beneficiary?.firstName}`}
                                     </TableCell>
                                 </TableRow>)
                             }
@@ -123,11 +123,11 @@ const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) =>
                             return (<TableRow key={index}>
                                 <TableCell>beneficiaryAdmission</TableCell>
                                 <TableCell>
-                                    {`${beneficiary?.firstName} ${
+                                    {`${
                                         beneficiary?.preferredName && beneficiary?.preferredName !== ''
                                             ? beneficiary?.preferredName
                                             : beneficiary?.lastName
-                                    }`}</TableCell>
+                                    } ${beneficiary?.firstName}`}</TableCell>
                                 <TableCell style={{ color: beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.APPROVED ? "green" : "" }}>
                                 {'demande.dateadmission' || ""}
                                 </TableCell>

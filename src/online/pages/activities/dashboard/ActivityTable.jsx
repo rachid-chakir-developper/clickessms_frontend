@@ -100,11 +100,11 @@ const ActivityTable = ({activityMonth}) => {
                     <TableRow key={indexB}>
                       <TableCell></TableCell>
                       <TableCell>
-                        {`${beneficiary?.firstName} ${
+                        {`${
                           beneficiary?.preferredName && beneficiary?.preferredName !== ''
                             ? beneficiary?.preferredName
                             : beneficiary?.lastName
-                        }`}
+                        } ${beneficiary?.firstName}`}
                       </TableCell>
                       <TableCell>{getFormatDate(beneficiary?.birthDate)}</TableCell>
                       <TableCell>{getFormatDate(beneficiaryEntry?.entryDate)}</TableCell>

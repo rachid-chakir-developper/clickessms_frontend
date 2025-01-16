@@ -54,6 +54,11 @@ const DashboardTableItem = ({activityTrackingEstablishment}) => {
       values: extractValues('objectiveOccupancyRate', '%'),
     },
     {
+      key: "objectiveDaysCount",
+      label: "Nombre de journées théoriques",
+      values: extractValues('objectiveDaysCount'),
+    },
+    {
       key: "gapDaysCount",
       label: "ECART en journées",
       values: extractValues('gapDaysCount'),

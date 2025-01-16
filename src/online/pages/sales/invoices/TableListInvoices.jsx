@@ -104,6 +104,24 @@ const headCells = [
       label: 'Numéro',
     },
     {
+        id: 'year',
+        property: 'year',
+        exportField: 'year',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Année',
+    },
+    {
+        id: 'monthText',
+        property: 'month',
+        exportField: 'month',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Mois',
+    },
+    {
         id: 'title',
         property: 'title',
         exportField: 'title',
@@ -137,7 +155,7 @@ const headCells = [
         render: ({establishment})=> <EstablishmentChip establishment={establishment} />
     },
     {
-        id: 'es',
+        id: 'financier',
         property: 'financier',
         exportField: ['financier__number', 'financier__name'],
         numeric: false,
@@ -179,7 +197,6 @@ const headCells = [
         exportField: 'validity_end_date',
         numeric: false,
         disablePadding: false,
-        isDefault: true,
         label: 'Échéance',
         render: ({dueDate})=> getFormatDate(dueDate)
     },
@@ -189,7 +206,6 @@ const headCells = [
         exportField: 'total_ht',
         numeric: false,
         disablePadding: false,
-        isDefault: true,
         label: 'Montant HT',
         render: ({totalHt})=> <>{totalHt}&nbsp;€</>
     },
@@ -558,15 +574,6 @@ export default function TableListInvoices({
                           horizontal: 'right',
                         }}
                       >
-                        <Link
-                          to={`/online/ventes/factures/modifier/${row?.id}`}
-                          className="no_style"
-                        >
-                          <MenuItem onClick={handleCloseMenu}>
-                            <Article sx={{ mr: 2 }} />
-                            Détails
-                          </MenuItem>
-                        </Link>
                         <MenuItem
                           onClick={() => {
                             onOpenModalToPrint(row)
@@ -576,6 +583,15 @@ export default function TableListInvoices({
                           <Print sx={{ mr: 2 }} />
                           Imprimer
                         </MenuItem>
+                        <Link
+                          to={`/online/ventes/factures/modifier/${row?.id}`}
+                          className="no_style"
+                        >
+                          <MenuItem onClick={handleCloseMenu}>
+                            <Article sx={{ mr: 2 }} />
+                            Détails
+                          </MenuItem>
+                        </Link>
                         {row?.status === INVOICE_STATUS.DRAFT && <><Link
                           to={`/online/ventes/factures/modifier/${row?.id}`}
                           className="no_style"

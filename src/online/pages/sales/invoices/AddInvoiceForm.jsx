@@ -245,7 +245,7 @@ export default function AddInvoiceForm({ idInvoice, title }) {
     {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
-        let { __typename, ...invoiceCopy } = data.invoice;
+        let { __typename, monthText, ...invoiceCopy } = data.invoice;
         invoiceCopy.year = invoiceCopy.year ? dayjs(new Date()).set('year', Number(invoiceCopy.year)) : null;
         invoiceCopy.month = invoiceCopy.month ? dayjs(new Date()).set('month', Number(invoiceCopy.month)-1) : null;
         invoiceCopy.emissionDate = invoiceCopy.emissionDate ? dayjs(invoiceCopy.emissionDate) : null;

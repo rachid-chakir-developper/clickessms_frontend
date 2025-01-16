@@ -8,7 +8,65 @@ import { useSession } from '../../../../../_shared/context/SessionProvider';
 import { formatCurrencyAmount, getFormatDate } from '../../../../../_shared/tools/functions';
 import InvoiceSpanningDocument from './InvoiceSpanningDocument';
 import AmountInWords from '../../../../../_shared/components/money/AmountInWords';
+import { INVOICE_STATUS } from '../../../../../_shared/tools/constants';
 
+function InvoiceStamp({invoice}) {
+    return(<>
+            {invoice?.status===INVOICE_STATUS.DRAFT && <Box
+                sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%) rotate(-25deg)',
+                    textAlign: 'center',
+                }}
+                >
+                <Typography
+                    sx={{
+                    fontSize: 130,
+                    fontWeight: 700,
+                    opacity: 0.05,
+                    color: 'red',
+                    textTransform: 'uppercase',
+                    border: '4px solid red',
+                    padding: '10px 20px',
+                    borderRadius: '10px',
+                    transform: 'rotate(-25deg)',
+                    display: 'inline-block',
+                    }}
+                >
+                    BROUILLON
+                </Typography>
+            </Box>}
+            {invoice?.status===INVOICE_STATUS.PAID && <Box
+                sx={{
+                    position: 'absolute',
+                    top: '14%',
+                    right: '0',
+                    transform: 'translate(-50%, -50%) rotate(-25deg)',
+                    textAlign: 'center',
+                }}
+                >
+                <Typography
+                    sx={{
+                    fontSize: 50,
+                    fontWeight: 700,
+                    opacity: 0.1,
+                    color: 'green',
+                    textTransform: 'uppercase',
+                    border: '4px solid green',
+                    padding: '10px 20px',
+                    borderRadius: '10px',
+                    transform: 'rotate(-25deg)',
+                    display: 'inline-block',
+                    }}
+                >
+                    RÉGLÉE
+                </Typography>
+            </Box>}
+        </>
+    )
+}
 export default function InvoiceDocument({invoice}) {
     const { user } = useSession();
     const [getInvoice, { 
@@ -25,7 +83,8 @@ export default function InvoiceDocument({invoice}) {
     
     if(loadingInvoice) return <ProgressService type="form" />
     return (
-            <>{invoiceData?.invoice && <Stack sx={{ height : '100%', alignItems : 'center', justifyContent : 'center'}}>
+            <>{invoiceData?.invoice && <Stack sx={{ height : '100%', alignItems : 'center', justifyContent : 'center', position: 'relative'}}>
+                <InvoiceStamp invoice={invoiceData?.invoice}/>
                 <Paper elevation={0} sx={{ width: '100%'}}>
                     
                     <Grid container spacing={0.5}>

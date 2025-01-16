@@ -70,7 +70,7 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
       siret: '',
       finess: '',
       apeCode: '',
-      openingDate: dayjs(new Date()),
+      openingDate: null,
       measurementActivityUnit: 'DAY',
       city: '',
       zipCode: '',
@@ -134,7 +134,7 @@ export default function AddEstablishmentForm({ idEstablishment, title }) {
       ...formik.values,
       activityAuthorizations: [
         ...formik.values.activityAuthorizations,
-        { document: undefined, startingDateTime: dayjs(new Date()), endingDateTime: dayjs(new Date()), capacity: 0, temporaryCapacity: 0},
+        { document: undefined, startingDateTime: dayjs(new Date()), endingDateTime: null, capacity: 0, temporaryCapacity: 0},
       ],
     });
   };

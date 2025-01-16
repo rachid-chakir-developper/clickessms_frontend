@@ -16,6 +16,7 @@ export const INVOICE_MINI_INFOS = gql`
     invoiceType
     year
     month
+    monthText
   }
 `;
 
@@ -95,7 +96,6 @@ export const INVOICE_DETAILS = gql`
 export const INVOICE_RECAP = gql`
   fragment InvoiceRecapFragment on InvoiceType {
     ...InvoiceBasicInfosFragment
-    monthText
     companyName
     companyLogoBase64Encoded
     invoiceItems{

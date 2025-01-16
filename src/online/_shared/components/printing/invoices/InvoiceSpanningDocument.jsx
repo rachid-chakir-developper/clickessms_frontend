@@ -58,18 +58,18 @@ export default function InvoiceSpanningDocument({ invoice, items=[] }) {
             <Table aria-label="spanning table">
                 <TableHead>
                     <TableRow>
-                        <StyledTableCell>Noms</StyledTableCell>
-                        <StyledTableCell>Prénoms</StyledTableCell>
-                        <StyledTableCell>Date nai.</StyledTableCell>
-                        <StyledTableCell>Date adm.</StyledTableCell>
-                        <StyledTableCell>Date sor.</StyledTableCell>
-                        <StyledTableCell align="center">Ap.</StyledTableCell>
-                        <StyledTableCell align="center">Apjm</StyledTableCell>
-                        <StyledTableCell align="center">Garde</StyledTableCell>
-                        <StyledTableCell align="center">Plt direct</StyledTableCell>
-                        <StyledTableCell align="center">Nbr jour.</StyledTableCell>
-                        <StyledTableCell align="right">Prix joru.</StyledTableCell>
-                        <StyledTableCell align="right">Toutaux</StyledTableCell>
+                        <StyledTableCell>Nom</StyledTableCell>
+                        <StyledTableCell>Prénom</StyledTableCell>
+                        <StyledTableCell>Date&nbsp;naissance</StyledTableCell>
+                        <StyledTableCell>Date&nbsp;admission</StyledTableCell>
+                        <StyledTableCell>Date&nbsp;sortie</StyledTableCell>
+                        {/* <StyledTableCell>Ap.</StyledTableCell>
+                        <StyledTableCell>Apjm</StyledTableCell>
+                        <StyledTableCell>Garde</StyledTableCell>
+                        <StyledTableCell>Plt direct</StyledTableCell> */}
+                        <StyledTableCell>Nbr&nbsp;journée</StyledTableCell>
+                        <StyledTableCell>Prix&nbsp;journée</StyledTableCell>
+                        <StyledTableCell align="right" sx={{minWidth: 170}}>Total</StyledTableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -90,7 +90,7 @@ export default function InvoiceSpanningDocument({ invoice, items=[] }) {
                         <StyledTableCell align="left">
                             <Typography>{getFormatDate(item?.releaseDate)}</Typography>
                         </StyledTableCell>
-                        <StyledTableCell align="left">
+                        {/* <StyledTableCell align="left">
                             <Typography></Typography>
                         </StyledTableCell>
                         <StyledTableCell align="left">
@@ -101,7 +101,7 @@ export default function InvoiceSpanningDocument({ invoice, items=[] }) {
                         </StyledTableCell>
                         <StyledTableCell align="left">
                             <Typography></Typography>
-                        </StyledTableCell>
+                        </StyledTableCell> */}
                         <StyledTableCell align="left">
                             <Typography>{item?.quantity}</Typography>
                         </StyledTableCell>
@@ -114,9 +114,9 @@ export default function InvoiceSpanningDocument({ invoice, items=[] }) {
                     </StyledTableRow>
                 ))}
                     <TableRow>
-                        <StyledTableCell rowSpan={3} colSpan={7} sx={{ border: 0 }}>
+                        <StyledTableCell rowSpan={3} colSpan={5} sx={{ border: 0 }}>
                         </StyledTableCell>
-                        <StyledTableCell colSpan={5} sx={{padding: theme => theme.spacing(0)}}>
+                        <StyledTableCell colSpan={3} sx={{padding: theme => theme.spacing(0)}}>
                             <Table>
                                 <TableRow sx={{ backgroundColor: theme => theme.palette.grey[500] }}>
                                     <StyledTableCell
