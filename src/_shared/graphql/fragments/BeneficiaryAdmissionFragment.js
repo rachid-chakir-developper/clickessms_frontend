@@ -32,6 +32,9 @@ export const BENEFICIARY_ADMISSION_MINI_INFOS = gql`
 export const BENEFICIARY_ADMISSION_BASIC_INFOS = gql`
   fragment BeneficiaryAdmissionBasicInfosFragment on BeneficiaryAdmissionType {
     ...BeneficiaryAdmissionMiniInfosFragment
+    birthCity
+    birthCountry
+    nationality
     establishments{
       ...EstablishmentMiniInfosFragment
     }

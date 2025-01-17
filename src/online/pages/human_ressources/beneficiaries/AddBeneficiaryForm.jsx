@@ -55,6 +55,9 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       lastName: '',
       gender: null,
       birthDate: dayjs(new Date()),
+      birthCity: '',
+      birthCountry: '',
+      nationality: '',
       admissionDate: dayjs(new Date()),
       latitude: '',
       longitude: '',
@@ -523,17 +526,60 @@ const [getEmployees, {
                       />
                     </Item>
                   </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
-                    <Item>
-                      <TheDesktopDatePicker
-                        label="Date de naissance"
-                        value={formik.values.birthDate}
-                        onChange={(date) => formik.setFieldValue('birthDate', date)}
-                        disabled={loadingPost || loadingPut}
-                      />
-                    </Item>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
+                      <Grid item xs={12} sm={12} md={12}>
+                        <Item>
+                          <TheDesktopDatePicker
+                            label="Date de naissance"
+                            value={formik.values.birthDate}
+                            onChange={(date) => formik.setFieldValue('birthDate', date)}
+                            disabled={loadingPost || loadingPut}
+                          />
+                        </Item>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={5}>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Ville de naissance"
+                            value={formik.values.birthCity}
+                            onChange={(e) =>
+                              formik.setFieldValue('birthCity', e.target.value)
+                            }
+                            disabled={loadingPost || loadingPut}
+                          />
+                        </Item>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={7}>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Pays de naissance"
+                            value={formik.values.birthCountry}
+                            onChange={(e) =>
+                              formik.setFieldValue('birthCountry', e.target.value)
+                            }
+                            disabled={loadingPost || loadingPut}
+                          />
+                        </Item>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={12}>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Nationalité"
+                            value={formik.values.nationality}
+                            onChange={(e) =>
+                              formik.setFieldValue('nationality', e.target.value)
+                            }
+                            disabled={loadingPost || loadingPut}
+                          />
+                        </Item>
+                      </Grid>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
+                  <Grid item xs={12} sm={6} md={4}>
                     <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
                       <Grid item xs={12} sm={12} md={12}>
                         <Item>
@@ -594,7 +640,7 @@ const [getEmployees, {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
+                  <Grid item xs={12} sm={6} md={4}>
                     <Item>
                       <TheTextField
                         variant="outlined"

@@ -72,6 +72,9 @@ export const BENEFICIARY_ENTRY_DETAILS = gql`
 export const BENEFICIARY_BASIC_INFOS = gql`
   fragment BeneficiaryBasicInfosFragment on BeneficiaryType {
     ...BeneficiaryMiniInfosFragment
+    birthCity
+    birthCountry
+    nationality
     beneficiaryStatusEntries{
       ...BeneficiaryStatusEntryFragment
     }

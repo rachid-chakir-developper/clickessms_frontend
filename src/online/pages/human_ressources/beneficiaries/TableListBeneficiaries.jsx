@@ -263,6 +263,30 @@ export default function TableListBeneficiaries({
         render: ({birthDate})=> getFormatDate(birthDate)
     },
     {
+        id: 'birthCity',
+        property: 'birth_city',
+        exportField: 'birth_city',
+        numeric: false,
+        disablePadding: true,
+        label: 'Ville de naissance',
+    },
+    {
+        id: 'birthCountry',
+        property: 'birth_country',
+        exportField: 'birth_country',
+        numeric: false,
+        disablePadding: true,
+        label: 'Pays de naissance',
+    },
+    {
+        id: 'nationality',
+        property: 'nationality',
+        exportField: 'nationality',
+        numeric: false,
+        disablePadding: true,
+        label: 'Nationnalité',
+    },
+    {
         id: 'beneficiaryStatuses',
         property: 'beneficiary_status_entries__beneficiary_status__name',
         exportField: ['beneficiary_status_entries__beneficiary_status__name'],

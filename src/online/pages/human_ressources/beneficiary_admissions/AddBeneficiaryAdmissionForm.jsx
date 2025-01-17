@@ -79,6 +79,9 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
       gender: null,
       receptionDate: dayjs(new Date()),
       birthDate: dayjs(new Date()),
+      birthCity: '',
+      birthCountry: '',
+      nationality: '',
       latitude: '',
       longitude: '',
       city: '',
@@ -408,14 +411,57 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
                     </Item>
                   </Grid>
                   <Grid item xs={12} sm={6} md={4}>
-                    <Item>
-                      <TheDesktopDatePicker
-                        label="Date de naissance"
-                        value={formik.values.birthDate}
-                        onChange={(date) => formik.setFieldValue('birthDate', date)}
-                        disabled={loadingPost || loadingPut}
-                      />
-                    </Item>
+                    <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
+                      <Grid item xs={12} sm={12} md={12}>
+                        <Item>
+                          <TheDesktopDatePicker
+                            label="Date de naissance"
+                            value={formik.values.birthDate}
+                            onChange={(date) => formik.setFieldValue('birthDate', date)}
+                            disabled={loadingPost || loadingPut}
+                          />
+                        </Item>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={5}>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Ville de naissance"
+                            value={formik.values.birthCity}
+                            onChange={(e) =>
+                              formik.setFieldValue('birthCity', e.target.value)
+                            }
+                            disabled={loadingPost || loadingPut}
+                          />
+                        </Item>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={7}>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Pays de naissance"
+                            value={formik.values.birthCountry}
+                            onChange={(e) =>
+                              formik.setFieldValue('birthCountry', e.target.value)
+                            }
+                            disabled={loadingPost || loadingPut}
+                          />
+                        </Item>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={12}>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Nationalité"
+                            value={formik.values.nationality}
+                            onChange={(e) =>
+                              formik.setFieldValue('nationality', e.target.value)
+                            }
+                            disabled={loadingPost || loadingPut}
+                          />
+                        </Item>
+                      </Grid>
+                    </Grid>
                   </Grid>
                   <Grid item xs={12} sm={6} md={4}>
                     <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
@@ -522,7 +568,7 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
                       <TheAutocomplete
                         options={establishmentsData?.establishments?.nodes}
                         label="Structures concernées"
-                        placeholder="Ajouter une tructure"
+                        placeholder="Ajouter une structure"
                         limitTags={3}
                         value={formik.values.establishments}
                         onChange={(e, newValue) =>

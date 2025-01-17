@@ -187,6 +187,9 @@ function BeneficiaryAdmissionInfosPerso({ beneficiaryAdmission }) {
     preferredName,
     gender,
     birthDate,
+    birthCity,
+    birthCountry,
+    nationality,
     latitude,
     longitude,
     city,
@@ -223,7 +226,10 @@ function BeneficiaryAdmissionInfosPerso({ beneficiaryAdmission }) {
             <b>Nom de naissance :</b> {lastName || '-'} <br />
             <b>Nom d’usage :</b> {preferredName || '-'} <br />
             <b>Genre :</b> {gender?.name || '-'} <br />
-            <b>Date de naissance :</b> {getFormatDate(birthDate) || '-'}
+            <b>Date de naissance :</b> {getFormatDate(birthDate) || '-'}<br />
+            <b>Ville de naissance :</b> {birthCity || '-'} <br />
+            <b>Pays de naissance :</b> {birthCountry || '-'} <br />
+            <b>Nationnalité :</b> {nationality || '-'} 
           </Typography>
         </Grid>
         <Grid item xs={4}>
@@ -270,7 +276,7 @@ function BeneficiaryAdmissionOtherInfos({ beneficiaryAdmission }) {
           {beneficiaryAdmission?.employee && (
             <Paper sx={{ padding: 1, display: 'flex' }} variant="outlined">
               <Typography variant="body1" color="textSecondary" gutterBottom>
-                Demandé par :
+                Ajoutée par :
               </Typography>
               <EmployeeChip employee={beneficiaryAdmission?.employee} />
             </Paper>

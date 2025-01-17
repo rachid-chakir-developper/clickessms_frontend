@@ -56,13 +56,9 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
     firstName,
     lastName,
     birthDate,
-    position,
-    hiringDate,
-    probationEndDate,
-    workEndDate,
-    startingSalary,
-    latitude,
-    longitude,
+    birthCity,
+    birthCountry,
+    nationality,
     city,
     zipCode,
     address,
@@ -70,14 +66,6 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
     fix,
     fax,
     email,
-    webSite,
-    otherContacts,
-    iban,
-    bic,
-    bankName,
-    description,
-    observation,
-    isActive,
     createdAt,
     updatedAt,
   } = beneficiary;
@@ -177,7 +165,10 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
             </Typography>
             <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
             <Typography variant="body1">
-              Date de naissance: {getFormatDate(birthDate)}
+              Date de naissance: {getFormatDate(birthDate)}<br />
+              Ville de naissance: {birthCity}<br />
+              Pays de naissance: {birthCountry}<br />
+              Nationnalité: {nationality}
             </Typography>
           </Paper>
           <CustomFieldValuesDetails formModel="Beneficiary" idObject={id} />

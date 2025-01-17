@@ -403,7 +403,7 @@ const [getEmployees, {
                 <TheAutocomplete
                   options={establishmentsData?.establishments?.nodes}
                   label="Structures concernées"
-                  placeholder="Ajouter une tructure"
+                  placeholder="Ajouter une structure"
                   limitTags={3}
                   value={formik.values.establishments}
                   onChange={(e, newValue) =>
