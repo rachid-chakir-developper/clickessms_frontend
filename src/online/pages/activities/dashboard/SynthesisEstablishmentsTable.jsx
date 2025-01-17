@@ -17,6 +17,7 @@ import {
 import EstablishmentChip from "../../companies/establishments/EstablishmentChip";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { BENEFICIARY_ADMISSION_STATUS_CHOICES } from "../../../../_shared/tools/constants";
+import { getFormatDate } from "../../../../_shared/tools/functions";
 
 const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) => {
     const {activitySynthesisMonth=[]} = activitySynthesisEstablishment
@@ -119,9 +120,9 @@ const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) =>
                     </TableHead>
                     <TableBody>
                         {activitySynthesisMonthItem?.beneficiaryAdmissions?.map((beneficiaryAdmission, index) => {
-                            const beneficiary = beneficiaryEntry?.beneficiary ? beneficiaryAdmission?.beneficiary : beneficiaryAdmission;
+                            const beneficiary = beneficiaryAdmission?.beneficiary ? beneficiaryAdmission?.beneficiary : beneficiaryAdmission;
                             return (<TableRow key={index}>
-                                <TableCell>beneficiaryAdmission</TableCell>
+                                <TableCell>{getFormatDate(beneficiaryAdmission.receptionDate)}</TableCell>
                                 <TableCell>
                                     {`${
                                         beneficiary?.preferredName && beneficiary?.preferredName !== ''
@@ -129,10 +130,16 @@ const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) =>
                                             : beneficiary?.lastName
                                     } ${beneficiary?.firstName}`}</TableCell>
                                 <TableCell style={{ color: beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.APPROVED ? "green" : "" }}>
-                                {'demande.dateadmission' || ""}
+                                    {
+                                        beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.APPROVED ?
+                                        getFormatDate(beneficiaryAdmission.responseDate) : ''
+                                    }
                                 </TableCell>
                                 <TableCell style={{ color: beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.REJECTED ? "red" : "" }}>
-                                {'demande.daterefus' || ""}
+                                    {
+                                        beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.REJECTED ?
+                                        getFormatDate(beneficiaryAdmission.responseDate) : ''
+                                    }
                                 </TableCell>
                                 <TableCell>{beneficiaryAdmission.statusReason || ""}</TableCell>
                             </TableRow>)

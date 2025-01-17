@@ -1,16 +1,27 @@
 import * as React from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Icon, IconButton, Stack, styled, TextField, Tooltip, Typography } from '@mui/material';
 import { Block, Cancel, Done, Drafts, Euro, HourglassEmpty, HourglassFull, HourglassTop, Pending, Print, ReceiptLong, Send, TaskAlt } from '@mui/icons-material';
 import { useMutation } from '@apollo/client';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 import CustomizedStatusLabelMenu from '../../../../_shared/components/app/menu/CustomizedStatusLabelMenu';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import { PUT_BENEFICIARY_ADMISSION_FIELDS } from '../../../../_shared/graphql/mutations/BeneficiaryAdmissionMutations';
 import { useSession } from '../../../../_shared/context/SessionProvider';
-import InputSendComment from './beneficiary_admissions-tabs/beneficiary_admission-chat/InputSendComment';
 import { BENEFICIARY_ADMISSION_STATUS_CHOICES } from '../../../../_shared/tools/constants';
 import { Link } from 'react-router-dom';
 import GenerateBeneficiaryButton from './GenerateBeneficiaryButton';
+import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
+import dayjs from 'dayjs';
+import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 
+const Item = styled(Stack)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(2),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
 
 export default function BeneficiaryAdmissionStatusLabelMenu({beneficiaryAdmission , openChangeReason, setOpenChangeReason}) {
   const { user } = useSession();
@@ -114,23 +125,35 @@ export default function BeneficiaryAdmissionStatusLabelMenu({beneficiaryAdmissio
         }
         {beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.APPROVED && <GenerateBeneficiaryButton beneficiaryAdmission={beneficiaryAdmission} />}
       </Box>
-
-        {/* Modal pour demander le motif */}
-        <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth={true} maxWidth="md">
-          <DialogTitle>Ajouter un motif</DialogTitle>
-          <DialogContent>
-            <InputSendStatusReason type="iconButton" beneficiaryAdmission={beneficiaryAdmission} updateBeneficiaryAdmissionFields={updateBeneficiaryAdmissionFields}/>
-          </DialogContent>
-          <DialogActions>
-              <Button color="inherit" onClick={handleCloseDialog}>Annuler</Button>
-          </DialogActions>
-        </Dialog>
+      <DialogStatusReason 
+        beneficiaryAdmission={beneficiaryAdmission} 
+        updateBeneficiaryAdmissionFields={updateBeneficiaryAdmissionFields}
+        loading={loadingPut}
+        onClose={handleCloseDialog}
+        open={openDialog}
+      />
     </Box>
   );
 }
 
 
-function InputSendStatusReason({type, beneficiaryAdmission, updateBeneficiaryAdmissionFields}){
+function DialogStatusReason({open, onClose, type, beneficiaryAdmission, updateBeneficiaryAdmissionFields, loading=false}){
+  const validationSchema = yup.object({});
+  const formik = useFormik({
+      initialValues: {
+        responseDate: beneficiaryAdmission ? (beneficiaryAdmission?.responseDate ? dayjs(beneficiaryAdmission?.responseDate) : null) : dayjs(new Date()) ,
+        statusReason: beneficiaryAdmission?.statusReason || '',
+      },
+      validationSchema: validationSchema,
+      onSubmit: (values) => {
+        let valuesCopy = {...values};
+        updateBeneficiaryAdmissionFields({ 
+          variables: {
+            id: beneficiaryAdmission?.id,
+            beneficiaryAdmissionData: valuesCopy
+          } })
+      },
+    });
   const [newStatusReason, setNewStatusReason] = React.useState(beneficiaryAdmission?.statusReason || '');
   const handleSendStatusReason = () => {
       if (newStatusReason.trim() === '') return;
@@ -139,35 +162,49 @@ function InputSendStatusReason({type, beneficiaryAdmission, updateBeneficiaryAdm
   };
 
   return (
-          <Box style={{ display: 'flex', alignItems: 'center', marginTop: 20 }}>
-              <TextField
-                  fullWidth
-                  multiline
-                  variant="outlined"
-                  label="Tapez votre motif..."
-                  value={newStatusReason}
-                  onChange={(e) => setNewStatusReason(e.target.value)}
-              />
-              {
-                  type !== 'iconButton' ? <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleSendStatusReason}
-                      endIcon={<SendIcon />}
-                      style={{ marginLeft: 8 }}
-                  >
+        <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="md">
+          <form onSubmit={formik.handleSubmit}>
+            <DialogTitle>Ajouter un motif de réponse</DialogTitle>
+            <DialogContent>
+              <Box style={{  marginTop: 20 }}>
+                <Grid container>
+                  <Grid item xs={12} sm={6} md={6}>
+                    <Item>
+                      <TheDesktopDatePicker
+                        label="Date de réponse"
+                        value={formik.values.responseDate}
+                        onChange={(date) => formik.setFieldValue('responseDate', date)}
+                        disabled={loading}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={12} >
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Motif de réponse"
+                        multiline
+                        rows={4}
+                        value={formik.values.statusReason}
+                        onChange={(e) => formik.setFieldValue('statusReason', e.target.value)}
+                        disabled={loading}
+                      />
+                    </Item>
+                  </Grid>
+                </Grid>
+              </Box>
+            </DialogContent>
+            <DialogActions>
+                <Button color="inherit" onClick={onClose}>Annuler</Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disabled={!formik.isValid || loading}
+                >
                   Valider
-                  </Button> :
-                  <Tooltip title="Envoyer">
-                      <IconButton
-                          color="primary"
-                          onClick={handleSendStatusReason}
-                          style={{ marginLeft: 8 }}
-                      >
-                      <Send />
-                  </IconButton>
-              </Tooltip>
-              }
-          </Box>
+                </Button>
+            </DialogActions>
+          </form>
+        </Dialog>
   );
 };

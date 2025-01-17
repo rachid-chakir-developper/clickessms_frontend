@@ -129,6 +129,8 @@ function BeneficiaryAdmissionMiniInfos({ beneficiaryAdmission }) {
     id,
     number,
     statusReason,
+    receptionDate,
+    responseDate,
     createdAt,
     updatedAt
   } = beneficiaryAdmission;
@@ -150,6 +152,9 @@ function BeneficiaryAdmissionMiniInfos({ beneficiaryAdmission }) {
             </Typography>
             <Divider sx={{ my: 2 }} />
             <Typography variant="body2" color="textSecondary">
+              <b>Date de réception de la demande d’admission :</b> {getFormatDate(receptionDate)}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
               <b>Créé le :</b> {getFormatDateTime(createdAt)} <br />
               <b>Dernière modification :</b> {getFormatDateTime(updatedAt)}
             </Typography>
@@ -159,8 +164,11 @@ function BeneficiaryAdmissionMiniInfos({ beneficiaryAdmission }) {
             </Typography>
             <BeneficiaryAdmissionStatusLabelMenu beneficiaryAdmission={beneficiaryAdmission} openChangeReason={openChangeReason} setOpenChangeReason={setOpenChangeReason}/>
             <Tooltip title="Cliquez pour modifier" placement="top-start">
-              <Typography variant="body2" color="textSecondary" sx={{ my: 2 }} onClick={()=>setOpenChangeReason(true)}>
-                <b>Motif :</b> {statusReason}
+              <Typography variant="body2" color="textSecondary" sx={{ marginTop: 2 }} onClick={()=>setOpenChangeReason(true)}>
+                <b>Date de réponse :</b> {getFormatDate(responseDate)}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" onClick={()=>setOpenChangeReason(true)}>
+                <b>Motif de réponse :</b> {statusReason}
               </Typography>
             </Tooltip>
           </Grid>

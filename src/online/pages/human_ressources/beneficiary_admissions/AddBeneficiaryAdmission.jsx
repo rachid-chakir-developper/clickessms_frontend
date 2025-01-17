@@ -9,7 +9,7 @@ export default function AddBeneficiaryAdmission() {
       idBeneficiaryAdmission={idBeneficiaryAdmission}
       title={
         idBeneficiaryAdmission && idBeneficiaryAdmission > 0
-          ? `Modifier la admission`
+          ? `Modifier l'admission`
           : `Ajouter une admission`
       }
     />

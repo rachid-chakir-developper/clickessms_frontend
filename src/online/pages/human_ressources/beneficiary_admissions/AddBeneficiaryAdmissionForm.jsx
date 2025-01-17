@@ -77,6 +77,7 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
       firstName: '',
       lastName: '',
       gender: null,
+      receptionDate: dayjs(new Date()),
       birthDate: dayjs(new Date()),
       latitude: '',
       longitude: '',
@@ -93,6 +94,8 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
       isActive: true,
       description: '',
       observation: '',
+      responseDate: dayjs(new Date()),
+      statusReason: '',
       files: [],
       financier: null,
       establishments: [],
@@ -239,6 +242,8 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
     onCompleted: (data) => {
       let { __typename, folder, employee, ...beneficiaryAdmissionCopy } = data.beneficiaryAdmission;
       beneficiaryAdmissionCopy.gender = beneficiaryAdmissionCopy.gender ? Number(beneficiaryAdmissionCopy.gender.id) : null;
+      beneficiaryAdmissionCopy.receptionDate = beneficiaryAdmissionCopy.receptionDate ? dayjs(beneficiaryAdmissionCopy.receptionDate) : null;
+      beneficiaryAdmissionCopy.responseDate = beneficiaryAdmissionCopy.responseDate ? dayjs(beneficiaryAdmissionCopy.responseDate) : null;
       beneficiaryAdmissionCopy.birthDate = beneficiaryAdmissionCopy.birthDate ? dayjs(beneficiaryAdmissionCopy.birthDate) : null;
       formik.setValues(beneficiaryAdmissionCopy);
       if(!canManageActivity && beneficiaryAdmissionCopy.status !== BENEFICIARY_ADMISSION_STATUS_CHOICES.PENDING) setIsNotEditable(true)
@@ -402,7 +407,7 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
                       />
                     </Item>
                   </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
+                  <Grid item xs={12} sm={6} md={4}>
                     <Item>
                       <TheDesktopDatePicker
                         label="Date de naissance"
@@ -412,7 +417,7 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
                       />
                     </Item>
                   </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
+                  <Grid item xs={12} sm={6} md={4}>
                     <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
                       <Grid item xs={12} sm={12} md={12}>
                         <Item>
@@ -473,7 +478,7 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
+                  <Grid item xs={12} sm={6} md={4}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -482,6 +487,14 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
                         onChange={(e) =>
                           formik.setFieldValue('mobile', e.target.value)
                         }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                    <Item>
+                      <TheDesktopDatePicker
+                        label="Date de réception de la demande d’admission"
+                        value={formik.values.receptionDate}
+                        onChange={(date) => formik.setFieldValue('receptionDate', date)}
                         disabled={loadingPost || loadingPut}
                       />
                     </Item>
@@ -534,7 +547,30 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
                       />
                     </Item>
                   </Grid>
-                  <Grid item xs={12} sm={6} md={7} >
+                  <Grid item xs={12} sm={6} md={4}>
+                    <Item>
+                      <TheDesktopDatePicker
+                        label="Date de réponse"
+                        value={formik.values.responseDate}
+                        onChange={(date) => formik.setFieldValue('responseDate', date)}
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={6} >
+                    <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Motif de réponse"
+                        multiline
+                        rows={4}
+                        value={formik.values.statusReason}
+                        onChange={(e) => formik.setFieldValue('statusReason', e.target.value)}
+                        disabled={loadingPost || loadingPut || isNotEditable}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={6} >
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -547,7 +583,7 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
                       />
                     </Item>
                   </Grid>
-                  <Grid item xs={12} sm={6} md={5} >
+                  <Grid item xs={12} sm={12} md={12} >
                     <Item>
                       <MultiFileField
                         variant="outlined"

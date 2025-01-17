@@ -9,6 +9,7 @@ export const BENEFICIARY_ADMISSION_MINI_INFOS = gql`
   fragment BeneficiaryAdmissionMiniInfosFragment on BeneficiaryAdmissionType {
     id
     number
+    receptionDate
     gender{
       id
       name
@@ -19,6 +20,7 @@ export const BENEFICIARY_ADMISSION_MINI_INFOS = gql`
     email
     birthDate
     status
+    responseDate
     statusReason
     financier{
       ...FinancierBasicInfosFragment
