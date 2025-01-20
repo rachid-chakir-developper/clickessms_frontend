@@ -54,8 +54,7 @@ function ccyFormat(num) {
     return '0.00'; // ou une autre valeur par défaut que vous souhaitez retourner
 }
 
-export default function PurchaseOrderSpanningDocument({ order, items=[], deposits=[] }) {
-    const detailTva = JSON.parse(order?.detailTva || '{}'); 
+export default function PurchaseOrderSpanningDocument({ order, items=[] }) {
     return (
         <>
             <Table sx={{ minWidth: 700 }} aria-label="spanning table">
@@ -71,28 +70,20 @@ export default function PurchaseOrderSpanningDocument({ order, items=[], deposit
                 {items.map((item, index) => (
                     <StyledTableRow key={index}>
                         <StyledTableCell>
-                            <Item sx={{textAlign: 'left'}}>
-                                <Typography
-                                    gutterBottom
-                                    component="div"
-                                    dangerouslySetInnerHTML={{ __html: item?.description }}
-                                />
-                            </Item>
+                            <Typography
+                                gutterBottom
+                                component="div"
+                                dangerouslySetInnerHTML={{ __html: item?.description }}
+                            />
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                            <Typography>{item?.quantity}</Typography>
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                            <Typography>{item?.amountTtc / item?.quantity}&nbsp;€</Typography>
                         </StyledTableCell>
                         <StyledTableCell align="right">
-                            <Item>
-                                <Typography>{item?.quantity}</Typography>
-                            </Item>
-                        </StyledTableCell>
-                        <StyledTableCell align="right">
-                            <Item>
-                                <Typography>{item?.amountTtc / item?.quantity}&nbsp;€</Typography>
-                            </Item>
-                        </StyledTableCell>
-                        <StyledTableCell align="right">
-                            <Item>
-                                <Typography>{item?.amountTtc}&nbsp;€</Typography>
-                            </Item>
+                            <Typography>{item?.amountTtc}&nbsp;€</Typography>
                         </StyledTableCell>
                     </StyledTableRow>
                 ))}

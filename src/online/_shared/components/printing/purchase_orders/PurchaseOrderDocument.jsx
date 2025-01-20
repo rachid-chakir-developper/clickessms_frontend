@@ -86,7 +86,6 @@ export default function PurchaseOrderDocument({purchaseOrder}) {
                             <PurchaseOrderSpanningDocument 
                                 order={purchaseOrderData?.purchaseOrder}
                                 items={purchaseOrderData?.purchaseOrder?.purchaseOrderItems || []}
-                                deposits={purchaseOrderData?.purchaseOrder?.purchaseOrderDeposits || []}
                                 />
                         </Grid>
                     </Grid>

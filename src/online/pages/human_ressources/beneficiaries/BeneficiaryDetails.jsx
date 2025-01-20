@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
-import { Box, Button, Divider, Paper, Stack, alpha } from '@mui/material';
+import { Box, Button, Divider, List, Paper, Stack, alpha } from '@mui/material';
 import { Grid, Typography, Avatar } from '@mui/material';
 // Assurez-vous d'importer dayjs si vous l'utilisez pour la gestion des dates
 
@@ -28,7 +28,17 @@ export default function BeneficiaryDetails() {
 
   return (
     <Stack>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
+        <Box sx={{ marginX: 2 }}>
+          <Link
+            to={`/online/ressources-humaines/beneficiaires/liste`}
+            className="no_style"
+          >
+            <Button variant="text" startIcon={<List />} size="small">
+              Retour à la Liste
+            </Button>
+          </Link>
+        </Box>
         <Link
           to={`/online/ressources-humaines/beneficiaires/modifier/${beneficiaryData?.beneficiary?.id}`}
           className="no_style"
@@ -56,6 +66,7 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
     firstName,
     lastName,
     birthDate,
+    age,
     birthCity,
     birthCountry,
     nationality,
@@ -126,7 +137,7 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
                 {`${firstName} ${preferredName && preferredName !== '' ? preferredName : lastName}`}
               </Typography>
               <Typography variant="body2">{`Nom de naissance: ${lastName}`}</Typography>
-              <Typography variant="body2" sx={{ fontStyle: 'italic' }}>{getFormatDate(birthDate)}</Typography>
+              <Typography variant="body2" sx={{ fontStyle: 'italic' }}>{getFormatDate(birthDate)} (âge: {age})</Typography>
               {address && address !== '' && (
                 <Typography variant="body2">{address}</Typography>
               )}

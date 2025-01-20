@@ -14,6 +14,7 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
@@ -21,23 +22,22 @@ import {
   Delete,
   Done,
   Edit,
-  Euro,
   Folder,
   MoreVert,
-  Print,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
+import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover} from '@mui/material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
-import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
-import { getFormatDate, getFormatDateTime } from '../../../../_shared/tools/functions';
-import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import { render } from 'react-dom';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
+import { formatCurrencyAmount, getFormatDate, getFormatDateTime, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
-import { GET_CUSTOM_FIELDS } from '../../../../_shared/graphql/queries/CustomFieldQueries';
-import { useQuery } from '@apollo/client';
+import PrintButton from '../../../_shared/components/printing/PrintButton';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -96,6 +96,141 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
+const headCells = [
+    {
+      id: 'number',
+      property: 'number',
+      exportField: 'number',
+      numeric: false,
+      disablePadding: true,
+      label: 'Numéro',
+    },
+    {
+      id: 'label',
+      property: 'label',
+      exportField: 'label',
+      numeric: false,
+      disablePadding: true,
+      label: 'Libellé',
+    },
+    {
+      id: 'endowmentType',
+      property: 'endowment_type__name',
+      exportField: 'endowment_type__name',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Type',
+      render: ({endowmentType}) => endowmentType && <Chip label={endowmentType?.name}  variant="filled" />
+    },
+    {
+      id: 'accountingNature',
+      property: 'accounting_nature__name',
+      exportField: 'accounting_nature__name',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Nature',
+      render: ({accountingNature}) => accountingNature && <Chip label={accountingNature?.name}  variant="filled" />
+    },
+    {
+        id: 'amountAllocated',
+        property: 'amount_allocated',
+        exportField: 'amount_allocated',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Montant prévu',
+        render: ({amountAllocated})=> <>{formatCurrencyAmount(amountAllocated)}</>
+    },
+    {
+        id: 'establishment',
+        property: 'establishment__name',
+        exportField: 'establishment__name',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Structure',
+        render: ({establishment}) => <EstablishmentChip establishment={establishment} />
+    },
+    {
+      id: 'gender',
+      property: 'gender__name',
+      exportField: 'gender__name',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Genre',
+      render: ({gender}) => gender && <Chip label={gender?.name}  variant="filled" />
+    },
+    {
+      id: 'professionalStatus',
+      property: 'professional_status__name',
+      exportField: 'professional_status__name',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Statut professionnel',
+      render: ({professionalStatus}) => professionalStatus && <Chip label={professionalStatus?.name}  variant="filled" />
+    },
+    {
+      id: 'age',
+      property: 'age_min',
+      exportField: ['age_min', 'age_max'],
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Âge',
+      render: ({ageMin, ageMax}) => <>{ageMin}-{ageMax}</>
+    },
+    {
+        id: 'startingDateTime',
+        property: 'starting_date_time',
+        exportField: 'starting_date_time',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Date de début',
+        render: ({startingDateTime}) => getFormatDate(startingDateTime)
+    },
+    {
+        id: 'endingDateTime',
+        property: 'ending_date_time',
+        exportField: 'ending_date_time',
+        numeric: false,
+        disablePadding: false,
+        label: 'Date de fin',
+        render: ({endingDateTime}) => getFormatDate(endingDateTime)
+    },
+    {
+        id: 'description',
+        property: 'description',
+        exportField: 'description',
+        numeric: false,
+        disablePadding: false,
+        label: 'Description',
+        render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
+    },
+    {
+        id: 'isActive',
+        property: 'is_active',
+        exportField: 'is_active',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'État',
+        render: ({isActive})=> isActive ? <AppLabel color="success">Actif</AppLabel> : <AppLabel color="warning">Inactif</AppLabel>
+    },
+    {
+        id: 'action',
+        numeric: true,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Actions',
+    },
+];
 
 function EnhancedTableHead(props) {
   const {
@@ -153,7 +288,7 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, onFilterChange, headCells } = props;
+  const { numSelected, onFilterChange } = props;
   const [selectedColumns, setSelectedColumns] = React.useState(
     headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
   );
@@ -190,12 +325,12 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les personnes accompagnées
+          Les dotations
         </Typography>
       )}
       <TableExportButton 
-        entity={'Beneficiary'}
-        fileName={'personnes-accompagnees'}
+        entity={'Endowment'}
+        fileName={'Dépenses'}
         fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
         titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
@@ -216,233 +351,13 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListBeneficiaries({
+export default function TableListEndowments({
   loading,
   rows,
-  onDeleteBeneficiary,
+  onDeleteEndowment,
   onFilterChange,
   paginator,
 }) {
-  
-  const [headCells, setHeadCells] = React.useState([
-    {
-        id: 'firstName',
-        property: 'first_name',
-        exportField: 'first_name',
-        numeric: false,
-        disablePadding: true,
-        isDefault: true,
-        label: 'Prénom',
-    },
-    {
-        id: 'lastName',
-        property: 'last_name',
-        exportField: 'last_name',
-        numeric: false,
-        disablePadding: true,
-        isDefault: true,
-        label: 'Nom de naissance',
-    },
-    {
-        id: 'preferredName',
-        property: 'preferred_name',
-        exportField: 'preferred_name',
-        numeric: false,
-        disablePadding: true,
-        isDefault: true,
-        label: 'Nom d’usage',
-    },
-    {
-        id: 'birthDate',
-        property: 'birth_date',
-        exportField: 'birth_date',
-        numeric: false,
-        disablePadding: true,
-        isDefault: true,
-        label: 'Date de naissance',
-        render: ({birthDate})=> getFormatDate(birthDate)
-    },
-    {
-        id: 'age',
-        property: 'age',
-        exportField: 'age',
-        numeric: false,
-        disablePadding: true,
-        isDefault: true,
-        label: 'Âge',
-    },
-    {
-        id: 'birthCity',
-        property: 'birth_city',
-        exportField: 'birth_city',
-        numeric: false,
-        disablePadding: true,
-        label: 'Ville de naissance',
-    },
-    {
-        id: 'birthCountry',
-        property: 'birth_country',
-        exportField: 'birth_country',
-        numeric: false,
-        disablePadding: true,
-        label: 'Pays de naissance',
-    },
-    {
-        id: 'nationality',
-        property: 'nationality',
-        exportField: 'nationality',
-        numeric: false,
-        disablePadding: true,
-        label: 'Nationnalité',
-    },
-    {
-        id: 'beneficiaryStatuses',
-        property: 'beneficiary_status_entries__beneficiary_status__name',
-        exportField: ['beneficiary_status_entries__beneficiary_status__name'],
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        disableClickDetail: true,
-        sortDisabled: true,
-        label: 'Status',
-        render: ({beneficiaryStatusEntries}) => beneficiaryStatusEntries && beneficiaryStatusEntries?.length > 0 && 
-        <AppLabel>{beneficiaryStatusEntries[beneficiaryStatusEntries?.length - 1]?.beneficiaryStatus?.name}</AppLabel>
-    },
-    {
-        id: 'establishments',
-        property: 'beneficiary_entries__establishments__name',
-        exportField: ['beneficiary_entries__establishments__name'],
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        disableClickDetail: true,
-        sortDisabled: true,
-        label: 'Structure(s)',
-        render: ({beneficiaryEntries}) => beneficiaryEntries && beneficiaryEntries?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
-        {beneficiaryEntries[beneficiaryEntries?.length - 1]?.establishments?.map((establishment, index) => {
-          return (
-            <EstablishmentChip
-              key={index}
-              establishment={establishment}
-            />
-          );
-        })}
-      </Stack>
-    },
-    {
-        id: 'internalReferents',
-        property: 'beneficiary_entries__internal_referents__first_name',
-        exportField: ['beneficiary_entries__internal_referents__first_name', 'beneficiary_entries__internal_referents__last_name'],
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        disableClickDetail: true,
-        sortDisabled: true,
-        label: 'Référents internes',
-        render: ({beneficiaryEntries}) => beneficiaryEntries && beneficiaryEntries?.length > 0  && <Stack direction="row" flexWrap='wrap' spacing={1}>
-          <ChipGroupWithPopover people={beneficiaryEntries[beneficiaryEntries?.length - 1]?.internalReferents} />
-      </Stack>
-    },
-    {
-        id: 'entryDate',
-        property: 'beneficiary_entries__entry_date',
-        exportField: 'beneficiary_entries__entry_date',
-        numeric: false,
-        disablePadding: true,
-        isDefault: true,
-        label: "Date d'entrée",
-        render: ({beneficiaryEntries})=> getFormatDate(beneficiaryEntries[beneficiaryEntries?.length - 1]?.entryDate)
-    },
-    {
-        id: 'dueDate',
-        property: 'beneficiary_entries__due_date',
-        exportField: 'beneficiary_entries__due_date',
-        numeric: false,
-        disablePadding: true,
-        isDefault: true,
-        label: "Date d'échéance",
-        render: ({beneficiaryEntries})=> getFormatDate(beneficiaryEntries[beneficiaryEntries?.length - 1]?.dueDate)
-    },
-    {
-        id: 'releaseDate',
-        property: 'beneficiary_entries__release_date',
-        exportField: 'beneficiary_entries__release_date',
-        numeric: false,
-        disablePadding: true,
-        isDefault: true,
-        label: "Date de sortie",
-        render: ({beneficiaryEntries})=> getFormatDate(beneficiaryEntries[beneficiaryEntries?.length - 1]?.releaseDate)
-    },
-    {
-        id: 'action',
-        numeric: true,
-        disablePadding: false,
-        isDefault: true,
-        label: 'Actions',
-    },
-  ]);
-  // Récupérer les champs personnalisés avec useQuery
-  const {
-    loading: loadingCustomFields,
-    data: customFieldsData,
-    error: customFieldsError,
-  } = useQuery(GET_CUSTOM_FIELDS, { variables: { customFieldFilter: { formModels: ['Beneficiary'] } } });
-
-  // Mettre à jour les headCells lorsque les champs personnalisés sont récupérés
-  React.useEffect(() => {
-    if (customFieldsData) {
-      setHeadCells(prevHeadCells => {
-        // Sélectionner les éléments à conserver
-        const actionCell = prevHeadCells.find(cell => cell.id === 'action');
-        const otherCells = prevHeadCells.slice(0, prevHeadCells.length - 1); // Tous les éléments sauf les deux derniers
-
-        // Créer les cellules de champs personnalisés
-        const customFieldCells = customFieldsData?.customFields?.nodes?.map(field => ({
-          id: field.id,
-          property: field.property,
-          exportField: field.exportField,
-          numeric: false,
-          disablePadding: false,
-          isDefault: false,
-          label: field.label,
-          render: ({ customFieldValues }) => {
-            const customFieldValue = customFieldValues.find((value) => value?.customField?.key === field?.key);
-            const value = customFieldValue ? customFieldValue?.value : "";
-            const { fieldType, options } = field;
-            switch (fieldType) {
-              case 'TEXT':
-                return value
-              case 'TEXTAREA':
-                return value
-              case 'NUMBER':
-                return value
-              case 'DATE':
-                return getFormatDate(value)
-              case 'DATETIME':
-                return getFormatDateTime(value)
-              case 'BOOLEAN':
-                return value ? <AppLabel color="success">Oui</AppLabel> : <AppLabel color="error">Non</AppLabel>
-              case 'SELECT':
-                return options.map((option, idx) => (
-                  value === option.value && <span key={idx}>{option.label}</span>
-                ))
-              case 'SELECT_MULTIPLE':
-                return options.filter(option => value.includes(option.value)) // Filtrer les options sélectionnées
-                        .map((option, idx) => (
-                  <span key={idx}>{option.label}{idx < options.filter(option => value.includes(option.value)).length - 1 ? ', ' : ''}</span>
-                  ))
-              default:
-                  return null;
-              }
-          },
-        }));
-
-        // Retourner l'array avec les champs personnalisés entre les deux derniers éléments et 'action' à la fin
-        return [...otherCells, ...customFieldCells, actionCell];
-      });
-    }
-  }, [customFieldsData]);
-
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -450,17 +365,6 @@ export default function TableListBeneficiaries({
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
-
-  const  { setDialogListLibrary, setPrintingModal } = useFeedBacks();
-  const onOpenDialogListLibrary = (folderParent) => {
-      setDialogListLibrary({
-        isOpen: true,
-        folderParent,
-        onClose: () => { 
-            setDialogListLibrary({isOpen: false})
-          }
-      })
-  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -513,11 +417,10 @@ export default function TableListBeneficiaries({
 
   const [anchorElList, setAnchorElList] = React.useState([]);
   const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
-
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }} >
-        <EnhancedTableToolbar headCells={headCells} numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
+        <EnhancedTableToolbar numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -546,7 +449,7 @@ export default function TableListBeneficiaries({
                 <StyledTableRow>
                   <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucune personne accompagnée trouvé.
+                      Aucune dotation trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -604,7 +507,7 @@ export default function TableListBeneficiaries({
                           scope="row"
                           padding={column?.disablePadding ? "none" : "normal"}
                           key={index}
-                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/ressources-humaines/beneficiaires/details/${row?.id}`)}}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/finance/dotations/details/${row?.id}`)}}
                         >
                         {column?.render ? column?.render(row) : row[column?.id]}
                         </StyledTableCell>
@@ -628,7 +531,7 @@ export default function TableListBeneficiaries({
                         }}
                       >
                         <Link
-                          to={`/online/ressources-humaines/beneficiaires/details/${row?.id}`}
+                          to={`/online/finance/dotations/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -636,17 +539,8 @@ export default function TableListBeneficiaries({
                             Détails
                           </MenuItem>
                         </Link>
-                        <MenuItem
-                          onClick={() => {
-                            onOpenDialogListLibrary(row?.folder);
-                            handleCloseMenu();
-                          }}
-                        >
-                          <Folder sx={{ mr: 2 }} />
-                          Bibliothèque
-                        </MenuItem>
                         <Link
-                          to={`/online/ressources-humaines/beneficiaires/modifier/${row?.id}`}
+                          to={`/online/finance/dotations/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -656,7 +550,7 @@ export default function TableListBeneficiaries({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteBeneficiary(row?.id);
+                            onDeleteEndowment(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

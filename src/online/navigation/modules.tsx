@@ -68,6 +68,7 @@ import NewspaperIcon from '@mui/icons-material/Newspaper';
 import TableBarIcon from '@mui/icons-material/TableBar';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import WalletIcon from '@mui/icons-material/Wallet';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import ArticleIcon from '@mui/icons-material/Article';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -608,6 +609,12 @@ export const modules: Module[] = [
         name: 'Facturation de l’activité',
         path: '/online/ventes/factures',
         icon: <RequestQuoteIcon />,
+      },
+      {
+        id: 'endowment',
+        name: 'APVH',
+        path: '/online/finance/dotations',
+        icon: <AccountBalanceWalletIcon />,
       },
       {
         id: 'budget',

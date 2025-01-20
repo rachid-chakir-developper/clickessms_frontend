@@ -46,7 +46,7 @@ export default function AddBudgetForm({ idBudget, title }) {
       amountAllocated: 0,
       amountSpent: 0,
       startingDate: dayjs(new Date()),
-      endingDate: dayjs(new Date()),
+      endingDate: null,
       description: '',
       observation: '',
       isActive: true,

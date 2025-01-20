@@ -34,7 +34,7 @@ import TableExportButton from '../../../_shared/components/data_tools/export/Tab
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import { render } from 'react-dom';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
-import { getCritAirVignetteLabel, getOwnershipTypeLabel, getBudgetStatusLabel, getFormatDate } from '../../../../_shared/tools/functions';
+import { getCritAirVignetteLabel, getOwnershipTypeLabel, getBudgetStatusLabel, getFormatDate, formatCurrencyAmount } from '../../../../_shared/tools/functions';
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 import BudgetStatusLabelMenu from './BudgetStatusLabelMenu';
@@ -105,7 +105,7 @@ const headCells = [
       disablePadding: true,
       isDefault: true,
       label: 'Libellé',
-    },,
+    },
     {
         id: 'establishment',
         property: 'establishment__name',
@@ -136,7 +136,7 @@ const headCells = [
         disablePadding: false,
         isDefault: true,
         label: 'Montant prévu',
-        render: ({amountAllocated})=> <>{amountAllocated}&nbsp;€</>
+        render: ({amountAllocated})=> <>{formatCurrencyAmount(amountAllocated)}</>
     },
     {
         id: 'amountSpent',
@@ -146,7 +146,7 @@ const headCells = [
         disablePadding: false,
         isDefault: true,
         label: 'Montant dépensé',
-        render: ({amountSpent})=> <>{amountSpent}&nbsp;€</>
+        render: ({amountSpent})=> <>{formatCurrencyAmount(amountSpent)}</>
     },
     {
         id: 'status',

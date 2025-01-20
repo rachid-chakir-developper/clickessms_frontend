@@ -16,7 +16,7 @@ import {
   IconButton,
   Tooltip,
 } from '@mui/material';
-import { Euro, ReceiptLong } from '@mui/icons-material';
+import { Euro, PermContactCalendar, Person, ReceiptLong } from '@mui/icons-material';
 import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { GENERATE_BENEFICIARY_FROM_BENEFICIARY_ADMISSION } from '../../../../_shared/graphql/mutations/BeneficiaryAdmissionMutations';
@@ -141,7 +141,7 @@ export default function GenerateBeneficiaryButton({ beneficiaryAdmission }) {
             <IconButton
                 onClick={onGenerateBeneficiary}
                 >
-                <ReceiptLong />
+                <PermContactCalendar />
             </IconButton>
         </Tooltip>
     </>

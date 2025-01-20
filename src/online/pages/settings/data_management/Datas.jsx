@@ -30,6 +30,7 @@ const modulesToManage = [
     title: 'Ressources humaines',
     datas: [
       { name: "Genre", description: '', type: 'HumanGender' },
+      { name: "Statut professionnel", description: '', type: 'ProfessionalStatus' },
     ],
   },
   {
@@ -89,6 +90,12 @@ const modulesToManage = [
     datas: [
       { name: 'Les marques des véhicules', description: '', type: 'VehicleBrand' },
       { name: 'Les modèles des véhicules', description: '', type: 'VehicleModel' },
+    ],
+  },
+  {
+    title: 'Finance',
+    datas: [
+      { name: 'Type de dotation', description: '', type: 'TypeEndowment' },
     ],
   },
   {

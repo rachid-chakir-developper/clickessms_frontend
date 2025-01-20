@@ -297,7 +297,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
     {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
-        let { __typename, folder, customFieldValues, ...beneficiaryCopy } = data.beneficiary;
+        let { __typename, folder, age, customFieldValues, ...beneficiaryCopy } = data.beneficiary;
         beneficiaryCopy.gender = beneficiaryCopy.gender
           ? Number(beneficiaryCopy.gender.id)
           : null;
