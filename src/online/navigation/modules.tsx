@@ -268,6 +268,12 @@ export const modules: Module[] = [
         icon: <CalendarMonthIcon />,
       },
       {
+        id: 'beneficiary-expenses',
+        name: 'Dépenses',
+        path: '/online/activites/depenses',
+        icon: <ShoppingBasketIcon />,
+      },
+      {
         id: 'malette-law-2002-2',
         name: 'Malette loi 2002-2',
         path: '/online/activité/malette-loi-2002-2',
