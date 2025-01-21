@@ -272,6 +272,7 @@ export default function AddBudgetForm({ idBudget, title }) {
                         onChange={(e, newValue) =>
                           formik.setFieldValue('establishment', newValue)
                         }
+                        disabled={loadingPost || loadingPut}
                       />
                     </Item>
                   </Grid>

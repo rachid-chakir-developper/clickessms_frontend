@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import { Stack, Box, Typography, Button, Stepper, Step, StepLabel, StepContent, RadioGroup, FormControlLabel, Radio, FormLabel, FormControl, IconButton, InputLabel, Select, MenuItem } from '@mui/material';
+import { Stack, Box, Typography, Button, Stepper, Step, StepLabel, StepContent, RadioGroup, FormControlLabel, Radio, FormLabel, FormControl, IconButton, InputLabel, Select, MenuItem, InputAdornment } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -80,10 +80,11 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       beneficiaryEntries: [],
       beneficiaryAdmissionDocuments: [],
       beneficiaryStatusEntries: [],
+      beneficiaryEndowmentEntries: [],
     },
     validationSchema: validationSchema,
       onSubmit: (values) => {
-        if (activeStep === 4) {
+        if (activeStep === 5) {
             setTriggerSave(true);
             setTimeout(() => setTriggerSave(false), 100);
             return
@@ -91,27 +92,33 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
         let { photo, ...beneficiaryFormCopy } = values;
         let { coverImage, ...beneficiaryCopy } = beneficiaryFormCopy;
         if (!beneficiaryCopy?.beneficiaryEntries) beneficiaryCopy['beneficiaryEntries'] = [];
-          let items = [];
-          beneficiaryCopy.beneficiaryEntries.forEach((item) => {
-            let { __typename, ...itemCopy } = item;
-            itemCopy.establishments = itemCopy.establishments.map((i) => i?.id);
-            itemCopy.internalReferents = itemCopy.internalReferents.map((i) => i?.id);
-            items.push(itemCopy);
-          });
-          beneficiaryCopy.beneficiaryEntries = items;
-          items = [];
-          beneficiaryCopy.beneficiaryAdmissionDocuments.forEach((item) => {
-            let { __typename, ...itemCopy } = item;
-            itemCopy.financier = itemCopy.financier ? itemCopy.financier.id : null;
-            items.push(itemCopy);
-          });
-          beneficiaryCopy.beneficiaryAdmissionDocuments = items;
-          items = [];
-          beneficiaryCopy.beneficiaryStatusEntries.forEach((item) => {
-            let { __typename, ...itemCopy } = item;
-            items.push(itemCopy);
-          });
-          beneficiaryCopy.beneficiaryStatusEntries = items;
+        let items = [];
+        beneficiaryCopy.beneficiaryEntries.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          itemCopy.establishments = itemCopy.establishments.map((i) => i?.id);
+          itemCopy.internalReferents = itemCopy.internalReferents.map((i) => i?.id);
+          items.push(itemCopy);
+        });
+        beneficiaryCopy.beneficiaryEntries = items;
+        items = [];
+        beneficiaryCopy.beneficiaryAdmissionDocuments.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          itemCopy.financier = itemCopy.financier ? itemCopy.financier.id : null;
+          items.push(itemCopy);
+        });
+        beneficiaryCopy.beneficiaryAdmissionDocuments = items;
+        items = [];
+        beneficiaryCopy.beneficiaryStatusEntries.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          items.push(itemCopy);
+        });
+        beneficiaryCopy.beneficiaryStatusEntries = items;
+        items = [];
+        beneficiaryCopy.beneficiaryEndowmentEntries.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          items.push(itemCopy);
+        });
+        beneficiaryCopy.beneficiaryEndowmentEntries = items;
 
         if (beneficiaryCopy?.id && beneficiaryCopy?.id != '') {
           onUpdateBeneficiary({
@@ -187,6 +194,26 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
     formik.setValues({
       ...formik.values,
       beneficiaryStatusEntries: updatedBeneficiaryStatusEntries,
+    });
+  };
+
+  const addBeneficiaryEndowmentEntry = () => {
+    formik.setValues({
+      ...formik.values,
+      beneficiaryEndowmentEntries: [
+        ...formik.values.beneficiaryEndowmentEntries,
+        { initialBalance: 0, endowmentType: null, startingDate: dayjs(new Date()), endingDate: null},
+      ],
+    });
+  };
+
+  const removeBeneficiaryEndowmentEntry = (index) => {
+    const updatedBeneficiaryEndowmentEntries = [...formik.values.beneficiaryEndowmentEntries];
+    updatedBeneficiaryEndowmentEntries.splice(index, 1);
+
+    formik.setValues({
+      ...formik.values,
+      beneficiaryEndowmentEntries: updatedBeneficiaryEndowmentEntries,
     });
   };
 
@@ -338,6 +365,18 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
           items.push(itemCopy);
         });
         beneficiaryCopy.beneficiaryStatusEntries = items;
+        if (!beneficiaryCopy?.beneficiaryEndowmentEntries) beneficiaryCopy['beneficiaryEndowmentEntries'] = [];
+        items = [];
+        beneficiaryCopy.beneficiaryEndowmentEntries.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          itemCopy.startingDate = itemCopy.startingDate ? dayjs(itemCopy.startingDate) : null
+          itemCopy.endingDate = itemCopy.endingDate ? dayjs(itemCopy.endingDate) : null
+          itemCopy.endowmentType = itemCopy.endowmentType
+          ? Number(itemCopy.endowmentType.id)
+          : null;
+          items.push(itemCopy);
+        });
+        beneficiaryCopy.beneficiaryEndowmentEntries = items;
         formik.setValues(beneficiaryCopy);
       },
       onError: (err) => console.log(err),
@@ -399,7 +438,7 @@ const [getEmployees, {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if(activeStep >= 4) navigate('/online/ressources-humaines/beneficiaires/liste');
+    if(activeStep >= 5) navigate('/online/ressources-humaines/beneficiaires/liste');
     else if (formik.values.id)
       setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });
@@ -1023,10 +1062,136 @@ const [getEmployees, {
                   </Grid>
                 </Grid>
               </StepContent>
-            </Step>
+            </Step> 
             <Step>
               <StepLabel
                 onClick={() => onGoToStep(4)}
+                optional={
+                  <Typography variant="caption">Les dotation(s) </Typography>
+                }
+              >
+                Les dotation(s) 
+              </StepLabel>
+              <StepContent>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  <Grid item xs={12} sm={12} md={12} >
+                      {formik.values?.beneficiaryEndowmentEntries?.map((item, index) => (
+                        <Grid
+                          container
+                          spacing={{ xs: 2, md: 3 }}
+                          columns={{ xs: 4, sm: 8, md: 12 }}
+                          key={index}
+                        >
+                          <Grid item xs={12} sm={6} md={3.5} >
+                            <Item>
+                              <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">
+                                  Type de dotation
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-label"
+                                  id="demo-simple-select"
+                                  label="Type de dotation"
+                                  value={item.endowmentType}
+                                  onChange={(e) =>
+                                    formik.setFieldValue(`beneficiaryEndowmentEntries.${index}.endowmentType`, e.target.value)
+                                  }
+                                >
+                                  <MenuItem value={null}>
+                                    <em>Choisissez un type de dotation</em>
+                                  </MenuItem>
+                                  {dataData?.endowmentTypes?.map((data, index) => {
+                                    return (
+                                      <MenuItem key={index} value={data.id}>
+                                        {data.name}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                              </FormControl>
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={2.5}>
+                            <Item>
+                              <TheTextField
+                                variant="outlined"
+                                label="Solde initial"
+                                type="number"
+                                InputProps={{
+                                  endAdornment: (
+                                    <InputAdornment position="start">€</InputAdornment>
+                                  ),
+                                }}
+                                value={item.initialBalance}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`beneficiaryEndowmentEntries.${index}.initialBalance`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={3} >
+                            <Item>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Date de début"
+                                value={item.startingDate}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`beneficiaryEndowmentEntries.${index}.startingDate`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={3} >
+                            <Item sx={{position: 'relative'}}>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Date de fin"
+                                value={item.endingDate}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`beneficiaryEndowmentEntries.${index}.endingDate`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                              <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                                onClick={() => removeBeneficiaryEndowmentEntry(index)}
+                                edge="end"
+                                color="error"
+                              >
+                                <Close />
+                              </IconButton>
+                            </Item>
+                          </Grid>
+                        </Grid>
+                      ))}
+                  </Grid>
+                  <Grid
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    item
+                    sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                  >
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={addBeneficiaryEndowmentEntry}
+                      disabled={loadingPost || loadingPut}
+                    >
+                      Ajouter une dotation
+                    </Button>
+                  </Grid>
+                </Grid>
+              </StepContent>
+            </Step>
+            <Step>
+              <StepLabel
+                onClick={() => onGoToStep(5)}
                 optional={
                   <Typography variant="caption">Autres informations</Typography>
                 }

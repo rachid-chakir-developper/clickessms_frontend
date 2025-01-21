@@ -78,6 +78,9 @@ export const GET_DATAS_BENEFICIARY = gql`
     beneficiaryStatuses: datas(typeData: "BeneficiaryStatus") {
       ...DataBasicInfosFragment
     }
+    endowmentTypes: datas(typeData: "TypeEndowment") {
+      ...DataBasicInfosFragment
+    }
   }
   ${DATA_BASIC_INFOS}
 `;
@@ -165,6 +168,18 @@ export const GET_DATAS_EMPLOYEE_CONTRACT = gql`
 export const GET_DATAS_EXPENSE = gql`
   query {
     accountingNatures: datas(typeData: "AccountingNature") {
+      ...DataBasicInfosFragment
+    }
+  }
+  ${DATA_BASIC_INFOS}
+`;
+
+export const GET_DATAS_ENDOWMENT = gql`
+  query {
+    endowmentTypes: datas(typeData: "TypeEndowment") {
+      ...DataBasicInfosFragment
+    }
+    professionalStatuses: datas(typeData: "ProfessionalStatus") {
       ...DataBasicInfosFragment
     }
   }

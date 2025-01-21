@@ -8,8 +8,26 @@ export const ENDOWMENT_BASIC_INFOS = gql`
         id
         number
         label
+        gender
+        amountAllocated
+        startingDateTime
+        endingDateTime
+        ageMin
+        ageMax
         establishment{
         ...EstablishmentMiniInfosFragment
+        }
+        endowmentType{
+          id
+          name
+        }
+        professionalStatus{
+          id
+          name
+        }
+        accountingNature{
+          id
+          name
         }
         description
         observation

@@ -22,7 +22,7 @@ export default function BeneficiaryAdmissionDocuments({beneficiaryAdmissionDocum
             color="text.secondary"
           >
             <b>Date de début :</b> {getFormatDate(beneficiaryAdmissionDocument?.startingDate) + ' '} <br />
-            <b>Date de fin :</b> {getFormatDate(beneficiaryAdmissionDocument?.startingDate) + ' '}
+            <b>Date de fin :</b> {getFormatDate(beneficiaryAdmissionDocument?.endingDate) + ' '}
           </TimelineOppositeContent>
           <TimelineSeparator>
             <TimelineConnector />

@@ -1,5 +1,6 @@
 import moment from 'moment';
 import {
+  GENDERS,
   ACCOUNT_TYPES,
   TASK_STATUS,
   ACTION_STATUS,
@@ -38,6 +39,11 @@ import {
   ROOM_TYPE_CHOICES,
   BENEFICIARY_ADMISSION_STATUS_CHOICES,
 } from './constants';
+
+export const getGenderLabel = (gender) => {
+  return GENDERS.ALL.find((g) => g.value === gender)?.label || "Non spécifié";
+};
+
 
 export const getStatusColor = (status) => {
   switch (status) {

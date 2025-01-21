@@ -8,6 +8,10 @@ import {
   InputAdornment,
   Button,
   Divider,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -29,6 +33,8 @@ import dayjs from 'dayjs';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
+import { GET_ALL_ACCOUNTING_NATURES, GET_DATAS_ENDOWMENT } from '../../../../_shared/graphql/queries/DataQueries';
+import { GENDERS } from '../../../../_shared/tools/constants';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -42,18 +48,26 @@ export default function AddEndowmentForm({ idEndowment, title }) {
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({
-    name: yup
-      .string('Entrez le nom de dotation')
-      .required('Le nom de dotation est obligatoire'),
+    amountAllocated: yup
+      .number('Veuillez entrer un montant valide') // Utilisation de `.number` pour valider un champ numérique.
+      .typeError('Le montant de dotation doit être un nombre') // Message d'erreur si la valeur n'est pas un nombre.
+      .positive('Le montant de dotation doit être supérieur à 0') // Validation pour un montant positif.
+      .required('Le montant de dotation est obligatoire'), // Rend le champ obligatoire.
   });
   const formik = useFormik({
     initialValues: {
       number: '',
       label: '',
+      endowmentType: null,
       amountAllocated: 0,
       startingDateTime: dayjs(new Date()),
       endingDateTime: null,
       establishment: null,
+      gender: GENDERS.NOT_SPECIFIED,
+      ageMin: 0,
+      ageMax: 0,
+      professionalStatus: null,
+      accountingNature: null,
       description: '',
       observation: '',
       isActive: true,
@@ -62,6 +76,7 @@ export default function AddEndowmentForm({ idEndowment, title }) {
     onSubmit: (values) => {
       let endowmentCopy= {...values};
       endowmentCopy.establishment = endowmentCopy.establishment ? endowmentCopy.establishment.id : null;
+      endowmentCopy.accountingNature = endowmentCopy.accountingNature ? endowmentCopy.accountingNature.id : null;
       if (idEndowment && idEndowment != '') {
         onUpdateEndowment({
           id: endowmentCopy.id,
@@ -174,21 +189,43 @@ export default function AddEndowmentForm({ idEndowment, title }) {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
         let { __typename, folder, ...endowmentCopy } = data.endowment;
+        endowmentCopy.startingDateTime = endowmentCopy.startingDateTime ? dayjs(endowmentCopy.startingDateTime) : null;
+        endowmentCopy.endingDateTime = endowmentCopy.endingDateTime ? dayjs(endowmentCopy.endingDateTime) : null;
+        endowmentCopy.endowmentType = endowmentCopy.endowmentType ? Number(endowmentCopy.endowmentType.id): null;
+        endowmentCopy.professionalStatus = endowmentCopy.professionalStatus ? Number(endowmentCopy.professionalStatus.id): null;
         formik.setValues(endowmentCopy);
       },
       onError: (err) => console.log(err),
     },
   );
 
+  const {
+    loading: loadingEstablishments,
+    data: establishmentsData,
+    error: establishmentsError,
+    fetchMore: fetchMoreEstablishments,
+  } = useQuery(GET_ESTABLISHMENTS, {
+    fetchPolicy: 'network-only',
+  });
 
   const {
-      loading: loadingEstablishments,
-      data: establishmentsData,
-      error: establishmentsError,
-      fetchMore: fetchMoreEstablishments,
-    } = useQuery(GET_ESTABLISHMENTS, {
-      fetchPolicy: 'network-only',
-    });
+    loading: loadingDatas,
+    data: dataData,
+    error: datsError,
+    fetchMore: fetchMoreDatas,
+  } = useQuery(GET_DATAS_ENDOWMENT, { fetchPolicy: 'network-only' });
+    
+  const [getAccountingNatures, {
+    loading: loadingAccountingNatures,
+    data: accountingNaturesData,
+    error: accountingNaturesError,
+    fetchMore: fetchMoreAccountingNatures,
+  }] = useLazyQuery(GET_ALL_ACCOUNTING_NATURES, { variables: { accountingNatureFilter : {listType: 'ALL'}, page: 1, limit: 20 } });
+  
+  const onGetAccountingNatures = (keyword)=>{
+    getAccountingNatures({ variables: { accountingNatureFilter : keyword === '' ? {listType: 'ALL'} : {listType: 'ALL', keyword}, page: 1, limit: 20 } })
+  }
+      
   
 
   React.useEffect(() => {
@@ -216,13 +253,39 @@ export default function AddEndowmentForm({ idEndowment, title }) {
                   label="Libellé"
                   id="label"
                   value={formik.values.label}
-                  required
                   onChange={(e) => formik.setFieldValue('label', e.target.value)}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.label && Boolean(formik.errors.label)}
-                  helperText={formik.touched.label && formik.errors.label}
                   disabled={loadingPost || loadingPut}
                 />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <Item>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Type
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="endowmentType"
+                    label="Type"
+                    value={formik.values.endowmentType}
+                    onChange={(e) =>
+                      formik.setFieldValue('endowmentType', e.target.value)
+                    }
+                    disabled={loadingPost || loadingPut}
+                  >
+                    <MenuItem value={null}>
+                      <em>Choisissez un type</em>
+                    </MenuItem>
+                    {dataData?.endowmentTypes?.map((data, index) => {
+                      return (
+                        <MenuItem key={index} value={data.id}>
+                          {data.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
               </Item>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
@@ -240,7 +303,7 @@ export default function AddEndowmentForm({ idEndowment, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={4} >
+            <Grid item xs={12} sm={6} md={2.5} >
               <Item>
                 <TheDesktopDatePicker
                   label="Date de début"
@@ -252,7 +315,7 @@ export default function AddEndowmentForm({ idEndowment, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={4} >
+            <Grid item xs={12} sm={6} md={2.5} >
               <Item>
                 <TheDesktopDatePicker
                   label="Date de fin"
@@ -264,10 +327,11 @@ export default function AddEndowmentForm({ idEndowment, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={2.5}>
               <Item>
                 <TheTextField
                   variant="outlined"
+                  id="amountAllocated"
                   label="Montant prévu"
                   type="number"
                   InputProps={{
@@ -279,6 +343,126 @@ export default function AddEndowmentForm({ idEndowment, title }) {
                   onChange={(e) =>
                     formik.setFieldValue('amountAllocated', e.target.value)
                   }
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.amountAllocated && Boolean(formik.errors.amountAllocated)} // Gestion des erreurs
+                  helperText={formik.touched.amountAllocated && formik.errors.amountAllocated} // Affiche le message d'erreur
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4.5} >
+              <Item>
+                <TheAutocomplete
+                  options={accountingNaturesData?.accountingNatures?.nodes}
+                  onInput={(e) => {
+                          onGetAccountingNatures(e.target.value)
+                        }}
+                  onFocus={(e) => {
+                    onGetAccountingNatures(e.target.value)
+                  }}
+                  label="Nature"
+                  placeholder="Nature"
+                  multiple={false}
+                  value={formik.values.accountingNature}
+                  onChange={(e, newValue) =>
+                    formik.setFieldValue('accountingNature', newValue)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <Item>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Statut professionnel
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="professionalStatus"
+                    label="Statut professionnel"
+                    value={formik.values.professionalStatus}
+                    onChange={(e) =>
+                      formik.setFieldValue('professionalStatus', e.target.value)
+                    }
+                    disabled={loadingPost || loadingPut}
+                  >
+                    <MenuItem value={null}>
+                      <em>Choisissez un statut</em>
+                    </MenuItem>
+                    {dataData?.professionalStatuses?.map((data, index) => {
+                      return (
+                        <MenuItem key={index} value={data.id}>
+                          {data.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={4} md={4}>
+              <Item>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Genre
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="gender"
+                    label="Genre"
+                    value={formik.values.gender}
+                    onChange={(e) =>
+                      formik.setFieldValue('gender', e.target.value)
+                    }
+                  >
+                    {GENDERS?.ALL?.map(
+                      (type, index) => {
+                        return (
+                          <MenuItem key={index} value={type.value}>
+                            {type.label}
+                          </MenuItem>
+                        );
+                      },
+                    )}
+                  </Select>
+                </FormControl>
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={4} md={2}>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Age min"
+                  type="number"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="start">ans</InputAdornment>
+                    ),
+                  }}
+                  value={formik.values.ageMin}
+                  onChange={(e) =>
+                    formik.setFieldValue('ageMin', e.target.value)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={4} md={2}>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Age max"
+                  type="number"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="start">ans</InputAdornment>
+                    ),
+                  }}
+                  value={formik.values.ageMax}
+                  onChange={(e) =>
+                    formik.setFieldValue('ageMax', e.target.value)
+                  }
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
@@ -286,31 +470,16 @@ export default function AddEndowmentForm({ idEndowment, title }) {
             <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid item xs={12} sm={6} md={6}>
+            <Grid item xs={12} sm={12} md={12}>
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Description"
+                  label="Détail"
                   multiline
                   rows={4}
                   value={formik.values.description}
                   onChange={(e) =>
                     formik.setFieldValue('description', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={6}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Observation"
-                  multiline
-                  rows={4}
-                  value={formik.values.observation}
-                  onChange={(e) =>
-                    formik.setFieldValue('observation', e.target.value)
                   }
                   disabled={loadingPost || loadingPut}
                 />

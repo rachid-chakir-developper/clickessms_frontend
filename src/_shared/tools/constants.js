@@ -2,6 +2,17 @@ export const GOOGLE = {
   MAPS_API_KEY: "AIzaSyACunnNRX8tSlQkdgC6AJRlPL5WhRQxjL0",
 };
 
+export const GENDERS = {
+  MALE: "MALE",
+  FEMALE: "FEMALE",
+  NOT_SPECIFIED: "NOT_SPECIFIED",
+  ALL: [
+    { value: "MALE", label: "Homme" },
+    { value: "FEMALE", label: "Femme" },
+    { value: "NOT_SPECIFIED", label: "Non spécifié" },
+  ],
+};
+
 export const STEP_TYPES = {
   BEFORE: "BEFORE",
   IN_PROGRESS: "IN_PROGRESS",

@@ -52,6 +52,18 @@ export const BENEFICIARY_STATUS_ENTRY_DETAILS = gql`
   }
 `;
 
+export const BENEFICIARY_ENDOWMENT_ENTRY_DETAILS = gql`
+  fragment BeneficiaryEndowmentEntryFragment on BeneficiaryEndowmentEntryType {
+    id
+    initialBalance
+    endowmentType{
+      id
+      name
+    }
+    startingDate
+    endingDate
+  }
+`;
 export const BENEFICIARY_ENTRY_DETAILS = gql`
   fragment BeneficiaryEntryFragment on BeneficiaryEntryType {
     id
@@ -140,9 +152,13 @@ export const BENEFICIARY_DETAILS = gql`
     beneficiaryAdmissionDocuments{
       ...BeneficiaryAdmissionDocumentFragment
     }
+    beneficiaryEndowmentEntries{
+      ...BeneficiaryEndowmentEntryFragment
+    }
   }
   ${BENEFICIARY_BASIC_INFOS}
   ${BENEFICIARY_ADMISSION_DETAILS}
+  ${BENEFICIARY_ENDOWMENT_ENTRY_DETAILS}
 `;
 export const BENEFICIARY_RECAP_DETAILS = gql`
   fragment BeneficiaryRecapDetailsFragment on BeneficiaryType {
@@ -168,10 +184,14 @@ export const BENEFICIARY_RECAP_DETAILS = gql`
     beneficiaryAdmissionDocuments{
       ...BeneficiaryAdmissionDocumentFragment
     }
+    beneficiaryEndowmentEntries{
+      ...BeneficiaryEndowmentEntryFragment
+    }
     createdAt
     updatedAt
   }
   ${BENEFICIARY_BASIC_INFOS}
   ${BENEFICIARY_ADMISSION_DETAILS}
+  ${BENEFICIARY_ENDOWMENT_ENTRY_DETAILS}
 `;
 

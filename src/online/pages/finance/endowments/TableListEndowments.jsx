@@ -35,7 +35,7 @@ import EstablishmentChip from '../../companies/establishments/EstablishmentChip'
 import { render } from 'react-dom';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
-import { formatCurrencyAmount, getFormatDate, getFormatDateTime, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
+import { formatCurrencyAmount, getFormatDate, getFormatDateTime, getGenderLabel, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 import PrintButton from '../../../_shared/components/printing/PrintButton';
 
@@ -131,7 +131,7 @@ const headCells = [
       disablePadding: true,
       isDefault: true,
       label: 'Nature',
-      render: ({accountingNature}) => accountingNature && <Chip label={accountingNature?.name}  variant="filled" />
+      render: ({accountingNature}) => accountingNature && <>{accountingNature?.name}</>
     },
     {
         id: 'amountAllocated',
@@ -157,13 +157,13 @@ const headCells = [
     },
     {
       id: 'gender',
-      property: 'gender__name',
-      exportField: 'gender__name',
+      property: 'gender',
+      exportField: 'gender',
       numeric: false,
       disablePadding: true,
       isDefault: true,
       label: 'Genre',
-      render: ({gender}) => gender && <Chip label={gender?.name}  variant="filled" />
+      render: ({gender}) => <>{getGenderLabel(gender)}</>
     },
     {
       id: 'professionalStatus',
@@ -173,7 +173,7 @@ const headCells = [
       disablePadding: true,
       isDefault: true,
       label: 'Statut professionnel',
-      render: ({professionalStatus}) => professionalStatus && <Chip label={professionalStatus?.name}  variant="filled" />
+      render: ({professionalStatus}) => professionalStatus && <>{professionalStatus?.name}</>
     },
     {
       id: 'age',
@@ -183,7 +183,7 @@ const headCells = [
       disablePadding: true,
       isDefault: true,
       label: 'Âge',
-      render: ({ageMin, ageMax}) => <>{ageMin}-{ageMax}</>
+      render: ({ageMin, ageMax}) => {(ageMin>=0 && ageMax>0) && <>{ageMin}-{ageMax}</>}
     },
     {
         id: 'startingDateTime',

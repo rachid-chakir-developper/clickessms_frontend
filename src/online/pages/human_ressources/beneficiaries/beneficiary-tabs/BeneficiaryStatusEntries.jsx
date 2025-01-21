@@ -22,7 +22,7 @@ export default function BeneficiaryStatusEntries({beneficiaryStatusEntries}) {
             color="text.secondary"
           >
             <b>Date de début :</b> {getFormatDate(beneficiaryStatusEntry?.startingDate) + ' '} <br />
-            <b>Date de fin :</b> {getFormatDate(beneficiaryStatusEntry?.startingDate) + ' '}
+            <b>Date de fin :</b> {getFormatDate(beneficiaryStatusEntry?.endingDate) + ' '}
           </TimelineOppositeContent>
           <TimelineSeparator>
             <TimelineConnector />

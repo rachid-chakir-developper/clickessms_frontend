@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
-import { Box, Button, Divider, Paper, Stack, alpha } from '@mui/material';
-import { Grid, Typography, Avatar } from '@mui/material';
-import { GET_RECAP_ENDOWMENT } from '../../../../_shared/graphql/queries/EndowmentQueries';
-import { getFormatDateTime } from '../../../../_shared/tools/functions';
+import { Box, Button, Divider, Paper, Stack, alpha, Typography, Grid, Avatar, List } from '@mui/material';
 import styled from '@emotion/styled';
 import { Devices, Edit } from '@mui/icons-material';
+import { GET_RECAP_ENDOWMENT } from '../../../../_shared/graphql/queries/EndowmentQueries';
+import { getFormatDate, getFormatDateTime, getGenderLabel } from '../../../../_shared/tools/functions';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -19,10 +19,7 @@ const Item = styled(Stack)(({ theme }) => ({
 
 export default function EndowmentDetails() {
   let { idEndowment } = useParams();
-  const [
-    getEndowment,
-    { loading: loadingEndowment, data: endowmentData },
-  ] = useLazyQuery(GET_RECAP_ENDOWMENT);
+  const [getEndowment, { loading, data: endowmentData }] = useLazyQuery(GET_RECAP_ENDOWMENT);
 
   React.useEffect(() => {
     if (idEndowment) {
@@ -32,20 +29,27 @@ export default function EndowmentDetails() {
 
   return (
     <Stack>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
-        <Link
-          to={`/online/finance/dotations/modifier/${endowmentData?.endowment?.id}`}
-          className="no_style"
-        >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
+        <Box sx={{marginX: 2}}>
+          <Link
+            to={`/online/finance/dotations/liste`}
+            className="no_style"
+          >
+            <Button variant="text" startIcon={<List />}  size="small">
+              Retour à la Liste
+            </Button>
+          </Link>
+        </Box>
+        <Link to={`/online/finance/dotations/modifier/${endowmentData?.endowment?.id}`} className="no_style">
+          <Button variant="outlined" startIcon={<Edit />} size="small">
             Modifier
           </Button>
         </Link>
       </Box>
-      {endowmentData?.endowment && (
-        <EndowmentDetailsPage
-          endowment={endowmentData?.endowment}
-        />
+      {loading ? (
+        <Typography variant="body1">Chargement...</Typography>
+      ) : (
+        endowmentData?.endowment && <EndowmentDetailsPage endowment={endowmentData.endowment} />
       )}
     </Stack>
   );
@@ -55,124 +59,103 @@ const EndowmentDetailsPage = ({ endowment }) => {
   const {
     id,
     number,
-    name,
-    image,
-    coverImage,
-    folder,
-    barCode,
-    buyingPriceHt,
-    tva,
-    designation,
-    quantity,
+    label,
+    gender,
+    amountAllocated,
+    startingDateTime,
+    endingDateTime,
+    ageMin,
+    ageMax,
+    establishment,
+    endowmentType,
+    professionalStatus,
+    accountingNature,
     description,
     observation,
-    createdAt,
-    updatedAt,
+    isActive,
   } = endowment;
 
   return (
     <Grid container spacing={3}>
-      {/* Informations de l'employé */}
-      <Grid item xs={12} sm={4}>
-        <Paper
-          sx={{
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            backgroundImage: `url(${coverImage})`,
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
-            bgcolor: (theme) => alpha(theme.palette.primary.main, 1),
-          }}
-        >
-          <Box
-            sx={{
-              py: 1.2,
-              px: 2,
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              bgcolor: (theme) => alpha(theme.palette.primary.main, 0.5),
-              boxShadow: '0px 0px 30px rgba(0, 0, 0, 0.2) inset',
-            }}
-          >
-            <Avatar
-              src={image}
-              alt={name}
-              sx={{
-                width: 100,
-                height: 100,
-                boxShadow: '0px 0px 4px rgba(0, 0, 0, 0.5)',
-                border: '2px solid white',
-              }}
-            >
-              <Devices />
-            </Avatar>
-            <Box
-              sx={{
-                mt: 1,
-                width: '100%',
-                display: 'flex',
-                borderRadius: 1.5,
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                color: (theme) => theme.palette.primary.contrastText,
-              }}
-            >
-              <Typography variant="h5" gutterBottom>
-                {name}
-              </Typography>
-            </Box>
-          </Box>
-        </Paper>
-      </Grid>
-      {/* Autres informations de l'employé */}
-      <Grid item xs={12} sm={8}>
+      {/* Header avec l'image et le titre */}
+
+      {/* Détails principaux */}
+      <Grid item xs={12} sm={6}>
         <Paper sx={{ padding: 2 }}>
           <Typography variant="h6" gutterBottom>
-            Informations supplémentaires
+            Informations principales
           </Typography>
           <Paper sx={{ padding: 2 }} variant="outlined">
-            <Typography variant="body1">Référence: {number}</Typography>
-            <Typography variant="body1">Code-barres: {barCode}</Typography>
-            <Typography variant="body1">Prix d'achat HT: {buyingPriceHt} €</Typography>
-            <Typography variant="body1">TVA: {tva}%</Typography>
-            <Typography variant="body1">Quantité: {quantity}</Typography>
-            <Typography variant="body1">Désignation: {designation}</Typography>
-            <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+            <Typography variant="body1"><b>Référence :</b> {number}</Typography>
+            <Typography variant="body1"><b>Libellé :</b> {label}</Typography>
             <Typography variant="body1">
-              Ajouté le: {getFormatDateTime(createdAt)}
+            <b>Montant alloué :</b> {amountAllocated ? `${amountAllocated} €` : 'Non défini'}
+            </Typography>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="body1"><b>Genre :</b> {getGenderLabel(gender)}</Typography>
+            <Typography variant="body1">
+            <b>Période :</b>{' '}
+              {startingDateTime
+                ? `${getFormatDate(startingDateTime)} au ${getFormatDate(endingDateTime)}`
+                : 'Non défini'}
             </Typography>
             <Typography variant="body1">
-              Dernière modification: {getFormatDateTime(updatedAt)}
+            <b>Mrge d'âge :</b> {ageMin || 'Non défini'} - {ageMax || 'Non défini'}
             </Typography>
           </Paper>
         </Paper>
       </Grid>
+
+      {/* Informations supplémentaires */}
       <Grid item xs={12} sm={6}>
+        <Paper sx={{ padding: 2 }}>
+          <Typography variant="h6" gutterBottom>
+            Type et statut
+          </Typography>
+          <Paper sx={{ padding: 2 }} variant="outlined">
+            <Typography variant="body1">
+            <b>Type de dotation :</b> {endowmentType?.name || 'Non défini'}
+            </Typography>
+            <Typography variant="body1">
+            <b>Statut professionnel :</b> {professionalStatus?.name || 'Non défini'}
+            </Typography>
+            <Typography variant="body1">
+              <b>Nature comptable :</b> {accountingNature?.name || 'Non défini'}
+            </Typography>
+          </Paper>
+          <Paper sx={{ padding: 2 }} variant="outlined">
+            {establishment ? (
+              <EstablishmentChip establishment={establishment} />
+            ) : (
+              <Typography variant="body1">Aucun établissement associé</Typography>
+            )}
+          </Paper>
+        </Paper>
+      </Grid>
+
+      {/* Description */}
+      <Grid item xs={12}>
         <Paper sx={{ padding: 2 }}>
           <Typography variant="h6" gutterBottom>
             Description
           </Typography>
           <Paper sx={{ padding: 2 }} variant="outlined">
             <Typography variant="body1">
-              {description ? description : "Aucune description pour l'instant"}
+              {description || "Aucune description pour l'instant"}
             </Typography>
           </Paper>
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={6}>
+
+      {/* Observation */}
+      <Grid item xs={12}>
         <Paper sx={{ padding: 2 }}>
           <Typography variant="h6" gutterBottom>
             Observation
           </Typography>
           <Paper sx={{ padding: 2 }} variant="outlined">
             <Typography variant="body1">
-              {observation ? observation : "Aucune observation pour l'instant"}
+              {observation || "Aucune observation pour l'instant"}
             </Typography>
           </Paper>
         </Paper>
