@@ -182,28 +182,6 @@ export const TASK_DETAILS = gql`
   ${TASK_CHECK_LIST_DETAILS}
 `;
 
-export const SIGNATURE_DETAILS = gql`
-  fragment SignatureTypeFragment on SignatureType {
-    id
-    base64Encoded
-    image
-    authorName
-    authorNumber
-    authorEmail
-    satisfaction
-    comment
-    author {
-      ...UserBasicInfosFragment
-    }
-    creator {
-      ...UserBasicInfosFragment
-    }
-    createdAt
-    updatedAt
-  }
-  ${USER_BASIC_INFOS}
-`;
-
 export const TASK_RECAP = gql`
   fragment TaskRecapFragment on TaskType {
     ...TaskBasicInfosFragment

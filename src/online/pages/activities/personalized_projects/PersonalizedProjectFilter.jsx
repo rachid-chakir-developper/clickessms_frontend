@@ -137,6 +137,7 @@ const PersonalizedProjectFilter = ({ onFilterChange }) => {
                   onChange={(transmissionEvent, newValue) => {
                       setFilterSelectedBeneficiaries(newValue)
                       setFilterValues({ ...filterValues, beneficiaries: newValue.map((v) => v.id) })
+                      onFilterChange({ ...filterValues, beneficiaries: newValue.map((v) => v.id) })
                   }}
                 />
             </Item>
