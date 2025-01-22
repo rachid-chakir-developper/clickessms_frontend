@@ -11,14 +11,15 @@ import {
   Divider,
 } from '@mui/material';
 
-import { BANK_ACCOUNT_RECAP } from '../../../../../_shared/graphql/queries/BankAccountQueries';
+import { BANK_CARD_RECAP } from '../../../../../_shared/graphql/queries/BankCardQueries';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import {
   getFormatDateTime,
   formatCurrencyAmount,
-  getFormatDate,
 } from '../../../../../_shared/tools/functions';
-import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
+import EmployeeItemCard from '../../../human_ressources/employees/EmployeeItemCard';
+import EstablishmentItemCard from '../../../companies/establishments/EstablishmentItemCard';
+import BankAccountItemCard from '../bank_accounts/BankAccountItemCard';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -28,32 +29,28 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function BankAccountDetails() {
-  let { idBankAccount } = useParams();
+export default function BankCardDetails() {
+  let { idBankCard } = useParams();
   const [
-    getBankAccount,
-    {
-      loading: loadingBankAccount,
-      data: bankAccountData,
-      error: bankAccountError,
-    },
-  ] = useLazyQuery(BANK_ACCOUNT_RECAP);
+    getBankCard,
+    { loading: loadingBankCard, data: bankCardData, error: bankCardError },
+  ] = useLazyQuery(BANK_CARD_RECAP);
   React.useEffect(() => {
-    if (idBankAccount) {
-      getBankAccount({ variables: { id: idBankAccount } });
+    if (idBankCard) {
+      getBankCard({ variables: { id: idBankCard } });
     }
-  }, [idBankAccount]);
+  }, [idBankCard]);
 
-  if (loadingBankAccount) return <ProgressService type="form" />;
+  if (loadingBankCard) return <ProgressService type="form" />;
   return (
     <>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
-            <BankAccountMiniInfos bankAccount={bankAccountData?.bankAccount} />
+            <BankCardMiniInfos bankCard={bankCardData?.bankCard} />
           </Grid>
           <Grid item xs={5}>
-            <BankAccountOtherInfos bankAccount={bankAccountData?.bankAccount} />
+            <BankCardOtherInfos bankCard={bankCardData?.bankCard} />
           </Grid>
           <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
             <Divider />
@@ -64,7 +61,7 @@ export default function BankAccountDetails() {
                 Description
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {bankAccountData?.bankAccount?.description}
+                {bankCardData?.bankCard?.description}
               </Typography>
             </Paper>
           </Grid>
@@ -74,7 +71,7 @@ export default function BankAccountDetails() {
                 Observation
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {bankAccountData?.bankAccount?.observation}
+                {bankCardData?.bankCard?.observation}
               </Typography>
             </Paper>
           </Grid>
@@ -91,7 +88,7 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-function BankAccountMiniInfos({ bankAccount }) {
+function BankCardMiniInfos({ bankCard }) {
   return (
     <Paper
       variant="outlined"
@@ -105,10 +102,10 @@ function BankAccountMiniInfos({ bankAccount }) {
       }}
     >
       <Grid container spacing={2}>
-        {bankAccount?.image && bankAccount?.image != '' && (
+        {bankCard?.image && bankCard?.image != '' && (
           <Grid item>
             <ButtonBase sx={{ width: 128, height: 'auto' }}>
-              <Img alt="complex" src={bankAccount?.image} />
+              <Img alt="complex" src={bankCard?.image} />
             </ButtonBase>
           </Grid>
         )}
@@ -116,26 +113,33 @@ function BankAccountMiniInfos({ bankAccount }) {
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
-                Réference : <b>{bankAccount?.number}</b>
+                Réference : <b>{bankCard?.number}</b>
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {bankAccount?.name}
+                {bankCard?.name}
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                Solde : {formatCurrencyAmount(bankAccount?.balance)}
+                Montant : {formatCurrencyAmount(bankCard?.amount)}
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                IBAN : <b>{bankAccount?.iban}</b>
+                IBAN : <b>{bankCard?.iban}</b>
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                BIC : <b>{bankAccount?.bic}</b>
+                BIC : <b>{bankCard?.bic}</b>
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b>{' '}
-                {`${getFormatDateTime(bankAccount?.createdAt)}`} <br />
+                <b>Crée le: </b> {`${getFormatDateTime(bankCard?.createdAt)}`}{' '}
+                <br />
                 <b>Dernière modification: </b>
-                {`${getFormatDateTime(bankAccount?.updatedAt)}`}
+                {`${getFormatDateTime(bankCard?.updatedAt)}`}
+              </Typography>
+              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+              <Typography variant="body2" color="text.secondary">
+                <b>Date début prévue: </b>{' '}
+                {`${getFormatDateTime(bankCard?.startingDateTime)}`} <br />
+                <b>Date fin prévue: </b>{' '}
+                {`${getFormatDateTime(bankCard?.endingDateTime)}`}
               </Typography>
             </Grid>
           </Grid>
@@ -145,7 +149,7 @@ function BankAccountMiniInfos({ bankAccount }) {
   );
 }
 
-function BankAccountOtherInfos({ bankAccount }) {
+function BankCardOtherInfos({ bankCard }) {
   return (
     <Paper
       variant="outlined"
@@ -157,21 +161,30 @@ function BankAccountOtherInfos({ bankAccount }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
-      {bankAccount?.establishment && (
+      {bankCard?.bankAccount?.establishment && (
         <>
-          <Typography variant="body2" color="text.secondary">
-            <b>Date ouverture: </b>{' '}
-            {`${getFormatDate(bankAccount?.openingDate)}`} <br />
-            <b>Date fermeture: </b>{' '}
-            {`${getFormatDate(bankAccount?.closingDate)}`}
-          </Typography>
-          <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
           <Typography variant="h6" gutterBottom>
             Structure
           </Typography>
-          <EstablishmentChip
-            establishment={bankAccount?.establishment}
-          />
+          <Paper sx={{ padding: 2 }} variant="outlined">
+            <Item>
+              <EstablishmentItemCard
+                establishment={bankCard?.bankAccount?.establishment}
+              />
+            </Item>
+          </Paper>
+        </>
+      )}
+      {bankCard?.bankAccount && (
+        <>
+          <Typography variant="h6" gutterBottom sx={{ marginTop: 1 }}>
+            Compte bancaire
+          </Typography>
+          <Paper sx={{ padding: 2 }} variant="outlined">
+            <Item>
+              <BankAccountItemCard bankAccount={bankCard?.bankAccount} />
+            </Item>
+          </Paper>
         </>
       )}
     </Paper>

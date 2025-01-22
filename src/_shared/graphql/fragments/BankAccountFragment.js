@@ -46,6 +46,8 @@ export const BANK_ACCOUNT_RECAP_DETAILS = gql`
     closingDate
     description
     observation
+    createdAt
+    updatedAt
   }
   ${BANK_ACCOUNT_BASIC_INFOS}
 `;

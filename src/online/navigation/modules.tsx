@@ -81,6 +81,7 @@ import CarCrashIcon from '@mui/icons-material/CarCrash';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import GarageIcon from '@mui/icons-material/Garage';
 import CarRepairIcon from '@mui/icons-material/CarRepair';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 import MoneyIcon from '@mui/icons-material/Money';
 import SaveIcon from '@mui/icons-material/Save';
 import CampaignIcon from '@mui/icons-material/Campaign';
@@ -643,6 +644,12 @@ export const modules: Module[] = [
             name: 'Comptes bancaires',
             path: '/online/finance/tresorerie/comptes-bancaires',
             icon: <AccountBalanceIcon />,
+          },
+          {
+            id: 'bank_cards',
+            name: 'Cartes bancaires',
+            path: '/online/finance/tresorerie/cartes-bancaires',
+            icon: <CreditCardIcon />,
           },
           {
             id: 'balances',
