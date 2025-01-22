@@ -44,6 +44,20 @@ export const PUT_BENEFICIARY_EXPENSE_STATE = gql`
   ${BENEFICIARY_EXPENSE_BASIC_INFOS}
 `;
 
+export const PUT_BENEFICIARY_EXPENSE_FIELDS = gql`
+  mutation UpdateBeneficiaryExpenseFields($id: ID!, $beneficiaryexpenseData: BeneficiaryExpenseInput!) {
+    updateBeneficiaryExpenseFields(id: $id, beneficiaryexpenseData: $beneficiaryexpenseData) {
+      done
+      success
+      message
+      expense {
+        ...BeneficiaryExpenseBasicInfosFragment
+      }
+    }
+  }
+  ${BENEFICIARY_EXPENSE_BASIC_INFOS}
+`;
+
 export const DELETE_BENEFICIARY_EXPENSE = gql`
   mutation DeleteBeneficiaryExpense($id: ID!) {
     deleteBeneficiaryExpense(id: $id) {

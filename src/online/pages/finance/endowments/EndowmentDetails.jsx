@@ -88,6 +88,7 @@ const EndowmentDetailsPage = ({ endowment }) => {
           <Paper sx={{ padding: 2 }} variant="outlined">
             <Typography variant="body1"><b>Référence :</b> {number}</Typography>
             <Typography variant="body1"><b>Libellé :</b> {label}</Typography>
+            <Divider sx={{ my: 2 }} />
             <Typography variant="body1">
             <b>Montant alloué :</b> {amountAllocated ? `${amountAllocated} €` : 'Non défini'}
             </Typography>

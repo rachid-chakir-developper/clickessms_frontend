@@ -39,6 +39,7 @@ import { formatCurrencyAmount, getFormatDate, getFormatDateTime, getPriorityLabe
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 import PrintButton from '../../../_shared/components/printing/PrintButton';
 import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
+import BeneficiaryExpenseStatusLabelMenu from './BeneficiaryExpenseStatusLabelMenu';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -107,13 +108,13 @@ const headCells = [
       label: 'Numéro',
     },
     {
-      id: 'title',
-      property: 'title',
-      exportField: 'title',
+      id: 'label',
+      property: 'label',
+      exportField: 'label',
       numeric: false,
       disablePadding: true,
       isDefault: true,
-      label: 'Titre',
+      label: 'Libellé',
     },
     {
         id: 'employee',
@@ -139,24 +140,45 @@ const headCells = [
         render: ({beneficiary}) => beneficiary && <BeneficiaryChip beneficiary={beneficiary} />
     },
     {
-        id: 'startingDateTime',
-        property: 'starting_date_time',
-        exportField: 'starting_date_time',
+        id: 'expenseDateTime',
+        property: 'expense_date_time',
+        exportField: 'expense_date_time',
         numeric: false,
         disablePadding: false,
         isDefault: true,
-        label: "Date de début",
-        render: ({startingDateTime})=> getFormatDate(startingDateTime)
+        label: "Date",
+        render: ({expenseDateTime})=> getFormatDate(expenseDateTime)
     },
     {
-        id: 'endingDateTime',
-        property: 'ending_date_time',
-        exportField: 'ending_date_time',
+        id: 'amount',
+        property: 'amount',
+        exportField: 'amount',
         numeric: false,
         disablePadding: false,
         isDefault: true,
-        label: "Date de fin",
-        render: ({endingDateTime})=> getFormatDate(endingDateTime)
+        label: 'Montant',
+        render: ({amount})=> <>{formatCurrencyAmount(amount)}</>
+    },
+    {
+      id: 'endowmentType',
+      property: 'endowment_type__name',
+      exportField: 'endowment_type__name',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Type dotation',
+      render: ({endowmentType}) => endowmentType && <Chip label={endowmentType?.name}  variant="filled" />
+    },
+    {
+        id: 'status',
+        property: 'status',
+        exportField: 'status',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        label: 'Status',
+        render: (data)=> <BeneficiaryExpenseStatusLabelMenu beneficiaryExpense={data} />
     },
     {
         id: 'description',
@@ -270,7 +292,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les dépenses
+          Les dépenses des personnes accompagnées
         </Typography>
       )}
       <TableExportButton 

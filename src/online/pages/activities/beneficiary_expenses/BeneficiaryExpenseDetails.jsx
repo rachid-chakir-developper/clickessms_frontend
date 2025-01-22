@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
-import { Box, Button, Divider, Paper, Stack, alpha } from '@mui/material';
-import { Grid, Typography, Avatar } from '@mui/material';
-import { GET_RECAP_BENEFICIARY_EXPENSE } from '../../../../_shared/graphql/queries/BeneficiaryExpenseQueries';
-import { getFormatDateTime } from '../../../../_shared/tools/functions';
+import { Box, Button, Divider, Paper, Stack, alpha, Typography, Grid, Avatar, List } from '@mui/material';
 import styled from '@emotion/styled';
 import { Devices, Edit } from '@mui/icons-material';
-import AppLabel from '../../../../_shared/components/app/label/AppLabel';
+import { GET_RECAP_BENEFICIARY_EXPENSE } from '../../../../_shared/graphql/queries/BeneficiaryExpenseQueries';
+import { getFormatDate, getFormatDateTime, getGenderLabel, getPaymentMethodLabel } from '../../../../_shared/tools/functions';
+import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
+import BeneficiaryExpenseStatusLabelMenu from './BeneficiaryExpenseStatusLabelMenu';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -19,10 +19,7 @@ const Item = styled(Stack)(({ theme }) => ({
 
 export default function BeneficiaryExpenseDetails() {
   let { idBeneficiaryExpense } = useParams();
-  const [
-    getBeneficiaryExpense,
-    { loading: loadingBeneficiaryExpense, data: beneficiaryExpenseData },
-  ] = useLazyQuery(GET_RECAP_BENEFICIARY_EXPENSE);
+  const [getBeneficiaryExpense, { loading, data: beneficiaryExpenseData }] = useLazyQuery(GET_RECAP_BENEFICIARY_EXPENSE);
 
   React.useEffect(() => {
     if (idBeneficiaryExpense) {
@@ -32,20 +29,27 @@ export default function BeneficiaryExpenseDetails() {
 
   return (
     <Stack>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
-        <Link
-          to={`/online/activites/depenses/modifier/${beneficiaryExpenseData?.beneficiaryExpense?.id}`}
-          className="no_style"
-        >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
+        <Box sx={{marginX: 2}}>
+          <Link
+            to={`/online/activites/depenses/liste`}
+            className="no_style"
+          >
+            <Button variant="text" startIcon={<List />}  size="small">
+              Retour à la Liste
+            </Button>
+          </Link>
+        </Box>
+        <Link to={`/online/activites/depenses/modifier/${beneficiaryExpenseData?.beneficiaryExpense?.id}`} className="no_style">
+          <Button variant="outlined" startIcon={<Edit />} size="small">
             Modifier
           </Button>
         </Link>
       </Box>
-      {beneficiaryExpenseData?.beneficiaryExpense && (
-        <BeneficiaryExpenseDetailsPage
-          beneficiaryExpense={beneficiaryExpenseData?.beneficiaryExpense}
-        />
+      {loading ? (
+        <Typography variant="body1">Chargement...</Typography>
+      ) : (
+        beneficiaryExpenseData?.beneficiaryExpense && <BeneficiaryExpenseDetailsPage beneficiaryExpense={beneficiaryExpenseData.beneficiaryExpense} />
       )}
     </Stack>
   );
@@ -55,124 +59,95 @@ const BeneficiaryExpenseDetailsPage = ({ beneficiaryExpense }) => {
   const {
     id,
     number,
-    name,
-    image,
-    coverImage,
-    folder,
-    barCode,
-    buyingPriceHt,
-    tva,
-    designation,
-    quantity,
+    label,
+    amount,
+    paymentMethod,
+    expenseDateTime,
+    beneficiary,
+    endowmentType,
     description,
     observation,
-    createdAt,
-    updatedAt,
+    isActive,
   } = beneficiaryExpense;
 
   return (
     <Grid container spacing={3}>
-      {/* Informations de l'employé */}
-      <Grid item xs={12} sm={4}>
-        <Paper
-          sx={{
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            backgroundImage: `url(${coverImage})`,
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
-            bgcolor: (theme) => alpha(theme.palette.primary.main, 1),
-          }}
-        >
-          <Box
-            sx={{
-              py: 1.2,
-              px: 2,
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              bgcolor: (theme) => alpha(theme.palette.primary.main, 0.5),
-              boxShadow: '0px 0px 30px rgba(0, 0, 0, 0.2) inset',
-            }}
-          >
-            <Avatar
-              src={image}
-              alt={name}
-              sx={{
-                width: 100,
-                height: 100,
-                boxShadow: '0px 0px 4px rgba(0, 0, 0, 0.5)',
-                border: '2px solid white',
-              }}
-            >
-              <Devices />
-            </Avatar>
-            <Box
-              sx={{
-                mt: 1,
-                width: '100%',
-                display: 'flex',
-                borderRadius: 1.5,
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                color: (theme) => theme.palette.primary.contrastText,
-              }}
-            >
-              <Typography variant="h5" gutterBottom>
-                {name}
-              </Typography>
-            </Box>
-          </Box>
-        </Paper>
-      </Grid>
-      {/* Autres informations de l'employé */}
-      <Grid item xs={12} sm={8}>
+      {/* Header avec l'image et le titre */}
+
+      {/* Détails principaux */}
+      <Grid item xs={12} sm={6}>
         <Paper sx={{ padding: 2 }}>
           <Typography variant="h6" gutterBottom>
-            Informations supplémentaires
+            Informations principales
           </Typography>
           <Paper sx={{ padding: 2 }} variant="outlined">
-            <Typography variant="body1">Référence: {number}</Typography>
-            <Typography variant="body1">Code-barres: {barCode}</Typography>
-            <Typography variant="body1">Prix d'achat HT: {buyingPriceHt} €</Typography>
-            <Typography variant="body1">TVA: {tva}%</Typography>
-            <Typography variant="body1">Quantité: {quantity}</Typography>
-            <Typography variant="body1">Désignation: {designation}</Typography>
-            <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+            <Typography variant="body1"><b>Référence :</b> {number}</Typography>
+            <Typography variant="body1"><b>Libellé :</b> {label}</Typography>
+            <Divider sx={{ my: 2 }} />
             <Typography variant="body1">
-              Ajouté le: {getFormatDateTime(createdAt)}
+            <b>Montant :</b> {amount ? `${amount} €` : 'Non défini'}
             </Typography>
+            <Typography variant="body1"><b>Methode du paiement :</b> {getPaymentMethodLabel(paymentMethod)}</Typography>
+            <Divider sx={{ my: 2 }} />
             <Typography variant="body1">
-              Dernière modification: {getFormatDateTime(updatedAt)}
+            <b>Date :</b>{' '} 
+              {expenseDateTime
+                ? `${getFormatDate(expenseDateTime)}`
+                : 'Non défini'}
             </Typography>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="body2" color="textSecondary">
+              <b>Status :</b>
+            </Typography>
+            <BeneficiaryExpenseStatusLabelMenu beneficiaryExpense={beneficiaryExpense} />
           </Paper>
         </Paper>
       </Grid>
+
+      {/* Informations supplémentaires */}
       <Grid item xs={12} sm={6}>
+        <Paper sx={{ padding: 2 }}>
+          <Typography variant="h6" gutterBottom>
+            Type et statut
+          </Typography>
+          <Paper sx={{ padding: 2 }} variant="outlined">
+            <Typography variant="body1">
+              <b>Type de dotation :</b> {endowmentType?.name || 'Non défini'}
+            </Typography>
+          </Paper>
+          <Paper sx={{ padding: 2 }} variant="outlined">
+            {beneficiary ? (
+              <BeneficiaryChip beneficiary={beneficiary} />
+            ) : (
+              <Typography variant="body1">Aucune personne accompagnée associée</Typography>
+            )}
+          </Paper>
+        </Paper>
+      </Grid>
+
+      {/* Description */}
+      <Grid item xs={12}>
         <Paper sx={{ padding: 2 }}>
           <Typography variant="h6" gutterBottom>
             Description
           </Typography>
           <Paper sx={{ padding: 2 }} variant="outlined">
             <Typography variant="body1">
-              {description ? description : "Aucune description pour l'instant"}
+              {description || "Aucune description pour l'instant"}
             </Typography>
           </Paper>
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={6}>
+
+      {/* Observation */}
+      <Grid item xs={12}>
         <Paper sx={{ padding: 2 }}>
           <Typography variant="h6" gutterBottom>
             Observation
           </Typography>
           <Paper sx={{ padding: 2 }} variant="outlined">
             <Typography variant="body1">
-              {observation ? observation : "Aucune observation pour l'instant"}
+              {observation || "Aucune observation pour l'instant"}
             </Typography>
           </Paper>
         </Paper>

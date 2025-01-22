@@ -242,8 +242,7 @@ export default function AddExpenseForm({ idExpense, title }) {
   const [getExpense, { loading: loadingExpense }] = useLazyQuery(GET_EXPENSE, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, ...expenseCopy1 } = data.expense;
-      let { folder, employee, purchaseOrders, ...expenseCopy } = expenseCopy1;
+      let { __typename, folder, employee, purchaseOrders, ...expenseCopy } = data.expense;
       expenseCopy.expenseDateTime = expenseCopy.expenseDateTime ? dayjs(expenseCopy.expenseDateTime) : null;
       if (!expenseCopy?.expenseItems) expenseCopy['expenseItems'] = [];
       let items = [];

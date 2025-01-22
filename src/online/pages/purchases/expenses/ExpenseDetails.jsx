@@ -9,34 +9,20 @@ import {
   ButtonBase,
   Typography,
   Divider,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Chip,
   Button,
-  Stack,
   List,
   ListItem,
   ListItemText,
   Alert,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { GET_EXPENSE_RECAP } from '../../../../_shared/graphql/queries/ExpenseQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import CommentsList from '../../../_shared/components/feedBacks/CommentsList';
-import TitlebarImageList from '../../../_shared/components/media/TitlebarImageList';
 import {
   formatCurrencyAmount,
   getFormatDateTime,
-  getPriorityLabel,
-  getStatusLabel,
-  getStepTypeLabel,
 } from '../../../../_shared/tools/functions';
-import PersonCard from '../../../_shared/components/persons/PersonCard';
-import ChecklistsList from '../../../_shared/components/feedBacks/ChecklistsList';
-import SignatureCard from '../../../_shared/components/feedBacks/SignatureCard';
-import { Check, Edit, Star, StarBorder } from '@mui/icons-material';
+import {Edit } from '@mui/icons-material';
 import ExpenseStatusLabelMenu from './ExpenseStatusLabelMenu';
 import ExpenseTabs from './expenses-tabs/ExpenseTabs';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';

@@ -187,6 +187,7 @@ const headCells = [
         numeric: false,
         disablePadding: false,
         label: 'Description',
+        render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
     },
     {
         id: 'action',

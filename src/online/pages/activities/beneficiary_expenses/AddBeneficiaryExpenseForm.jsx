@@ -8,10 +8,14 @@ import {
   InputAdornment,
   Button,
   Divider,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 
 import { Link, useNavigate } from 'react-router-dom';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
@@ -30,6 +34,9 @@ import TheDesktopDatePicker from '../../../../_shared/components/form-fields/The
 import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
+import MultiFileField from '../../../../_shared/components/form-fields/MultiFileField';
+import { GET_DATAS_BENEFICIARY_EXPENSE } from '../../../../_shared/graphql/queries/DataQueries';
+import { PAYMENT_METHOD } from '../../../../_shared/tools/constants';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -43,34 +50,42 @@ export default function AddBeneficiaryExpenseForm({ idBeneficiaryExpense, title 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({
-    name: yup
-      .string('Entrez le nom du dépense')
-      .required('Le nom du dépense est obligatoire'),
+    amount: yup
+      .number('Veuillez entrer un montant valide') // Utilisation de `.number` pour valider un champ numérique.
+      .typeError('Le montant de dotation doit être un nombre') // Message d'erreur si la valeur n'est pas un nombre.
+      .positive('Le montant de dotation doit être supérieur à 0') // Validation pour un montant positif.
+      .required('Le montant de dotation est obligatoire'), // Rend le champ obligatoire.
   });
   const formik = useFormik({
     initialValues: {
       number: '',
-      title: '',
-      startingDateTime: dayjs(new Date()),
-      endingDateTime: null,
+      label: '',
+      expenseDateTime: dayjs(new Date()),
       beneficiary: null,
+      amount: 0,
+      paymentMethod: PAYMENT_METHOD.CASH,
+      endowmentType: null,
       description: '',
       observation: '',
+      files: [],
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let beneficiaryExpenseCopy= {...values};
+      let {files, ...beneficiaryExpenseCopy}= values;
       beneficiaryExpenseCopy.employee = beneficiaryExpenseCopy.employee ? beneficiaryExpenseCopy.employee.id : null;
       beneficiaryExpenseCopy.beneficiary = beneficiaryExpenseCopy.beneficiary ? beneficiaryExpenseCopy.beneficiary.id : null;
+      files = files?.map((f)=>({id: f?.id, file: f.file || f.path,  caption: f?.caption}))
       if (idBeneficiaryExpense && idBeneficiaryExpense != '') {
         onUpdateBeneficiaryExpense({
           id: beneficiaryExpenseCopy.id,
           beneficiaryExpenseData: beneficiaryExpenseCopy,
+          files: files
         });
       } else
         createBeneficiaryExpense({
           variables: {
             beneficiaryExpenseData: beneficiaryExpenseCopy,
+            files: files
           },
         });
     },
@@ -191,14 +206,21 @@ export default function AddBeneficiaryExpenseForm({ idBeneficiaryExpense, title 
       getEmployees({ variables: { employeeFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
     }
 
+    const {
+        loading: loadingDatas,
+        data: dataData,
+        error: datsError,
+        fetchMore: fetchMoreDatas,
+      } = useQuery(GET_DATAS_BENEFICIARY_EXPENSE, { fetchPolicy: 'network-only' });
+
   const [getBeneficiaryExpense, { loading: loadingBeneficiaryExpense }] = useLazyQuery(
     GET_BENEFICIARY_EXPENSE,
     {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
         let { __typename, folder, ...beneficiaryExpenseCopy } = data.beneficiaryExpense;
-        beneficiaryExpenseCopy.startingDateTime = beneficiaryExpenseCopy.startingDateTime ? dayjs(beneficiaryExpenseCopy.startingDateTime) : null;
-        beneficiaryExpenseCopy.endingDateTime = beneficiaryExpenseCopy.endingDateTime ? dayjs(beneficiaryExpenseCopy.endingDateTime) : null;
+        beneficiaryExpenseCopy.expenseDateTime = beneficiaryExpenseCopy.expenseDateTime ? dayjs(beneficiaryExpenseCopy.expenseDateTime) : null;
+        beneficiaryExpenseCopy.endowmentType = beneficiaryExpenseCopy.endowmentType ? Number(beneficiaryExpenseCopy.endowmentType.id): null;
         formik.setValues(beneficiaryExpenseCopy);
       },
       onError: (err) => console.log(err),
@@ -222,51 +244,37 @@ export default function AddBeneficiaryExpenseForm({ idBeneficiaryExpense, title 
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid item xs={2} sm={4} md={3}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Titre"
-                  id="title"
-                  value={formik.values.title}
-                  required
-                  onChange={(e) => formik.setFieldValue('title', e.target.value)}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.title && Boolean(formik.errors.title)}
-                  helperText={formik.touched.title && formik.errors.title}
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
+          <Grid item xs={12} sm={6} md={3} >
+            <Item>
+              <TheTextField
+                variant="outlined"
+                label="Libellé"
+                value={formik.values.label}
+                onChange={(e) => formik.setFieldValue('label', e.target.value)}
+                disabled={loadingPost || loadingPut}
+              />
+            </Item>
+          </Grid>
             <Grid item xs={12} sm={6} md={3} >
               <Item>
                 <TheDesktopDatePicker
-                  label="Date de début"
-                  value={formik.values.startingDateTime}
+                  label="Date"
+                  value={formik.values.expenseDateTime}
                   onChange={(date) =>
-                    formik.setFieldValue('startingDateTime', date)
+                    formik.setFieldValue('expenseDateTime', date)
                   }
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
             </Grid>
             <Grid item xs={12} sm={6} md={3} >
-              <Item>
-                <TheDesktopDatePicker
-                  label="Date de fin"
-                  value={formik.values.endingDateTime}
-                  onChange={(date) =>
-                    formik.setFieldValue('endingDateTime', date)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={2} sm={4} md={3} >
               <Item>
                 <TheAutocomplete
                   options={beneficiariesData?.beneficiaries?.nodes}
                   onInput={(e) => {
+                    onGetBeneficiaries(e.target.value)
+                  }}
+                  onFocus={(e) => {
                     onGetBeneficiaries(e.target.value)
                   }}
                   label="Personne accompagnée"
@@ -279,10 +287,85 @@ export default function AddBeneficiaryExpenseForm({ idBeneficiaryExpense, title 
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={12} md={12}>
-              <Divider variant="middle" />
+            <Grid item xs={12} sm={6} md={3}>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  id="amount"
+                  label="Montant"
+                  type="number"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="start">€</InputAdornment>
+                    ),
+                  }}
+                  value={formik.values.amount}
+                  onChange={(e) =>
+                    formik.setFieldValue('amount', e.target.value)
+                  }
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.amount && Boolean(formik.errors.amount)} // Gestion des erreurs
+                  helperText={formik.touched.amount && formik.errors.amount} // Affiche le message d'erreur
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={6}>
+            <Grid item xs={12} sm={6} md={4}>
+              <Item>
+                <FormControl fullWidth variant="outlined">
+                  <InputLabel id="demo-simple-select-label">
+                    Type dotation
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="endowmentType"
+                    label="Type dotation"
+                    value={formik.values.endowmentType}
+                    onChange={(e) =>
+                      formik.setFieldValue('endowmentType', e.target.value)
+                    }
+                    disabled={loadingPost || loadingPut}
+                  >
+                    <MenuItem value={null}>
+                      <em>Choisissez un type</em>
+                    </MenuItem>
+                    {dataData?.endowmentTypes?.map((data, index) => {
+                      return (
+                        <MenuItem key={index} value={data.id}>
+                          {data.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Item>
+              <Item>
+                <FormControl fullWidth>
+                    <InputLabel>Methode du paiement</InputLabel>
+                    <Select
+                        value={formik.values.paymentMethod}
+                        onChange={(e) => formik.setFieldValue('paymentMethod', e.target.value)}
+                        disabled={loadingPost || loadingPut}
+                    >
+                        {PAYMENT_METHOD.ALL.map((state, index )=>{
+                            return <MenuItem key={index} value={state.value}>{state.label}</MenuItem>
+                        })}
+                    </Select>
+                </FormControl>
+              </Item>
+              <Item>
+                <MultiFileField
+                  variant="outlined"
+                  label="Pièces jointes"
+                  fileValue={formik.values.files}
+                  onChange={(files) =>
+                    formik.setFieldValue('files', files)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={8}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -296,8 +379,6 @@ export default function AddBeneficiaryExpenseForm({ idBeneficiaryExpense, title 
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={6}>
               <Item>
                 <TheTextField
                   variant="outlined"
