@@ -9,6 +9,7 @@ import { GET_BENEFICIARY_RECAP } from '../../../../_shared/graphql/queries/Benef
 import {
   getFormatDate,
   getFormatDateTime,
+  getGenderLabel,
 } from '../../../../_shared/tools/functions';
 import { Edit } from '@mui/icons-material';
 import BeneficiaryTabs from './beneficiary-tabs/BeneficiaryTabs';
@@ -132,7 +133,7 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
                 color: (theme) => theme.palette.primary.contrastText,
               }}
             >
-              <Typography variant="body2">{gender?.name}</Typography>
+              <Typography variant="body2">Genre: {getGenderLabel(gender)}</Typography>
               <Typography variant="h5" gutterBottom>
                 {`${firstName} ${preferredName && preferredName !== '' ? preferredName : lastName}`}
               </Typography>

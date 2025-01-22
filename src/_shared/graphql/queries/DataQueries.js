@@ -69,9 +69,6 @@ export const GET_DATAS_ESTABLISHMENT = gql`
 
 export const GET_DATAS_BENEFICIARY = gql`
   query {
-    humanGenders: datas(typeData: "HumanGender") {
-      ...DataBasicInfosFragment
-    }
     admissionDocumentTypes: datas(typeData: "AdmissionDocumentType") {
       ...DataBasicInfosFragment
     }

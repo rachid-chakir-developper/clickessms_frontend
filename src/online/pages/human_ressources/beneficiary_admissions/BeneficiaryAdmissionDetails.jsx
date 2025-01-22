@@ -28,6 +28,7 @@ import {
   formatCurrencyAmount,
   getFormatDate,
   getFormatDateTime,
+  getGenderLabel,
 } from '../../../../_shared/tools/functions';
 import BeneficiaryAdmissionStatusLabelMenu from './BeneficiaryAdmissionStatusLabelMenu';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
@@ -225,7 +226,7 @@ function BeneficiaryAdmissionInfosPerso({ beneficiaryAdmission }) {
             <b>Prénom :</b> {firstName || '-'} <br />
             <b>Nom de naissance :</b> {lastName || '-'} <br />
             <b>Nom d’usage :</b> {preferredName || '-'} <br />
-            <b>Genre :</b> {gender?.name || '-'} <br />
+            <b>Genre :</b> {getGenderLabel(gender) || '-'} <br />
             <b>Date de naissance :</b> {getFormatDate(birthDate) || '-'}<br />
             <b>Ville de naissance :</b> {birthCity || '-'} <br />
             <b>Pays de naissance :</b> {birthCountry || '-'} <br />

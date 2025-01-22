@@ -26,6 +26,7 @@ import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutoc
 import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
 import { GET_FINANCIERS } from '../../../../_shared/graphql/queries/FinancierQueries';
 import CustomFieldValues from '../../../../_shared/components/form-fields/costum-fields/CustomFieldValues';
+import { GENDERS } from '../../../../_shared/tools/constants';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -53,7 +54,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       number: '',
       firstName: '',
       lastName: '',
-      gender: null,
+      gender: GENDERS.NOT_SPECIFIED,
       birthDate: dayjs(new Date()),
       birthCity: '',
       birthCountry: '',
@@ -325,9 +326,6 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
         let { __typename, folder, age, customFieldValues, ...beneficiaryCopy } = data.beneficiary;
-        beneficiaryCopy.gender = beneficiaryCopy.gender
-          ? Number(beneficiaryCopy.gender.id)
-          : null;
         beneficiaryCopy.birthDate = beneficiaryCopy.birthDate ? dayjs(beneficiaryCopy.birthDate) : null;
         beneficiaryCopy.admissionDate = beneficiaryCopy.admissionDate ? dayjs(beneficiaryCopy.admissionDate) : null;
         
@@ -501,9 +499,9 @@ const [getEmployees, {
                             formik.setFieldValue('gender', e.target.value)
                           }
                         >
-                          {dataData?.humanGenders?.map((data, index) => {
+                          {GENDERS?.ALL?.map((genre, index) => {
                             return (
-                              <FormControlLabel key={index} value={data.id} control={<Radio />} label={data.name} />
+                              <FormControlLabel key={index} value={genre.value} control={<Radio />} label={genre.label} />
                             );
                           })}
                         </RadioGroup>

@@ -10,10 +10,7 @@ export const BENEFICIARY_ADMISSION_MINI_INFOS = gql`
     id
     number
     receptionDate
-    gender{
-      id
-      name
-    }
+    gender
     preferredName
     firstName
     lastName

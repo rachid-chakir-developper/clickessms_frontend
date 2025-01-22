@@ -39,7 +39,7 @@ import {
 } from '../../../../_shared/graphql/mutations/BeneficiaryAdmissionMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
-import { BENEFICIARY_ADMISSION_STATUS_CHOICES } from '../../../../_shared/tools/constants';
+import { BENEFICIARY_ADMISSION_STATUS_CHOICES, GENDERS } from '../../../../_shared/tools/constants';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import MultiFileField from '../../../../_shared/components/form-fields/MultiFileField';
@@ -76,7 +76,7 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
       number: '',
       firstName: '',
       lastName: '',
-      gender: null,
+      gender: GENDERS.NOT_SPECIFIED,
       receptionDate: dayjs(new Date()),
       birthDate: dayjs(new Date()),
       birthCity: '',
@@ -244,7 +244,6 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       let { __typename, folder, employee, ...beneficiaryAdmissionCopy } = data.beneficiaryAdmission;
-      beneficiaryAdmissionCopy.gender = beneficiaryAdmissionCopy.gender ? Number(beneficiaryAdmissionCopy.gender.id) : null;
       beneficiaryAdmissionCopy.receptionDate = beneficiaryAdmissionCopy.receptionDate ? dayjs(beneficiaryAdmissionCopy.receptionDate) : null;
       beneficiaryAdmissionCopy.responseDate = beneficiaryAdmissionCopy.responseDate ? dayjs(beneficiaryAdmissionCopy.responseDate) : null;
       beneficiaryAdmissionCopy.birthDate = beneficiaryAdmissionCopy.birthDate ? dayjs(beneficiaryAdmissionCopy.birthDate) : null;
@@ -346,9 +345,9 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
                             formik.setFieldValue('gender', e.target.value)
                           }
                         >
-                          {dataData?.humanGenders?.map((data, index) => {
+                          {GENDERS?.ALL?.map((genre, index) => {
                             return (
-                              <FormControlLabel key={index} value={data.id} control={<Radio />} label={data.name} />
+                              <FormControlLabel key={index} value={genre.value} control={<Radio />} label={genre.label} />
                             );
                           })}
                         </RadioGroup>

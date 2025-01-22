@@ -24,10 +24,7 @@ export const BENEFICIARY_PHONE_INFOS = gql`
 export const BENEFICIARY_MINI_INFOS = gql`
   fragment BeneficiaryMiniInfosFragment on BeneficiaryType {
     id
-    gender{
-      id
-      name
-    }
+    gender
     preferredName
     firstName
     lastName
