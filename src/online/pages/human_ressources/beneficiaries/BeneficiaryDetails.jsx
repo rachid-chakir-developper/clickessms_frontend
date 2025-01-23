@@ -71,6 +71,7 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
     birthCity,
     birthCountry,
     nationality,
+    professionalStatus,
     city,
     zipCode,
     address,
@@ -178,9 +179,11 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
             <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
             <Typography variant="body1">
               Date de naissance: {getFormatDate(birthDate)}<br />
+              Âge: {age}<br />
               Ville de naissance: {birthCity}<br />
               Pays de naissance: {birthCountry}<br />
-              Nationnalité: {nationality}
+              Nationnalité: {nationality}<br />
+              Statut professionnel: {professionalStatus?.name}
             </Typography>
           </Paper>
           <CustomFieldValuesDetails formModel="Beneficiary" idObject={id} />

@@ -85,6 +85,10 @@ export const BENEFICIARY_BASIC_INFOS = gql`
     birthCountry
     nationality
     age
+    professionalStatus{
+      id
+      name
+    }
     beneficiaryStatusEntries{
       ...BeneficiaryStatusEntryFragment
     }

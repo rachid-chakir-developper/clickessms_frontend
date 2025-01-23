@@ -82,6 +82,7 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
       birthCity: '',
       birthCountry: '',
       nationality: '',
+      professionalStatus: null,
       latitude: '',
       longitude: '',
       city: '',
@@ -243,10 +244,11 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
   const [getBeneficiaryAdmission, { loading: loadingBeneficiaryAdmission }] = useLazyQuery(GET_BENEFICIARY_ADMISSION, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, folder, employee, ...beneficiaryAdmissionCopy } = data.beneficiaryAdmission;
+      let { __typename, folder, employee, age, ...beneficiaryAdmissionCopy } = data.beneficiaryAdmission;
       beneficiaryAdmissionCopy.receptionDate = beneficiaryAdmissionCopy.receptionDate ? dayjs(beneficiaryAdmissionCopy.receptionDate) : null;
       beneficiaryAdmissionCopy.responseDate = beneficiaryAdmissionCopy.responseDate ? dayjs(beneficiaryAdmissionCopy.responseDate) : null;
       beneficiaryAdmissionCopy.birthDate = beneficiaryAdmissionCopy.birthDate ? dayjs(beneficiaryAdmissionCopy.birthDate) : null;
+      beneficiaryAdmissionCopy.professionalStatus = beneficiaryAdmissionCopy.professionalStatus ? Number(beneficiaryAdmissionCopy.professionalStatus.id): null;
       formik.setValues(beneficiaryAdmissionCopy);
       if(!canManageActivity && beneficiaryAdmissionCopy.status !== BENEFICIARY_ADMISSION_STATUS_CHOICES.PENDING) setIsNotEditable(true)
     },
@@ -534,6 +536,34 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
                         }
                         disabled={loadingPost || loadingPut}
                       />
+                    </Item>
+                    <Item>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Statut professionnel
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="professionalStatus"
+                          label="Statut professionnel"
+                          value={formik.values.professionalStatus}
+                          onChange={(e) =>
+                            formik.setFieldValue('professionalStatus', e.target.value)
+                          }
+                          disabled={loadingPost || loadingPut}
+                        >
+                          <MenuItem value={null}>
+                            <em>Choisissez un statut</em>
+                          </MenuItem>
+                          {dataData?.professionalStatuses?.map((data, index) => {
+                            return (
+                              <MenuItem key={index} value={data.id}>
+                                {data.name}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
                     </Item>
                     <Item>
                       <TheDesktopDatePicker

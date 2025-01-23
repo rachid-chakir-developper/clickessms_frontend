@@ -37,6 +37,8 @@ import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutoc
 import MultiFileField from '../../../../_shared/components/form-fields/MultiFileField';
 import { GET_DATAS_BENEFICIARY_EXPENSE } from '../../../../_shared/graphql/queries/DataQueries';
 import { PAYMENT_METHOD } from '../../../../_shared/tools/constants';
+import { GET_CASH_REGISTERS } from '../../../../_shared/graphql/queries/CashRegisterQueries';
+import { GET_BANK_CARDS } from '../../../../_shared/graphql/queries/BankCardQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -64,6 +66,10 @@ export default function AddBeneficiaryExpenseForm({ idBeneficiaryExpense, title 
       beneficiary: null,
       amount: 0,
       paymentMethod: PAYMENT_METHOD.CASH,
+      bankCard: null,
+      cashRegister: null,
+      checkNumber: '',
+      bankName: '',
       endowmentType: null,
       description: '',
       observation: '',
@@ -74,6 +80,8 @@ export default function AddBeneficiaryExpenseForm({ idBeneficiaryExpense, title 
       let {files, ...beneficiaryExpenseCopy}= values;
       beneficiaryExpenseCopy.employee = beneficiaryExpenseCopy.employee ? beneficiaryExpenseCopy.employee.id : null;
       beneficiaryExpenseCopy.beneficiary = beneficiaryExpenseCopy.beneficiary ? beneficiaryExpenseCopy.beneficiary.id : null;
+      beneficiaryExpenseCopy.bankCard = beneficiaryExpenseCopy.bankCard && beneficiaryExpenseCopy.paymentMethod===PAYMENT_METHOD.CREDIT_CARD ? beneficiaryExpenseCopy.bankCard.id : null;
+      beneficiaryExpenseCopy.cashRegister = beneficiaryExpenseCopy.cashRegister && beneficiaryExpenseCopy.paymentMethod===PAYMENT_METHOD.CASH ? beneficiaryExpenseCopy.cashRegister.id : null;
       files = files?.map((f)=>({id: f?.id, file: f.file || f.path,  caption: f?.caption}))
       if (idBeneficiaryExpense && idBeneficiaryExpense != '') {
         onUpdateBeneficiaryExpense({
@@ -206,12 +214,30 @@ export default function AddBeneficiaryExpenseForm({ idBeneficiaryExpense, title 
       getEmployees({ variables: { employeeFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
     }
 
-    const {
-        loading: loadingDatas,
-        data: dataData,
-        error: datsError,
-        fetchMore: fetchMoreDatas,
-      } = useQuery(GET_DATAS_BENEFICIARY_EXPENSE, { fetchPolicy: 'network-only' });
+  const {
+      loading: loadingDatas,
+      data: dataData,
+      error: datsError,
+      fetchMore: fetchMoreDatas,
+    } = useQuery(GET_DATAS_BENEFICIARY_EXPENSE, { fetchPolicy: 'network-only' });
+
+  const {
+      loading: loadingCashRegisters,
+      data: cashRegistersData,
+      error: cashRegistersError,
+      fetchMore: fetchMoreCashRegisters,
+    } = useQuery(GET_CASH_REGISTERS, {
+      fetchPolicy: 'network-only',
+    });
+  
+  const {
+    loading: loadingBankCards,
+    data: bankCardsData,
+    error: bankCardsError,
+    fetchMore: fetchMoreBankCards,
+  } = useQuery(GET_BANK_CARDS, {
+    fetchPolicy: 'network-only',
+  });
 
   const [getBeneficiaryExpense, { loading: loadingBeneficiaryExpense }] = useLazyQuery(
     GET_BENEFICIARY_EXPENSE,
@@ -353,6 +379,58 @@ export default function AddBeneficiaryExpenseForm({ idBeneficiaryExpense, title 
                     </Select>
                 </FormControl>
               </Item>
+              {formik.values.paymentMethod===PAYMENT_METHOD.CREDIT_CARD && <Item>
+                <TheAutocomplete
+                  options={bankCardsData?.bankCards?.nodes}
+                  label="Carte bancaire"
+                  placeholder="Choisissez une carte"
+                  limitTags={2}
+                  multiple={false}
+                  value={formik.values.bankCard}
+                  onChange={(e, newValue) => {
+                    formik.setFieldValue('bankCard', newValue);
+                  }}
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>}
+              {formik.values.paymentMethod===PAYMENT_METHOD.CASH && <Item>
+                <TheAutocomplete
+                  options={cashRegistersData?.cashRegisters?.nodes}
+                  label="Caisse"
+                  placeholder="Choisissez une caisse"
+                  limitTags={2}
+                  multiple={false}
+                  value={formik.values.cashRegister}
+                  onChange={(e, newValue) => {
+                    formik.setFieldValue('cashRegister', newValue);
+                  }}
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>}
+              {formik.values.paymentMethod === PAYMENT_METHOD.CHECK && <>
+                <Item>
+                  <TheTextField
+                    variant="outlined"
+                    label="Numéro du chèque"
+                    value={formik.values.checkNumber}
+                    onChange={(e) =>
+                      formik.setFieldValue('checkNumber', e.target.value)
+                    }
+                    disabled={loadingPost || loadingPut}
+                  />
+                </Item>
+                <Item>
+                  <TheTextField
+                    variant="outlined"
+                    label="Nom de la banque"
+                    value={formik.values.bankName}
+                    onChange={(e) =>
+                      formik.setFieldValue('bankName', e.target.value)
+                    }
+                    disabled={loadingPost || loadingPut}
+                  />
+                </Item>
+              </>}
               <Item>
                 <MultiFileField
                   variant="outlined"

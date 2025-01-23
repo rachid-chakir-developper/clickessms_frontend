@@ -59,6 +59,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       birthCity: '',
       birthCountry: '',
       nationality: '',
+      professionalStatus: null,
       admissionDate: dayjs(new Date()),
       latitude: '',
       longitude: '',
@@ -328,6 +329,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
         let { __typename, folder, age, customFieldValues, ...beneficiaryCopy } = data.beneficiary;
         beneficiaryCopy.birthDate = beneficiaryCopy.birthDate ? dayjs(beneficiaryCopy.birthDate) : null;
         beneficiaryCopy.admissionDate = beneficiaryCopy.admissionDate ? dayjs(beneficiaryCopy.admissionDate) : null;
+        beneficiaryCopy.professionalStatus = beneficiaryCopy.professionalStatus ? Number(beneficiaryCopy.professionalStatus.id): null;
         
         if (!beneficiaryCopy?.beneficiaryEntries) beneficiaryCopy['beneficiaryEntries'] = [];
         let items = [];
@@ -688,6 +690,34 @@ const [getEmployees, {
                         }
                         disabled={loadingPost || loadingPut}
                       />
+                    </Item>
+                    <Item>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Statut professionnel
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="professionalStatus"
+                          label="Statut professionnel"
+                          value={formik.values.professionalStatus}
+                          onChange={(e) =>
+                            formik.setFieldValue('professionalStatus', e.target.value)
+                          }
+                          disabled={loadingPost || loadingPut}
+                        >
+                          <MenuItem value={null}>
+                            <em>Choisissez un statut</em>
+                          </MenuItem>
+                          {dataData?.professionalStatuses?.map((data, index) => {
+                            return (
+                              <MenuItem key={index} value={data.id}>
+                                {data.name}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
                     </Item>
                   </Grid>
                 </Grid>

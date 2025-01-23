@@ -32,6 +32,11 @@ export const BENEFICIARY_ADMISSION_BASIC_INFOS = gql`
     birthCity
     birthCountry
     nationality
+    age
+    professionalStatus{
+      id
+      name
+    }
     establishments{
       ...EstablishmentMiniInfosFragment
     }

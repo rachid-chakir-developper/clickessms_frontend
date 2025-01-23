@@ -6,6 +6,7 @@ import { EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
 import { SUPPLIER_MINI_INFOS } from './SupplierFragment';
 import { CASH_REGISTER_MINI_INFOS } from './CashRegisterFragment';
 import { PURCHASE_ORDER_MINI_INFOS } from './PurchaseOrderFragment';
+import { BANK_CARD_MINI_INFOS } from './BankCardFragment';
 
 export const EXPENSE_BASIC_INFOS = gql`
   fragment ExpenseBasicInfosFragment on ExpenseType {
@@ -29,10 +30,15 @@ export const EXPENSE_BASIC_INFOS = gql`
     supplier {
       ...SupplierMiniInfosFragment
     }
+    bankCard{
+      ...BankCardMiniInfosFragment
+    }
     cashRegister{
       ...CashRegisterMiniInfosFragment
     }
-    folder {
+    checkNumber
+    bankName
+    folders{
       id
       number
       name
@@ -44,6 +50,7 @@ export const EXPENSE_BASIC_INFOS = gql`
   ${ESTABLISHMENT_MINI_INFOS}
   ${EMPLOYEE_BASIC_INFOS}
   ${SUPPLIER_MINI_INFOS}
+  ${BANK_CARD_MINI_INFOS}
   ${CASH_REGISTER_MINI_INFOS}
   ${PURCHASE_ORDER_MINI_INFOS}
 `;

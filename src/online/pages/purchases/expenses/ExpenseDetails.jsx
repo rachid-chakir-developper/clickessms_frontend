@@ -21,12 +21,14 @@ import ProgressService from '../../../../_shared/services/feedbacks/ProgressServ
 import {
   formatCurrencyAmount,
   getFormatDateTime,
+  getPaymentMethodLabel,
 } from '../../../../_shared/tools/functions';
 import {Edit } from '@mui/icons-material';
 import ExpenseStatusLabelMenu from './ExpenseStatusLabelMenu';
 import ExpenseTabs from './expenses-tabs/ExpenseTabs';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import { PAYMENT_METHOD } from '../../../../_shared/tools/constants';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -155,15 +157,22 @@ function ExpenseMiniInfos({ expense }) {
               <Alert sx={{marginLeft: 2}} severity="info">{expense?.isPlannedInBudget ? "Prévu au budget" : "Non prévu au budget"}</Alert>
             </Box>
             <Divider sx={{ my: 2 }} />
+            <Typography variant="subtitle1" color="textSecondary"><b>Methode du paiement :</b> {getPaymentMethodLabel(expense?.paymentMethod)}</Typography>
+            {expense?.paymentMethod===PAYMENT_METHOD.CREDIT_CARD && 
+              <Typography variant="subtitle1" color="textSecondary"><b>Carte bancaire :</b> {expense?.bankCard?.cardNumber}</Typography>
+            }
+            {expense?.paymentMethod===PAYMENT_METHOD.CASH && 
+              <Typography variant="subtitle1" color="textSecondary"><b>Caisse :</b>{expense?.cashRegister?.name}</Typography>
+            }
+            {expense?.paymentMethod===PAYMENT_METHOD.CHECK && <>
+              <Typography variant="subtitle1" color="textSecondary"><b>Numéro chèque :</b> {expense?.checkNumber}</Typography>
+              <Typography variant="subtitle1" color="textSecondary"><b>Nom de la banque :</b> {expense?.bankName}</Typography></>
+            }
+            <Divider sx={{ my: 2 }} />
             <Typography variant="body2" color="textSecondary">
               <b>Créé le :</b> {getFormatDateTime(expense?.createdAt)} <br />
               <b>Dernière modification :</b> {getFormatDateTime(expense?.updatedAt)}
             </Typography>
-            <Divider sx={{ my: 2 }} />
-            <Typography variant="body2" color="textSecondary">
-              <b>Status :</b>
-            </Typography>
-            <ExpenseStatusLabelMenu expense={expense} />
           </Grid>
         </Grid>
       </Grid>
@@ -201,6 +210,11 @@ function ExpenseOtherInfos({ expense }) {
           )}
         </Grid>
       </Grid>
+      <Divider sx={{ my: 2 }} />
+      <Typography variant="body2" color="textSecondary">
+        <b>Status :</b>
+      </Typography>
+      <ExpenseStatusLabelMenu expense={expense} />
     </Paper>
   );
 }

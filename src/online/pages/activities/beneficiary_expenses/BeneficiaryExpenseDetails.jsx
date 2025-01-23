@@ -8,6 +8,8 @@ import { GET_RECAP_BENEFICIARY_EXPENSE } from '../../../../_shared/graphql/queri
 import { getFormatDate, getFormatDateTime, getGenderLabel, getPaymentMethodLabel } from '../../../../_shared/tools/functions';
 import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
 import BeneficiaryExpenseStatusLabelMenu from './BeneficiaryExpenseStatusLabelMenu';
+import { PAYMENT_METHOD } from '../../../../_shared/tools/constants';
+import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -47,7 +49,7 @@ export default function BeneficiaryExpenseDetails() {
         </Link>
       </Box>
       {loading ? (
-        <Typography variant="body1">Chargement...</Typography>
+        <ProgressService type="form" />
       ) : (
         beneficiaryExpenseData?.beneficiaryExpense && <BeneficiaryExpenseDetailsPage beneficiaryExpense={beneficiaryExpenseData.beneficiaryExpense} />
       )}
@@ -62,6 +64,10 @@ const BeneficiaryExpenseDetailsPage = ({ beneficiaryExpense }) => {
     label,
     amount,
     paymentMethod,
+    bankCard,
+    cashRegister,
+    checkNumber,
+    bankName,
     expenseDateTime,
     beneficiary,
     endowmentType,
@@ -88,6 +94,16 @@ const BeneficiaryExpenseDetailsPage = ({ beneficiaryExpense }) => {
             <b>Montant :</b> {amount ? `${amount} €` : 'Non défini'}
             </Typography>
             <Typography variant="body1"><b>Methode du paiement :</b> {getPaymentMethodLabel(paymentMethod)}</Typography>
+            {paymentMethod===PAYMENT_METHOD.CREDIT_CARD && 
+              <Typography variant="body1"><b>Carte bancaire :</b> {bankCard?.cardNumber}</Typography>
+            }
+            {paymentMethod===PAYMENT_METHOD.CASH && 
+              <Typography variant="body1"><b>Caisse :</b>{cashRegister?.name}</Typography>
+            }
+            {paymentMethod===PAYMENT_METHOD.CHECK && <>
+              <Typography variant="body1"><b>Numéro chèque :</b> {checkNumber}</Typography>
+              <Typography variant="body1"><b>Nom de la banque :</b> {bankName}</Typography></>
+            }
             <Divider sx={{ my: 2 }} />
             <Typography variant="body1">
             <b>Date :</b>{' '} 
@@ -95,11 +111,6 @@ const BeneficiaryExpenseDetailsPage = ({ beneficiaryExpense }) => {
                 ? `${getFormatDate(expenseDateTime)}`
                 : 'Non défini'}
             </Typography>
-            <Divider sx={{ my: 2 }} />
-            <Typography variant="body2" color="textSecondary">
-              <b>Status :</b>
-            </Typography>
-            <BeneficiaryExpenseStatusLabelMenu beneficiaryExpense={beneficiaryExpense} />
           </Paper>
         </Paper>
       </Grid>
@@ -110,11 +121,14 @@ const BeneficiaryExpenseDetailsPage = ({ beneficiaryExpense }) => {
           <Typography variant="h6" gutterBottom>
             Type et statut
           </Typography>
-          <Paper sx={{ padding: 2 }} variant="outlined">
+          <Paper sx={{ padding: 2, marginBottom:2 }} variant="outlined">
             <Typography variant="body1">
               <b>Type de dotation :</b> {endowmentType?.name || 'Non défini'}
             </Typography>
           </Paper>
+          <Typography variant="h6" gutterBottom>
+            Personne accompagnée
+          </Typography>
           <Paper sx={{ padding: 2 }} variant="outlined">
             {beneficiary ? (
               <BeneficiaryChip beneficiary={beneficiary} />
@@ -122,6 +136,11 @@ const BeneficiaryExpenseDetailsPage = ({ beneficiaryExpense }) => {
               <Typography variant="body1">Aucune personne accompagnée associée</Typography>
             )}
           </Paper>
+          <Divider sx={{ my: 2 }} />
+          <Typography variant="body2" color="textSecondary">
+            <b>Status :</b>
+          </Typography>
+          <BeneficiaryExpenseStatusLabelMenu beneficiaryExpense={beneficiaryExpense} />
         </Paper>
       </Grid>
 

@@ -32,7 +32,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
-import { getFormatDate, getFormatDateTime } from '../../../../_shared/tools/functions';
+import { getFormatDate, getFormatDateTime, getGenderLabel } from '../../../../_shared/tools/functions';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
@@ -226,6 +226,15 @@ export default function TableListBeneficiaries({
   
   const [headCells, setHeadCells] = React.useState([
     {
+      id: 'gender',
+      property: 'gender',
+      exportField: 'gender',
+      numeric: false,
+      disablePadding: true,
+      label: 'Genre',
+      render: ({gender}) => <>{getGenderLabel(gender)}</>
+    },
+    {
         id: 'firstName',
         property: 'first_name',
         exportField: 'first_name',
@@ -294,6 +303,15 @@ export default function TableListBeneficiaries({
         numeric: false,
         disablePadding: true,
         label: 'Nationnalité',
+    },
+    {
+      id: 'professionalStatus',
+      property: 'professional_status__name',
+      exportField: 'professional_status__name',
+      numeric: false,
+      disablePadding: true,
+      label: 'Statut professionnel',
+      render: ({professionalStatus}) => professionalStatus && <>{professionalStatus?.name}</>
     },
     {
         id: 'beneficiaryStatuses',

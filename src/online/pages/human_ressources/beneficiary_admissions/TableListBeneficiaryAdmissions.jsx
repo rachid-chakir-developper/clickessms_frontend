@@ -35,7 +35,7 @@ import EstablishmentChip from '../../companies/establishments/EstablishmentChip'
 import { render } from 'react-dom';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
-import { getFormatDate, getFormatDateTime, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
+import { getFormatDate, getFormatDateTime, getGenderLabel, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
 import BeneficiaryAdmissionStatusLabelMenu from './BeneficiaryAdmissionStatusLabelMenu';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 
@@ -98,6 +98,15 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
+      id: 'gender',
+      property: 'gender',
+      exportField: 'gender',
+      numeric: false,
+      disablePadding: true,
+      label: 'Genre',
+      render: ({gender}) => <>{getGenderLabel(gender)}</>
+    },
+    {
         id: 'firstName',
         property: 'first_name',
         exportField: 'first_name',
@@ -135,6 +144,15 @@ const headCells = [
         render: ({birthDate})=> getFormatDate(birthDate)
     },
     {
+        id: 'age',
+        property: 'age',
+        exportField: 'age',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Âge',
+    },
+    {
         id: 'birthCity',
         property: 'birth_city',
         exportField: 'birth_city',
@@ -157,6 +175,15 @@ const headCells = [
         numeric: false,
         disablePadding: true,
         label: 'Nationnalité',
+    },
+    {
+      id: 'professionalStatus',
+      property: 'professional_status__name',
+      exportField: 'professional_status__name',
+      numeric: false,
+      disablePadding: true,
+      label: 'Statut professionnel',
+      render: ({professionalStatus}) => professionalStatus && <>{professionalStatus?.name}</>
     },
     {
         id: 'establishments',
@@ -192,14 +219,14 @@ const headCells = [
         render: ({employee}) => employee && <EmployeeChip employee={employee} />
     },
     {
-        id: 'expenseDateTime',
-        property: 'expense_date_time',
-        exportField: 'expense_date_time',
+        id: 'receptionDate',
+        property: 'reception_date',
+        exportField: 'reception_date',
         numeric: false,
         disablePadding: false,
         isDefault: true,
-        label: 'Date',
-        render: ({expenseDateTime})=> getFormatDate(expenseDateTime)
+        label: 'Date réception',
+        render: ({receptionDate})=> getFormatDate(receptionDate)
     },
     {
         id: 'status',
@@ -211,6 +238,15 @@ const headCells = [
         disableClickDetail: true,
         label: 'Status',
         render: (data)=> <BeneficiaryAdmissionStatusLabelMenu beneficiaryAdmission={data} />
+    },
+    {
+        id: 'responseDate',
+        property: 'response_date',
+        exportField: 'response_date',
+        numeric: false,
+        disablePadding: false,
+        label: 'Date réponse',
+        render: ({responseDate})=> getFormatDate(responseDate)
     },
     {
         id: 'statusReason',

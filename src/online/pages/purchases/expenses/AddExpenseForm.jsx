@@ -42,6 +42,7 @@ import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 import { GET_SUPPLIERS } from '../../../../_shared/graphql/queries/SupplierQueries';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { GET_CASH_REGISTERS } from '../../../../_shared/graphql/queries/CashRegisterQueries';
+import { GET_BANK_CARDS } from '../../../../_shared/graphql/queries/BankCardQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -73,6 +74,8 @@ export default function AddExpenseForm({ idExpense, title }) {
       label: '',
       expenseDateTime: dayjs(new Date()),
       paymentMethod: PAYMENT_METHOD.CREDIT_CARD,
+      checkNumber: '',
+      bankName: '',
       expenseType: EXPENSE_TYPE_CHOICES.PURCHASE,
       isAmountAccurate: true,
       isPlannedInBudget: false,
@@ -83,6 +86,7 @@ export default function AddExpenseForm({ idExpense, title }) {
       establishment: null,
       expenseItems: [],
       supplier: null,
+      bankCard: null,
       cashRegister: null,
     },
     validationSchema: validationSchema,
@@ -90,6 +94,7 @@ export default function AddExpenseForm({ idExpense, title }) {
       if(isNotEditable) return
       let {files, ...expenseCopy} = values;
       expenseCopy.supplier = expenseCopy.supplier ? expenseCopy.supplier.id : null;
+      expenseCopy.bankCard = expenseCopy.bankCard && expenseCopy.paymentMethod===PAYMENT_METHOD.CREDIT_CARD ? expenseCopy.bankCard.id : null;
       expenseCopy.cashRegister = expenseCopy.cashRegister && expenseCopy.paymentMethod===PAYMENT_METHOD.CASH ? expenseCopy.cashRegister.id : null;
       expenseCopy.establishment = expenseCopy.establishment ?  expenseCopy.establishment?.id : null;;
       files = files?.map((f)=>({id: f?.id, file: f.file || f.path,  caption: f?.caption}))
@@ -131,6 +136,15 @@ export default function AddExpenseForm({ idExpense, title }) {
     error: cashRegistersError,
     fetchMore: fetchMoreCashRegisters,
   } = useQuery(GET_CASH_REGISTERS, {
+    fetchPolicy: 'network-only',
+  });
+
+  const {
+    loading: loadingBankCards,
+    data: bankCardsData,
+    error: bankCardsError,
+    fetchMore: fetchMoreBankCards,
+  } = useQuery(GET_BANK_CARDS, {
     fetchPolicy: 'network-only',
   });
 
@@ -372,7 +386,7 @@ export default function AddExpenseForm({ idExpense, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={2.5}>
               <Item>
                 <TheSwitch
                   variant="outlined"
@@ -386,7 +400,7 @@ export default function AddExpenseForm({ idExpense, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={2.5}>
               <Item>
                 <TheSwitch
                   variant="outlined"
@@ -400,7 +414,7 @@ export default function AddExpenseForm({ idExpense, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <FormControl fullWidth>
                     <InputLabel>Methode du paiement</InputLabel>
@@ -415,6 +429,20 @@ export default function AddExpenseForm({ idExpense, title }) {
                     </Select>
                 </FormControl>
               </Item>
+              {formik.values.paymentMethod===PAYMENT_METHOD.CREDIT_CARD && <Item>
+                <TheAutocomplete
+                  options={bankCardsData?.bankCards?.nodes}
+                  label="Carte bancaire"
+                  placeholder="Choisissez une carte"
+                  limitTags={2}
+                  multiple={false}
+                  value={formik.values.bankCard}
+                  onChange={(e, newValue) => {
+                    formik.setFieldValue('bankCard', newValue);
+                  }}
+                  disabled={loadingPost || loadingPut || isNotEditable}
+                />
+              </Item>}
               {formik.values.paymentMethod===PAYMENT_METHOD.CASH && <Item>
                 <TheAutocomplete
                   options={cashRegistersData?.cashRegisters?.nodes}
@@ -426,8 +454,33 @@ export default function AddExpenseForm({ idExpense, title }) {
                   onChange={(e, newValue) => {
                     formik.setFieldValue('cashRegister', newValue);
                   }}
+                  disabled={loadingPost || loadingPut || isNotEditable}
                 />
               </Item>}
+            {formik.values.paymentMethod === PAYMENT_METHOD.CHECK && <>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Numéro du chèque"
+                  value={formik.values.checkNumber}
+                  onChange={(e) =>
+                    formik.setFieldValue('checkNumber', e.target.value)
+                  }
+                  disabled={loadingPost || loadingPut || isNotEditable}
+                />
+              </Item>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Nom de la banque"
+                  value={formik.values.bankName}
+                  onChange={(e) =>
+                    formik.setFieldValue('bankName', e.target.value)
+                  }
+                  disabled={loadingPost || loadingPut || isNotEditable}
+                />
+              </Item>
+            </>}
             </Grid>
             <Grid item xs={12} sm={6} md={7} >
               <Item>

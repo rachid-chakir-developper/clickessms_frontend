@@ -78,6 +78,9 @@ export const GET_DATAS_BENEFICIARY = gql`
     endowmentTypes: datas(typeData: "TypeEndowment") {
       ...DataBasicInfosFragment
     }
+    professionalStatuses: datas(typeData: "ProfessionalStatus") {
+      ...DataBasicInfosFragment
+    }
   }
   ${DATA_BASIC_INFOS}
 `;

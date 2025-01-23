@@ -8,6 +8,7 @@ import { GET_RECAP_ENDOWMENT } from '../../../../_shared/graphql/queries/Endowme
 import { getFormatDate, getFormatDateTime, getGenderLabel } from '../../../../_shared/tools/functions';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -47,7 +48,7 @@ export default function EndowmentDetails() {
         </Link>
       </Box>
       {loading ? (
-        <Typography variant="body1">Chargement...</Typography>
+        <ProgressService type="form" />
       ) : (
         endowmentData?.endowment && <EndowmentDetailsPage endowment={endowmentData.endowment} />
       )}
@@ -101,7 +102,7 @@ const EndowmentDetailsPage = ({ endowment }) => {
                 : 'Non défini'}
             </Typography>
             <Typography variant="body1">
-            <b>Mrge d'âge :</b> {ageMin || 'Non défini'} - {ageMax || 'Non défini'}
+            <b>Marge d'âge :</b> {ageMin || 'Non défini'} - {ageMax || 'Non défini'}
             </Typography>
           </Paper>
         </Paper>

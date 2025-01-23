@@ -111,7 +111,7 @@ const headCells = [
       exportField: 'number',
       numeric: false,
       disablePadding: true,
-      label: 'Numéro',
+      label: 'Réference',
     },
     {
       id: 'title',
@@ -147,7 +147,7 @@ const headCells = [
       disablePadding: true,
       isDefault: true,
       label: "Date d'expiration",
-      render: ({expirationDate}) => getFormatDate(expirationDate)
+      render: ({expirationDate}) => getFormatDate(expirationDate, 'MM/YYYY')
     },
     {
       id: 'cvv',

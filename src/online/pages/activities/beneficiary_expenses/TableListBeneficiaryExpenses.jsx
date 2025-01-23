@@ -35,7 +35,7 @@ import EstablishmentChip from '../../companies/establishments/EstablishmentChip'
 import { render } from 'react-dom';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
-import { formatCurrencyAmount, getFormatDate, getFormatDateTime, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
+import { formatCurrencyAmount, getFormatDate, getFormatDateTime, getPaymentMethodLabel, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 import PrintButton from '../../../_shared/components/printing/PrintButton';
 import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
@@ -158,6 +158,50 @@ const headCells = [
         isDefault: true,
         label: 'Montant',
         render: ({amount})=> <>{formatCurrencyAmount(amount)}</>
+    },
+    {
+        id: 'paymentMethod',
+        property: 'payment_method',
+        exportField: 'payment_method',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Methode du paiement',
+        render: ({paymentMethod})=> <AppLabel >{getPaymentMethodLabel(paymentMethod)}</AppLabel>
+    },
+    {
+        id: 'bankCard',
+        property: 'bank_card__card_number',
+        exportField: 'bank_card__card_number',
+        numeric: false,
+        disablePadding: false,
+        label: 'Carte bancaire',
+        render: ({bankCard})=> <>{bankCard?.cardNumber}</>
+    },
+    {
+        id: 'cashRegister',
+        property: 'cash_register__name',
+        exportField: 'cash_register__name',
+        numeric: false,
+        disablePadding: false,
+        label: 'Caisse',
+        render: ({cashRegister})=> <>{cashRegister?.name}</>
+    },
+    {
+        id: 'checkNumber',
+        property: 'check_number',
+        exportField: 'check_number',
+        numeric: false,
+        disablePadding: false,
+        label: 'Numéro du chèque',
+    },
+    {
+        id: 'bankName',
+        property: 'bank_name',
+        exportField: 'bank_name',
+        numeric: false,
+        disablePadding: false,
+        label: 'Nom de la Banque',
     },
     {
       id: 'endowmentType',

@@ -188,9 +188,11 @@ function BeneficiaryAdmissionInfosPerso({ beneficiaryAdmission }) {
     preferredName,
     gender,
     birthDate,
+    age,
     birthCity,
     birthCountry,
     nationality,
+    professionalStatus,
     latitude,
     longitude,
     city,
@@ -228,9 +230,11 @@ function BeneficiaryAdmissionInfosPerso({ beneficiaryAdmission }) {
             <b>Nom d’usage :</b> {preferredName || '-'} <br />
             <b>Genre :</b> {getGenderLabel(gender) || '-'} <br />
             <b>Date de naissance :</b> {getFormatDate(birthDate) || '-'}<br />
+            <b>Âge :</b> {age || '-'}<br />
             <b>Ville de naissance :</b> {birthCity || '-'} <br />
             <b>Pays de naissance :</b> {birthCountry || '-'} <br />
-            <b>Nationnalité :</b> {nationality || '-'} 
+            <b>Nationnalité :</b> {nationality || '-'} <br />
+            <b>Statut professionnel :</b> {professionalStatus?.name || '-'}
           </Typography>
         </Grid>
         <Grid item xs={4}>

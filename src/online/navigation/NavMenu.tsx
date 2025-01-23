@@ -73,7 +73,7 @@ function SubmoduleNavEntry(props: SubmoduleNavEntryProps) {
       expandable
       expanded={props.expanded}
     >
-      <List disablePadding sx={{ backgroundColor: '#EFEFEF' }}>
+      <List disablePadding sx={{ backgroundColor: '#EFEFEF', marginLeft: 4 }}>
         {props.pages.map((page) => (
           <PageNavEntry
             key={page.id}

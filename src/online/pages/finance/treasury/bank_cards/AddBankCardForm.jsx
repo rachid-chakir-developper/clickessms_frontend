@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import { Stack, Box, Typography, Button, InputAdornment } from '@mui/material';
+import { Stack, Box, Typography, Button, InputAdornment, Divider } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -45,6 +45,8 @@ export default function AddBankCardForm({ idBankCard, title }) {
       cardholderName: '',
       cvv: '',
       bankAccount: null,
+      description: '',
+      observation: '',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -169,8 +171,7 @@ export default function AddBankCardForm({ idBankCard, title }) {
   const [getBankCard, { loading: loadingBankCard }] = useLazyQuery(GET_BANK_CARD, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, ...bankCardCopy1 } = data.bankCard;
-      let { folder, ...bankCardCopy } = bankCardCopy1;
+      let { __typename, folder, name, ...bankCardCopy } =  data.bankCard;
       bankCardCopy.expirationDate = bankCardCopy.expirationDate ? dayjs(bankCardCopy.expirationDate) : null;
       formik.setValues(bankCardCopy);
     },
@@ -185,7 +186,7 @@ export default function AddBankCardForm({ idBankCard, title }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
-        {title} {formik.values.number}
+        {title}: <em><u>{formik.values.cardNumber}</u></em>
       </Typography>
       {loadingBankCard && <ProgressService type="form" />}
       {!loadingBankCard && (
@@ -289,6 +290,39 @@ export default function AddBankCardForm({ idBankCard, title }) {
                   </Item>
                 </Grid>
               </Grid>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+              <Divider variant="middle" />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Description"
+                  multiline
+                  rows={4}
+                  value={formik.values.description}
+                  onChange={(e) =>
+                    formik.setFieldValue('description', e.target.value)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Observation"
+                  multiline
+                  rows={4}
+                  value={formik.values.observation}
+                  onChange={(e) =>
+                    formik.setFieldValue('observation', e.target.value)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
