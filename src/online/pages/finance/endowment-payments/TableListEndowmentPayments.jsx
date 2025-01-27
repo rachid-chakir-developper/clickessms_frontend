@@ -35,9 +35,11 @@ import EstablishmentChip from '../../companies/establishments/EstablishmentChip'
 import { render } from 'react-dom';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
-import { formatCurrencyAmount, getFormatDate, getFormatDateTime, getGenderLabel, getPriorityLabel, getRecurrenceLabel, truncateText } from '../../../../_shared/tools/functions';
+import { formatCurrencyAmount, getFormatDate, getFormatDateTime, getPaymentMethodLabel, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 import PrintButton from '../../../_shared/components/printing/PrintButton';
+import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
+import EndowmentPaymentStatusLabelMenu from './EndowmentPaymentStatusLabelMenu';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -111,7 +113,95 @@ const headCells = [
       exportField: 'label',
       numeric: false,
       disablePadding: true,
+      isDefault: true,
       label: 'Libellé',
+    },
+    {
+        id: 'employee',
+        property: 'employee__first_name',
+        exportField: ['employee__first_name', 'employee__last_name'],
+        numeric: false,
+        disablePadding: false,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Déclaré par',
+        render: ({employee}) => employee && <EmployeeChip employee={employee} />
+    },
+    {
+        id: 'beneficiary',
+        property: 'beneficiary__first_name',
+        exportField: ['beneficiary__first_name', 'beneficiary__last_name'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Personne accompagnée',
+        render: ({beneficiary}) => beneficiary && <BeneficiaryChip beneficiary={beneficiary} />
+    },
+    {
+        id: 'date',
+        property: 'expense_date_time',
+        exportField: 'expense_date_time',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: "Date",
+        render: ({date})=> getFormatDate(date)
+    },
+    {
+        id: 'amount',
+        property: 'amount',
+        exportField: 'amount',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Montant',
+        render: ({amount})=> <>{formatCurrencyAmount(amount)}</>
+    },
+    {
+        id: 'paymentMethod',
+        property: 'payment_method',
+        exportField: 'payment_method',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Methode du paiement',
+        render: ({paymentMethod})=> <AppLabel >{getPaymentMethodLabel(paymentMethod)}</AppLabel>
+    },
+    {
+        id: 'bankCard',
+        property: 'bank_card__card_number',
+        exportField: 'bank_card__card_number',
+        numeric: false,
+        disablePadding: false,
+        label: 'Carte bancaire',
+        render: ({bankCard})=> <>{bankCard?.cardNumber}</>
+    },
+    {
+        id: 'cashRegister',
+        property: 'cash_register__name',
+        exportField: 'cash_register__name',
+        numeric: false,
+        disablePadding: false,
+        label: 'Caisse',
+        render: ({cashRegister})=> <>{cashRegister?.name}</>
+    },
+    {
+        id: 'checkNumber',
+        property: 'check_number',
+        exportField: 'check_number',
+        numeric: false,
+        disablePadding: false,
+        label: 'Numéro du chèque',
+    },
+    {
+        id: 'bankName',
+        property: 'bank_name',
+        exportField: 'bank_name',
+        numeric: false,
+        disablePadding: false,
+        label: 'Nom de la Banque',
     },
     {
       id: 'endowmentType',
@@ -120,99 +210,19 @@ const headCells = [
       numeric: false,
       disablePadding: true,
       isDefault: true,
-      label: 'Type',
+      label: 'Type dotation',
       render: ({endowmentType}) => endowmentType && <Chip label={endowmentType?.name}  variant="filled" />
     },
     {
-      id: 'accountingNature',
-      property: 'accounting_nature__name',
-      exportField: 'accounting_nature__name',
-      numeric: false,
-      disablePadding: true,
-      isDefault: true,
-      label: 'Nature',
-      render: ({accountingNature}) => accountingNature && <>{accountingNature?.name}</>
-    },
-    {
-        id: 'amountAllocated',
-        property: 'amount_allocated',
-        exportField: 'amount_allocated',
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        label: 'Montant prévu',
-        render: ({amountAllocated})=> <>{formatCurrencyAmount(amountAllocated)}</>
-    },
-    {
-        id: 'establishment',
-        property: 'establishment__name',
-        exportField: 'establishment__name',
+        id: 'status',
+        property: 'status',
+        exportField: 'status',
         numeric: false,
         disablePadding: false,
         isDefault: true,
         disableClickDetail: true,
-        sortDisabled: true,
-        label: 'Structure',
-        render: ({establishment}) => <EstablishmentChip establishment={establishment} />
-    },
-    {
-      id: 'recurrenceRule',
-      property: 'recurrence_frequency',
-      exportField: 'recurrence_frequency',
-      numeric: false,
-      disablePadding: true,
-      isDefault: true,
-      label: 'Fréquence',
-      render: ({recurrenceRule}) => <>{getRecurrenceLabel(recurrenceRule)}</>
-    },,
-    {
-      id: 'gender',
-      property: 'gender',
-      exportField: 'gender',
-      numeric: false,
-      disablePadding: true,
-      isDefault: true,
-      label: 'Genre',
-      render: ({gender}) => <>{getGenderLabel(gender)}</>
-    },
-    {
-      id: 'professionalStatus',
-      property: 'professional_status__name',
-      exportField: 'professional_status__name',
-      numeric: false,
-      disablePadding: true,
-      isDefault: true,
-      label: 'Statut professionnel',
-      render: ({professionalStatus}) => professionalStatus && <>{professionalStatus?.name}</>
-    },
-    {
-      id: 'age',
-      property: 'age_min',
-      exportField: ['age_min', 'age_max'],
-      numeric: false,
-      disablePadding: true,
-      isDefault: true,
-      label: 'Âge',
-      render: ({ageMin, ageMax}) => {(ageMin>=0 && ageMax>0) && <>{ageMin}-{ageMax}</>}
-    },
-    {
-        id: 'startingDateTime',
-        property: 'starting_date_time',
-        exportField: 'starting_date_time',
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        label: 'Date de début',
-        render: ({startingDateTime}) => getFormatDate(startingDateTime)
-    },
-    {
-        id: 'endingDateTime',
-        property: 'ending_date_time',
-        exportField: 'ending_date_time',
-        numeric: false,
-        disablePadding: false,
-        label: 'Date de fin',
-        render: ({endingDateTime}) => getFormatDate(endingDateTime)
+        label: 'Status',
+        render: (data)=> <EndowmentPaymentStatusLabelMenu endowmentPayment={data} />
     },
     {
         id: 'description',
@@ -220,18 +230,9 @@ const headCells = [
         exportField: 'description',
         numeric: false,
         disablePadding: false,
+        isDefault: true,
         label: 'Description',
         render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
-    },
-    {
-        id: 'isActive',
-        property: 'is_active',
-        exportField: 'is_active',
-        numeric: false,
-        disablePadding: true,
-        isDefault: true,
-        label: 'État',
-        render: ({isActive})=> isActive ? <AppLabel color="success">Actif</AppLabel> : <AppLabel color="warning">Inactif</AppLabel>
     },
     {
         id: 'action',
@@ -335,12 +336,12 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les dotations
+          Les paiements des personnes accompagnées
         </Typography>
       )}
       <TableExportButton 
-        entity={'Endowment'}
-        fileName={'Dépenses'}
+        entity={'EndowmentPayment'}
+        fileName={'Projets-personnalises'}
         fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
         titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
@@ -361,10 +362,10 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListEndowments({
+export default function TableListEndowmentPayments({
   loading,
   rows,
-  onDeleteEndowment,
+  onDeleteEndowmentPayment,
   onFilterChange,
   paginator,
 }) {
@@ -459,7 +460,7 @@ export default function TableListEndowments({
                 <StyledTableRow>
                   <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucune dotation trouvé.
+                      Aucun paiement trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -517,7 +518,7 @@ export default function TableListEndowments({
                           scope="row"
                           padding={column?.disablePadding ? "none" : "normal"}
                           key={index}
-                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/finance/dotations/details/${row?.id}`)}}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/finance/dotations-paiements/details/${row?.id}`)}}
                         >
                         {column?.render ? column?.render(row) : row[column?.id]}
                         </StyledTableCell>
@@ -541,7 +542,7 @@ export default function TableListEndowments({
                         }}
                       >
                         <Link
-                          to={`/online/finance/dotations/details/${row?.id}`}
+                          to={`/online/finance/dotations-paiements/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -550,7 +551,7 @@ export default function TableListEndowments({
                           </MenuItem>
                         </Link>
                         <Link
-                          to={`/online/finance/dotations/modifier/${row?.id}`}
+                          to={`/online/finance/dotations-paiements/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -560,7 +561,7 @@ export default function TableListEndowments({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteEndowment(row?.id);
+                            onDeleteEndowmentPayment(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

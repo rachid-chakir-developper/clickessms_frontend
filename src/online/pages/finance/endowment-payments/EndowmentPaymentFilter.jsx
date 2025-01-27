@@ -28,7 +28,7 @@ const Item = styled(Stack)(({ theme }) => ({
     color: theme.palette.text.secondary,
   }));
 
-const TransmissionEventFilter = ({ onFilterChange }) => {
+const EndowmentPaymentFilter = ({ onFilterChange }) => {
   const [filterValues, setFilterValues] = useState({
     startingDateTime: null,
     endingDateTime: null,
@@ -131,9 +131,6 @@ const TransmissionEventFilter = ({ onFilterChange }) => {
                   onInput={(e) => {
                     onGetBeneficiaries(e.target.value)
                   }}
-                  onFocus={(e) => {
-                    onGetBeneficiaries(e.target.value)
-                  }}
                   label="Personnes accompagnées"
                   limitTags={3}
                   value={selectedBeneficiaries}
@@ -149,4 +146,4 @@ const TransmissionEventFilter = ({ onFilterChange }) => {
   );
 };
 
-export default TransmissionEventFilter;
+export default EndowmentPaymentFilter;

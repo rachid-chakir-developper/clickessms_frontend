@@ -5,6 +5,7 @@ import DecisionDocuments from './decision_documents/DecisionDocuments';
 import Treasury from './treasury/Treasury';
 import Budgets from './budgets/Budgets';
 import Endowments from './endowments/Endowments';
+import EndowmentPayments from './endowment-payments/EndowmentPayments';
 
 export default function Finance() {
   return (
@@ -13,6 +14,10 @@ export default function Finance() {
         <Route
           path={`dotations/*`}
           element={<Endowments />}
+        />
+        <Route
+          path={`dotations-paiements/*`}
+          element={<EndowmentPayments />}
         />
         <Route
           path={`decisions/*`}

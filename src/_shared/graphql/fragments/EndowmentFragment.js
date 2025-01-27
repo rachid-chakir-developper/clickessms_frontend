@@ -3,8 +3,8 @@
 import { gql } from '@apollo/client';
 import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 
-export const ENDOWMENT_BASIC_INFOS = gql`
-    fragment EndowmentBasicInfosFragment on EndowmentType {
+export const ENDOWMENT_MINI_INFOS = gql`
+    fragment EndowmentMiniInfosFragment on EndowmentType {
         id
         number
         label
@@ -12,8 +12,17 @@ export const ENDOWMENT_BASIC_INFOS = gql`
         amountAllocated
         startingDateTime
         endingDateTime
+        isRecurring
+        recurrenceRule
         ageMin
         ageMax
+        isActive
+    }
+`;
+
+export const ENDOWMENT_BASIC_INFOS = gql`
+    fragment EndowmentBasicInfosFragment on EndowmentType {
+        ...EndowmentMiniInfosFragment
         establishment{
         ...EstablishmentMiniInfosFragment
         }
@@ -31,8 +40,8 @@ export const ENDOWMENT_BASIC_INFOS = gql`
         }
         description
         observation
-        isActive
     }
+    ${ENDOWMENT_MINI_INFOS}
     ${ESTABLISHMENT_MINI_INFOS}
 `;
 

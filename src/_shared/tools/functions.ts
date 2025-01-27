@@ -38,6 +38,7 @@ import {
   TICKET_TYPE_CHOICES,
   ROOM_TYPE_CHOICES,
   BENEFICIARY_ADMISSION_STATUS_CHOICES,
+  RECURRENCE_OPTIONS,
 } from './constants';
 
 export const getGenderLabel = (gender) => {
@@ -272,6 +273,10 @@ export const getRoomTypeLabel = (roomType) => {
 export const getBeneficiaryAdmissionStatusLabel = (status) => {
   return BENEFICIARY_ADMISSION_STATUS_CHOICES.ALL.find((s) => s.value === status)?.label;
 };
+export const getRecurrenceLabel = (recurrence) => {
+  return RECURRENCE_OPTIONS.ALL.find((option) => option.value === recurrence)?.label || "Récurrence inconnue";
+};
+
 
 
 const intlNumFmt = new Intl.NumberFormat('fr-FR', {

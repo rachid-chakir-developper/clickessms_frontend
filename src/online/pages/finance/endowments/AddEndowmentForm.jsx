@@ -35,6 +35,7 @@ import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/Establis
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_ALL_ACCOUNTING_NATURES, GET_DATAS_ENDOWMENT } from '../../../../_shared/graphql/queries/DataQueries';
 import { GENDERS } from '../../../../_shared/tools/constants';
+import TheRecurrenceSelect from '../../../../_shared/components/form-fields/TheRecurrenceSelect';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -62,6 +63,7 @@ export default function AddEndowmentForm({ idEndowment, title }) {
       amountAllocated: 0,
       startingDateTime: dayjs(new Date()),
       endingDateTime: null,
+      recurrenceRule:'RRULE:FREQ=MONTHLY;WKST=MO',
       establishment: null,
       gender: GENDERS.NOT_SPECIFIED,
       ageMin: 0,
@@ -371,7 +373,45 @@ export default function AddEndowmentForm({ idEndowment, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={3}>
+                <Item>
+                    <TheRecurrenceSelect
+                        label="Répéter"
+                        value={formik.values.recurrenceRule}
+                        onChange={(rrule) => formik.setFieldValue('recurrenceRule', rrule)}
+                        disabled={loadingPost || loadingPut}
+                    />
+                </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Item>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Genre
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="gender"
+                    label="Genre"
+                    value={formik.values.gender}
+                    onChange={(e) =>
+                      formik.setFieldValue('gender', e.target.value)
+                    }
+                  >
+                    {GENDERS?.ALL?.map(
+                      (type, index) => {
+                        return (
+                          <MenuItem key={index} value={type.value}>
+                            {type.label}
+                          </MenuItem>
+                        );
+                      },
+                    )}
+                  </Select>
+                </FormControl>
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
               <Item>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">
@@ -401,35 +441,7 @@ export default function AddEndowmentForm({ idEndowment, title }) {
                 </FormControl>
               </Item>
             </Grid>
-            <Grid item xs={12} sm={4} md={4}>
-              <Item>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
-                    Genre
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="gender"
-                    label="Genre"
-                    value={formik.values.gender}
-                    onChange={(e) =>
-                      formik.setFieldValue('gender', e.target.value)
-                    }
-                  >
-                    {GENDERS?.ALL?.map(
-                      (type, index) => {
-                        return (
-                          <MenuItem key={index} value={type.value}>
-                            {type.label}
-                          </MenuItem>
-                        );
-                      },
-                    )}
-                  </Select>
-                </FormControl>
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={4} md={2}>
+            <Grid item xs={12} sm={4} md={1.5}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -448,7 +460,7 @@ export default function AddEndowmentForm({ idEndowment, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={4} md={2}>
+            <Grid item xs={12} sm={4} md={1.5}>
               <Item>
                 <TheTextField
                   variant="outlined"

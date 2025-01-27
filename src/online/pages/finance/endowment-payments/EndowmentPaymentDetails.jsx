@@ -4,10 +4,11 @@ import { useLazyQuery } from '@apollo/client';
 import { Box, Button, Divider, Paper, Stack, alpha, Typography, Grid, Avatar, List } from '@mui/material';
 import styled from '@emotion/styled';
 import { Devices, Edit } from '@mui/icons-material';
-import { GET_RECAP_ENDOWMENT } from '../../../../_shared/graphql/queries/EndowmentQueries';
-import { getFormatDate, getFormatDateTime, getGenderLabel, getRecurrenceLabel } from '../../../../_shared/tools/functions';
-import AppLabel from '../../../../_shared/components/app/label/AppLabel';
-import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import { GET_RECAP_ENDOWMENT_PAYMENT } from '../../../../_shared/graphql/queries/EndowmentPaymentQueries';
+import { getFormatDate, getFormatDateTime, getGenderLabel, getPaymentMethodLabel } from '../../../../_shared/tools/functions';
+import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
+import EndowmentPaymentStatusLabelMenu from './EndowmentPaymentStatusLabelMenu';
+import { PAYMENT_METHOD } from '../../../../_shared/tools/constants';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 
 const Item = styled(Stack)(({ theme }) => ({
@@ -18,22 +19,22 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function EndowmentDetails() {
-  let { idEndowment } = useParams();
-  const [getEndowment, { loading, data: endowmentData }] = useLazyQuery(GET_RECAP_ENDOWMENT);
+export default function EndowmentPaymentDetails() {
+  let { idEndowmentPayment } = useParams();
+  const [getEndowmentPayment, { loading, data: endowmentPaymentData }] = useLazyQuery(GET_RECAP_ENDOWMENT_PAYMENT);
 
   React.useEffect(() => {
-    if (idEndowment) {
-      getEndowment({ variables: { id: idEndowment } });
+    if (idEndowmentPayment) {
+      getEndowmentPayment({ variables: { id: idEndowmentPayment } });
     }
-  }, [idEndowment]);
+  }, [idEndowmentPayment]);
 
   return (
     <Stack>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
         <Box sx={{marginX: 2}}>
           <Link
-            to={`/online/finance/dotations/liste`}
+            to={`/online/finance/dotations-paiements/liste`}
             className="no_style"
           >
             <Button variant="text" startIcon={<List />}  size="small">
@@ -41,7 +42,7 @@ export default function EndowmentDetails() {
             </Button>
           </Link>
         </Box>
-        <Link to={`/online/finance/dotations/modifier/${endowmentData?.endowment?.id}`} className="no_style">
+        <Link to={`/online/finance/dotations-paiements/modifier/${endowmentPaymentData?.endowmentPayment?.id}`} className="no_style">
           <Button variant="outlined" startIcon={<Edit />} size="small">
             Modifier
           </Button>
@@ -50,32 +51,30 @@ export default function EndowmentDetails() {
       {loading ? (
         <ProgressService type="form" />
       ) : (
-        endowmentData?.endowment && <EndowmentDetailsPage endowment={endowmentData.endowment} />
+        endowmentPaymentData?.endowmentPayment && <EndowmentPaymentDetailsPage endowmentPayment={endowmentPaymentData.endowmentPayment} />
       )}
     </Stack>
   );
 }
 
-const EndowmentDetailsPage = ({ endowment }) => {
+const EndowmentPaymentDetailsPage = ({ endowmentPayment }) => {
   const {
     id,
     number,
     label,
-    gender,
-    amountAllocated,
-    startingDateTime,
-    endingDateTime,
-    ageMin,
-    ageMax,
-    establishment,
+    amount,
+    paymentMethod,
+    bankCard,
+    cashRegister,
+    checkNumber,
+    bankName,
+    date,
+    beneficiary,
     endowmentType,
-    recurrenceRule,
-    professionalStatus,
-    accountingNature,
     description,
     observation,
     isActive,
-  } = endowment;
+  } = endowmentPayment;
 
   return (
     <Grid container spacing={3}>
@@ -92,18 +91,25 @@ const EndowmentDetailsPage = ({ endowment }) => {
             <Typography variant="body1"><b>Libellé :</b> {label}</Typography>
             <Divider sx={{ my: 2 }} />
             <Typography variant="body1">
-            <b>Montant alloué :</b> {amountAllocated ? `${amountAllocated} €` : 'Non défini'}
+            <b>Montant :</b> {amount ? `${amount} €` : 'Non défini'}
             </Typography>
+            <Typography variant="body1"><b>Methode du paiement :</b> {getPaymentMethodLabel(paymentMethod)}</Typography>
+            {paymentMethod===PAYMENT_METHOD.CREDIT_CARD && 
+              <Typography variant="body1"><b>Carte bancaire :</b> {bankCard?.cardNumber}</Typography>
+            }
+            {paymentMethod===PAYMENT_METHOD.CASH && 
+              <Typography variant="body1"><b>Caisse :</b>{cashRegister?.name}</Typography>
+            }
+            {paymentMethod===PAYMENT_METHOD.CHECK && <>
+              <Typography variant="body1"><b>Numéro chèque :</b> {checkNumber}</Typography>
+              <Typography variant="body1"><b>Nom de la banque :</b> {bankName}</Typography></>
+            }
             <Divider sx={{ my: 2 }} />
-            <Typography variant="body1"><b>Genre :</b> {getGenderLabel(gender)}</Typography>
             <Typography variant="body1">
-            <b>Période :</b>{' '}
-              {startingDateTime
-                ? `${getFormatDate(startingDateTime)} au ${getFormatDate(endingDateTime)}`
+            <b>Date :</b>{' '} 
+              {date
+                ? `${getFormatDate(date)}`
                 : 'Non défini'}
-            </Typography>
-            <Typography variant="body1">
-            <b>Marge d'âge :</b> {ageMin || 'Non défini'} - {ageMax || 'Non défini'}
             </Typography>
           </Paper>
         </Paper>
@@ -115,27 +121,26 @@ const EndowmentDetailsPage = ({ endowment }) => {
           <Typography variant="h6" gutterBottom>
             Type et statut
           </Typography>
-          <Paper sx={{ padding: 2 }} variant="outlined">
+          <Paper sx={{ padding: 2, marginBottom:2 }} variant="outlined">
             <Typography variant="body1">
-            <b>Type de dotation :</b> {endowmentType?.name || 'Non défini'}
-            </Typography>
-            <Typography variant="body1">
-            <b>Fréquence :</b> {getRecurrenceLabel(recurrenceRule) || 'Non défini'}
-            </Typography>
-            <Typography variant="body1">
-            <b>Statut professionnel :</b> {professionalStatus?.name || 'Non défini'}
-            </Typography>
-            <Typography variant="body1">
-              <b>Nature comptable :</b> {accountingNature?.name || 'Non défini'}
+              <b>Type de dotation :</b> {endowmentType?.name || 'Non défini'}
             </Typography>
           </Paper>
+          <Typography variant="h6" gutterBottom>
+            Personne accompagnée
+          </Typography>
           <Paper sx={{ padding: 2 }} variant="outlined">
-            {establishment ? (
-              <EstablishmentChip establishment={establishment} />
+            {beneficiary ? (
+              <BeneficiaryChip beneficiary={beneficiary} />
             ) : (
-              <Typography variant="body1">Aucun établissement associé</Typography>
+              <Typography variant="body1">Aucune personne accompagnée associée</Typography>
             )}
           </Paper>
+          <Divider sx={{ my: 2 }} />
+          <Typography variant="body2" color="textSecondary">
+            <b>Status :</b>
+          </Typography>
+          <EndowmentPaymentStatusLabelMenu endowmentPayment={endowmentPayment} />
         </Paper>
       </Grid>
 

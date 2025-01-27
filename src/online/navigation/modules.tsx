@@ -620,7 +620,7 @@ export const modules: Module[] = [
       {
         id: 'endowment',
         name: 'APVH',
-        path: '/online/finance/dotations',
+        path: '/online/finance/dotations-paiements',
         icon: <AccountBalanceWalletIcon />,
       },
       {

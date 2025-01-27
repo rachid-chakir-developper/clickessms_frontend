@@ -660,3 +660,34 @@ export const BENEFICIARY_ADMISSION_STATUS_CHOICES = {
   ],
 };
 
+export const RECURRENCE_FREQUENCIES = {
+  DAILY: "DAILY",
+  WEEKLY: "WEEKLY",
+  MONTHLY: "MONTHLY",
+  YEARLY: "YEARLY",
+  ALL: [
+      { value: "DAILY", label: "Jour" },
+      { value: "WEEKLY", label: "Semaine" },
+      { value: "MONTHLY", label: "Mois" },
+      { value: "YEARLY", label: "Année" }
+  ]
+};
+
+export const RECURRENCE_OPTIONS = {
+  // ONCE: "ONCE",
+  // DAILY: "DAILY",
+  // WEEKLY: "WEEKLY",
+  MONTHLY: "MONTHLY",
+  YEARLY: "YEARLY",
+  // WEEKDAYS: "WEEKDAYS",
+  // CUSTOM: "COSTUM",
+  ALL: [
+      // { value: "ONCE", label: "Une seule fois" },
+      // { value: "RRULE:FREQ=DAILY;WKST=MO", label: "Tous les jours" },
+      // { value: "RRULE:FREQ=WEEKLY;WKST=MO", label: "Toutes les semaines" },
+      { value: "RRULE:FREQ=MONTHLY;WKST=MO", label: "Tous les mois" },
+      { value: "RRULE:FREQ=YEARLY;WKST=MO", label: "Tous les ans" },
+      // { value: "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;WKST=MO", label: "Tous les jours de la semaine (du lundi au vendredi)" },
+      // { value: "COSTUM", label: "Personnaliser…" }
+  ]
+};

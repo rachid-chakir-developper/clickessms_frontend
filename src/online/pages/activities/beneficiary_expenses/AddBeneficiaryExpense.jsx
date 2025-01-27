@@ -9,7 +9,7 @@ export default function AddBeneficiaryExpense() {
       idBeneficiaryExpense={idBeneficiaryExpense}
       title={
         idBeneficiaryExpense && idBeneficiaryExpense > 0
-          ? `Modifier le dépense`
+          ? `Modifier la dépense`
           : `Ajouter une dépense`
       }
     />

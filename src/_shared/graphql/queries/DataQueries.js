@@ -194,3 +194,13 @@ export const GET_DATAS_BENEFICIARY_EXPENSE = gql`
   }
   ${DATA_BASIC_INFOS}
 `;
+
+export const GET_DATAS_ENDOWMENT_PAYMENT = gql`
+  query {
+    endowmentTypes: datas(typeData: "TypeEndowment") {
+      ...DataBasicInfosFragment
+    }
+  }
+  ${DATA_BASIC_INFOS}
+`;
+

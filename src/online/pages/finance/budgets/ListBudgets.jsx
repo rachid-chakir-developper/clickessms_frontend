@@ -3,7 +3,6 @@ import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
-import BudgetItemCard from './BudgetItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Add } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
@@ -14,7 +13,6 @@ import {
   PUT_BUDGET_STATE,
 } from '../../../../_shared/graphql/mutations/BudgetMutations';
 import { GET_BUDGETS } from '../../../../_shared/graphql/queries/BudgetQueries';
-import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import BudgetFilter from './BudgetFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
 import TableListBudgets from './TableListBudgets';
@@ -173,35 +171,6 @@ export default function ListBudgets() {
       <Grid item xs={12}>
         <BudgetFilter onFilterChange={handleFilterChange} />
       </Grid>
-      {/* <Grid item xs={12}>
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-          >
-            {loadingBudgets && (
-              <Grid key={'pgrs'} item xs={12} sm={6} md={4}>
-                <ProgressService type="mediaCard" />
-              </Grid>
-            )}
-            {budgetsData?.budgets?.nodes?.length < 1 && !loadingBudgets && (
-              <Alert severity="warning">Aucun budget trouvé.</Alert>
-            )}
-            {budgetsData?.budgets?.nodes?.map((budget, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <Item>
-                  <BudgetItemCard
-                    budget={budget}
-                    onDeleteBudget={onDeleteBudget}
-                    onUpdateBudgetState={onUpdateBudgetState}
-                  />
-                </Item>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      </Grid> */}
       <Grid item xs={12}>
         <TableListBudgets
           loading={loadingBudgets}

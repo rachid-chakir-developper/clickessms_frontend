@@ -17,6 +17,9 @@ import { Add } from '@mui/icons-material';
 
 export default function ListEndowments() {
   const authorizationSystem = useAuthorizationSystem();
+  const canManageFinance = authorizationSystem.requestAuthorization({
+    type: 'manageFinance',
+  }).authorized;
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [endowmentFilter, setEndowmentFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
