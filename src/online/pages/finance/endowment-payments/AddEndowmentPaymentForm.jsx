@@ -68,6 +68,7 @@ export default function AddEndowmentPaymentForm({ idEndowmentPayment, title }) {
       cashRegister: null,
       checkNumber: '',
       bankName: '',
+      iban: '',
       endowmentType: null,
       description: '',
       observation: '',
@@ -405,6 +406,18 @@ export default function AddEndowmentPaymentForm({ idEndowmentPayment, title }) {
                   disabled={loadingPost || loadingPut}
                 />
               </Item>}
+              {formik.values.paymentMethod === PAYMENT_METHOD.BANK_TRANSFER && 
+                <Item>
+                  <TheTextField
+                    variant="outlined"
+                    label="RIB ou IBAN"
+                    value={formik.values.iban}
+                    onChange={(e) =>
+                      formik.setFieldValue('iban', e.target.value)
+                    }
+                    disabled={loadingPost || loadingPut}
+                  />
+                </Item>}
               {formik.values.paymentMethod === PAYMENT_METHOD.CHECK && <>
                 <Item>
                   <TheTextField

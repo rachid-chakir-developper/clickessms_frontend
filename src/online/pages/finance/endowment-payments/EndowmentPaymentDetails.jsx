@@ -68,6 +68,7 @@ const EndowmentPaymentDetailsPage = ({ endowmentPayment }) => {
     cashRegister,
     checkNumber,
     bankName,
+    iban,
     date,
     beneficiary,
     endowmentType,
@@ -103,6 +104,9 @@ const EndowmentPaymentDetailsPage = ({ endowmentPayment }) => {
             {paymentMethod===PAYMENT_METHOD.CHECK && <>
               <Typography variant="body1"><b>Numéro chèque :</b> {checkNumber}</Typography>
               <Typography variant="body1"><b>Nom de la banque :</b> {bankName}</Typography></>
+            }
+            {paymentMethod===PAYMENT_METHOD.BANK_TRANSFER && 
+              <Typography variant="body1"><b>RIB ou IBAN :</b>{iban}</Typography>
             }
             <Divider sx={{ my: 2 }} />
             <Typography variant="body1">

@@ -24,6 +24,7 @@ export const ENDOWMENT_PAYMENT_BASIC_INFOS = gql`
     paymentMethod
     checkNumber
     bankName
+    iban
     status
     description
     comment

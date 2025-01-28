@@ -125,6 +125,7 @@ function DialogPaymentMethod({open, onClose, endowmentPayment, updateEndowmentPa
         cashRegister: endowmentPayment?.cashRegister,
         checkNumber: endowmentPayment?.checkNumber,
         bankName: endowmentPayment?.bankName,
+        iban: endowmentPayment?.iban,
         description: endowmentPayment?.description,
         observation: endowmentPayment?.observation,
       },
@@ -170,7 +171,7 @@ function DialogPaymentMethod({open, onClose, endowmentPayment, updateEndowmentPa
         <DialogContent>
           <Box style={{  marginTop: 20 }}>
             <Grid container>
-              <Grid item xs={12} sm={4} md={4} >
+              <Grid item xs={12} sm={6} md={6}>
                 <Item>
                   <FormControl fullWidth>
                       <InputLabel>Methode du paiement</InputLabel>
@@ -185,72 +186,84 @@ function DialogPaymentMethod({open, onClose, endowmentPayment, updateEndowmentPa
                       </Select>
                   </FormControl>
                 </Item>
-                {formik.values.paymentMethod===PAYMENT_METHOD.CREDIT_CARD && <Item>
-                  <TheAutocomplete
-                    options={bankCardsData?.bankCards?.nodes}
-                    onInput={(e) => {
-                      onGetBankCards(e.target.value)
-                    }}
-                    onFocus={(e) => {
-                      onGetBankCards(e.target.value)
-                    }}
-                    label="Carte bancaire"
-                    placeholder="Choisissez une carte"
-                    limitTags={2}
-                    multiple={false}
-                    value={formik.values.bankCard}
-                    onChange={(e, newValue) => {
-                      formik.setFieldValue('bankCard', newValue);
-                    }}
-                    disabled={loading}
-                  />
-                </Item>}
-                {formik.values.paymentMethod===PAYMENT_METHOD.CASH && <Item>
-                  <TheAutocomplete
-                    options={cashRegistersData?.cashRegisters?.nodes}
-                    onInput={(e) => {
-                      onGetCashRegisters(e.target.value)
-                    }}
-                    onFocus={(e) => {
-                      onGetCashRegisters(e.target.value)
-                    }}
-                    label="Caisse"
-                    placeholder="Choisissez une caisse"
-                    limitTags={2}
-                    multiple={false}
-                    value={formik.values.cashRegister}
-                    onChange={(e, newValue) => {
-                      formik.setFieldValue('cashRegister', newValue);
-                    }}
-                    disabled={loading}
-                  />
-                </Item>}
-                {formik.values.paymentMethod === PAYMENT_METHOD.CHECK && <>
-                  <Item>
-                    <TheTextField
-                      variant="outlined"
-                      label="Numéro du chèque"
-                      value={formik.values.checkNumber}
-                      onChange={(e) =>
-                        formik.setFieldValue('checkNumber', e.target.value)
-                      }
-                      disabled={loading}
-                    />
-                  </Item>
-                  <Item>
-                    <TheTextField
-                      variant="outlined"
-                      label="Nom de la banque"
-                      value={formik.values.bankName}
-                      onChange={(e) =>
-                        formik.setFieldValue('bankName', e.target.value)
-                      }
-                      disabled={loading}
-                    />
-                  </Item>
-                </>}
               </Grid>
-              <Grid item xs={12} sm={8} md={8}>
+              {formik.values.paymentMethod===PAYMENT_METHOD.CREDIT_CARD && <Grid item xs={12} sm={6} md={6}><Item>
+                <TheAutocomplete
+                  options={bankCardsData?.bankCards?.nodes}
+                  onInput={(e) => {
+                    onGetBankCards(e.target.value)
+                  }}
+                  onFocus={(e) => {
+                    onGetBankCards(e.target.value)
+                  }}
+                  label="Carte bancaire"
+                  placeholder="Choisissez une carte"
+                  limitTags={2}
+                  multiple={false}
+                  value={formik.values.bankCard}
+                  onChange={(e, newValue) => {
+                    formik.setFieldValue('bankCard', newValue);
+                  }}
+                  disabled={loading}
+                />
+              </Item></Grid>}
+              {formik.values.paymentMethod===PAYMENT_METHOD.CASH && <Grid item xs={12} sm={6} md={6}><Item>
+                <TheAutocomplete
+                  options={cashRegistersData?.cashRegisters?.nodes}
+                  onInput={(e) => {
+                    onGetCashRegisters(e.target.value)
+                  }}
+                  onFocus={(e) => {
+                    onGetCashRegisters(e.target.value)
+                  }}
+                  label="Caisse"
+                  placeholder="Choisissez une caisse"
+                  limitTags={2}
+                  multiple={false}
+                  value={formik.values.cashRegister}
+                  onChange={(e, newValue) => {
+                    formik.setFieldValue('cashRegister', newValue);
+                  }}
+                  disabled={loading}
+                />
+              </Item></Grid>}
+              {formik.values.paymentMethod === PAYMENT_METHOD.BANK_TRANSFER && <Grid item xs={12} sm={6} md={6}>
+                <Item>
+                  <TheTextField
+                    variant="outlined"
+                    label="RIB ou IBAN"
+                    value={formik.values.iban}
+                    onChange={(e) =>
+                      formik.setFieldValue('iban', e.target.value)
+                    }
+                    disabled={loading}
+                  />
+                </Item></Grid>}
+              {formik.values.paymentMethod === PAYMENT_METHOD.CHECK && <Grid item xs={12} sm={6} md={6}>
+                <Item>
+                  <TheTextField
+                    variant="outlined"
+                    label="Numéro du chèque"
+                    value={formik.values.checkNumber}
+                    onChange={(e) =>
+                      formik.setFieldValue('checkNumber', e.target.value)
+                    }
+                    disabled={loading}
+                  />
+                </Item>
+                <Item>
+                  <TheTextField
+                    variant="outlined"
+                    label="Nom de la banque"
+                    value={formik.values.bankName}
+                    onChange={(e) =>
+                      formik.setFieldValue('bankName', e.target.value)
+                    }
+                    disabled={loading}
+                  />
+                </Item>
+              </Grid>}
+              <Grid item xs={12} sm={12} md={12}>
                 <Item>
                   <TheTextField
                     variant="outlined"

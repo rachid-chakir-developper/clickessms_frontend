@@ -203,6 +203,14 @@ const headCells = [
         label: 'Nom de la Banque',
     },
     {
+        id: 'iban',
+        property: 'iban',
+        exportField: 'iban',
+        numeric: false,
+        disablePadding: false,
+        label: 'RIB ou IBAN',
+    },
+    {
       id: 'endowmentType',
       property: 'endowment_type__name',
       exportField: 'endowment_type__name',
