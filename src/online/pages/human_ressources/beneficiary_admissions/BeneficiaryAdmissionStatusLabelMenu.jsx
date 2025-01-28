@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Icon, IconButton, Stack, styled, TextField, Tooltip, Typography } from '@mui/material';
-import { Block, Cancel, Done, Drafts, Euro, HourglassEmpty, HourglassFull, HourglassTop, Pending, Print, ReceiptLong, Send, TaskAlt } from '@mui/icons-material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Stack, styled, Tooltip, Typography } from '@mui/material';
+import { Block, Cancel, Done, Drafts, HourglassTop } from '@mui/icons-material';
 import { useMutation } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -136,7 +136,6 @@ export default function BeneficiaryAdmissionStatusLabelMenu({beneficiaryAdmissio
   );
 }
 
-
 function DialogStatusReason({open, onClose, type, beneficiaryAdmission, updateBeneficiaryAdmissionFields, loading=false}){
   const validationSchema = yup.object({});
   const formik = useFormik({
@@ -162,49 +161,49 @@ function DialogStatusReason({open, onClose, type, beneficiaryAdmission, updateBe
   };
 
   return (
-        <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="md">
-          <form onSubmit={formik.handleSubmit}>
-            <DialogTitle>Ajouter un motif de réponse</DialogTitle>
-            <DialogContent>
-              <Box style={{  marginTop: 20 }}>
-                <Grid container>
-                  <Grid item xs={12} sm={6} md={6}>
-                    <Item>
-                      <TheDesktopDatePicker
-                        label="Date de réponse"
-                        value={formik.values.responseDate}
-                        onChange={(date) => formik.setFieldValue('responseDate', date)}
-                        disabled={loading}
-                      />
-                    </Item>
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={12} >
-                    <Item>
-                      <TheTextField
-                        variant="outlined"
-                        label="Motif de réponse"
-                        multiline
-                        rows={4}
-                        value={formik.values.statusReason}
-                        onChange={(e) => formik.setFieldValue('statusReason', e.target.value)}
-                        disabled={loading}
-                      />
-                    </Item>
-                  </Grid>
-                </Grid>
-              </Box>
-            </DialogContent>
-            <DialogActions>
-                <Button color="inherit" onClick={onClose}>Annuler</Button>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={!formik.isValid || loading}
-                >
-                  Valider
-                </Button>
-            </DialogActions>
-          </form>
-        </Dialog>
+    <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="md">
+      <form onSubmit={formik.handleSubmit}>
+        <DialogTitle>Ajouter un motif de réponse</DialogTitle>
+        <DialogContent>
+          <Box style={{  marginTop: 20 }}>
+            <Grid container>
+              <Grid item xs={12} sm={6} md={6}>
+                <Item>
+                  <TheDesktopDatePicker
+                    label="Date de réponse"
+                    value={formik.values.responseDate}
+                    onChange={(date) => formik.setFieldValue('responseDate', date)}
+                    disabled={loading}
+                  />
+                </Item>
+              </Grid>
+              <Grid item xs={12} sm={12} md={12} >
+                <Item>
+                  <TheTextField
+                    variant="outlined"
+                    label="Motif de réponse"
+                    multiline
+                    rows={4}
+                    value={formik.values.statusReason}
+                    onChange={(e) => formik.setFieldValue('statusReason', e.target.value)}
+                    disabled={loading}
+                  />
+                </Item>
+              </Grid>
+            </Grid>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+            <Button color="inherit" onClick={onClose}>Annuler</Button>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={!formik.isValid || loading}
+            >
+              Valider
+            </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 };

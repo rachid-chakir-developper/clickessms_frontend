@@ -13,7 +13,7 @@ import PaginationControlled from '../../../../_shared/components/helpers/Paginat
 import TableListEndowments from './TableListEndowments';
 import { Link } from 'react-router-dom';
 import { Box, Button } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Add, Money } from '@mui/icons-material';
 
 export default function ListEndowments() {
   const authorizationSystem = useAuthorizationSystem();
@@ -150,6 +150,15 @@ export default function ListEndowments() {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
+          {canManageFinance && <Link
+            to="/online/finance/dotations-paiements/liste"
+            className="no_style"
+          >
+            <Button variant="outlined" endIcon={<Money />}
+            sx={{ mx: 3 }}>
+              Les paiements
+            </Button>
+          </Link>}
           <Link to="/online/finance/dotations/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
               Ajouter une dotation

@@ -2,10 +2,11 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import ListMeetings from './ListMeetings';
 import AddMeeting from './AddMeeting';
 import MeetingDetails from './MeetingDetails';
+import { Box } from '@mui/material';
 
 export default function Meetings() {
   return (
-    <div className="online">
+    <Box>
       <Routes>
         <Route path={`liste`} element={<ListMeetings />} />
         <Route path={`ajouter`} element={<AddMeeting />} />
@@ -13,6 +14,6 @@ export default function Meetings() {
         <Route path={`details/:idMeeting`} element={<MeetingDetails />} />
         <Route path="/" element={<Navigate to={`liste`} replace />} />
       </Routes>
-    </div>
+    </Box>
   );
 }

@@ -45,12 +45,12 @@ export const PUT_ENDOWMENT_PAYMENT_STATE = gql`
 `;
 
 export const PUT_ENDOWMENT_PAYMENT_FIELDS = gql`
-  mutation UpdateEndowmentPaymentFields($id: ID!, $beneficiaryexpenseData: EndowmentPaymentInput!) {
-    updateEndowmentPaymentFields(id: $id, beneficiaryexpenseData: $beneficiaryexpenseData) {
+  mutation UpdateEndowmentPaymentFields($id: ID!, $endowmentPaymentData: EndowmentPaymentFieldInput!) {
+    updateEndowmentPaymentFields(id: $id, endowmentPaymentData: $endowmentPaymentData) {
       done
       success
       message
-      expense {
+      endowmentPayment {
         ...EndowmentPaymentBasicInfosFragment
       }
     }
