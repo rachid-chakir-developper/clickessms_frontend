@@ -113,7 +113,6 @@ const headCells = [
       exportField: 'label',
       numeric: false,
       disablePadding: true,
-      isDefault: true,
       label: 'Libellé',
     },
     {

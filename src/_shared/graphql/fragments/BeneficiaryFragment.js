@@ -188,6 +188,10 @@ export const BENEFICIARY_RECAP_DETAILS = gql`
     beneficiaryEndowmentEntries{
       ...BeneficiaryEndowmentEntryFragment
     }
+    balanceDetails
+    balance
+    totalExpenses
+    totalPayments
     createdAt
     updatedAt
   }

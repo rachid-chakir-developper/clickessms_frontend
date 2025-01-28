@@ -13,6 +13,7 @@ import BeneficiaryStatusEntries from './BeneficiaryStatusEntries';
 import PersonalizedProjects from './PersonalizedProjects';
 import BeneficiaryExpenses from './BeneficiaryExpenses';
 import BeneficiaryEndowmentEntries from './BeneficiaryEndowmentEntries';
+import { formatCurrencyAmount } from '../../../../../_shared/tools/functions';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -109,7 +110,7 @@ export default function BeneficiaryTabs({beneficiary}) {
                 <LinkTab label="Admissions" href="/drafts" />
                 <LinkTab label="Entrées / sorties" href="/trash" />
                 <LinkTab label="Statuts" href="/trash" />
-                <LinkTab label="Dotations" href="/trash" />
+                <LinkTab label={`Dotations(${formatCurrencyAmount(beneficiary?.balance)})`} href="/trash" />
                 <LinkTab label="Dépenses" href="/trash" />
                 <LinkTab label="Projets personnalisés (PPA)" href="/trash" />
             </Tabs>
@@ -133,7 +134,7 @@ export default function BeneficiaryTabs({beneficiary}) {
             <BeneficiaryStatusEntries beneficiaryStatusEntries={beneficiary?.beneficiaryStatusEntries} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={6}>
-            <BeneficiaryEndowmentEntries beneficiaryEndowmentEntries={beneficiary?.beneficiaryEndowmentEntries} />
+            <BeneficiaryEndowmentEntries beneficiary={beneficiary} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={7}>
           <BeneficiaryExpenses beneficiary={beneficiary} />
