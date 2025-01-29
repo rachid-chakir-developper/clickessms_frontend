@@ -81,7 +81,6 @@ const ActivityTable = ({activityMonth}) => {
           <TableBody>
             {activityMonthEstablishments?.map((activityMonthEstablishment, indexE) => (
               <React.Fragment key={indexE}>
-                {/* Ligne pour afficher le nom de l'établissement */}
                 <TableRow style={{ backgroundColor: '#f1f1f1', fontWeight: 'bold' }}>
                   <TableCell colSpan={7}>
                     {activityMonthEstablishment?.establishment ? 

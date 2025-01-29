@@ -278,8 +278,8 @@ export default function AddExpenseReportForm({ idExpenseReport, title }) {
               <Item>
                 <TheAutocomplete
                     options={establishmentsData?.establishments?.nodes}
-                    label="Établissement / Service"
-                    placeholder="Ajouter un établissement ou service"
+                    label="Structure concernée"
+                    placeholder="Choisissez une structure"
                     multiple={false}
                     value={formik.values.establishment}
                     onChange={(e, newValue) =>

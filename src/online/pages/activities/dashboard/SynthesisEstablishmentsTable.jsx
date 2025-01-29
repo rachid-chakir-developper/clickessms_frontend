@@ -179,7 +179,6 @@ const SynthesisEstablishmentsTable = ({ activitySynthesis }) => {
                         ))}
                     </TabList>
                 </Box>
-                {/* Contenu de l'établissement sélectionné */}
                 {activitySynthesisEstablishments.map((activitySynthesisEstablishment, index) => (
                     <TabPanel key={index} value={index}>
                         <SynthesisEstablishmentsTableItem activitySynthesisEstablishment={activitySynthesisEstablishment} />

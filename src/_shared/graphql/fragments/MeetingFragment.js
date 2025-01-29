@@ -30,7 +30,7 @@ export const MEETING_BASIC_INFOS = gql`
     id
     number
     title
-    topic
+    topics
     meetingMode
     startingDateTime
     endingDateTime

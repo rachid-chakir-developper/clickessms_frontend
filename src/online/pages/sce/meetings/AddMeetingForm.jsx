@@ -40,7 +40,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({
-    title: yup
+    topics: yup
       .string("Entrez l'objet de le procès-verbal")
       .required("L'ordre du jour est obligatoire"),
   });
@@ -48,7 +48,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
     initialValues: {
       number: '',
       title: '',
-      topic: '',
+      topics: '',
       meetingMode: 'PV_SCE',
       videoCallLink: '',
       startingDateTime: dayjs(new Date()),
@@ -381,25 +381,27 @@ const [getEmployees, {
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
-                  <Grid item xs={12} sm={6} md={4}>
+                  <Grid item xs={12} sm={8} md={8}>
                     <Item>
                       <TheTextField
                         variant="outlined"
                         label="Ordre du jour"
-                        id="title"
-                        value={formik.values.title}
+                        id="topics"
+                        multiline
+                        minRows={6}
+                        value={formik.values.topics}
                         required
                         onChange={(e) =>
-                          formik.setFieldValue('title', e.target.value)
+                          formik.setFieldValue('topics', e.target.value)
                         }
                         onBlur={formik.handleBlur}
-                        error={formik.touched.title && Boolean(formik.errors.title)}
-                        helperText={formik.touched.title && formik.errors.title}
+                        error={formik.touched.topics && Boolean(formik.errors.topics)}
+                        helperText={formik.touched.topics && formik.errors.topics}
                         disabled={loadingPost || loadingPut}
                       />
                     </Item>
                   </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
+                  <Grid item xs={12} sm={4} md={4}>
                     <Item>
                       <TheDateTimePicker
                         label="Date et heure de début"
@@ -410,8 +412,6 @@ const [getEmployees, {
                         disabled={loadingPost || loadingPut}
                       />
                     </Item>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
                     <Item>
                       <TheDateTimePicker
                         label="Date de fin"
@@ -456,6 +456,9 @@ const [getEmployees, {
                         onInput={(e) => {
                           onGetBeneficiaries(e.target.value)
                         }}
+                        onFocus={(e) => {
+                          onGetBeneficiaries(e.target.value)
+                        }}
                         label="Personnes accompagnées concernés"
                         placeholder="Ajouter une personne accompagnée"
                         limitTags={3}
@@ -470,10 +473,12 @@ const [getEmployees, {
                     <Item>
                       <TheAutocomplete
                         options={employeesData?.employees?.nodes}
-onInput={(e) => {
+                        onInput={(e) => {
                           onGetEmployees(e.target.value)
                         }}
-
+                        onFocus={(e) => {
+                          onGetEmployees(e.target.value)
+                        }}
                         label="Personnes invités"
                         placeholder="Ajouter une personne"
                         limitTags={3}
@@ -486,10 +491,12 @@ onInput={(e) => {
                     <Item>
                       <TheAutocomplete
                         options={employeesData?.employees?.nodes}
-onInput={(e) => {
+                        onInput={(e) => {
                           onGetEmployees(e.target.value)
                         }}
-
+                        onFocus={(e) => {
+                          onGetEmployees(e.target.value)
+                        }}
                         label="Personnes absentes"
                         placeholder="Ajouter une personne"
                         limitTags={3}
@@ -525,7 +532,7 @@ onInput={(e) => {
                         variant="outlined"
                         label="Prise de notes"
                         multiline
-                        minRows={6}
+                        minRows={12}
                         value={formik.values.notes}
                         onChange={(e) =>
                           formik.setFieldValue('notes', e.target.value)

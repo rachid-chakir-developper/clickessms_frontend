@@ -34,15 +34,15 @@ const modulesToManage = [
     ],
   },
   {
-    title: 'Etablissments',
+    title: 'Structures',
     datas: [
       {
-        name: "Type de l'établissement",
+        name: "Type de la structure",
         description: '',
         type: 'EstablishmentType',
       },
       {
-        name: "Catégorie de l'établissement",
+        name: "Catégorie de la structure",
         description: '',
         type: 'EstablishmentCategory',
       },

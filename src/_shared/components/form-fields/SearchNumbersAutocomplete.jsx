@@ -91,7 +91,7 @@ export default function SearchNumbersAutocomplete(props) {
           establishments.nodes.map((item) => ({
             caller: item,
             callerType: 'Establishment',
-            typeLabel: 'Etablissements',
+            typeLabel: 'Structures',
           })),
         );
       }

@@ -30,7 +30,7 @@ const modulesToManage = [
     customFields: [],
   },
   {
-    title: 'Etablissments',
+    title: 'Structures',
     customFields: [],
   },
   {

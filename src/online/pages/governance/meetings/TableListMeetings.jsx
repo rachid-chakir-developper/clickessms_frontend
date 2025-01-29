@@ -102,10 +102,10 @@ const headCells = [
       label: 'Type de réunion',
     },
     {
-        id: 'title',
+        id: 'topics',
         numeric: false,
         disablePadding: false,
-        label: 'Libellé',
+        label: 'Ordre du jour',
     },
     {
         id: 'startingDateTime',
@@ -413,7 +413,7 @@ export default function TableListMeetings({
                         })}
                     </Stack>
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.title}</StyledTableCell>
+                    <StyledTableCell align="left">{row.topics}</StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
                     <StyledTableCell align="left">
                       <Stack direction="row" flexWrap='wrap' spacing={1}>

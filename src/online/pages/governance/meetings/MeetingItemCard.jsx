@@ -26,12 +26,12 @@ export default function MeetingItemCard({ meeting, onDeleteMeeting }) {
       variant="outlined"
       sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 2 }}
     >
-      <Tooltip title={meeting?.title}>
+      <Tooltip title={meeting?.topics}>
         <CardMedia
           component="img"
           width="100"
           height="100"
-          alt={meeting?.title}
+          alt={meeting?.topics}
           src={meeting?.image ? meeting?.image : '/default-placeholder.jpg'}
           sx={{ borderRadius: 0.6, height: 100, width: 100 }}
         />
@@ -39,7 +39,7 @@ export default function MeetingItemCard({ meeting, onDeleteMeeting }) {
       <Stack direction="column" spacing={2} alignItems="center">
         <Stack direction="column" spacing={0.2} alignItems="center">
           <Typography color="text.primary" fontWeight="medium" fontSize={18}>
-            {meeting?.title}
+            {meeting?.topics}
           </Typography>
           <Typography
             component="div"

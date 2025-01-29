@@ -881,7 +881,7 @@ const [getEmployees, {
                               <TheAutocomplete
                                 options={establishmentsData?.establishments?.nodes}
                                 label="Structure(s) concernée(s)"
-                                placeholder="Ajouter un établissement ou service"
+                                placeholder="Ajouter une structure"
                                 limitTags={3}
                                 value={item.establishments}
                                 onChange={(e, newValue) =>

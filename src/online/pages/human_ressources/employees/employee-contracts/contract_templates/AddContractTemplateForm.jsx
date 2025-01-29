@@ -89,7 +89,7 @@ const FIELDS = {
     label: 'Structure',
     formModel: 'Establishment',
     keys: [
-      { key: "name", label: "Nom de l'établissement" },
+      { key: "name", label: "Nom de la structure" },
       { key: "siret", label: "Numéro SIRET" },
       { key: "finess", label: "Numéro FINESS" },
       { key: "ape_code", label: "Code APE" },

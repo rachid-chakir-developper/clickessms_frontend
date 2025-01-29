@@ -133,7 +133,7 @@ const EndowmentDetailsPage = ({ endowment }) => {
             {establishment ? (
               <EstablishmentChip establishment={establishment} />
             ) : (
-              <Typography variant="body1">Aucun établissement associé</Typography>
+              <Typography variant="body1">Aucune structure associée</Typography>
             )}
           </Paper>
         </Paper>

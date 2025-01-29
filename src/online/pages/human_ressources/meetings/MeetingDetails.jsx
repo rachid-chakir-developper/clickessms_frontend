@@ -147,7 +147,7 @@ function MeetingMiniInfos({ meeting }) {
                   Réference : <b>{meeting?.number}</b>
                 </Typography>
                 <Typography gutterBottom variant="subtitle1" component="div">
-                  {meeting?.title}
+                  {meeting?.topics}
                 </Typography>
                 <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
                 <Typography variant="body2" color="text.secondary">

@@ -45,7 +45,7 @@ function DialogGenerateInvoice({ open, onClose, onConfirm }) {
     establishments: yup
     .array()
     .min(1, 'Veuillez sélectionner au moins une structure.') // S'assure qu'au moins un élément est présent.
-    .required('Le champ établissement est obligatoire.'),
+    .required('Le champ structure est obligatoire.'),
     financier: yup
       .mixed() // Utilisé pour valider un champ de type null ou autre valeur.
       .required('Le champ financeur est obligatoire.'),

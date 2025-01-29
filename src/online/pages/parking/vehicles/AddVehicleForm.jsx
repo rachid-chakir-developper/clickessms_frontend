@@ -385,7 +385,7 @@ const [getEmployees, {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5" sx={{marginBottom: 3}}>
-        {title} <u><b>{formik.values.name}</b></u> immatriculé <u><b>{formik.values.registrationNumber}</b></u> rattaché à l'établissement <u><b>{formik.values.vehicleEstablishments[0]?.establishments[0]?.name}</b></u>
+        {title} <u><b>{formik.values.name}</b></u> immatriculé <u><b>{formik.values.registrationNumber}</b></u> rattaché à la structure <u><b>{formik.values.vehicleEstablishments[0]?.establishments[0]?.name}</b></u>
       </Typography>
       {loadingVehicle && <ProgressService type="form" />}
       {!loadingVehicle && (
@@ -609,7 +609,7 @@ const [getEmployees, {
                               <TheAutocomplete
                                 options={establishmentsData?.establishments?.nodes}
                                 label="Structure(s) concernée(s)"
-                                placeholder="Ajouter un établissement ou service"
+                                placeholder="Ajouter une structure"
                                 limitTags={3}
                                 value={item.establishments}
                                 onChange={(e, newValue) =>
