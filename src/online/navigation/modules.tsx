@@ -236,7 +236,7 @@ export const modules: Module[] = [
       },
       {
         id: 'beneficiary-admissions',
-        name: 'Les admissions',
+        name: 'Demandes d’admissions',
         path: '/online/ressources-humaines/admissions-beneficiaires',
         icon: <AssignmentIndIcon />,
         hidden(authorizationSystem) {

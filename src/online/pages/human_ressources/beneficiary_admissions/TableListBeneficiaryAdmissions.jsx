@@ -368,7 +368,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les admissions
+          Les demandes d’admissions
         </Typography>
       )}
       <TableExportButton 
@@ -503,7 +503,7 @@ export default function TableListBeneficiaryAdmissions({
                 <StyledTableRow>
                   <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucune admission trouvé.
+                      Aucune demande d’admission trouvée.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>

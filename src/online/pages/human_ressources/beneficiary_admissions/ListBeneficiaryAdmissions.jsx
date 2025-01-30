@@ -175,7 +175,7 @@ export default function ListBeneficiaryAdmissions() {
           {
           canManageActivity && <Link to="/online/ressources-humaines/admissions-beneficiaires/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter une admission
+              Ajouter une demande d’admission
             </Button>
           </Link>}
         </Box>

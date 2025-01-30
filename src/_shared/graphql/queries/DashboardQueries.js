@@ -193,3 +193,154 @@ export const GET_DASHBOARD_ACTIVITY = gql`
   ${BENEFICIARY_ENTRY_DETAILS}
   ${BENEFICIARY_ADMISSION_MINI_INFOS}
 `;
+
+
+export const GET_DASHBOARD_ACTIVITY_1 = gql`
+  query getDashboardActivity($dashboardActivityFilter: DashboardActivityFilterInput){
+    dashboardActivity(dashboardActivityFilter: $dashboardActivityFilter){
+      activityTracking{
+        activityTrackingMonth{
+          month
+          year
+          entriesCount
+          exitsCount
+          plannedExitsCount
+          presentsMonthCount
+          daysCount
+          objectiveDaysCount
+          objectiveOccupancyRate
+          occupancyRate
+          valuation
+          objectiveValuation
+          gapValuation
+        }
+        activityTrackingAccumulation{
+          year
+          entriesCount
+          exitsCount
+          plannedExitsCount
+          presentsMonthCount
+          daysCount
+          objectiveDaysCount
+          objectiveOccupancyRate
+          occupancyRate
+          valuation
+          objectiveValuation
+          gapValuation
+        }
+      }
+    }
+  }
+  ${BENEFICIARY_MINI_INFOS}
+  ${BENEFICIARY_ENTRY_DETAILS}
+  ${BENEFICIARY_ADMISSION_MINI_INFOS}
+`;
+
+
+export const GET_DASHBOARD_ACTIVITY_2 = gql`
+  query getDashboardActivity($dashboardActivityFilter: DashboardActivityFilterInput){
+    dashboardActivity(dashboardActivityFilter: $dashboardActivityFilter){
+      activityTrackingEstablishments{
+        year
+        months
+        title
+        establishment{
+          id
+          name
+          logo
+        }
+        activityTrackingMonth{
+          month
+          year
+          entriesCount
+          exitsCount
+          plannedExitsCount
+          presentsMonthCount
+          daysCount
+          objectiveDaysCount
+          gapDaysCount
+          objectiveOccupancyRate
+          occupancyRate
+          valuation
+          objectiveValuation
+          gapValuation
+        }
+        activityTrackingAccumulation{
+          year
+          label
+          entriesCount
+          exitsCount
+          plannedExitsCount
+          presentsMonthCount
+          daysCount
+          objectiveDaysCount
+          gapDaysCount
+          objectiveOccupancyRate
+          occupancyRate
+          valuation
+          objectiveValuation
+          gapValuation
+        }
+      }
+    }
+  }
+  ${BENEFICIARY_MINI_INFOS}
+  ${BENEFICIARY_ENTRY_DETAILS}
+  ${BENEFICIARY_ADMISSION_MINI_INFOS}
+`;
+
+
+
+export const GET_DASHBOARD_ACTIVITY_3 = gql`
+  query getDashboardActivity($dashboardActivityFilter: DashboardActivityFilterInput){
+    dashboardActivity(dashboardActivityFilter: $dashboardActivityFilter){
+      activitySynthesis{
+        year
+        months
+        monthTotals
+        activitySynthesisEstablishments{
+          year
+          months
+          title
+          establishment{
+            id
+            name
+            logo
+          }
+          activitySynthesisMonth{
+            year
+            month
+            countReceived
+            countApproved
+            countRejected
+            countCanceled
+            countOccupiedPlaces
+            countAvailablePlaces
+            beneficiaryEntries{
+              beneficiary{
+                ...BeneficiaryMiniInfosFragment
+              }
+              ...BeneficiaryEntryFragment
+            }
+            beneficiaryAdmissions{
+              beneficiary{
+                ...BeneficiaryMiniInfosFragment
+              }
+              ...BeneficiaryAdmissionMiniInfosFragment
+            }
+          }
+          activityTotalSynthesisMonth{
+            totalReceived
+            totalApproved
+            totalRejected
+            totalCanceled
+            totalAvailablePlaces
+          }
+        }
+      }
+    }
+  }
+  ${BENEFICIARY_MINI_INFOS}
+  ${BENEFICIARY_ENTRY_DETAILS}
+  ${BENEFICIARY_ADMISSION_MINI_INFOS}
+`;

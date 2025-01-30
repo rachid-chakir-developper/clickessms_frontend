@@ -258,7 +258,6 @@ export default function TableListBeneficiaries({
         exportField: 'preferred_name',
         numeric: false,
         disablePadding: true,
-        isDefault: true,
         label: 'Nom d’usage',
     },
     {

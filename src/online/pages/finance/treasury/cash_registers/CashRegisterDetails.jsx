@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
   Box,
@@ -11,6 +11,7 @@ import {
   Divider,
   Stack,
   Button,
+  List,
 } from '@mui/material';
 
 import { CASH_REGISTER_RECAP } from '../../../../../_shared/graphql/queries/CashRegisterQueries';
@@ -22,6 +23,7 @@ import {
 import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
 import EmployeeChip from '../../../human_ressources/employees/EmployeeChip';
 import ListCashRegisterTransactions from './transactions/ListCashRegisterTransactions';
+import { Edit } from '@mui/icons-material';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -47,6 +49,26 @@ export default function CashRegisterDetails() {
   return (
     <>
       <Box sx={{ width: '100%' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
+          <Box sx={{ marginX: 2 }}>
+            <Link
+              to={`/online/finance/tresorerie/caisses/liste`}
+              className="no_style"
+            >
+              <Button variant="text" startIcon={<List />} size="small">
+                Retour à la Liste
+              </Button>
+            </Link>
+          </Box>
+          <Link
+            to={`/online/finance/tresorerie/caisses/modifier/${cashRegisterData?.cashRegister?.id}`}
+            className="no_style"
+          >
+            <Button variant="outlined" endIcon={<Edit />} size="small">
+              Modifier
+            </Button>
+          </Link>
+        </Box>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
             <CashRegisterMiniInfos cashRegister={cashRegisterData?.cashRegister} />

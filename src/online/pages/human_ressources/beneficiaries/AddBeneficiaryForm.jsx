@@ -79,6 +79,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       description: '',
       observation: '',
       isActive: true,
+      addressBookEntries: [],
       beneficiaryEntries: [],
       beneficiaryAdmissionDocuments: [],
       beneficiaryStatusEntries: [],
@@ -86,7 +87,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
     },
     validationSchema: validationSchema,
       onSubmit: (values) => {
-        if (activeStep === 5) {
+        if (activeStep === 6) {
             setTriggerSave(true);
             setTimeout(() => setTriggerSave(false), 100);
             return
@@ -121,6 +122,12 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
           items.push(itemCopy);
         });
         beneficiaryCopy.beneficiaryEndowmentEntries = items;
+        items = [];
+        beneficiaryCopy.addressBookEntries.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          items.push(itemCopy);
+        });
+        beneficiaryCopy.addressBookEntries = items;
 
         if (beneficiaryCopy?.id && beneficiaryCopy?.id != '') {
           onUpdateBeneficiary({
@@ -219,7 +226,25 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
     });
   };
 
+  const addAddressBookEntry = () => {
+    formik.setValues({
+      ...formik.values,
+      addressBookEntries: [
+        ...formik.values.addressBookEntries,
+        { title: '', firstName: '', lastName: '', email: '', fullAddress: '', mobile: '', fix: '', fax: '' },
+      ],
+    });
+  };
 
+  const removeAddressBookEntry = (index) => {
+    const updatedAddressBookEntries = [...formik.values.addressBookEntries];
+    updatedAddressBookEntries.splice(index, 1);
+
+    formik.setValues({
+      ...formik.values,
+      addressBookEntries: updatedAddressBookEntries,
+    });
+  };
   const [createBeneficiary, { loading: loadingPost }] = useMutation(
     POST_BENEFICIARY,
     {
@@ -377,6 +402,14 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
           items.push(itemCopy);
         });
         beneficiaryCopy.beneficiaryEndowmentEntries = items;
+        
+        if (!beneficiaryCopy?.addressBookEntries) beneficiaryCopy['addressBookEntries'] = [];
+        items = [];
+        beneficiaryCopy.addressBookEntries.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          items.push(itemCopy);
+        });
+        beneficiaryCopy.addressBookEntries = items;
         formik.setValues(beneficiaryCopy);
       },
       onError: (err) => console.log(err),
@@ -438,7 +471,7 @@ const [getEmployees, {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if(activeStep >= 5) navigate('/online/ressources-humaines/beneficiaires/liste');
+    if(activeStep >= 6) navigate('/online/ressources-humaines/beneficiaires/liste');
     else if (formik.values.id)
       setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });
@@ -514,10 +547,19 @@ const [getEmployees, {
                     <Item>
                       <TheTextField
                         variant="outlined"
-                        label="Nom d’usage"
-                        value={formik.values.preferredName}
+                        label="Prénom"
+                        id="firstName"
+                        value={formik.values.firstName}
+                        required
                         onChange={(e) =>
-                          formik.setFieldValue('preferredName', e.target.value)
+                          formik.setFieldValue('firstName', e.target.value)
+                        }
+                        onBlur={formik.handleBlur}
+                        error={
+                          formik.touched.firstName && Boolean(formik.errors.firstName)
+                        }
+                        helperText={
+                          formik.touched.firstName && formik.errors.firstName
                         }
                         disabled={loadingPost || loadingPut}
                       />
@@ -547,19 +589,10 @@ const [getEmployees, {
                     <Item>
                       <TheTextField
                         variant="outlined"
-                        label="Prénom"
-                        id="firstName"
-                        value={formik.values.firstName}
-                        required
+                        label="Nom d’usage"
+                        value={formik.values.preferredName}
                         onChange={(e) =>
-                          formik.setFieldValue('firstName', e.target.value)
-                        }
-                        onBlur={formik.handleBlur}
-                        error={
-                          formik.touched.firstName && Boolean(formik.errors.firstName)
-                        }
-                        helperText={
-                          formik.touched.firstName && formik.errors.firstName
+                          formik.setFieldValue('preferredName', e.target.value)
                         }
                         disabled={loadingPost || loadingPut}
                       />
@@ -727,6 +760,135 @@ const [getEmployees, {
               <StepLabel
                 onClick={() => onGoToStep(1)}
                 optional={
+                  <Typography variant="caption">Les contact(s) </Typography>
+                }
+              >
+                Les contact(s) 
+              </StepLabel>
+              <StepContent>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  <Grid item xs={12} sm={12} md={12} >
+                      {formik.values?.addressBookEntries?.map((item, index) => (
+                        <Grid
+                          container
+                          spacing={{ xs: 2, md: 3 }}
+                          columns={{ xs: 4, sm: 8, md: 12 }}
+                          key={index}
+                        >
+                          <Grid item xs={12} sm={6} md={3}>
+                            <Item>
+                              <TheTextField
+                                variant="outlined"
+                                label="Titre"
+                                value={item.title}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`addressBookEntries.${index}.title`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                                helperText="Ex : Père, Mère, Tuteur, Frère, soeure..."
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={3}>
+                            <Item>
+                              <TheTextField
+                                variant="outlined"
+                                label="Prénom"
+                                value={item.firstName}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`addressBookEntries.${index}.firstName`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                            <Item>
+                              <TheTextField
+                                variant="outlined"
+                                label="Nom"
+                                value={item.lastName}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`addressBookEntries.${index}.lastName`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={3}>
+                            <Item>
+                              <TheTextField
+                                variant="outlined"
+                                label="Téléphone mobile"
+                                value={item.mobile}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`addressBookEntries.${index}.mobile`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                            <Item>
+                              <TheTextField
+                                variant="outlined"
+                                label="Adresse E-mail"
+                                value={item.email}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`addressBookEntries.${index}.email`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={3} >
+                            <Item sx={{position: 'relative'}}>
+                              <TheTextField
+                                variant="outlined"
+                                label="Adresse postale"
+                                multiline
+                                rows={5}
+                                value={item.fullAddress}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`addressBookEntries.${index}.fullAddress`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                              <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                                onClick={() => removeAddressBookEntry(index)}
+                                edge="end"
+                                color="error"
+                              >
+                                <Close />
+                              </IconButton>
+                            </Item>
+                          </Grid>
+                        </Grid>
+                      ))}
+                  </Grid>
+                  <Grid
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    item
+                    sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                  >
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={addAddressBookEntry}
+                      disabled={loadingPost || loadingPut}
+                    >
+                      Ajouter un contact
+                    </Button>
+                  </Grid>
+                </Grid>
+              </StepContent>
+            </Step>
+            <Step>
+              <StepLabel
+                onClick={() => onGoToStep(2)}
+                optional={
                   <Typography variant="caption">Les admission(s)</Typography>
                 }
               >
@@ -746,7 +908,7 @@ const [getEmployees, {
                           columns={{ xs: 4, sm: 8, md: 12 }}
                           key={index}
                         >
-                          <Grid item xs={12} sm={6} md={2.5} >
+                          <Grid item xs={12} sm={6} md={3} >
                             <Item>
                               <TheFileField variant="outlined" label="Document d'admission"
                                 fileValue={item.document}
@@ -755,7 +917,7 @@ const [getEmployees, {
                                 />
                             </Item>
                           </Grid>
-                          <Grid item xs={12} sm={6} md={2.5} >
+                          {/* <Grid item xs={12} sm={6} md={2.5} >
                             <Item>
                               <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">
@@ -783,8 +945,8 @@ const [getEmployees, {
                                 </Select>
                               </FormControl>
                             </Item>
-                          </Grid>
-                          <Grid item xs={12} sm={6} md={3}>
+                          </Grid> */}
+                          <Grid item xs={12} sm={6} md={4}>
                             <Item>
                               <TheAutocomplete
                                 options={financiersData?.financiers?.nodes}
@@ -798,11 +960,11 @@ const [getEmployees, {
                               />
                             </Item>
                           </Grid>
-                          <Grid item xs={12} sm={6} md={2} >
+                          <Grid item xs={12} sm={6} md={2.5} >
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
-                                label="Date de début"
+                                label="Date d’admission"
                                 value={item.startingDate}
                                 onChange={(date) =>
                                   formik.setFieldValue(`beneficiaryAdmissionDocuments.${index}.startingDate`, date)
@@ -811,11 +973,11 @@ const [getEmployees, {
                               />
                             </Item>
                           </Grid>
-                          <Grid item xs={12} sm={6} md={2} >
+                          <Grid item xs={12} sm={6} md={2.5} >
                             <Item sx={{position: 'relative'}}>
                               <TheDesktopDatePicker
                                 variant="outlined"
-                                label="Date de fin"
+                                label="Date de sortie"
                                 value={item.endingDate}
                                 onChange={(date) =>
                                   formik.setFieldValue(`beneficiaryAdmissionDocuments.${index}.endingDate`, date)
@@ -855,7 +1017,7 @@ const [getEmployees, {
             </Step>
             <Step>
               <StepLabel
-                onClick={() => onGoToStep(2)}
+                onClick={() => onGoToStep(3)}
                 optional={
                   <Typography variant="caption">Déclarer une entrée / sortie</Typography>
                 }
@@ -977,7 +1139,7 @@ const [getEmployees, {
             </Step>
             <Step>
               <StepLabel
-                onClick={() => onGoToStep(3)}
+                onClick={() => onGoToStep(4)}
                 optional={
                   <Typography variant="caption">Les statut(s) </Typography>
                 }
@@ -1093,7 +1255,7 @@ const [getEmployees, {
             </Step> 
             <Step>
               <StepLabel
-                onClick={() => onGoToStep(4)}
+                onClick={() => onGoToStep(5)}
                 optional={
                   <Typography variant="caption">Les dotation(s) </Typography>
                 }
@@ -1219,7 +1381,7 @@ const [getEmployees, {
             </Step>
             <Step>
               <StepLabel
-                onClick={() => onGoToStep(5)}
+                onClick={() => onGoToStep(6)}
                 optional={
                   <Typography variant="caption">Autres informations</Typography>
                 }

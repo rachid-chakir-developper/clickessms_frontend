@@ -8,7 +8,7 @@ export default function AddCashRegister() {
     <AddCashRegisterForm
       idCashRegister={idCashRegister}
       title={
-        idCashRegister && idCashRegister > 0 ? `Modifier le document` : `Ajouter un document`
+        idCashRegister && idCashRegister > 0 ? `Modifier la caisse` : `Ajouter une caisse`
       }
     />
   );

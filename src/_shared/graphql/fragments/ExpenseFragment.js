@@ -38,7 +38,7 @@ export const EXPENSE_BASIC_INFOS = gql`
     }
     checkNumber
     bankName
-    folders{
+    folder{
       id
       number
       name
@@ -98,6 +98,13 @@ export const EXPENSE_RECAP = gql`
     description
     comment
     observation
+    files {
+      id
+      caption
+      file
+      createdAt
+      updatedAt
+    }
     expenseItems{
       ...ExpenseItemFragment
     }

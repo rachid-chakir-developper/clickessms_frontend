@@ -5,6 +5,7 @@ import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 import { EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
 import { FINANCIER_BASIC_INFOS } from './FinancierFragment';
 import { CUSTOM_FIELD_VALUE_DETAILS } from './CustomFieldFragment';
+import { ADDRESS_BOOK_ENTRY_DETAILS } from './AddressBookEntryFragment';
 
 export const BENEFICIARY_PHONE_INFOS = gql`
   fragment BeneficiaryPhoneInfosFragment on BeneficiaryType {
@@ -156,10 +157,14 @@ export const BENEFICIARY_DETAILS = gql`
     beneficiaryEndowmentEntries{
       ...BeneficiaryEndowmentEntryFragment
     }
+    addressBookEntries{
+      ...AddressBookEntryDetailsFragment
+    }
   }
   ${BENEFICIARY_BASIC_INFOS}
   ${BENEFICIARY_ADMISSION_DETAILS}
   ${BENEFICIARY_ENDOWMENT_ENTRY_DETAILS}
+  ${ADDRESS_BOOK_ENTRY_DETAILS}
 `;
 export const BENEFICIARY_RECAP_DETAILS = gql`
   fragment BeneficiaryRecapDetailsFragment on BeneficiaryType {
@@ -188,6 +193,9 @@ export const BENEFICIARY_RECAP_DETAILS = gql`
     beneficiaryEndowmentEntries{
       ...BeneficiaryEndowmentEntryFragment
     }
+    addressBookEntries{
+      ...AddressBookEntryDetailsFragment
+    }
     balanceDetails
     balance
     totalExpenses
@@ -198,5 +206,6 @@ export const BENEFICIARY_RECAP_DETAILS = gql`
   ${BENEFICIARY_BASIC_INFOS}
   ${BENEFICIARY_ADMISSION_DETAILS}
   ${BENEFICIARY_ENDOWMENT_ENTRY_DETAILS}
+  ${ADDRESS_BOOK_ENTRY_DETAILS}
 `;
 
