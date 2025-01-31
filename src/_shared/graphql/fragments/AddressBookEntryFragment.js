@@ -10,6 +10,7 @@ export const ADDRESS_BOOK_ENTRY_BASIC_INFOS = gql`
     lastName
     email
     fullAddress
+    description
     mobile
     fix
     fax

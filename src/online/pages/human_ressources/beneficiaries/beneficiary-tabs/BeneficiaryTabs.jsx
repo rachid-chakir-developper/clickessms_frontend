@@ -14,6 +14,8 @@ import PersonalizedProjects from './PersonalizedProjects';
 import BeneficiaryExpenses from './BeneficiaryExpenses';
 import BeneficiaryEndowmentEntries from './BeneficiaryEndowmentEntries';
 import { formatCurrencyAmount } from '../../../../../_shared/tools/functions';
+import AddressBookEntryList from '../../../../_shared/components/infos/AddressBookEntryList';
+import CareerEntryList from '../../../../_shared/components/infos/CareerEntryList';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -103,7 +105,11 @@ export default function BeneficiaryTabs({beneficiary}) {
                 onChange={handleChange}
                 aria-label="nav tabs example"
                 role="navigation"
+                variant="scrollable"  // Permet le scroll horizontal
+                scrollButtons="auto"  // Affiche les boutons de défilement si nécessaire
             >
+                <LinkTab label="Contacts" href="/spam" />
+                <LinkTab label="Formation / Experience" href="/spam" />
                 <LinkTab label="Absences" href="/spam" />
                 <LinkTab label="Evénements / Transmissions" href="/spam" />
                 <LinkTab label="Evénements indésirables" href="/spam" />
@@ -116,30 +122,36 @@ export default function BeneficiaryTabs({beneficiary}) {
             </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          <BeneficiaryAbsences beneficiary={beneficiary} />
+          <AddressBookEntryList addressBookEntries={beneficiary?.addressBookEntries} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          <BeneficiaryTransmissionEvents beneficiary={beneficiary} />
+          <CareerEntryList careerEntries={beneficiary?.careerEntries} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          <BeneficiaryUndesirableEvents beneficiary={beneficiary} />
+          <BeneficiaryAbsences beneficiary={beneficiary} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={3}>
-            <BeneficiaryAdmissionDocuments beneficiaryAdmissionDocuments={beneficiary?.beneficiaryAdmissionDocuments} />
+          <BeneficiaryTransmissionEvents beneficiary={beneficiary} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={4}>
-            <BeneficiaryEntries beneficiaryEntries={beneficiary?.beneficiaryEntries} />
+          <BeneficiaryUndesirableEvents beneficiary={beneficiary} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={5}>
-            <BeneficiaryStatusEntries beneficiaryStatusEntries={beneficiary?.beneficiaryStatusEntries} />
+            <BeneficiaryAdmissionDocuments beneficiaryAdmissionDocuments={beneficiary?.beneficiaryAdmissionDocuments} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={6}>
-            <BeneficiaryEndowmentEntries beneficiary={beneficiary} />
+            <BeneficiaryEntries beneficiaryEntries={beneficiary?.beneficiaryEntries} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={7}>
-          <BeneficiaryExpenses beneficiary={beneficiary} />
+            <BeneficiaryStatusEntries beneficiaryStatusEntries={beneficiary?.beneficiaryStatusEntries} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={8}>
+            <BeneficiaryEndowmentEntries beneficiary={beneficiary} />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={9}>
+          <BeneficiaryExpenses beneficiary={beneficiary} />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={10}>
           <PersonalizedProjects beneficiary={beneficiary} />
         </CustomTabPanel>
     </Box>

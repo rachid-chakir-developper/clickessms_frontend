@@ -691,3 +691,28 @@ export const RECURRENCE_OPTIONS = {
       // { value: "COSTUM", label: "Personnaliser…" }
   ]
 };
+
+export const CAREER_ENTRY_TYPES = {
+  EDUCATION: "EDUCATION",
+  INTERNSHIP: "INTERNSHIP",
+  JOB: "JOB",
+  TRAINING: "TRAINING",
+  VOLUNTEERING: "VOLUNTEERING",
+  OTHER: "OTHER",
+  ALL: [
+    { value: "EDUCATION", label: "Scolarité" },
+    { value: "INTERNSHIP", label: "Stage" },
+    { value: "JOB", label: "Emploi" },
+    { value: "TRAINING", label: "Formation" },
+    { value: "VOLUNTEERING", label: "Bénévolat" },
+    { value: "OTHER", label: "Autre" }
+  ],
+  TEXT_HELPERS : {
+    EDUCATION: "Ex : Licence en Informatique",
+    INTERNSHIP: "Ex : Stage en développement web chez XYZ",
+    JOB: "Ex : Développeur Full Stack",
+    TRAINING: "Ex : Formation en cybersécurité",
+    VOLUNTEERING: "Ex : Bénévole dans une association humanitaire",
+    OTHER: "Ex : Expérience particulière à préciser",
+  }
+};

@@ -39,6 +39,7 @@ import {
   ROOM_TYPE_CHOICES,
   BENEFICIARY_ADMISSION_STATUS_CHOICES,
   RECURRENCE_OPTIONS,
+  CAREER_ENTRY_TYPES,
 } from './constants';
 
 export const getGenderLabel = (gender) => {
@@ -277,6 +278,9 @@ export const getRecurrenceLabel = (recurrence) => {
   return RECURRENCE_OPTIONS.ALL.find((option) => option.value === recurrence)?.label || "Récurrence inconnue";
 };
 
+export const getCareerEntryLabel = (careerType) => {
+  return CAREER_ENTRY_TYPES.ALL.find((option) => option.value === careerType)?.label || "Type inconnu";
+};
 
 
 const intlNumFmt = new Intl.NumberFormat('fr-FR', {

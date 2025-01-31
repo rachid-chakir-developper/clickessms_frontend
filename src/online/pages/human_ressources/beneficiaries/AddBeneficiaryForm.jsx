@@ -26,7 +26,8 @@ import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutoc
 import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
 import { GET_FINANCIERS } from '../../../../_shared/graphql/queries/FinancierQueries';
 import CustomFieldValues from '../../../../_shared/components/form-fields/costum-fields/CustomFieldValues';
-import { GENDERS } from '../../../../_shared/tools/constants';
+import { CAREER_ENTRY_TYPES, GENDERS } from '../../../../_shared/tools/constants';
+import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -84,10 +85,11 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       beneficiaryAdmissionDocuments: [],
       beneficiaryStatusEntries: [],
       beneficiaryEndowmentEntries: [],
+      careerEntries: [],
     },
     validationSchema: validationSchema,
       onSubmit: (values) => {
-        if (activeStep === 6) {
+        if (activeStep === 7) {
             setTriggerSave(true);
             setTimeout(() => setTriggerSave(false), 100);
             return
@@ -128,6 +130,12 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
           items.push(itemCopy);
         });
         beneficiaryCopy.addressBookEntries = items;
+        items = [];
+        beneficiaryCopy.careerEntries.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          items.push(itemCopy);
+        });
+        beneficiaryCopy.careerEntries = items;
 
         if (beneficiaryCopy?.id && beneficiaryCopy?.id != '') {
           onUpdateBeneficiary({
@@ -231,7 +239,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       ...formik.values,
       addressBookEntries: [
         ...formik.values.addressBookEntries,
-        { title: '', firstName: '', lastName: '', email: '', fullAddress: '', mobile: '', fix: '', fax: '' },
+        { title: '', firstName: '', lastName: '', email: '', fullAddress: '', mobile: '', fix: '', fax: '', description: '' },
       ],
     });
   };
@@ -245,6 +253,39 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       addressBookEntries: updatedAddressBookEntries,
     });
   };
+
+  const addCareerEntry = () => {
+    formik.setValues({
+      ...formik.values,
+      careerEntries: [
+        ...formik.values.careerEntries,
+        { careerType: CAREER_ENTRY_TYPES.EDUCATION,
+          institution: '',
+          title: '',
+          startingDate: dayjs(new Date()),
+          endingDate: null,
+          professionalStatus: null,
+          email: '',
+          fullAddress: '',
+          description: '',
+          mobile: '',
+          fix: '',
+          fax: ''
+        },
+      ],
+    });
+  };
+  
+  const removeCareerEntry = (index) => {
+    const updatedCareerEntries = [...formik.values.careerEntries];
+    updatedCareerEntries.splice(index, 1);
+  
+    formik.setValues({
+      ...formik.values,
+      careerEntries: updatedCareerEntries,
+    });
+  };
+  
   const [createBeneficiary, { loading: loadingPost }] = useMutation(
     POST_BENEFICIARY,
     {
@@ -410,6 +451,20 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
           items.push(itemCopy);
         });
         beneficiaryCopy.addressBookEntries = items;
+        
+        if (!beneficiaryCopy?.careerEntries) beneficiaryCopy['careerEntries'] = [];
+        items = [];
+        beneficiaryCopy.careerEntries.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          itemCopy.startingDate = itemCopy.startingDate ? dayjs(itemCopy.startingDate) : null
+          itemCopy.endingDate = itemCopy.endingDate ? dayjs(itemCopy.endingDate) : null
+          itemCopy.professionalStatus = itemCopy.professionalStatus
+          ? Number(itemCopy.professionalStatus.id)
+          : null;
+          items.push(itemCopy);
+        });
+        beneficiaryCopy.careerEntries = items;
+
         formik.setValues(beneficiaryCopy);
       },
       onError: (err) => console.log(err),
@@ -471,7 +526,7 @@ const [getEmployees, {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if(activeStep >= 6) navigate('/online/ressources-humaines/beneficiaires/liste');
+    if(activeStep >= 7) navigate('/online/ressources-humaines/beneficiaires/liste');
     else if (formik.values.id)
       setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });
@@ -523,6 +578,19 @@ const [getEmployees, {
                 >
                   <Grid item xs={12} sm={6} md={3}>
                     <Item>
+                      <ImageFileField
+                        variant="outlined"
+                        label="Photo"
+                        imageValue={formik.values.photo}
+                        onChange={(imageFile) =>
+                          formik.setFieldValue('photo', imageFile)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={3}>
+                    <Item>
                       <FormControl>
                         <FormLabel id="demo-controlled-radio-buttons-group" sx={{textAlign: 'left'}}>Civilité</FormLabel>
                         <RadioGroup
@@ -533,6 +601,7 @@ const [getEmployees, {
                           onChange={(e) =>
                             formik.setFieldValue('gender', e.target.value)
                           }
+                          disabled={loadingPost || loadingPut}
                         >
                           {GENDERS?.ALL?.map((genre, index) => {
                             return (
@@ -584,8 +653,6 @@ const [getEmployees, {
                         disabled={loadingPost || loadingPut}
                       />
                     </Item>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
                     <Item>
                       <TheTextField
                         variant="outlined"
@@ -789,11 +856,9 @@ const [getEmployees, {
                                   formik.setFieldValue(`addressBookEntries.${index}.title`, e.target.value)
                                 }
                                 disabled={loadingPost || loadingPut}
-                                helperText="Ex : Père, Mère, Tuteur, Frère, soeure..."
+                                helperText="Ex : Père, Mère, Tuteur, Frère, Sœur..."
                               />
                             </Item>
-                          </Grid>
-                          <Grid item xs={12} sm={6} md={3}>
                             <Item>
                               <TheTextField
                                 variant="outlined"
@@ -842,15 +907,30 @@ const [getEmployees, {
                             </Item>
                           </Grid>
                           <Grid item xs={12} sm={6} md={3} >
-                            <Item sx={{position: 'relative'}}>
+                            <Item>
                               <TheTextField
                                 variant="outlined"
                                 label="Adresse postale"
                                 multiline
-                                rows={5}
+                                rows={9}
                                 value={item.fullAddress}
                                 onChange={(e) =>
                                   formik.setFieldValue(`addressBookEntries.${index}.fullAddress`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={3} >
+                            <Item sx={{position: 'relative'}}>
+                              <TheTextField
+                                variant="outlined"
+                                label="Note"
+                                multiline
+                                rows={9}
+                                value={item.description}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`addressBookEntries.${index}.description`, e.target.value)
                                 }
                                 disabled={loadingPost || loadingPut}
                               />
@@ -888,6 +968,181 @@ const [getEmployees, {
             <Step>
               <StepLabel
                 onClick={() => onGoToStep(2)}
+                optional={
+                  <Typography variant="caption">Formation(s) / Experience(s)</Typography>
+                }
+              >
+                Formation(s) / Experience(s)
+              </StepLabel>
+              <StepContent>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  <Grid item xs={12} sm={12} md={12} >
+                      {formik.values?.careerEntries?.map((item, index) => (
+                        <Grid
+                          container
+                          spacing={{ xs: 2, md: 3 }}
+                          columns={{ xs: 4, sm: 8, md: 12 }}
+                          key={index}
+                        >
+                          <Grid item xs={12} sm={6} md={3}>
+                            <Item>
+                              <FormControl fullWidth>
+                                  <InputLabel>Type</InputLabel>
+                                  <Select
+                                      value={item.careerType}
+                                      onChange={(e) =>
+                                        formik.setFieldValue(`careerEntries.${index}.careerType`, e.target.value)
+                                      }
+                                      disabled={loadingPost || loadingPut}
+                                  >
+                                      {CAREER_ENTRY_TYPES.ALL.map((state, index )=>{
+                                          return <MenuItem key={index} value={state.value}>{state.label}</MenuItem>
+                                      })}
+                                  </Select>
+                              </FormControl>
+                            </Item>
+                            <Item>
+                              <TheTextField
+                                variant="outlined"
+                                label="Institution"
+                                value={item.institution}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`careerEntries.${index}.institution`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                            <Item>
+                              <TheTextField
+                                variant="outlined"
+                                label="Titre"
+                                value={item.title}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`careerEntries.${index}.title`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                                helperText={CAREER_ENTRY_TYPES.TEXT_HELPERS[item.careerType] || "Ex : Intitulé du poste"}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={3}>
+                            <Item>
+                              <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">
+                                  Statut professionnel
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-label"
+                                  id="professionalStatus"
+                                  label="Statut professionnel"
+                                  value={item.professionalStatus}
+                                  onChange={(e) =>
+                                    formik.setFieldValue(`careerEntries.${index}.professionalStatus`, e.target.value)
+                                  }
+                                  disabled={loadingPost || loadingPut}
+                                >
+                                  <MenuItem value={null}>
+                                    <em>Choisissez un statut</em>
+                                  </MenuItem>
+                                  {dataData?.professionalStatuses?.map((data, index) => {
+                                    return (
+                                      <MenuItem key={index} value={data.id}>
+                                        {data.name}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                              </FormControl>
+                            </Item>
+                            <Item>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Date de début"
+                                value={item.startingDate}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`careerEntries.${index}.startingDate`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                            <Item>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Date de fin"
+                                value={item.endingDate}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`careerEntries.${index}.endingDate`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={3} >
+                            <Item>
+                              <TheTextField
+                                variant="outlined"
+                                label="Adresse postale"
+                                multiline
+                                rows={9}
+                                value={item.fullAddress}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`careerEntries.${index}.fullAddress`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={3} >
+                            <Item sx={{position: 'relative'}}>
+                              <TheTextField
+                                variant="outlined"
+                                label="Détail"
+                                multiline
+                                rows={9}
+                                value={item.description}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`careerEntries.${index}.description`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                              <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                                onClick={() => removeCareerEntry(index)}
+                                edge="end"
+                                color="error"
+                              >
+                                <Close />
+                              </IconButton>
+                            </Item>
+                          </Grid>
+                        </Grid>
+                      ))}
+                  </Grid>
+                  <Grid
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    item
+                    sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                  >
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={addCareerEntry}
+                      disabled={loadingPost || loadingPut}
+                    >
+                      Ajouter un contact
+                    </Button>
+                  </Grid>
+                </Grid>
+              </StepContent>
+            </Step>
+            <Step>
+              <StepLabel
+                onClick={() => onGoToStep(3)}
                 optional={
                   <Typography variant="caption">Les admission(s)</Typography>
                 }
@@ -1017,7 +1272,7 @@ const [getEmployees, {
             </Step>
             <Step>
               <StepLabel
-                onClick={() => onGoToStep(3)}
+                onClick={() => onGoToStep(4)}
                 optional={
                   <Typography variant="caption">Déclarer une entrée / sortie</Typography>
                 }
@@ -1139,7 +1394,7 @@ const [getEmployees, {
             </Step>
             <Step>
               <StepLabel
-                onClick={() => onGoToStep(4)}
+                onClick={() => onGoToStep(5)}
                 optional={
                   <Typography variant="caption">Les statut(s) </Typography>
                 }
@@ -1255,7 +1510,7 @@ const [getEmployees, {
             </Step> 
             <Step>
               <StepLabel
-                onClick={() => onGoToStep(5)}
+                onClick={() => onGoToStep(6)}
                 optional={
                   <Typography variant="caption">Les dotation(s) </Typography>
                 }
@@ -1381,7 +1636,7 @@ const [getEmployees, {
             </Step>
             <Step>
               <StepLabel
-                onClick={() => onGoToStep(6)}
+                onClick={() => onGoToStep(7)}
                 optional={
                   <Typography variant="caption">Autres informations</Typography>
                 }
