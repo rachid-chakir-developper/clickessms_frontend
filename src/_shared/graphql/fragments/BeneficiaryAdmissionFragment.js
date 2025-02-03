@@ -9,6 +9,7 @@ export const BENEFICIARY_ADMISSION_MINI_INFOS = gql`
   fragment BeneficiaryAdmissionMiniInfosFragment on BeneficiaryAdmissionType {
     id
     number
+    preAdmissionDate
     receptionDate
     gender
     preferredName

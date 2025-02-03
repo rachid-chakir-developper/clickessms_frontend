@@ -156,18 +156,19 @@ const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) =>
 };
 
 const SynthesisEstablishmentsTable = ({ activitySynthesis }) => {
-  const { activitySynthesisEstablishments = [] } = activitySynthesis;
+    const { activitySynthesisEstablishments = [] } = activitySynthesis || {};
 
-  // État pour gérer l'onglet actif
-  const [selectedEstablishment, setSelectedEstablishment] = useState(
-    activitySynthesisEstablishments[0]?.id || 0
-  );
 
-  const handleChange = (event, newValue) => {
-    setSelectedEstablishment(newValue);
-  };
+    // État pour gérer l'onglet actif
+    const [selectedEstablishment, setSelectedEstablishment] = useState(
+        activitySynthesisEstablishments[0]?.id || 0
+    );
 
-  return (
+    const handleChange = (event, newValue) => {
+        setSelectedEstablishment(newValue);
+    };
+
+    return (
         <Box sx={{ flexGrow: 1, marginTop: 2 }}>
             <TabContext value={selectedEstablishment}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

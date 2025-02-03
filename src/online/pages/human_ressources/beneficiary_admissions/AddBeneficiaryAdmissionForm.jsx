@@ -77,8 +77,9 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
       firstName: '',
       lastName: '',
       gender: GENDERS.NOT_SPECIFIED,
+      preAdmissionDate: dayjs(new Date()),
       receptionDate: dayjs(new Date()),
-      birthDate: dayjs(new Date()),
+      birthDate: null,
       birthCity: '',
       birthCountry: '',
       nationality: '',
@@ -98,7 +99,7 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
       isActive: true,
       description: '',
       observation: '',
-      responseDate: dayjs(new Date()),
+      responseDate: null,
       statusReason: '',
       files: [],
       financier: null,
@@ -246,6 +247,7 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
     onCompleted: (data) => {
       let { __typename, folder, employee, age, ...beneficiaryAdmissionCopy } = data.beneficiaryAdmission;
       beneficiaryAdmissionCopy.receptionDate = beneficiaryAdmissionCopy.receptionDate ? dayjs(beneficiaryAdmissionCopy.receptionDate) : null;
+      beneficiaryAdmissionCopy.preAdmissionDate = beneficiaryAdmissionCopy.preAdmissionDate ? dayjs(beneficiaryAdmissionCopy.preAdmissionDate) : null;
       beneficiaryAdmissionCopy.responseDate = beneficiaryAdmissionCopy.responseDate ? dayjs(beneficiaryAdmissionCopy.responseDate) : null;
       beneficiaryAdmissionCopy.birthDate = beneficiaryAdmissionCopy.birthDate ? dayjs(beneficiaryAdmissionCopy.birthDate) : null;
       beneficiaryAdmissionCopy.professionalStatus = beneficiaryAdmissionCopy.professionalStatus ? Number(beneficiaryAdmissionCopy.professionalStatus.id): null;
@@ -570,6 +572,14 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
                         label="Date de réception de la demande d’admission"
                         value={formik.values.receptionDate}
                         onChange={(date) => formik.setFieldValue('receptionDate', date)}
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                    <Item>
+                      <TheDesktopDatePicker
+                        label="Date de pré-admission"
+                        value={formik.values.preAdmissionDate}
+                        onChange={(date) => formik.setFieldValue('preAdmissionDate', date)}
                         disabled={loadingPost || loadingPut}
                       />
                     </Item>

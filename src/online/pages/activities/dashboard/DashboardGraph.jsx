@@ -119,15 +119,15 @@ const DashboardGraphItem = ({ activityTrackingEstablishment }) => {
 
 const DashboardGraph = ({ activityTrackingEstablishments }) => {
 
-  return (
-    <Box sx={{ flexGrow: 1, marginTop: 2 }}>
-        {activityTrackingEstablishments?.map((activityTrackingEstablishment, index) => (
-            <Box key={index} sx={{backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#e0e0e0"}}>
-                <DashboardGraphItem activityTrackingEstablishment={activityTrackingEstablishment} />
-            </Box>
-        ))}
-    </Box>
-  );
+    return (
+        <Box sx={{ flexGrow: 1, marginTop: 2 }}>
+            {activityTrackingEstablishments?.map((activityTrackingEstablishment, index) => (
+                <Box key={index} sx={{backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#e0e0e0"}}>
+                    <DashboardGraphItem activityTrackingEstablishment={activityTrackingEstablishment} />
+                </Box>
+            ))}
+        </Box>
+    );
 };
 
 export default DashboardGraph;

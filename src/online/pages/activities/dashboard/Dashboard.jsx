@@ -4,7 +4,7 @@ import { useLazyQuery, useQuery } from '@apollo/client';
 import { FileDownload, PictureAsPdf, ViewList, ViewQuilt } from '@mui/icons-material';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import DashboardFilter from './DashboardFilter';
-import { GET_DASHBOARD_ACTIVITY } from '../../../../_shared/graphql/queries/DashboardQueries';
+import { GET_DASHBOARD_ACTIVITY_MONTH, GET_DASHBOARD_ACTIVITY_SYNTHESIS, GET_DASHBOARD_ACTIVITY_TRACKING_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/DashboardQueries';
 import DashboardGraph from './DashboardGraph';
 import DashboardTable from './DashboardTable';
 import SynthesisTable from './SynthesisTable';
@@ -23,20 +23,55 @@ export default function Dashboard() {
     if(newFilter) newFilter.month = newFilter.month ? new Date(newFilter.month).getMonth()+1 : null
     setDashboardActivityFilter(newFilter);
   };
-  const [getDashboardActivityFilter, {
-    loading: loadingDashboardActivity,
-    data: dashboardActivityData,
-    error: dashboardActivityError,
-  }] = useLazyQuery(GET_DASHBOARD_ACTIVITY, { variables:{dashboardActivityFilter}, fetchPolicy: 'network-only' });
 
-  React.useEffect(() => {
-    getDashboardActivityFilter()
-  }, [dashboardActivityFilter]);
+  const [getDashboardActivityTrackingEstablishments, {
+    loading: loadingDashboardActivityTrackingEstablishments,
+    data: dashboardActivityTrackingEstablishmentsData,
+    error: dashboardActivityTrackingEstablishmentsError,
+  }] = useLazyQuery(GET_DASHBOARD_ACTIVITY_TRACKING_ESTABLISHMENTS, { variables:{dashboardActivityFilter}});
+
+  const [getDashboardActivitySynthesis, {
+    loading: loadingDashboardActivitySynthesis,
+    data: dashboardActivitySynthesisData,
+    error: dashboardActivitySynthesisError,
+  }] = useLazyQuery(GET_DASHBOARD_ACTIVITY_SYNTHESIS, { variables:{dashboardActivityFilter}});
+
+  const [getDashboardActivityMonth, {
+    loading: loadingDashboardActivityMonth,
+    data: dashboardActivityMonthData,
+    error: dashboardActivityMonthError,
+  }] = useLazyQuery(GET_DASHBOARD_ACTIVITY_MONTH, { variables:{dashboardActivityFilter}});
+
+
   const [view, setView] = React.useState('table');
 
   const handleChange = (event, nextView) => {
     if(nextView) setView(nextView);
   };
+  
+  React.useEffect(() => {
+    switch (view) {
+      case 'graph':
+        getDashboardActivityTrackingEstablishments()
+        break;
+      case 'table':
+        getDashboardActivityTrackingEstablishments()
+        break;
+      case 'synthesis':
+        getDashboardActivitySynthesis()
+        break;
+      case 'synthesisEstablishment':
+        getDashboardActivitySynthesis()
+        break;
+      case 'activity':
+        getDashboardActivityMonth()
+        break;
+    
+      default:
+        break;
+    }
+  }, [dashboardActivityFilter, view]);
+
   const handleExportToPdf = async () => {
     try {
       const input = componentRef.current;
@@ -198,13 +233,13 @@ export default function Dashboard() {
             </Grid>
           </Grid>
           
-          {loadingDashboardActivity && <ProgressService type="dashboard" />}
-          {!loadingDashboardActivity && (<Box ref={componentRef}>
-          {view==='graph' && <DashboardGraph activityTrackingEstablishments={dashboardActivityData?.dashboardActivity?.activityTrackingEstablishments}/>}
-          {view==='table' && <DashboardTable activityTrackingEstablishments={dashboardActivityData?.dashboardActivity?.activityTrackingEstablishments}/>}
-          {view==='synthesis' && <SynthesisTable activitySynthesis={dashboardActivityData?.dashboardActivity?.activitySynthesis}/>}
-          {view==='synthesisEstablishment' && <SynthesisEstablishmentsTable activitySynthesis={dashboardActivityData?.dashboardActivity?.activitySynthesis}/>}
-          {view==='activity' && <ActivityTable activityMonth={dashboardActivityData?.dashboardActivity?.activityMonth}/>}
+          {(loadingDashboardActivityTrackingEstablishments || loadingDashboardActivitySynthesis || loadingDashboardActivityMonth) && <ProgressService type="dashboard" />}
+          {(!loadingDashboardActivityTrackingEstablishments && !loadingDashboardActivitySynthesis & !loadingDashboardActivityMonth)  && (<Box ref={componentRef}>
+          {view==='graph' && <DashboardGraph activityTrackingEstablishments={dashboardActivityTrackingEstablishmentsData?.dashboardActivity?.activityTrackingEstablishments}/>}
+          {view==='table' && <DashboardTable activityTrackingEstablishments={dashboardActivityTrackingEstablishmentsData?.dashboardActivity?.activityTrackingEstablishments}/>}
+          {view==='synthesis' && <SynthesisTable activitySynthesis={dashboardActivitySynthesisData?.dashboardActivity?.activitySynthesis}/>}
+          {view==='synthesisEstablishment' && <SynthesisEstablishmentsTable activitySynthesis={dashboardActivitySynthesisData?.dashboardActivity?.activitySynthesis}/>}
+          {view==='activity' && <ActivityTable activityMonth={dashboardActivityMonthData?.dashboardActivity?.activityMonth}/>}
         </Box>
       )}
     </>

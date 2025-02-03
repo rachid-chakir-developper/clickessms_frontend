@@ -45,37 +45,6 @@ export const GET_DASHBOARD = gql`
 export const GET_DASHBOARD_ACTIVITY = gql`
   query getDashboardActivity($dashboardActivityFilter: DashboardActivityFilterInput){
     dashboardActivity(dashboardActivityFilter: $dashboardActivityFilter){
-      activityTracking{
-        activityTrackingMonth{
-          month
-          year
-          entriesCount
-          exitsCount
-          plannedExitsCount
-          presentsMonthCount
-          daysCount
-          objectiveDaysCount
-          objectiveOccupancyRate
-          occupancyRate
-          valuation
-          objectiveValuation
-          gapValuation
-        }
-        activityTrackingAccumulation{
-          year
-          entriesCount
-          exitsCount
-          plannedExitsCount
-          presentsMonthCount
-          daysCount
-          objectiveDaysCount
-          objectiveOccupancyRate
-          occupancyRate
-          valuation
-          objectiveValuation
-          gapValuation
-        }
-      }
       activityTrackingEstablishments{
         year
         months
@@ -194,50 +163,7 @@ export const GET_DASHBOARD_ACTIVITY = gql`
   ${BENEFICIARY_ADMISSION_MINI_INFOS}
 `;
 
-
-export const GET_DASHBOARD_ACTIVITY_1 = gql`
-  query getDashboardActivity($dashboardActivityFilter: DashboardActivityFilterInput){
-    dashboardActivity(dashboardActivityFilter: $dashboardActivityFilter){
-      activityTracking{
-        activityTrackingMonth{
-          month
-          year
-          entriesCount
-          exitsCount
-          plannedExitsCount
-          presentsMonthCount
-          daysCount
-          objectiveDaysCount
-          objectiveOccupancyRate
-          occupancyRate
-          valuation
-          objectiveValuation
-          gapValuation
-        }
-        activityTrackingAccumulation{
-          year
-          entriesCount
-          exitsCount
-          plannedExitsCount
-          presentsMonthCount
-          daysCount
-          objectiveDaysCount
-          objectiveOccupancyRate
-          occupancyRate
-          valuation
-          objectiveValuation
-          gapValuation
-        }
-      }
-    }
-  }
-  ${BENEFICIARY_MINI_INFOS}
-  ${BENEFICIARY_ENTRY_DETAILS}
-  ${BENEFICIARY_ADMISSION_MINI_INFOS}
-`;
-
-
-export const GET_DASHBOARD_ACTIVITY_2 = gql`
+export const GET_DASHBOARD_ACTIVITY_TRACKING_ESTABLISHMENTS = gql`
   query getDashboardActivity($dashboardActivityFilter: DashboardActivityFilterInput){
     dashboardActivity(dashboardActivityFilter: $dashboardActivityFilter){
       activityTrackingEstablishments{
@@ -284,14 +210,11 @@ export const GET_DASHBOARD_ACTIVITY_2 = gql`
       }
     }
   }
-  ${BENEFICIARY_MINI_INFOS}
-  ${BENEFICIARY_ENTRY_DETAILS}
-  ${BENEFICIARY_ADMISSION_MINI_INFOS}
 `;
 
 
 
-export const GET_DASHBOARD_ACTIVITY_3 = gql`
+export const GET_DASHBOARD_ACTIVITY_SYNTHESIS = gql`
   query getDashboardActivity($dashboardActivityFilter: DashboardActivityFilterInput){
     dashboardActivity(dashboardActivityFilter: $dashboardActivityFilter){
       activitySynthesis{
@@ -343,4 +266,38 @@ export const GET_DASHBOARD_ACTIVITY_3 = gql`
   ${BENEFICIARY_MINI_INFOS}
   ${BENEFICIARY_ENTRY_DETAILS}
   ${BENEFICIARY_ADMISSION_MINI_INFOS}
+`;
+
+export const GET_DASHBOARD_ACTIVITY_MONTH = gql`
+  query getDashboardActivity($dashboardActivityFilter: DashboardActivityFilterInput){
+    dashboardActivity(dashboardActivityFilter: $dashboardActivityFilter){
+      activityMonth{
+        title
+        year
+        month
+        activityMonthEstablishments{
+          year
+          title
+          establishment{
+            id
+            name
+            logo
+          }
+          capacity
+          countOutsidePlacesDepartment
+          countOccupiedPlaces
+          countAvailablePlaces
+          agesText
+          beneficiaryEntries{
+            beneficiary{
+              ...BeneficiaryMiniInfosFragment
+            }
+            ...BeneficiaryEntryFragment
+          }
+        }
+      }
+    }
+  }
+  ${BENEFICIARY_MINI_INFOS}
+  ${BENEFICIARY_ENTRY_DETAILS}
 `;

@@ -42,31 +42,31 @@ const SynthesisTable = ({activitySynthesis}) => {
             <TableHead>
                 <TableRow>
                     <StyledTableCell align="center">Année : {activitySynthesis?.year}</StyledTableCell>
-                    {activitySynthesis?.activitySynthesisEstablishments?.map((activitySynthesisEstablishment, index)=> 
-                        <StyledTableCell key={index} align="center" colSpan={6}>
-                            <EstablishmentChip establishment={activitySynthesisEstablishment?.establishment} /> 
-                        </StyledTableCell>
-                    )}
+                        {activitySynthesis?.activitySynthesisEstablishments?.map((activitySynthesisEstablishment, index)=> 
+                            <StyledTableCell key={index} align="center" colSpan={6}>
+                                <EstablishmentChip establishment={activitySynthesisEstablishment?.establishment} /> 
+                            </StyledTableCell>
+                        )}
                     <StyledTableCell align="center">TOTAL</StyledTableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell align="center" sx={{backgroundColor: "#e0e0e0"}}></TableCell>
-                    {activitySynthesis?.activitySynthesisEstablishments?.map((activitySynthesisEstablishment, index) => (
-                        <React.Fragment key={index}>
-                            {[
-                                "Dispo",
-                                "Reçu",
-                                "AF",
-                                "AD",
-                                "AN",
-                                ].map((header, index) => (
-                                    <TableCell key={index} align="center">
-                                        {header}
-                                    </TableCell>
-                                ))}
-                            <TableCell align="center" sx={{backgroundColor: "#e0e0e0"}}></TableCell>
-                        </React.Fragment>
-                    ))}
+                        {activitySynthesis?.activitySynthesisEstablishments?.map((activitySynthesisEstablishment, index) => (
+                            <React.Fragment key={index}>
+                                {[
+                                    "Dispo",
+                                    "Reçu",
+                                    "AF",
+                                    "AD",
+                                    "AN",
+                                    ].map((header, index) => (
+                                        <TableCell key={index} align="center">
+                                            {header}
+                                        </TableCell>
+                                    ))}
+                                <TableCell align="center" sx={{backgroundColor: "#e0e0e0"}}></TableCell>
+                            </React.Fragment>
+                        ))}
                     <TableCell align="center" sx={{backgroundColor: "#e0e0e0"}}></TableCell>
                 </TableRow>
             </TableHead>

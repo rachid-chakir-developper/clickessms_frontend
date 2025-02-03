@@ -12,7 +12,7 @@ export default function MixedBarChart({data=[]}) {
     const valueFormatter = (value)=> `${value}€`;
     return (
         <BarChart
-            height={240}
+            height={340}
             margin={{ right: 5, bottom: 60, left: 100 }}
             sx={
                 {

@@ -229,6 +229,16 @@ const headCells = [
         render: ({receptionDate})=> getFormatDate(receptionDate)
     },
     {
+        id: 'preAdmissionDate',
+        property: 'pre_admission_date',
+        exportField: 'pre_admission_date',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Date pré-admission',
+        render: ({preAdmissionDate})=> getFormatDate(preAdmissionDate)
+    },
+    {
         id: 'status',
         property: 'status',
         exportField: 'status',
