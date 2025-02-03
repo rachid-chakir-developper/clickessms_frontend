@@ -81,6 +81,9 @@ export const GET_DATAS_BENEFICIARY = gql`
     professionalStatuses: datas(typeData: "ProfessionalStatus") {
       ...DataBasicInfosFragment
     }
+    documentTypes: datas(typeData: "DocumentType") {
+      ...DataBasicInfosFragment
+    }
   }
   ${DATA_BASIC_INFOS}
 `;

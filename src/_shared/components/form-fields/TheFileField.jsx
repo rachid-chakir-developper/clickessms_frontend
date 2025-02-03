@@ -32,7 +32,7 @@ export default function TheFileField(props) {
   };
 
   return (
-    <Card sx={{ display: "flex", alignItems: "center", padding: 2 }} variant="outlined">
+    <Card sx={{ display: "flex", alignItems: "center", padding: 2, position: 'relative' }} variant="outlined">
       <Box sx={{ flexGrow: 1 }}>
         <CardContent sx={{ padding: "8px 16px" }}>
           <Typography variant="subtitle1" color="text.secondary">
@@ -59,6 +59,10 @@ export default function TheFileField(props) {
                   backgroundColor: "error.main",
                   color: "white",
                   "&:hover": { backgroundColor: "error.dark" },
+                  position: 'absolute',
+                  zIndex:10,
+                  right: 5,
+                  top: 5
                 }}
               >
                 <Close />

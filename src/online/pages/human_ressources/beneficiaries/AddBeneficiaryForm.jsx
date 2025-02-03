@@ -28,6 +28,7 @@ import { GET_FINANCIERS } from '../../../../_shared/graphql/queries/FinancierQue
 import CustomFieldValues from '../../../../_shared/components/form-fields/costum-fields/CustomFieldValues';
 import { CAREER_ENTRY_TYPES, GENDERS } from '../../../../_shared/tools/constants';
 import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
+import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -86,10 +87,11 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       beneficiaryStatusEntries: [],
       beneficiaryEndowmentEntries: [],
       careerEntries: [],
+      documentRecords: [],
     },
     validationSchema: validationSchema,
       onSubmit: (values) => {
-        if (activeStep === 7) {
+        if (activeStep === 8) {
             setTriggerSave(true);
             setTimeout(() => setTriggerSave(false), 100);
             return
@@ -136,6 +138,11 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
           items.push(itemCopy);
         });
         beneficiaryCopy.careerEntries = items;
+        items = [];
+        beneficiaryCopy.documentRecords.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          items.push(itemCopy);
+        });
 
         if (beneficiaryCopy?.id && beneficiaryCopy?.id != '') {
           onUpdateBeneficiary({
@@ -286,6 +293,27 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
     });
   };
   
+  const addDocumentRecord = () => {
+    formik.setValues({
+      ...formik.values,
+      documentRecords: [
+        ...formik.values.documentRecords,
+        { document: undefined, name: '', documentType: null , startingDate: dayjs(new Date()), endingDate: null, 
+          description: '', isNotificationEnabled: false},
+      ],
+    });
+  };
+
+  const removeDocumentRecord = (index) => {
+    const updatedDocumentRecords = [...formik.values.documentRecords];
+    updatedDocumentRecords.splice(index, 1);
+
+    formik.setValues({
+      ...formik.values,
+      documentRecords: updatedDocumentRecords,
+    });
+  };
+
   const [createBeneficiary, { loading: loadingPost }] = useMutation(
     POST_BENEFICIARY,
     {
@@ -464,6 +492,19 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
           items.push(itemCopy);
         });
         beneficiaryCopy.careerEntries = items;
+        
+        if (!beneficiaryCopy?.documentRecords) beneficiaryCopy['documentRecords'] = [];
+        items = [];
+        beneficiaryCopy.documentRecords.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          itemCopy.startingDate = itemCopy.startingDate ? dayjs(itemCopy.startingDate) : null
+          itemCopy.endingDate = itemCopy.endingDate ? dayjs(itemCopy.endingDate) : null
+          itemCopy.documentType = itemCopy.documentType
+          ? Number(itemCopy.documentType.id)
+          : null;
+          items.push(itemCopy);
+        });
+        beneficiaryCopy.documentRecords = items;
 
         formik.setValues(beneficiaryCopy);
       },
@@ -526,7 +567,7 @@ const [getEmployees, {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if(activeStep >= 7) navigate('/online/ressources-humaines/beneficiaires/liste');
+    if(activeStep >= 8) navigate('/online/ressources-humaines/beneficiaires/liste');
     else if (formik.values.id)
       setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });
@@ -1008,7 +1049,7 @@ const [getEmployees, {
                             <Item>
                               <TheTextField
                                 variant="outlined"
-                                label="Institution"
+                                label={CAREER_ENTRY_TYPES.INSTITUTION_LABELS[item.careerType] || "Institution"}
                                 value={item.institution}
                                 onChange={(e) =>
                                   formik.setFieldValue(`careerEntries.${index}.institution`, e.target.value)
@@ -1085,9 +1126,20 @@ const [getEmployees, {
                             <Item>
                               <TheTextField
                                 variant="outlined"
+                                label="Téléphone mobile"
+                                value={item.mobile}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`careerEntries.${index}.mobile`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                            <Item>
+                              <TheTextField
+                                variant="outlined"
                                 label="Adresse postale"
                                 multiline
-                                rows={9}
+                                rows={6}
                                 value={item.fullAddress}
                                 onChange={(e) =>
                                   formik.setFieldValue(`careerEntries.${index}.fullAddress`, e.target.value)
@@ -1097,26 +1149,39 @@ const [getEmployees, {
                             </Item>
                           </Grid>
                           <Grid item xs={12} sm={6} md={3} >
-                            <Item sx={{position: 'relative'}}>
-                              <TheTextField
-                                variant="outlined"
-                                label="Détail"
-                                multiline
-                                rows={9}
-                                value={item.description}
-                                onChange={(e) =>
-                                  formik.setFieldValue(`careerEntries.${index}.description`, e.target.value)
-                                }
-                                disabled={loadingPost || loadingPut}
-                              />
-                              <IconButton sx={{position: 'absolute', top: -3, right: -2}}
-                                onClick={() => removeCareerEntry(index)}
-                                edge="end"
-                                color="error"
-                              >
-                                <Close />
-                              </IconButton>
-                            </Item>
+                            <Box sx={{position: 'relative'}}>
+                              <Item>
+                                <TheTextField
+                                  variant="outlined"
+                                  label="Adresse E-mail"
+                                  value={item.email}
+                                  onChange={(e) =>
+                                    formik.setFieldValue(`careerEntries.${index}.email`, e.target.value)
+                                  }
+                                  disabled={loadingPost || loadingPut}
+                                />
+                              </Item>
+                              <Item>
+                                <TheTextField
+                                  variant="outlined"
+                                  label="Détail"
+                                  multiline
+                                  rows={6}
+                                  value={item.description}
+                                  onChange={(e) =>
+                                    formik.setFieldValue(`careerEntries.${index}.description`, e.target.value)
+                                  }
+                                  disabled={loadingPost || loadingPut}
+                                />
+                              </Item>
+                                <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                                  onClick={() => removeCareerEntry(index)}
+                                  edge="end"
+                                  color="error"
+                                >
+                                  <Close />
+                                </IconButton>
+                            </Box>
                           </Grid>
                         </Grid>
                       ))}
@@ -1637,6 +1702,158 @@ const [getEmployees, {
             <Step>
               <StepLabel
                 onClick={() => onGoToStep(7)}
+                optional={
+                  <Typography variant="caption">Les document(s) </Typography>
+                }
+              >
+                Les document(s) 
+              </StepLabel>
+              <StepContent>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  <Grid item xs={12} sm={12} md={12} >
+                      {formik.values?.documentRecords?.map((item, index) => (
+                        <Grid
+                          container
+                          spacing={{ xs: 2, md: 3 }}
+                          columns={{ xs: 4, sm: 8, md: 12 }}
+                          key={index}
+                        >
+                          <Grid item xs={12} sm={6} md={3} >
+                            <Item>
+                              <TheFileField variant="outlined" label="Document"
+                                fileValue={item.document}
+                                onChange={(file) => formik.setFieldValue(`documentRecords.${index}.document`, file)}
+                                disabled={loadingPost || loadingPut}
+                                />
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={3} >
+                            <Item>
+                              <TheTextField
+                                variant="outlined"
+                                label="Nom"
+                                value={item.name}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`documentRecords.${index}.name`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                            <Item>
+                              <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">
+                                  Type
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-label"
+                                  id="demo-simple-select"
+                                  label="Type"
+                                  value={item.documentType}
+                                  onChange={(e) =>
+                                    formik.setFieldValue(`documentRecords.${index}.documentType`, e.target.value)
+                                  }
+                                >
+                                  <MenuItem value={null}>
+                                    <em>Choisissez un type</em>
+                                  </MenuItem>
+                                  {dataData?.documentTypes?.map((data, index) => {
+                                    return (
+                                      <MenuItem key={index} value={data.id}>
+                                        {data.name}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                              </FormControl>
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={2} >
+                            <Item>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Début le"
+                                value={item.startingDate}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`documentRecords.${index}.startingDate`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                            <Item>
+                              <TheDesktopDatePicker
+                                variant="outlined"
+                                label="Valide jusqu'au"
+                                value={item.endingDate}
+                                onChange={(date) =>
+                                  formik.setFieldValue(`documentRecords.${index}.endingDate`, date)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={4} >
+                            <Item sx={{position: 'relative'}}>
+                              <TheTextField
+                                variant="outlined"
+                                label="Description"
+                                multiline
+                                rows={3}
+                                value={item.description}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`documentRecords.${index}.description`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                              <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                                onClick={() => removeDocumentRecord(index)}
+                                edge="end"
+                                color="error"
+                              >
+                                <Close />
+                              </IconButton>
+                            </Item>
+                            <Item>
+                              <TheSwitch
+                                variant="outlined"
+                                label="Notifier ?"
+                                checked={item.isNotificationEnabled}
+                                value={item.isNotificationEnabled}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`documentRecords.${index}.isNotificationEnabled`, e.target.checked)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              />
+                            </Item>
+                          </Grid>
+                        </Grid>
+                      ))}
+                  </Grid>
+                  <Grid
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    item
+                    sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                  >
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={addDocumentRecord}
+                      disabled={loadingPost || loadingPut}
+                    >
+                      Ajouter un Document
+                    </Button>
+                  </Grid>
+                </Grid>
+              </StepContent>
+            </Step> 
+            <Step>
+              <StepLabel
+                onClick={() => onGoToStep(8)}
                 optional={
                   <Typography variant="caption">Autres informations</Typography>
                 }

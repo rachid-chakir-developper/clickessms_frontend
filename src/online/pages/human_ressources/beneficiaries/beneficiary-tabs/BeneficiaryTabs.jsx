@@ -16,6 +16,7 @@ import BeneficiaryEndowmentEntries from './BeneficiaryEndowmentEntries';
 import { formatCurrencyAmount } from '../../../../../_shared/tools/functions';
 import AddressBookEntryList from '../../../../_shared/components/infos/AddressBookEntryList';
 import CareerEntryList from '../../../../_shared/components/infos/CareerEntryList';
+import DocumentRecordList from '../../../../_shared/components/infos/DocumentRecordList';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -110,6 +111,7 @@ export default function BeneficiaryTabs({beneficiary}) {
             >
                 <LinkTab label="Contacts" href="/spam" />
                 <LinkTab label="Formation / Experience" href="/spam" />
+                <LinkTab label="Documents" href="/spam" />
                 <LinkTab label="Absences" href="/spam" />
                 <LinkTab label="Evénements / Transmissions" href="/spam" />
                 <LinkTab label="Evénements indésirables" href="/spam" />
@@ -128,30 +130,33 @@ export default function BeneficiaryTabs({beneficiary}) {
           <CareerEntryList careerEntries={beneficiary?.careerEntries} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          <BeneficiaryAbsences beneficiary={beneficiary} />
+          <DocumentRecordList documentRecords={beneficiary?.documentRecords} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={3}>
-          <BeneficiaryTransmissionEvents beneficiary={beneficiary} />
+          <BeneficiaryAbsences beneficiary={beneficiary} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={4}>
-          <BeneficiaryUndesirableEvents beneficiary={beneficiary} />
+          <BeneficiaryTransmissionEvents beneficiary={beneficiary} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={5}>
-            <BeneficiaryAdmissionDocuments beneficiaryAdmissionDocuments={beneficiary?.beneficiaryAdmissionDocuments} />
+          <BeneficiaryUndesirableEvents beneficiary={beneficiary} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={6}>
-            <BeneficiaryEntries beneficiaryEntries={beneficiary?.beneficiaryEntries} />
+            <BeneficiaryAdmissionDocuments beneficiaryAdmissionDocuments={beneficiary?.beneficiaryAdmissionDocuments} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={7}>
-            <BeneficiaryStatusEntries beneficiaryStatusEntries={beneficiary?.beneficiaryStatusEntries} />
+            <BeneficiaryEntries beneficiaryEntries={beneficiary?.beneficiaryEntries} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={8}>
-            <BeneficiaryEndowmentEntries beneficiary={beneficiary} />
+            <BeneficiaryStatusEntries beneficiaryStatusEntries={beneficiary?.beneficiaryStatusEntries} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={9}>
-          <BeneficiaryExpenses beneficiary={beneficiary} />
+            <BeneficiaryEndowmentEntries beneficiary={beneficiary} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={10}>
+          <BeneficiaryExpenses beneficiary={beneficiary} />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={11}>
           <PersonalizedProjects beneficiary={beneficiary} />
         </CustomTabPanel>
     </Box>

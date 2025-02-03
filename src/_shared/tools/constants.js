@@ -714,5 +714,13 @@ export const CAREER_ENTRY_TYPES = {
     TRAINING: "Ex : Formation en cybersécurité",
     VOLUNTEERING: "Ex : Bénévole dans une association humanitaire",
     OTHER: "Ex : Expérience particulière à préciser",
+  },
+  INSTITUTION_LABELS : {
+    EDUCATION: "Nom de l'établissement scolaire",
+    INTERNSHIP: "Nom de l'entreprise / Organisation de stage",
+    JOB: "Nom de l'entreprise",
+    TRAINING: "Nom de l'organisme de formation",
+    VOLUNTEERING: "Nom de l'association / Organisation",
+    OTHER: "Nom de l'entité liée à l'expérience",
   }
 };
