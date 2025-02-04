@@ -176,8 +176,10 @@ export const GET_DASHBOARD_ACTIVITY_TRACKING_ESTABLISHMENTS = gql`
           logo
         }
         activityTrackingMonth{
-          month
           year
+          month
+          isCurrentMonth
+          isFutureMonth
           entriesCount
           exitsCount
           plannedExitsCount

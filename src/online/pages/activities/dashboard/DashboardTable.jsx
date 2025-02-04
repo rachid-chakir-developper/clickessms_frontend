@@ -91,7 +91,7 @@ const DashboardTableItem = ({activityTrackingEstablishment}) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((row, rowIndex) => (
+            {data.map((row, rowIndex) =>(
               <TableRow key={rowIndex}>
                 <TableCell
                   component="th"
@@ -104,20 +104,30 @@ const DashboardTableItem = ({activityTrackingEstablishment}) => {
                 >
                   {row.label}
                 </TableCell>
-                {row.values.map((value, colIndex) => (
-                  <TableCell
-                    key={colIndex}
-                    align="center"
-                    sx={{
-                      color: row.highlightNegative && value < 0 ? "red" : "inherit",
-                      fontWeight: row.bold ? "bold" : "normal",
-                    }}
-                  >
-                    {value}
-                  </TableCell>
-                ))}
+                {row.values.map((value, colIndex) => {
+                  // Récupérer les informations du mois correspondant
+                  const monthData = activityTrackingEstablishment?.activityTrackingMonth?.[colIndex] || {};
+                  
+                  const isCurrent = monthData?.isCurrentMonth;
+                  const isFuture = monthData?.isFutureMonth;
+                  return (
+                    <TableCell
+                      key={colIndex}
+                      align="center"
+                      sx={{
+                        color: row.highlightNegative && value < 0 ? "red" : "inherit",
+                        fontWeight: row.bold ? "bold" : "normal",
+                        backgroundColor: isCurrent ? "#efefef" : "",  // Fond foncé pour le mois courant
+                        opacity: isFuture ? 0.1 : 1,  // Opacité réduite pour les mois futurs
+                        fontSize: isFuture ? 13 : '',  // Opacité réduite pour les mois futurs
+                      }}
+                    >
+                      {value}
+                    </TableCell>
+                  )}
+                )}
               </TableRow>
-            ))}
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
