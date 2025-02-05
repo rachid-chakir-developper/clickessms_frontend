@@ -26,7 +26,7 @@ const ActivityTable = ({activityMonth}) => {
             <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
               <TableCell>Groupe</TableCell>
               <TableCell align="center">Capacité</TableCell>
-              <TableCell align="center">Places Hors département</TableCell>
+              {/* <TableCell align="center">Places Hors département</TableCell> */}
               <TableCell align="center">Places occupées</TableCell>
               <TableCell align="center">Places disponibles</TableCell>
               <TableCell align="center">Âges</TableCell>
@@ -37,7 +37,7 @@ const ActivityTable = ({activityMonth}) => {
               <TableRow key={indexE}>
                 <TableCell>{activityMonthEstablishment?.establishment?.name}</TableCell>
                 <TableCell align="center">{activityMonthEstablishment?.capacity}</TableCell>
-                <TableCell align="center">{activityMonthEstablishment?.countOutsidePlacesDepartment}</TableCell>
+                {/* <TableCell align="center">{activityMonthEstablishment?.countOutsidePlacesDepartment}</TableCell> */}
                 <TableCell align="center">{activityMonthEstablishment?.countOccupiedPlaces}</TableCell>
                 <TableCell
                   align="center"

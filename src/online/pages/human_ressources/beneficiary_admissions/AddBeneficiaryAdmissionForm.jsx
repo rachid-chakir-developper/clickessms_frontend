@@ -66,19 +66,18 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({
-      firstName: yup
-        .string('Entrez votre prénom')
-        .required('Le prénom est obligatoire'),
-      lastName: yup.string('Entrez votre nom').required('Le nom est obligatoire'),
-    });
+    firstName: yup.string('Entrez votre prénom').required('Le prénom est obligatoire'),
+    lastName: yup.string('Entrez votre nom').required('Le nom est obligatoire'),
+    receptionDate: yup.date().nullable().typeError("Veuillez entrer une date valide").required("La date de réception est obligatoire"),
+  });
   const formik = useFormik({
     initialValues: {
       number: '',
       firstName: '',
       lastName: '',
       gender: GENDERS.NOT_SPECIFIED,
-      preAdmissionDate: dayjs(new Date()),
-      receptionDate: dayjs(new Date()),
+      preAdmissionDate: null,
+      receptionDate: null,
       birthDate: null,
       birthCity: '',
       birthCountry: '',
@@ -573,6 +572,13 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
                         value={formik.values.receptionDate}
                         onChange={(date) => formik.setFieldValue('receptionDate', date)}
                         disabled={loadingPost || loadingPut}
+                        onBlur={formik.handleBlur}
+                        slotProps={{
+                          textField: {
+                            error: Boolean(formik.touched.receptionDate && formik.errors.receptionDate),
+                            helperText: formik.touched.receptionDate && formik.errors.receptionDate,
+                          }
+                        }}
                       />
                     </Item>
                     <Item>

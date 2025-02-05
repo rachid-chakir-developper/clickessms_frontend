@@ -79,7 +79,13 @@ const DashboardTableItem = ({activityTrackingEstablishment}) => {
         <Table sx={{ minWidth: 1200 }} aria-label="dashboard table">
           <TableHead>
             <TableRow>
-              <TableCell>Année : {activityTrackingEstablishment?.year}</TableCell>
+              <TableCell
+                  sx={{
+                    width: 200,
+                    maxWidth: 200,
+                    minWidth: 200,
+                  }}
+                  >Année : {activityTrackingEstablishment?.year}</TableCell>
                 {activityTrackingEstablishment?.months?.map((month, index) => (
                   <TableCell key={index} align="center" sx={{ fontWeight: "bold", backgroundColor: "#003366", color: "#fff" }}>
                     {month}
@@ -97,7 +103,6 @@ const DashboardTableItem = ({activityTrackingEstablishment}) => {
                   component="th"
                   scope="row"
                   sx={{
-                    minWidth: 308,
                     fontWeight: row.bold ? "bold" : "normal",
                     backgroundColor: rowIndex % 2 === 0 ? "#f3f3f3" : "#e0e0e0",
                   }}

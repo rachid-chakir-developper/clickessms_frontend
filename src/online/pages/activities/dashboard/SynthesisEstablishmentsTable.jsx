@@ -17,7 +17,7 @@ import {
 import EstablishmentChip from "../../companies/establishments/EstablishmentChip";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { BENEFICIARY_ADMISSION_STATUS_CHOICES } from "../../../../_shared/tools/constants";
-import { getFormatDate } from "../../../../_shared/tools/functions";
+import { getBeneficiaryAdmissionStatusLabel, getFormatDate } from "../../../../_shared/tools/functions";
 
 const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) => {
     const {activitySynthesisMonth=[]} = activitySynthesisEstablishment
@@ -112,9 +112,9 @@ const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) =>
                     <TableHead>
                         <TableRow>
                         <TableCell>Date de demande</TableCell>
+                        <TableCell>Date de pré-admission</TableCell>
                         <TableCell>Nom - Prénom</TableCell>
-                        <TableCell>Admission le</TableCell>
-                        <TableCell>Refus le</TableCell>
+                        <TableCell>Status</TableCell>
                         <TableCell>Motif</TableCell>
                         </TableRow>
                     </TableHead>
@@ -123,23 +123,17 @@ const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) =>
                             const beneficiary = beneficiaryAdmission?.beneficiary ? beneficiaryAdmission?.beneficiary : beneficiaryAdmission;
                             return (<TableRow key={index}>
                                 <TableCell>{getFormatDate(beneficiaryAdmission.receptionDate)}</TableCell>
+                                <TableCell>{getFormatDate(beneficiaryAdmission.preAdmissionDate)}</TableCell>
                                 <TableCell>
                                     {`${
                                         beneficiary?.preferredName && beneficiary?.preferredName !== ''
                                             ? beneficiary?.preferredName
                                             : beneficiary?.lastName
                                     } ${beneficiary?.firstName}`}</TableCell>
-                                <TableCell style={{ color: beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.APPROVED ? "green" : "" }}>
-                                    {
-                                        beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.APPROVED ?
-                                        getFormatDate(beneficiaryAdmission.responseDate) : ''
-                                    }
-                                </TableCell>
-                                <TableCell style={{ color: beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.REJECTED ? "red" : "" }}>
-                                    {
-                                        beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.REJECTED ?
-                                        getFormatDate(beneficiaryAdmission.responseDate) : ''
-                                    }
+                                <TableCell style={{ color: beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.APPROVED ? "green" : "red" }}>
+                                    {beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.APPROVED  && <>Admis </>}
+                                    {beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.REJECTED  && <>Refusé </>}
+                                    le {getFormatDate(beneficiaryAdmission.responseDate)}
                                 </TableCell>
                                 <TableCell>{beneficiaryAdmission.statusReason || ""}</TableCell>
                             </TableRow>)
