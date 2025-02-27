@@ -2,14 +2,11 @@ import Box from '@mui/material/Box';
 import { alpha, styled } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
-
 export const StyledLabel = styled(Box)(({ theme, ownerState }) => {
   const lightMode = theme.palette.mode === 'light';
 
   const filledVariant = ownerState.variant === 'filled';
-
   const outlinedVariant = ownerState.variant === 'outlined';
-
   const softVariant = ownerState.variant === 'soft';
 
   const defaultStyle = {
@@ -50,6 +47,24 @@ export const StyledLabel = styled(Box)(({ theme, ownerState }) => {
       ...(softVariant && {
         color: theme.palette[ownerState.color][lightMode ? 'dark' : 'light'],
         backgroundColor: alpha(theme.palette[ownerState.color].main, 0.16),
+      }),
+    }),
+    ...(ownerState.color === 'yellow' && { // Ajout de la couleur jaune personnalisée
+      // FILLED
+      ...(filledVariant && {
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.yellow.main,
+      }),
+      // OUTLINED
+      ...(outlinedVariant && {
+        backgroundColor: 'transparent',
+        color: theme.palette.yellow.main,
+        border: `2px solid ${theme.palette.yellow.main}`,
+      }),
+      // SOFT
+      ...(softVariant && {
+        color: theme.palette.yellow.main,
+        backgroundColor: alpha(theme.palette.yellow.main, 0.16),
       }),
     }),
   };

@@ -26,7 +26,7 @@ import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutoc
 import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
 import { GET_FINANCIERS } from '../../../../_shared/graphql/queries/FinancierQueries';
 import CustomFieldValues from '../../../../_shared/components/form-fields/costum-fields/CustomFieldValues';
-import { CAREER_ENTRY_TYPES, GENDERS } from '../../../../_shared/tools/constants';
+import { CAREER_ENTRY_TYPES, GENDERS, NOTIFICATION_PERIOD_UNITS } from '../../../../_shared/tools/constants';
 import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
 import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 
@@ -299,7 +299,9 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       documentRecords: [
         ...formik.values.documentRecords,
         { document: undefined, name: '', beneficiaryDocumentType: null , startingDate: null, endingDate: null, 
-          description: '', isNotificationEnabled: false},
+          description: '', isNotificationEnabled: false,
+          notificationPeriodUnit: NOTIFICATION_PERIOD_UNITS.MONTH, notificationPeriodValue: 1
+        },
       ],
     });
   };
@@ -1816,18 +1818,59 @@ const [getEmployees, {
                                 <Close />
                               </IconButton>
                             </Item>
-                            <Item>
-                              <TheSwitch
-                                variant="outlined"
-                                label="Notifier ?"
-                                checked={item.isNotificationEnabled}
-                                value={item.isNotificationEnabled}
-                                onChange={(e) =>
-                                  formik.setFieldValue(`documentRecords.${index}.isNotificationEnabled`, e.target.checked)
-                                }
-                                disabled={loadingPost || loadingPut}
-                              />
-                            </Item>
+                            <Grid
+                              container
+                              spacing={{ xs: 2, md: 3 }}
+                              columns={{ xs: 4, sm: 8, md: 12 }}
+                              key={index}
+                            >
+                              <Grid item xs={12} sm={item.isNotificationEnabled ? 4 : 12} md={item.isNotificationEnabled ? 4 : 12} >
+                                  <TheSwitch
+                                    variant="outlined"
+                                    label="Notifier ?"
+                                    checked={item.isNotificationEnabled}
+                                    value={item.isNotificationEnabled}
+                                    onChange={(e) =>
+                                      formik.setFieldValue(`documentRecords.${index}.isNotificationEnabled`, e.target.checked)
+                                    }
+                                    disabled={loadingPost || loadingPut}
+                                  />
+                              </Grid>
+                              {item.isNotificationEnabled && <>
+                                <Grid item xs={12} sm={3} md={3} >
+                                    <TheTextField
+                                        variant="outlined"
+                                        type="number"
+                                        value={item.notificationPeriodValue}
+                                        onChange={(e) =>
+                                          formik.setFieldValue(`documentRecords.${index}.notificationPeriodValue`, e.target.value)
+                                        }
+                                        disabled={loadingPost || loadingPut}
+                                      />
+                                </Grid>
+                                <Grid item xs={12} sm={5} md={5} >
+                                    <FormControl fullWidth>
+                                      <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={item.notificationPeriodUnit}
+                                        onChange={(e) =>
+                                          formik.setFieldValue(`documentRecords.${index}.notificationPeriodUnit`, e.target.value)
+                                        }
+                                        disabled={loadingPost || loadingPut}
+                                      >
+                                        {NOTIFICATION_PERIOD_UNITS?.ALL?.map((type, index) => {
+                                          return (
+                                            <MenuItem key={index} value={type.value}>
+                                              {type.label}
+                                            </MenuItem>
+                                          );
+                                        })}
+                                      </Select>
+                                    </FormControl>
+                                </Grid></>
+                              }
+                            </Grid>
                           </Grid>
                         </Grid>
                       ))}

@@ -7,6 +7,7 @@ import {
   CRIT_AIR_CHOICES,
   LEVELS,
   MEASUREMENT_ACTIVITY_UNITS,
+  NOTIFICATION_PERIOD_UNITS,
   OWNERSHIP_TYPE_CHOICES,
   PRIORITIES,
   REPAIR_STATES,
@@ -136,6 +137,27 @@ export const getaccountTypeLabel = (type) => {
 export const getMeasurementActivityUnitLabel = (unit) => {
   return MEASUREMENT_ACTIVITY_UNITS.ALL.find((t) => t.value == unit)?.label;
 };
+export const getNotificationPeriodUnitLabel = (unit) => {
+  return NOTIFICATION_PERIOD_UNITS.ALL.find((t) => t.value == unit)?.label;
+};
+
+export const getExpirationStatusDetails = (status) => {
+  switch (status) {
+    case "EXPIRED":
+      return { color: "error", label: "Expiré" };
+    case "EXPIRING_SOON":
+      return { color: "yellow", label: "Expire prochainement" };
+    case "ALMOST_EXPIRED":
+      return { color: "warning", label: "Bientôt expiré" };
+    case "NOT_YET_EXPIRED":
+      return { color: "success", label: "Pas encore expiré" };
+    case "NO_EXPIRATION_DATE":
+      return { color: "default", label: "Pas de date d'expiration" };
+    default:
+      return { color: "default", label: "Inconnu" };
+  }
+};
+
 
 export const getVehicleStateLabel = (state) => {
   return VEHICLE_STATES.ALL.find((t) => t.value == state)?.label;

@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent, CardHeader, Typography, Grid, Link } from "@mui/material";
-import { getFormatDate } from "../../../../_shared/tools/functions";
+import { getFormatDate, getNotificationPeriodUnitLabel } from "../../../../_shared/tools/functions";
 
 const DocumentRecordList = ({ documentRecords = [] }) => {
   return (
@@ -43,7 +43,7 @@ const DocumentRecordList = ({ documentRecords = [] }) => {
                   </Typography>
                 )}
                 <Typography variant="body2">
-                  <strong>Notification activée :</strong> {record.isNotificationEnabled ? "Oui" : "Non"}
+                  <strong>Notification :</strong> {record.isNotificationEnabled ? `Oui avant ${record.notificationPeriodValue} ${getNotificationPeriodUnitLabel(record.notificationPeriodUnit)}` : "Non"}
                 </Typography>
                 <Typography variant="body2">
                   <strong>Description :</strong> {record.description || "Aucune description"}

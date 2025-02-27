@@ -45,6 +45,7 @@ export const BENEFICIARY_DOCUMENT_BASIC_INFOS = gql`
     ...BeneficiaryMiniInfosFragment
     documentRecords{
       ... DocumentRecordBasicDetailsFragment
+      expirationStatus
     }
   }
   ${BENEFICIARY_MINI_INFOS}

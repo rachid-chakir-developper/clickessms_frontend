@@ -15,6 +15,8 @@ export const DOCUMENT_RECORD_MINI_INFOS = gql`
         endingDate
         description
         isNotificationEnabled
+        notificationPeriodUnit
+        notificationPeriodValue
         isActive
     }
 `;

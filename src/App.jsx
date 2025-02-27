@@ -34,6 +34,9 @@ function App() {
         main: '#003539', // Couleur secondaire
         contrastText: '#333333',
       },
+      yellow: {
+        main: '#FFda2a', // Jaune pur
+      },
     },
   });
 

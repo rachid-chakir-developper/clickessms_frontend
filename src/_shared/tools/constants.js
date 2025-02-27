@@ -198,6 +198,19 @@ export const MEASUREMENT_ACTIVITY_UNITS = {
   ],
 };
 
+export const NOTIFICATION_PERIOD_UNITS = {
+  HOUR: "HOUR",
+  DAY: "DAY",
+  WEEK: "WEEK",
+  MONTH: "MONTH",
+  ALL: [
+    { value: "HOUR", label: "Heure" },
+    { value: "DAY", label: "Jour" },
+    { value: "WEEK", label: "Semaine" },
+    { value: "MONTH", label: "Mois" },
+  ],
+};
+
 export const VEHICLE_STATES = {
   GOOD: "GOOD",
   TO_REVIEW: "TO_REVIEW",

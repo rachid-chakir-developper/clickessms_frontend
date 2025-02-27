@@ -64,6 +64,7 @@ AppLabel.propTypes = {
     'secondary',
     'info',
     'success',
+    'yellow',
     'warning',
     'error',
   ]),

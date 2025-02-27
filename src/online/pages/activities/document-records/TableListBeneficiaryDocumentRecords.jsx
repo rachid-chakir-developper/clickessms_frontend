@@ -39,6 +39,7 @@ import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupW
 import { GET_CUSTOM_FIELDS } from '../../../../_shared/graphql/queries/CustomFieldQueries';
 import { useQuery } from '@apollo/client';
 import { GET_DATAS_BENEFICIARY, GET_DATAS_BENEFICIARY_DCOUMENT } from '../../../../_shared/graphql/queries/DataQueries';
+import DocumentRecordStatusLabel from './DocumentRecordStatusLabel';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -352,7 +353,7 @@ export default function TableListBeneficiaryDocumentRecords({
           label: type.name,
           render: ({ documentRecords }) => {
             const documentRecord = documentRecords.find((documentRecord) => documentRecord?.beneficiaryDocumentType?.id === type?.id);
-            return documentRecord ? <AppLabel color="success">Oui</AppLabel> : ""
+            return documentRecord ? <DocumentRecordStatusLabel documentRecord={documentRecord} /> : ""
           },
         }));
 
