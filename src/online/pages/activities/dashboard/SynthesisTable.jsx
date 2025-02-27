@@ -12,6 +12,7 @@ import {
   tableCellClasses,
 } from "@mui/material";
 import EstablishmentChip from "../../companies/establishments/EstablishmentChip";
+import InputSendDashboardComment from "./comments/InputDashboardComment";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -55,6 +56,7 @@ const SynthesisTable = ({activitySynthesis}) => {
                             <React.Fragment key={index}>
                                 {[
                                     "Dispo",
+                                    "Réel",
                                     "Reçu",
                                     "AF",
                                     "AD",
@@ -84,13 +86,25 @@ const SynthesisTable = ({activitySynthesis}) => {
                                     <React.Fragment key={indexA}>
                                         {[
                                             "countAvailablePlaces",
+                                            "dashboardComment",
                                             "countReceived",
                                             "countApproved",
                                             "countRejected",
                                             "countCanceled",
                                             ].map((item, index) => (
                                                 <TableCell key={index} align="center">
-                                                    {activitySynthesisMonthItem[item]}
+                                                    {item!=='dashboardComment' && <>{activitySynthesisMonthItem[item]}</>}
+                                                    {item==='dashboardComment' && 
+                                                        <InputSendDashboardComment
+                                                            inputType="number"
+                                                            multiline={false}
+                                                            establishment={activitySynthesisEstablishment?.establishment?.id}
+                                                            commentType="SYNTHESIS_ALL"
+                                                            year={activitySynthesis?.year}
+                                                            month={indexMonth+1}
+                                                            onDashboardCommentSent={()=> console.log()}
+                                                            defaultDashboardComment={activitySynthesisMonthItem[item]} />
+                                                    }
                                                 </TableCell>
                                             ))}
                                         <TableCell align="center" sx={{backgroundColor: "#e0e0e0"}}></TableCell>

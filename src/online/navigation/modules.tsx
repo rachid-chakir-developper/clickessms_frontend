@@ -57,6 +57,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import ContactsIcon from '@mui/icons-material/Contacts';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import FolderSharedIcon from '@mui/icons-material/FolderShared';
 import CreditCardOffIcon from '@mui/icons-material/CreditCardOff';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import EditNoteIcon from '@mui/icons-material/EditNote';
@@ -239,6 +240,17 @@ export const modules: Module[] = [
         name: 'Demandes d’admissions',
         path: '/online/ressources-humaines/admissions-beneficiaires',
         icon: <AssignmentIndIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageActivity',
+          }).authorized;
+        },
+      },
+      {
+        id: 'beneficiary-documents',
+        name: 'Documents',
+        path: '/online/activites/documents-beneficiaires',
+        icon: <FolderSharedIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageActivity',

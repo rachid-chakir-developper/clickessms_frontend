@@ -7,7 +7,7 @@ import { FINANCIER_BASIC_INFOS } from './FinancierFragment';
 import { CUSTOM_FIELD_VALUE_DETAILS } from './CustomFieldFragment';
 import { ADDRESS_BOOK_ENTRY_DETAILS } from './AddressBookEntryFragment';
 import { CAREER_ENTRY_DETAILS } from './CareerEntryFragment';
-import { DOCUMENT_RECORD_DETAILS } from './DocumentRecordFragment';
+import { DOCUMENT_RECORD_BASIC_DETAILS } from './DocumentRecordFragment';
 
 export const BENEFICIARY_PHONE_INFOS = gql`
   fragment BeneficiaryPhoneInfosFragment on BeneficiaryType {
@@ -37,6 +37,18 @@ export const BENEFICIARY_MINI_INFOS = gql`
     coverImage
     isActive
   }
+`;
+
+
+export const BENEFICIARY_DOCUMENT_BASIC_INFOS = gql`
+  fragment BeneficiaryDocumentBasicInfosFragment on BeneficiaryType {
+    ...BeneficiaryMiniInfosFragment
+    documentRecords{
+      ... DocumentRecordBasicDetailsFragment
+    }
+  }
+  ${BENEFICIARY_MINI_INFOS}
+  ${DOCUMENT_RECORD_BASIC_DETAILS}
 `;
 
 export const BENEFICIARY_STATUS_ENTRY_DETAILS = gql`
@@ -166,7 +178,7 @@ export const BENEFICIARY_DETAILS = gql`
       ... CareerEntryDetailsFragment
     }
     documentRecords{
-      ... DocumentRecordDetailsFragment
+      ... DocumentRecordBasicDetailsFragment
     }
   }
   ${BENEFICIARY_BASIC_INFOS}
@@ -174,7 +186,7 @@ export const BENEFICIARY_DETAILS = gql`
   ${BENEFICIARY_ENDOWMENT_ENTRY_DETAILS}
   ${ADDRESS_BOOK_ENTRY_DETAILS}
   ${CAREER_ENTRY_DETAILS}
-  ${DOCUMENT_RECORD_DETAILS}
+  ${DOCUMENT_RECORD_BASIC_DETAILS}
 `;
 export const BENEFICIARY_RECAP_DETAILS = gql`
   fragment BeneficiaryRecapDetailsFragment on BeneficiaryType {
@@ -210,7 +222,7 @@ export const BENEFICIARY_RECAP_DETAILS = gql`
       ... CareerEntryDetailsFragment
     }
     documentRecords{
-      ... DocumentRecordDetailsFragment
+      ... DocumentRecordBasicDetailsFragment
     }
     balanceDetails
     balance
@@ -224,6 +236,6 @@ export const BENEFICIARY_RECAP_DETAILS = gql`
   ${BENEFICIARY_ENDOWMENT_ENTRY_DETAILS}
   ${ADDRESS_BOOK_ENTRY_DETAILS}
   ${CAREER_ENTRY_DETAILS}
-  ${DOCUMENT_RECORD_DETAILS}
+  ${DOCUMENT_RECORD_BASIC_DETAILS}
 `;
 

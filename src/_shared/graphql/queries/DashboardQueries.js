@@ -5,6 +5,7 @@ import { TASK_ACTION_BASIC_INFOS } from '../fragments/TaskActionFragment';
 import { UNDESIRABLE_EVENT_BASIC_INFOS } from '../fragments/UndesirableEventFragment';
 import { BENEFICIARY_ENTRY_DETAILS, BENEFICIARY_MINI_INFOS } from '../fragments/BeneficiaryFragment';
 import { BENEFICIARY_ADMISSION_MINI_INFOS } from '../fragments/BeneficiaryAdmissionFragment';
+import { DASHBOARD_COMMENT_BASIC_INFOS } from '../fragments/DashboardCommentFragment';
 
 export const GET_DASHBOARD = gql`
   query {
@@ -241,6 +242,12 @@ export const GET_DASHBOARD_ACTIVITY_SYNTHESIS = gql`
             countCanceled
             countOccupiedPlaces
             countAvailablePlaces
+            dashboardComment{
+              ...DashboardCommentBasicInfosFragment
+            }
+            dashboardComments{
+              ...DashboardCommentBasicInfosFragment
+            }
             beneficiaryEntries{
               beneficiary{
                 ...BeneficiaryMiniInfosFragment
@@ -265,6 +272,7 @@ export const GET_DASHBOARD_ACTIVITY_SYNTHESIS = gql`
       }
     }
   }
+  ${DASHBOARD_COMMENT_BASIC_INFOS}
   ${BENEFICIARY_MINI_INFOS}
   ${BENEFICIARY_ENTRY_DETAILS}
   ${BENEFICIARY_ADMISSION_MINI_INFOS}

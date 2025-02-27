@@ -2,12 +2,12 @@
 
 import { gql } from '@apollo/client';
 
-export const DOCUMENT_RECORD_BASIC_INFOS = gql`
-    fragment DocumentRecordBasicInfosFragment on DocumentRecordType {
+export const DOCUMENT_RECORD_MINI_INFOS = gql`
+    fragment DocumentRecordMiniInfosFragment on DocumentRecordType {
         id
         name
         document
-        documentType{
+        beneficiaryDocumentType{
             id
             name
         }
@@ -19,11 +19,37 @@ export const DOCUMENT_RECORD_BASIC_INFOS = gql`
     }
 `;
 
-export const DOCUMENT_RECORD_DETAILS = gql`
-    fragment DocumentRecordDetailsFragment on DocumentRecordType {
+export const DOCUMENT_RECORD_BASIC_INFOS = gql`
+    fragment DocumentRecordBasicInfosFragment on DocumentRecordType {
+        ...DocumentRecordMiniInfosFragment
+    }
+    ${DOCUMENT_RECORD_MINI_INFOS}
+`;
+
+export const DOCUMENT_RECORD_BASIC_DETAILS = gql`
+    fragment DocumentRecordBasicDetailsFragment on DocumentRecordType {
         ...DocumentRecordBasicInfosFragment
     }
     ${DOCUMENT_RECORD_BASIC_INFOS}
+`;
+
+export const DOCUMENT_RECORD_DETAILS = gql`
+    fragment DocumentRecordDetailsFragment on DocumentRecordType {
+        ...DocumentRecordBasicDetailsFragment
+        beneficiary{
+            id
+            preferredName
+            firstName
+            lastName
+            email
+            mobile
+            fix
+            photo
+            coverImage
+            isActive
+        }
+    }
+    ${DOCUMENT_RECORD_BASIC_DETAILS}
 `;
 
 export const DOCUMENT_RECORD_RECAP_DETAILS = gql`

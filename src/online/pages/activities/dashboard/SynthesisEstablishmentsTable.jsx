@@ -18,6 +18,7 @@ import EstablishmentChip from "../../companies/establishments/EstablishmentChip"
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { BENEFICIARY_ADMISSION_STATUS_CHOICES } from "../../../../_shared/tools/constants";
 import { getBeneficiaryAdmissionStatusLabel, getFormatDate } from "../../../../_shared/tools/functions";
+import InputSendDashboardComment from "./comments/InputDashboardComment";
 
 const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) => {
     const {activitySynthesisMonth=[]} = activitySynthesisEstablishment
@@ -89,8 +90,37 @@ const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) =>
                             )}
                             {activitySynthesisMonthItem?.countAvailablePlaces > 0 && <TableRow>
                                 <TableCell style={{ color: "red"}}>
-                                    {activitySynthesisMonthItem?.countAvailablePlaces}{" "}
-                                    {activitySynthesisMonthItem?.countAvailablePlaces === 1 ? "place disponible" : "places disponibles"}
+                                    {activitySynthesisMonthItem?.dashboardComment?.text 
+                                        ? `${activitySynthesisMonthItem.dashboardComment.text} ${
+                                            Number(activitySynthesisMonthItem.countAvailablePlaces) === 1 
+                                                ? "place disponible" 
+                                                : "places disponibles"
+                                        }`
+                                        : `${activitySynthesisMonthItem.countAvailablePlaces} ${
+                                            activitySynthesisMonthItem.countAvailablePlaces === 1 
+                                                ? "place disponible" 
+                                                : "places disponibles"
+                                        }`
+                                    }
+                                    {activitySynthesisMonthItem?.dashboardComments?.map((dashboardComment, index) =>
+                                        <InputSendDashboardComment
+                                            key={index}
+                                            establishment={activitySynthesisEstablishment?.establishment?.id}
+                                            commentType="SYNTHESIS"
+                                            year={activitySynthesisMonthItem?.year}
+                                            month={indexM+1}
+                                            onDashboardCommentSent={()=> console.log()}
+                                            defaultDashboardComment={dashboardComment}
+                                        />
+                                    )}
+                                    {(!activitySynthesisMonthItem?.dashboardComments || activitySynthesisMonthItem?.dashboardComments?.length < 1) && <InputSendDashboardComment 
+                                        establishment={activitySynthesisEstablishment?.establishment?.id}
+                                        commentType="SYNTHESIS"
+                                        year={activitySynthesisMonthItem?.year}
+                                        month={indexM+1}
+                                        onDashboardCommentSent={()=> console.log()}
+                                        defaultDashboardComment={null}
+                                    />}
                                 </TableCell>
                             </TableRow>}
                         </TableBody>

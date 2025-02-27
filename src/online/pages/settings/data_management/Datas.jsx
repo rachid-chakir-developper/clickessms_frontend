@@ -53,6 +53,7 @@ const modulesToManage = [
     datas: [
       { name: "Status des personnes accompagnées", description: '', type: 'BeneficiaryStatus' },
       { name: "Motif de l'absence", description: '', type: 'AbsenceReason' },
+      { name: 'Type de document personne accompagnée', description: '', type: 'BeneficiaryDocumentType' },
     ],
   },
   {
@@ -82,7 +83,7 @@ const modulesToManage = [
       { name: 'Type de document d’admission ', description: '', type: 'AdmissionDocumentType' },
       { name: 'Type de la réunion', description: '', type: 'TypeMeeting' },
       { name: 'Motif de la réunion', description: '', type: 'MeetingReason' },
-      { name: 'Type de document', description: '', type: 'DocumentType' },
+      { name: 'Type de trame document', description: '', type: 'DocumentType' },
     ],
   },
   {

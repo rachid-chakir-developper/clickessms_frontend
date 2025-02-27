@@ -14,8 +14,8 @@ const DocumentRecordList = ({ documentRecords = [] }) => {
           <Grid item xs={12} sm={6} md={4} key={record.id}>
             <Card variant="outlined">
               <CardHeader
-                title={record.name || "Document sans nom"}
-                subheader={record.documentType?.name || "Type inconnu"}
+                title={record.beneficiaryDocumentType?.name || "Type inconnu"}
+                // subheader={record.beneficiaryDocumentType?.name || "Type inconnu"}
                 titleTypographyProps={{
                   sx: { fontWeight: "bold" },
                 }}

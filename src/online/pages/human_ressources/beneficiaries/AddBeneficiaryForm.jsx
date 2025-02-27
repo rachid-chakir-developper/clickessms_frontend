@@ -298,7 +298,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
       ...formik.values,
       documentRecords: [
         ...formik.values.documentRecords,
-        { document: undefined, name: '', documentType: null , startingDate: dayjs(new Date()), endingDate: null, 
+        { document: undefined, name: '', beneficiaryDocumentType: null , startingDate: null, endingDate: null, 
           description: '', isNotificationEnabled: false},
       ],
     });
@@ -499,8 +499,8 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
           let { __typename, ...itemCopy } = item;
           itemCopy.startingDate = itemCopy.startingDate ? dayjs(itemCopy.startingDate) : null
           itemCopy.endingDate = itemCopy.endingDate ? dayjs(itemCopy.endingDate) : null
-          itemCopy.documentType = itemCopy.documentType
-          ? Number(itemCopy.documentType.id)
+          itemCopy.beneficiaryDocumentType = itemCopy.beneficiaryDocumentType
+          ? Number(itemCopy.beneficiaryDocumentType.id)
           : null;
           items.push(itemCopy);
         });
@@ -1732,7 +1732,7 @@ const [getEmployees, {
                             </Item>
                           </Grid>
                           <Grid item xs={12} sm={6} md={3} >
-                            <Item>
+                            {/* <Item>
                               <TheTextField
                                 variant="outlined"
                                 label="Nom"
@@ -1742,7 +1742,7 @@ const [getEmployees, {
                                 }
                                 disabled={loadingPost || loadingPut}
                               />
-                            </Item>
+                            </Item> */}
                             <Item>
                               <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">
@@ -1752,15 +1752,15 @@ const [getEmployees, {
                                   labelId="demo-simple-select-label"
                                   id="demo-simple-select"
                                   label="Type"
-                                  value={item.documentType}
+                                  value={item.beneficiaryDocumentType}
                                   onChange={(e) =>
-                                    formik.setFieldValue(`documentRecords.${index}.documentType`, e.target.value)
+                                    formik.setFieldValue(`documentRecords.${index}.beneficiaryDocumentType`, e.target.value)
                                   }
                                 >
                                   <MenuItem value={null}>
                                     <em>Choisissez un type</em>
                                   </MenuItem>
-                                  {dataData?.documentTypes?.map((data, index) => {
+                                  {dataData?.beneficiaryDocumentTypes?.map((data, index) => {
                                     return (
                                       <MenuItem key={index} value={data.id}>
                                         {data.name}
@@ -1891,7 +1891,7 @@ const [getEmployees, {
                   className="no_style"
                 >
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>
-                    Annuler
+                    Terminer
                   </Button>
                 </Link>
                 <Button

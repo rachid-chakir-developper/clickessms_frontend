@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 import {
   BENEFICIARY_BASIC_INFOS,
   BENEFICIARY_DETAILS,
+  BENEFICIARY_DOCUMENT_BASIC_INFOS,
   BENEFICIARY_RECAP_DETAILS,
 } from '../fragments/BeneficiaryFragment';
 
@@ -34,6 +35,28 @@ export const GET_BENEFICIARIES = gql`
     }
   }
   ${BENEFICIARY_BASIC_INFOS}
+`;
+
+export const GET_BENEFICIARY_DOCUMENT_RECORDS = gql`
+  query GetBeneficiaries(
+    $beneficiaryFilter: BeneficiaryFilterInput
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    beneficiaries(
+      beneficiaryFilter: $beneficiaryFilter
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
+      totalCount
+      nodes {
+        ...BeneficiaryDocumentBasicInfosFragment
+      }
+    }
+  }
+  ${BENEFICIARY_DOCUMENT_BASIC_INFOS}
 `;
 
 export const GET_BENEFICIARY_RECAP = gql`
