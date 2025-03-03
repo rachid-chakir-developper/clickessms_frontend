@@ -243,13 +243,14 @@ export default function TableListUsers({
   rows,
   onDeleteUser,
   onUpdateUserState,
+  paginator,
 }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
   React.useEffect(() => {
     console.log(loading, rows);

@@ -212,6 +212,7 @@ export default function ListUsers() {
             loading={loadingUsers}
             rows={usersData?.users?.nodes || []}
             onDeleteUser={onDeleteUser}
+            paginator={paginator}
           />
         </Grid>
         <Grid item xs={12}>

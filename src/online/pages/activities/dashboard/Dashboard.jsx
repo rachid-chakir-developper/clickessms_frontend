@@ -4,7 +4,7 @@ import { useLazyQuery, useQuery } from '@apollo/client';
 import { FileDownload, PictureAsPdf, ViewList, ViewQuilt } from '@mui/icons-material';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import DashboardFilter from './DashboardFilter';
-import { GET_DASHBOARD_ACTIVITY_MONTH, GET_DASHBOARD_ACTIVITY_SYNTHESIS, GET_DASHBOARD_ACTIVITY_TRACKING_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/DashboardQueries';
+import { GET_DASHBOARD_ACTIVITY_BENEFICIARY_ESTABLISHMENTS, GET_DASHBOARD_ACTIVITY_MONTH, GET_DASHBOARD_ACTIVITY_SYNTHESIS, GET_DASHBOARD_ACTIVITY_TRACKING_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/DashboardQueries';
 import DashboardGraph from './DashboardGraph';
 import DashboardTable from './DashboardTable';
 import SynthesisTable from './SynthesisTable';
@@ -12,6 +12,7 @@ import ActivityTable from './ActivityTable';
 import SynthesisEstablishmentsTable from './SynthesisEstablishmentsTable';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import DashboardBeneficiaryTable from './DashboardBeneficiaryTable';
 
 export default function Dashboard() {
   const componentRef = React.useRef();
@@ -30,6 +31,12 @@ export default function Dashboard() {
     error: dashboardActivityTrackingEstablishmentsError,
   }] = useLazyQuery(GET_DASHBOARD_ACTIVITY_TRACKING_ESTABLISHMENTS, { variables:{dashboardActivityFilter}});
 
+  const [getDashboardActivityBeneficiaryEstablishments, {
+    loading: loadingDashboardActivityBeneficiaryEstablishments,
+    data: dashboardActivityBeneficiaryEstablishmentsData,
+    error: dashboardActivityBeneficiaryEstablishmentsError,
+  }] = useLazyQuery(GET_DASHBOARD_ACTIVITY_BENEFICIARY_ESTABLISHMENTS, { variables:{dashboardActivityFilter}});
+  
   const [getDashboardActivitySynthesis, {
     loading: loadingDashboardActivitySynthesis,
     data: dashboardActivitySynthesisData,
@@ -56,6 +63,9 @@ export default function Dashboard() {
         break;
       case 'table':
         getDashboardActivityTrackingEstablishments()
+        break;
+      case 'beneficiaryTable':
+        getDashboardActivityBeneficiaryEstablishments()
         break;
       case 'synthesis':
         getDashboardActivitySynthesis()
@@ -213,6 +223,11 @@ export default function Dashboard() {
                       <ViewList />
                     </ToggleButton>
                   </Tooltip>
+                  <Tooltip title="Les personnes accompagnées" >
+                    <ToggleButton value="beneficiaryTable" aria-label="list">
+                      <ViewList />
+                    </ToggleButton>
+                  </Tooltip>
                   <Tooltip title="La synthese" >
                     <ToggleButton value="synthesis" aria-label="list">
                       <ViewList />
@@ -237,6 +252,7 @@ export default function Dashboard() {
           {(!loadingDashboardActivityTrackingEstablishments && !loadingDashboardActivitySynthesis & !loadingDashboardActivityMonth)  && (<Box ref={componentRef}>
           {view==='graph' && <DashboardGraph activityTrackingEstablishments={dashboardActivityTrackingEstablishmentsData?.dashboardActivity?.activityTrackingEstablishments}/>}
           {view==='table' && <DashboardTable activityTrackingEstablishments={dashboardActivityTrackingEstablishmentsData?.dashboardActivity?.activityTrackingEstablishments}/>}
+          {view==='beneficiaryTable' && <DashboardBeneficiaryTable activityBeneficiaryEstablishments={dashboardActivityBeneficiaryEstablishmentsData?.dashboardActivity?.activityBeneficiaryEstablishments}/>}
           {view==='synthesis' && <SynthesisTable activitySynthesis={dashboardActivitySynthesisData?.dashboardActivity?.activitySynthesis}/>}
           {view==='synthesisEstablishment' && <SynthesisEstablishmentsTable activitySynthesis={dashboardActivitySynthesisData?.dashboardActivity?.activitySynthesis}/>}
           {view==='activity' && <ActivityTable activityMonth={dashboardActivityMonthData?.dashboardActivity?.activityMonth}/>}

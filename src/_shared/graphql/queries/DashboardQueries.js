@@ -311,3 +311,34 @@ export const GET_DASHBOARD_ACTIVITY_MONTH = gql`
   ${BENEFICIARY_MINI_INFOS}
   ${BENEFICIARY_ENTRY_DETAILS}
 `;
+
+
+export const GET_DASHBOARD_ACTIVITY_BENEFICIARY_ESTABLISHMENTS = gql`
+  query getDashboardActivity($dashboardActivityFilter: DashboardActivityFilterInput){
+    dashboardActivity(dashboardActivityFilter: $dashboardActivityFilter){
+      activityBeneficiaryEstablishments{
+        title
+        year
+        months
+        establishment{
+          id
+          name
+          logo
+        }
+        activityBeneficiaries{
+          year
+          beneficiary{
+            ...BeneficiaryMiniInfosFragment
+          }
+          activityBeneficiaryMonths{
+            month
+            isCurrentMonth
+            isFutureMonth
+            daysCount
+          }
+        }
+      }
+    }
+  }
+  ${BENEFICIARY_MINI_INFOS}
+`;
