@@ -33,6 +33,11 @@ export default function TheAutocomplete({
     else if (option?.logo) return option?.logo;
     else return null;
   };
+  const getLabel = (option) => {
+    if (option?.title) return option?.title;
+    if (option?.name) return option?.name;
+    return `${option?.firstName} ${option?.preferredName && option?.preferredName !== '' ? option?.preferredName : option?.lastName}`;
+  };
   return (
     <Autocomplete
       size={size}
@@ -45,11 +50,7 @@ export default function TheAutocomplete({
       limitTags={limitTags}
       options={options}
       disableCloseOnSelect={multiple}
-      getOptionLabel={(option) =>
-        option?.name
-          ? `${option?.name}`
-          : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`
-      }
+      getOptionLabel={getLabel}
       filterSelectedOptions
       isOptionEqualToValue={(option, value) => option.id === value.id}
       value={value}
@@ -69,16 +70,10 @@ export default function TheAutocomplete({
               {...props}
             >
               <Avatar
-                alt={
-                  option?.name
-                    ? `${option?.name}`
-                    : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`
-                }
+                alt={getLabel(option)}
                 src={getPhoto(option)}
               />
-              {option?.name
-                ? `${option?.name}`
-                : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`}
+              {getLabel(option)}
             </Box>
           </Box>
         ) : (
@@ -88,16 +83,10 @@ export default function TheAutocomplete({
             {...props}
           >
             <Avatar
-              alt={
-                option?.name
-                  ? `${option?.name}`
-                  : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`
-              }
+              alt={getLabel(option)}
               src={getPhoto(option)}
             />
-            {option?.name
-              ? `${option?.name}`
-              : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`}
+            {getLabel(option)}
           </Box>
         )
       }
@@ -107,19 +96,11 @@ export default function TheAutocomplete({
             key={index}
             avatar={
               <Avatar
-                alt={
-                  option?.name
-                    ? `${option?.name}`
-                    : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`
-                }
+                alt={getLabel(option)}
                 src={getPhoto(option)}
               />
             }
-            label={
-              option?.name
-                ? `${option?.name}`
-                : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`
-            }
+            label={getLabel(option)}
             {...getTagProps({ index })}
           />
         ))

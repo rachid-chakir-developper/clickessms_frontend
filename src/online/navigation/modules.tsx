@@ -33,6 +33,7 @@ import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import GavelIcon from '@mui/icons-material/Gavel';
 import AirportShuttleIcon from '@mui/icons-material/AirportShuttle';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
+import WorkIcon from '@mui/icons-material/Work';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
 import HandshakeIcon from '@mui/icons-material/Handshake';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
@@ -56,6 +57,7 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import CommentIcon from '@mui/icons-material/Comment';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import ContactsIcon from '@mui/icons-material/Contacts';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import FolderSharedIcon from '@mui/icons-material/FolderShared';
 import CreditCardOffIcon from '@mui/icons-material/CreditCardOff';
@@ -390,11 +392,23 @@ export const modules: Module[] = [
         disabled: true,
       },
       {
-        id: 'candidates-pool',
-        name: 'Vivier candidats',
-        path: '/online/ressources-humaines/vivier-candidats',
-        icon: <ContactsIcon />,
-        disabled: true,
+        id: 'recruitment',
+        name: 'Recrutement',
+        icon: <WorkIcon />,
+        pages: [
+          {
+            id: 'job_position',
+            name: ' Fiche besoin ',
+            path: '/online/ressources-humaines/recrutement/fiches-besoin',
+            icon: <PersonSearchIcon  />,
+          },
+          {
+            id: 'candidates-pool',
+            name: 'Vivier candidats',
+            path: '/online/ressources-humaines/recrutement/vivier-candidats',
+            icon: <ContactsIcon />,
+          },
+        ],
       },
       {
         id: 'collective-bargaining-agreement',

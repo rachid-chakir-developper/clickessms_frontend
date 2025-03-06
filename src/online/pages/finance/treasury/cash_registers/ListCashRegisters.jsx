@@ -126,7 +126,7 @@ export default function ListCashRegisters() {
             className="no_style"
           >
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter un document
+              Ajouter une caisse
             </Button>
           </Link>
         </Box>

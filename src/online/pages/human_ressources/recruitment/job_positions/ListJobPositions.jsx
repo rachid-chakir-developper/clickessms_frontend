@@ -4,45 +4,45 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
 import { useAuthorizationSystem } from '../../../../../_shared/context/AuthorizationSystemProvider';
 import {
-  DELETE_BANK_CARD,
-} from '../../../../../_shared/graphql/mutations/BankCardMutations';
-import { GET_BANK_CARDS } from '../../../../../_shared/graphql/queries/BankCardQueries';
-import BankCardFilter from './BankCardFilter';
+  DELETE_JOB_POSITION,
+} from '../../../../../_shared/graphql/mutations/JobPositionMutations';
+import { GET_JOB_POSITIONS } from '../../../../../_shared/graphql/queries/JobPositionQueries';
+import JobPositionFilter from './JobPositionFilter';
 import PaginationControlled from '../../../../../_shared/components/helpers/PaginationControlled';
-import TableListBankCards from './TableListBankCards';
+import TableListJobPositions from './TableListJobPositions';
 import { Link } from 'react-router-dom';
 import { Box, Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 
-export default function ListBankCards() {
+export default function ListJobPositions() {
   const authorizationSystem = useAuthorizationSystem();
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
-  const [bankCardFilter, setBankCardFilter] = React.useState(null);
+  const [jobPositionFilter, setJobPositionFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
-    setBankCardFilter(newFilter);
+    setJobPositionFilter(newFilter);
   };
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const [
-    getBankCards,
+    getJobPositions,
     {
-      loading: loadingBankCards,
-      data: bankCardsData,
-      error: bankCardsError,
-      fetchMore: fetchMoreBankCards,
+      loading: loadingJobPositions,
+      data: jobPositionsData,
+      error: jobPositionsError,
+      fetchMore: fetchMoreJobPositions,
     },
-  ] = useLazyQuery(GET_BANK_CARDS, {
-    variables: { bankCardFilter, page: paginator.page, limit: paginator.limit },
+  ] = useLazyQuery(GET_JOB_POSITIONS, {
+    variables: { jobPositionFilter, page: paginator.page, limit: paginator.limit },
   });
 
   React.useEffect(() => {
-    getBankCards();
-  }, [bankCardFilter, paginator]);
+    getJobPositions();
+  }, [jobPositionFilter, paginator]);
 
-  const [deleteBankCard, { loading: loadingDelete }] = useMutation(DELETE_BANK_CARD, {
+  const [deleteJobPosition, { loading: loadingDelete }] = useMutation(DELETE_JOB_POSITION, {
     onCompleted: (datas) => {
-      if (datas.deleteBankCard.deleted) {
+      if (datas.deleteJobPosition.deleted) {
         setNotifyAlert({
           isOpen: true,
           message: 'Supprimé avec succès',
@@ -51,28 +51,28 @@ export default function ListBankCards() {
       } else {
         setNotifyAlert({
           isOpen: true,
-          message: `Non supprimé ! ${datas.deleteBankCard.message}.`,
+          message: `Non supprimé ! ${datas.deleteJobPosition.message}.`,
           type: 'error',
         });
       }
     },
-    update(cache, { data: { deleteBankCard } }) {
-      console.log('Updating cache after deletion:', deleteBankCard);
+    update(cache, { data: { deleteJobPosition } }) {
+      console.log('Updating cache after deletion:', deleteJobPosition);
 
-      const deletedBankCardId = deleteBankCard.id;
+      const deletedJobPositionId = deleteJobPosition.id;
 
       cache.modify({
         fields: {
-          bankCards(existingBankCards = { totalCount: 0, nodes: [] }, { readField }) {
-            const updatedBankCards = existingBankCards.nodes.filter(
-              (bankCard) => readField('id', bankCard) !== deletedBankCardId,
+          jobPositions(existingJobPositions = { totalCount: 0, nodes: [] }, { readField }) {
+            const updatedJobPositions = existingJobPositions.nodes.filter(
+              (jobPosition) => readField('id', jobPosition) !== deletedJobPositionId,
             );
 
-            console.log('Updated bankCards:', updatedBankCards);
+            console.log('Updated jobPositions:', updatedJobPositions);
 
             return {
-              totalCount: existingBankCards.totalCount - 1,
-              nodes: updatedBankCards,
+              totalCount: existingJobPositions.totalCount - 1,
+              nodes: updatedJobPositions,
             };
           },
         },
@@ -88,14 +88,14 @@ export default function ListBankCards() {
     },
   });
 
-  const onDeleteBankCard = (id) => {
+  const onDeleteJobPosition = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment supprimer ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        deleteBankCard({ variables: { id: id } });
+        deleteJobPosition({ variables: { id: id } });
       },
     });
   };
@@ -106,28 +106,28 @@ export default function ListBankCards() {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
-          <Link to="/online/finance/tresorerie/cartes-bancaires/ajouter" className="no_style">
+          <Link to="/online/ressources-humaines/recrutement/fiches-besoin/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter une carte bancaire
+              Ajouter une fiche besoin
             </Button>
           </Link>
         </Box>
       </Grid>
       <Grid item xs={12}>
-        <BankCardFilter onFilterChange={handleFilterChange} />
+        <JobPositionFilter onFilterChange={handleFilterChange} />
       </Grid>
       <Grid item xs={12}>
-        <TableListBankCards
-          loading={loadingBankCards}
-          rows={bankCardsData?.bankCards?.nodes || []}
-          onDeleteBankCard={onDeleteBankCard}
-          onFilterChange={(newFilter) => handleFilterChange({ ...bankCardFilter, ...newFilter })}
+        <TableListJobPositions
+          loading={loadingJobPositions}
+          rows={jobPositionsData?.jobPositions?.nodes || []}
+          onDeleteJobPosition={onDeleteJobPosition}
+          onFilterChange={(newFilter) => handleFilterChange({ ...jobPositionFilter, ...newFilter })}
           paginator={paginator}
         />
       </Grid>
       <Grid item xs={12}>
         <PaginationControlled
-          totalItems={bankCardsData?.bankCards?.totalCount} // Nombre total d'éléments
+          totalItems={jobPositionsData?.jobPositions?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
           currentPage={paginator.page}
           onChange={(page) => setPaginator({ ...paginator, page })}

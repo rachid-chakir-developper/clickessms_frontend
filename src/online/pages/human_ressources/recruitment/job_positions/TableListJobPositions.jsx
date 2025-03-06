@@ -14,7 +14,6 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
@@ -23,25 +22,17 @@ import {
   Done,
   Edit,
   Folder,
-  KeyboardArrowDown,
-  KeyboardArrowUp,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, Collapse, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Stack, TablePagination } from '@mui/material';
-import AppLabel from '../../../../_shared/components/app/label/AppLabel';
+import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover} from '@mui/material';
+import AppLabel from '../../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
-import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
-import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
-import { render } from 'react-dom';
-import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
-import { getCritAirVignetteLabel, getFormatDate, getOwnershipTypeLabel, getPriorityLabel, truncateText } from '../../../../_shared/tools/functions';
-import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
-import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
-import CircularProgressWithLabel from '../../../../_shared/components/feedbacks/CircularProgressWithLabel';
-import TicketStatusLabelMenu from './TicketStatusLabelMenu';
-import TaskActionStatusLabelMenu from '../actions/TaskActionStatusLabelMenu';
+import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
+import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
+import TableExportButton from '../../../../_shared/components/data_tools/export/TableExportButton';
+import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
+import TableFilterButton from '../../../../_shared/components/table/TableFilterButton';
+import { formatCurrencyAmount, getContractTypeLabel, getFormatDate, truncateText } from '../../../../../_shared/tools/functions';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -102,84 +93,61 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
+      id: 'number',
+      property: 'number',
+      exportField: 'number',
+      numeric: false,
+      disablePadding: true,
+      label: 'Réference',
+    },
+    {
       id: 'title',
       property: 'title',
       exportField: 'title',
       numeric: false,
       disablePadding: true,
       isDefault: true,
-      label: 'Libellé',
+      label: 'Titre',
     },
     {
-        id: 'establishments',
-        property: 'establishments__name',
-        exportField: ['establishments__name'],
+      id: 'sector',
+      property: 'sector',
+      exportField: 'sector',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Secteur',
+    },
+    {
+        id: 'contractType',
+        property: 'contract_type',
+        exportField: 'contract_type',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Type du contrat',
+        render: ({contractType})=> getContractTypeLabel(contractType)
+    },
+    {
+      id: 'duration',
+      property: 'duration',
+      exportField: 'duration',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Durée',
+    },
+    {
+        id: 'establishment',
+        property: 'establishment__name',
+        exportField: ['establishment__name'],
         numeric: false,
         disablePadding: false,
         isDefault: true,
         disableClickDetail: true,
         sortDisabled: true,
-        label: 'Structure(s)',
-        render: ({establishments}) => establishments && establishments.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
-        {establishments?.map((establishment, index) => {
-          return (
-            <EstablishmentChip
-              key={index}
-              establishment={establishment}
-            />
-          );
-        })}
-      </Stack>
-    },
-    {
-        id: 'priority',
-        property: 'priority',
-        exportField: 'priority',
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        label: 'Priorité',
-        render: ({priority})=> getPriorityLabel(priority)
-    },
-    {
-        id: 'efcReports__title',
-        property: 'efc_reports__title',
-        exportField: 'efc_reports__title',
-        numeric: false,
-        disablePadding: false,
-        label: 'Intitulé CREX',
-        render: ({efcReports})=> efcReports?.length > 0 && efcReports[0]?.title
-    },
-    {
-        id: 'efcReports__efcDate',
-        property: 'efc_reports__efc_date',
-        exportField: 'efc_reports__efc_date',
-        numeric: false,
-        disablePadding: false,
-        label: 'Date CREX',
-        render: ({efcReports})=> efcReports?.length > 0 && getFormatDate(efcReports[0]?.efcDate)
-    },
-    {
-        id: 'efcReports__employees',
-        property: 'efc_reports__employees__first_name',
-        exportField: ['efc_reports__employees__first_name', 'efc_reports__employees__last_name'],
-        numeric: false,
-        disablePadding: false,
-        disableClickDetail: true,
-        sortDisabled: true,
-        label: 'CREX-Participant(s)',
-        render: ({efcReports}) => efcReports?.length > 0 && efcReports[0] && efcReports[0]?.employees.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
-            <ChipGroupWithPopover people={efcReports[0]?.employees} />
-      </Stack>
-    },
-    {
-        id: 'efcReports__declarationDate',
-        property: 'efc_reports__declaration_date',
-        exportField: 'efc_reports__declaration_date',
-        numeric: false,
-        disablePadding: false,
-        label: 'Date de déclaration aux autorités compétentes',
-        render: ({efcReports})=> efcReports?.length > 0 && getFormatDate(efcReports[0]?.declarationDate)
+        label: 'Structure',
+        render: ({establishment}) => establishment && <EstablishmentChip establishment={establishment}/>
     },
     {
         id: 'description',
@@ -187,38 +155,17 @@ const headCells = [
         exportField: 'description',
         numeric: false,
         disablePadding: false,
-        label: 'Analyse',
+        label: 'Description',
         render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
     },
     {
-        id: 'observation',
-        property: 'observation',
-        exportField: 'observation',
+        id: 'isActive',
+        property: 'is_active',
+        exportField: 'is_active',
         numeric: false,
-        disablePadding: false,
-        label: 'Observation',
-    },
-    {
-        id: 'status',
-        property: 'status',
-        exportField: 'status',
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        disableClickDetail: true,
-        label: 'Status',
-        render: (data)=> <TicketStatusLabelMenu ticket={data} />
-    },
-    {
-        id: 'completionPercentage',
-        property: 'completion_percentage',
-        exportField: 'completion_percentage',
-        numeric: false,
-        disablePadding: false,
-        disableClickDetail: true,
-        isDefault: true,
-        label: 'Progression',
-        render: ({completionPercentage})=> <CircularProgressWithLabel value={completionPercentage}/>
+        disablePadding: true,
+        label: 'État',
+        render: ({isActive})=> isActive ? <AppLabel color="success">Actif</AppLabel> : <AppLabel color="warning">Inactif</AppLabel>
     },
     {
         id: 'action',
@@ -322,12 +269,12 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-         Plan d’amélioration continue de la qualité et de la gestion des risques
+          Les fiches besoin
         </Typography>
       )}
       <TableExportButton 
-        entity={'Ticket'}
-        fileName={'Plan-action'}
+        entity={'JobPosition'}
+        fileName={'Dépenses'}
         fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
         titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
@@ -348,10 +295,10 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListTickets({
+export default function TableListJobPositions({
   loading,
   rows,
-  onDeleteTicket,
+  onDeleteJobPosition,
   onFilterChange,
   paginator,
 }) {
@@ -425,7 +372,6 @@ export default function TableListTickets({
 
   const [anchorElList, setAnchorElList] = React.useState([]);
   const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
-  const [anchorElRowList, setAnchorElRowList] = React.useState([]);
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }} >
@@ -458,7 +404,7 @@ export default function TableListTickets({
                 <StyledTableRow>
                   <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucun objectif trouvé.
+                      Aucune fiche besoin trouvée.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -488,132 +434,88 @@ export default function TableListTickets({
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
-                if (!anchorElRowList[index]) {
-                  anchorElRowList[index] = null;
-                }
-                
-                const handleOpenRow = (event) => {
-                  // Utilisez l'index de la ligne pour mettre à jour l'état d'ancrage correspondant
-                  if(!openRow){
-                    const newAnchorElRowList = [...anchorElRowList];
-                    newAnchorElRowList[index] = event.currentTarget;
-                    setAnchorElRowList(newAnchorElRowList);
-                  }else{
-                    handleCloseRow()
-                  }
-                };
-                
-                const handleCloseRow = () => {
-                  // Réinitialisez l'état d'ancrage de la ligne correspondante à null
-                  const newAnchorElRowList = [...anchorElRowList];
-                  newAnchorElRowList[index] = null;
-                  setAnchorElRowList(newAnchorElRowList);
-                };
-                
-                const openRow = Boolean(anchorElRowList[index]);
-
                 return (
-                  <React.Fragment key={row.id}>
-                    <StyledTableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      selected={isItemSelected}
-                      sx={{ cursor: 'pointer' }}
-                    >
+                  <StyledTableRow
+                    hover
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={row.id}
+                    selected={isItemSelected}
+                    sx={{ cursor: 'pointer' }}
+                  >
                     <StyledTableCell padding="checkbox">
-                      <Stack direction="row" alignItems="center" spacing={1}>
-                        <Checkbox
-                          onClick={(event) => handleClick(event, row.id)}
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
-                        />
-                        {row?.actions && row?.actions?.length > 0 && <Tooltip title={`${openRow ? 'Cacher' : 'Afficher'} les actions`}><IconButton
-                          aria-label="expand row"
-                          size="small"
-                          onClick={handleOpenRow}
-                        >
-                          {openRow ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-                        </IconButton></Tooltip>}
-                      </Stack>
+                      <Checkbox
+                        onClick={(event) => handleClick(event, row.id)}
+                        color="primary"
+                        checked={isItemSelected}
+                        inputProps={{
+                          'aria-labelledby': labelId,
+                        }}
+                      />
                     </StyledTableCell>
-                      {
-                        selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
-                          return <StyledTableCell
-                            component="th"
-                            id={labelId}
-                            scope="row"
-                            padding={column?.disablePadding ? "none" : "normal"}
-                            key={index}
-                            onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/qualites/plan-action/tickets/details/${row?.id}`)}}
-                          >
-                          {column?.render ? column?.render(row) : row[column?.id]}
-                          </StyledTableCell>
-                        })
-                      }
-                      <StyledTableCell align="right">
-                        <IconButton
-                          aria-describedby={id}
-                          onClick={handleOpenMenu}
+                    {
+                      selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
+                        return <StyledTableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding={column?.disablePadding ? "none" : "normal"}
+                          key={index}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/ressources-humaines/recrutement/fiches-besoin/details/${row?.id}`)}}
                         >
-                          <MoreVert />
-                        </IconButton>
-                        <Popover
-                          open={open}
-                          anchorEl={anchorElList[index]}
-                          onClose={handleCloseMenu}
-                          anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-                          transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
+                        {column?.render ? column?.render(row) : row[column?.id]}
+                        </StyledTableCell>
+                      })
+                    }
+                    <StyledTableCell align="right">
+                      <IconButton
+                        aria-describedby={id}
+                        onClick={handleOpenMenu}
+                      >
+                        <MoreVert />
+                      </IconButton>
+                      <Popover
+                        open={open}
+                        anchorEl={anchorElList[index]}
+                        onClose={handleCloseMenu}
+                        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                        transformOrigin={{
+                          vertical: 'top',
+                          horizontal: 'right',
+                        }}
+                      >
+                        <Link
+                          to={`/online/ressources-humaines/recrutement/fiches-besoin/details/${row?.id}`}
+                          className="no_style"
+                        >
+                          <MenuItem onClick={handleCloseMenu}>
+                            <Article sx={{ mr: 2 }} />
+                            Détails
+                          </MenuItem>
+                        </Link>
+                        <Link
+                          to={`/online/ressources-humaines/recrutement/fiches-besoin/modifier/${row?.id}`}
+                          className="no_style"
+                        >
+                          <MenuItem onClick={handleCloseMenu}>
+                            <Edit sx={{ mr: 2 }} />
+                            Modifier
+                          </MenuItem>
+                        </Link>
+                        <MenuItem
+                          onClick={() => {
+                            onDeleteJobPosition(row?.id);
+                            handleCloseMenu();
                           }}
+                          sx={{ color: 'error.main' }}
                         >
-                          <Link
-                            to={`/online/qualites/plan-action/tickets/details/${row?.id}`}
-                            className="no_style"
-                          >
-                            <MenuItem onClick={handleCloseMenu}>
-                              <Article sx={{ mr: 2 }} />
-                              Détails
-                            </MenuItem>
-                          </Link>
-                          <MenuItem
-                            onClick={() => {
-                              onOpenDialogListLibrary(row?.folder);
-                              handleCloseMenu();
-                            }}
-                          >
-                            <Folder sx={{ mr: 2 }} />
-                            Bibliothèque
-                          </MenuItem>
-                          <Link
-                            to={`/online/qualites/plan-action/tickets/modifier/${row?.id}`}
-                            className="no_style"
-                          >
-                            <MenuItem onClick={handleCloseMenu}>
-                              <Edit sx={{ mr: 2 }} />
-                              Modifier
-                            </MenuItem>
-                          </Link>
-                          <MenuItem
-                            onClick={() => {
-                              onDeleteTicket(row?.id);
-                              handleCloseMenu();
-                            }}
-                            sx={{ color: 'error.main' }}
-                          >
-                            <Delete sx={{ mr: 2 }} />
-                            Supprimer
-                          </MenuItem>
-                        </Popover>
-                      </StyledTableCell>
-                    </StyledTableRow>
-                    {row?.actions && row?.actions?.length > 0 && <CollapsibleRow rows={row?.actions} open={openRow}/>}
-                  </React.Fragment>
+                          <Delete sx={{ mr: 2 }} />
+                          Supprimer
+                        </MenuItem>
+                      </Popover>
+                    </StyledTableCell>
+                  </StyledTableRow>
                 );
               })}
               {emptyRows > 0 && (
@@ -630,51 +532,5 @@ export default function TableListTickets({
         </TableContainer>
       </Paper>
     </Box>
-  );
-}
-
-
-
-function CollapsibleRow({rows, open}) {
-  return (
-    <StyledTableRow>
-      <StyledTableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <Box sx={{ margin: 1 }}>
-            <Typography variant="h6" gutterBottom component="div">
-              Les actions
-            </Typography>
-            <Table size="small" aria-label="purchases">
-              <TableHead>
-                <StyledTableRow>
-                  <StyledTableCell>Description</StyledTableCell>
-                  <StyledTableCell>Échéance</StyledTableCell>
-                  <StyledTableCell>Responsables</StyledTableCell>
-                  <StyledTableCell>Statut</StyledTableCell>
-                </StyledTableRow>
-              </TableHead>
-              <TableBody>
-                {rows?.map((row, index) => (
-                  <StyledTableRow key={index}>
-                    <StyledTableCell component="th" scope="row">
-                      {row.description}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.dueDate)}`}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <ChipGroupWithPopover people={row?.employees} />
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <TaskActionStatusLabelMenu taskAction={row} />
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Box>
-        </Collapse>
-      </StyledTableCell>
-    </StyledTableRow>
   );
 }

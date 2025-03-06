@@ -149,7 +149,7 @@ const headCells = [
         disablePadding: false,
         label: 'Intitulé CREX',
         render: ({efcReports})=> efcReports?.length > 0 && efcReports[0]?.title
-    },,
+    },
     {
         id: 'efcReports__efcDate',
         property: 'efc_reports__efc_date',

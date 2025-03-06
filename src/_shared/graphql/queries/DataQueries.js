@@ -216,3 +216,12 @@ export const GET_DATAS_ENDOWMENT_PAYMENT = gql`
   ${DATA_BASIC_INFOS}
 `;
 
+export const GET_DATAS_JOB = gql`
+  query {
+    jobPlatforms: datas(typeData: "JobPlatform") {
+      ...DataBasicInfosFragment
+    }
+  }
+  ${DATA_BASIC_INFOS}
+`;
+

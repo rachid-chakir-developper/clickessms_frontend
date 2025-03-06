@@ -82,12 +82,6 @@ export const GET_SEARCH_NUMBERS = gql`
             ...EmployeePhoneInfosFragment
           }
         }
-        clients {
-          totalCount
-          nodes {
-            ...ClientPhoneInfosFragment
-          }
-        }
         suppliers {
           totalCount
           nodes {
@@ -122,7 +116,6 @@ export const GET_SEARCH_NUMBERS = gql`
     }
   }
   ${EMPLOYEE_PHONE_INFOS}
-  ${CLIENT_PHONE_INFOS}
   ${SUPPLIER_PHONE_INFOS}
   ${PARTNER_PHONE_INFOS}
   ${BENEFICIARY_PHONE_INFOS}

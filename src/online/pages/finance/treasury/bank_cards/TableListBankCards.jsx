@@ -190,7 +190,7 @@ const headCells = [
         disablePadding: false,
         label: 'Description',
         render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
-    },,
+    },
     {
         id: 'isActive',
         property: 'is_active',

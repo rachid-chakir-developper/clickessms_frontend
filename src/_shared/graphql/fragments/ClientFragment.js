@@ -11,7 +11,6 @@ export const CLIENT_PHONE_INFOS = gql`
     mobile
     fix
     email
-    photo
     isActive
   }
 `;
