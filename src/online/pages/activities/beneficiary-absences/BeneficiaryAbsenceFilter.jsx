@@ -131,6 +131,9 @@ const BeneficiaryAbsenceFilter = ({ onFilterChange }) => {
                   onInput={(e) => {
                     onGetBeneficiaries(e.target.value)
                   }}
+                  onFocus={(e) => {
+                    onGetBeneficiaries(e.target.value)
+                  }}
                   label="Personnes accompagnées"
                   limitTags={3}
                   value={selectedBeneficiaries}

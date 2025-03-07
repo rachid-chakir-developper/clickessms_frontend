@@ -10,6 +10,7 @@ export const JOB_POSITION_MINI_INFOS = gql`
     title
     sector
     contractType
+    hiringDate
     isActive
   }
 `;

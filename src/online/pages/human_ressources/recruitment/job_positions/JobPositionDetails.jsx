@@ -17,8 +17,10 @@ import {
 import { JOB_POSITION_RECAP } from '../../../../../_shared/graphql/queries/JobPositionQueries';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
-import { getFormatDate, getFormatDateTime } from '../../../../../_shared/tools/functions';
+import { getContractTypeLabel, getFormatDate, getFormatDateTime } from '../../../../../_shared/tools/functions';
 import { Edit } from '@mui/icons-material';
+import EmployeeChip from '../../employees/EmployeeChip';
+import JobPositionTabs from './job_position-tabs/JobPositionTabs';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -122,6 +124,11 @@ const JobPositionDetailsPage = ({ jobPosition }) => {
             </Paper>
           </Paper>
         </Grid>
+        <Grid item xs={12} sm={12}>
+          <Paper sx={{ padding: 2 }}>
+            <JobPositionTabs jobPosition={jobPosition}/>
+          </Paper>
+        </Grid>
       </Grid>
     </Box>
   );
@@ -153,26 +160,26 @@ function JobPositionMiniInfos({ jobPosition }) {
               <Typography variant="subtitle1" component="div">
                 <b>Réference:</b> {jobPosition?.number}
               </Typography>
-              <Typography variant="subtitle1" component="div">
-                <b>Nom:</b> {jobPosition?.title}
-              </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Paper sx={{ padding: 2 }} variant="outlined">
                 <Typography variant="h6" sx={{textDecoration: 'underline'}} gutterBottom>
-                  Infos sur la carte:
+                  Infos sur le poste demandé:
                 </Typography>
                 <Box sx={{paddingLeft: 4}}>
                   <Typography variant="subtitle1" component="div">
-                    <b>Nom sur la carte:</b> {jobPosition?.cardholderName}
+                    <b>Titre:</b> {jobPosition?.title}
                   </Typography>
                   <Typography variant="subtitle1" component="div">
-                    <b>Numéro de carte:</b> {jobPosition?.cardNumber}
+                    <b>Secteur:</b> {jobPosition?.sector}
                   </Typography>
                   <Typography variant="subtitle1" component="div">
-                    <b>Date d'expiration:</b> {getFormatDate(jobPosition?.expirationDate, 'MM/YYYY')}
+                    <b>Type du contrat:</b> {getContractTypeLabel(jobPosition?.contractType)}
                   </Typography>
                   <Typography variant="subtitle1" component="div">
-                    <b>CVV:</b> {jobPosition?.cvv}
+                    <b>Date d'embauche prévue:</b> {getFormatDate(jobPosition?.hiringDate)}
+                  </Typography>
+                  <Typography variant="subtitle1" component="div">
+                    <b>Duré:</b> {jobPosition?.duration}
                   </Typography>
                 </Box>
               </Paper>
@@ -203,13 +210,23 @@ function JobPositionOtherInfos({ jobPosition }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
-      {jobPosition?.bankAccount?.establishment && (
+      {jobPosition?.establishment && (
         <>
           <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
             <Typography variant="h6" gutterBottom>
-              Structure Associés
+              Structures associés
             </Typography>
-            <EstablishmentChip establishment={jobPosition?.bankAccount?.establishment} />
+            <EstablishmentChip establishment={jobPosition?.establishment} />
+          </Paper>
+        </>
+      )}
+      {jobPosition?.employee && (
+        <>
+          <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
+            <Typography variant="h6" gutterBottom>
+              Ajouté par
+            </Typography>
+            <EmployeeChip employee={jobPosition?.employee} />
           </Paper>
         </>
       )}

@@ -35,6 +35,7 @@ import TableFilterButton from '../../../../_shared/components/table/TableFilterB
 import { formatCurrencyAmount, getFormatDate, truncateText } from '../../../../../_shared/tools/functions';
 import JobPositionChip from '../job_positions/JobPositionChip';
 import EmployeeChip from '../../employees/EmployeeChip';
+import FileViewer from '../../../../../_shared/components/media/FileViewer';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -146,7 +147,7 @@ const headCells = [,
         disablePadding: true,
         isDefault: true,
         label: 'Tél',
-    },,
+    },
     {
         id: 'availabilityDate',
         property: 'availability_date',
@@ -163,7 +164,6 @@ const headCells = [,
         exportField: ['employee__first_name', 'employee__last_name'],
         numeric: false,
         disablePadding: false,
-        isDefault: true,
         disableClickDetail: true,
         sortDisabled: true,
         label: 'Ajouté par',
@@ -202,6 +202,30 @@ const headCells = [,
         render: ({rating})=> <Rating value={rating} readOnly />
     },
     {
+        id: 'cv',
+        property: 'cv',
+        exportField: 'cv',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'CV',
+        render: ({cv, firstName, lastName})=> <FileViewer size="small" fileUrl={cv} fileName={`cv-${firstName}-${lastName}`} />
+    },
+    {
+        id: 'coverLetter',
+        property: 'cover_letter',
+        exportField: 'cover_letter',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Lettre de motivation',
+        render: ({coverLetter, firstName, lastName})=> <FileViewer size="small" fileUrl={coverLetter} fileName={`Lettre-de-motivation-${firstName}-${lastName}`} />
+    },
+    {
         id: 'description',
         property: 'description',
         exportField: 'description',
@@ -209,15 +233,6 @@ const headCells = [,
         disablePadding: false,
         label: 'Description',
         render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
-    },
-    {
-        id: 'isActive',
-        property: 'is_active',
-        exportField: 'is_active',
-        numeric: false,
-        disablePadding: true,
-        label: 'État',
-        render: ({isActive})=> isActive ? <AppLabel color="success">Actif</AppLabel> : <AppLabel color="warning">Inactif</AppLabel>
     },
     {
         id: 'action',

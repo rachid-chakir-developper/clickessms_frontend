@@ -24,7 +24,7 @@ import {
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover} from '@mui/material';
+import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Rating} from '@mui/material';
 import AppLabel from '../../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
@@ -32,7 +32,10 @@ import ProgressService from '../../../../../_shared/services/feedbacks/ProgressS
 import TableExportButton from '../../../../_shared/components/data_tools/export/TableExportButton';
 import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
 import TableFilterButton from '../../../../_shared/components/table/TableFilterButton';
-import { formatCurrencyAmount, getContractTypeLabel, getFormatDate, truncateText } from '../../../../../_shared/tools/functions';
+import { formatCurrencyAmount, getFormatDate, truncateText } from '../../../../../_shared/tools/functions';
+import JobPositionChip from '../job_positions/JobPositionChip';
+import EmployeeChip from '../../employees/EmployeeChip';
+import FileViewer from '../../../../../_shared/components/media/FileViewer';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -91,7 +94,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
+const headCells = [,
     {
       id: 'number',
       property: 'number',
@@ -101,63 +104,126 @@ const headCells = [
       label: 'Réference',
     },
     {
-      id: 'title',
-      property: 'title',
-      exportField: 'title',
-      numeric: false,
-      disablePadding: true,
-      isDefault: true,
-      label: 'Titre',
-    },
-    {
-      id: 'sector',
-      property: 'sector',
-      exportField: 'sector',
-      numeric: false,
-      disablePadding: true,
-      isDefault: true,
-      label: 'Secteur',
-    },
-    {
-        id: 'contractType',
-        property: 'contract_type',
-        exportField: 'contract_type',
+        id: 'firstName',
+        property: 'first_name',
+        exportField: 'first_name',
         numeric: false,
         disablePadding: true,
         isDefault: true,
-        label: 'Type du contrat',
-        render: ({contractType})=> getContractTypeLabel(contractType)
+        label: 'Prénom',
     },
     {
-        id: 'hiringDate',
-        property: 'hiring_date',
-        exportField: 'hiring_date',
+        id: 'lastName',
+        property: 'last_name',
+        exportField: 'last_name',
         numeric: false,
         disablePadding: true,
         isDefault: true,
-        label: "Date d'embauche prévue",
-        render: ({hiringDate})=> getFormatDate(hiringDate)
+        label: 'Nom',
     },
     {
-      id: 'duration',
-      property: 'duration',
-      exportField: 'duration',
-      numeric: false,
-      disablePadding: true,
-      isDefault: true,
-      label: 'Durée',
+        id: 'jobTitle',
+        property: 'job_title',
+        exportField: 'job_title',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Métier',
     },
     {
-        id: 'establishment',
-        property: 'establishment__name',
-        exportField: ['establishment__name'],
+        id: 'email',
+        property: 'email',
+        exportField: 'email',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'E-mail',
+    },
+    {
+        id: 'phone',
+        property: 'phone',
+        exportField: 'phone',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Tél',
+    },
+    {
+        id: 'availabilityDate',
+        property: 'availability_date',
+        exportField: 'availability_date',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Disponible le',
+        render: ({availabilityDate})=> getFormatDate(availabilityDate)
+    },
+    {
+        id: 'employee',
+        property: 'employee__first_name',
+        exportField: ['employee__first_name', 'employee__last_name'],
+        numeric: false,
+        disablePadding: false,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Ajouté par',
+        render: ({employee}) => <EmployeeChip employee={employee} />
+    },
+    {
+        id: 'bank_account',
+        property: 'bank_account__name',
+        exportField: ['bank_account__name'],
         numeric: false,
         disablePadding: false,
         isDefault: true,
         disableClickDetail: true,
         sortDisabled: true,
-        label: 'Structure',
-        render: ({establishment}) => establishment && <EstablishmentChip establishment={establishment}/>
+        label: 'Fiche besoin',
+        render: ({jobPosition}) => jobPosition && <JobPositionChip jobPosition={jobPosition}/>
+    },
+    {
+        id: 'jobPlatform',
+        property: 'job_platform__name',
+        exportField: ['job_platform__name'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Source',
+        render: ({jobPlatform})=> jobPlatform?.name
+    },
+    {
+        id: 'rating',
+        property: 'rating',
+        exportField: 'rating',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Note',
+        render: ({rating})=> <Rating value={rating} readOnly />
+    },
+    {
+        id: 'cv',
+        property: 'cv',
+        exportField: 'cv',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'CV',
+        render: ({cv, firstName, lastName})=> <FileViewer size="small" fileUrl={cv} fileName={`cv-${firstName}-${lastName}`} />
+    },
+    {
+        id: 'coverLetter',
+        property: 'cover_letter',
+        exportField: 'cover_letter',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Lettre de motivation',
+        render: ({coverLetter, firstName, lastName})=> <FileViewer size="small" fileUrl={coverLetter} fileName={`Lettre-de-motivation-${firstName}-${lastName}`} />
     },
     {
         id: 'description',
@@ -167,15 +233,6 @@ const headCells = [
         disablePadding: false,
         label: 'Description',
         render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
-    },
-    {
-        id: 'isActive',
-        property: 'is_active',
-        exportField: 'is_active',
-        numeric: false,
-        disablePadding: true,
-        label: 'État',
-        render: ({isActive})=> isActive ? <AppLabel color="success">Actif</AppLabel> : <AppLabel color="warning">Inactif</AppLabel>
     },
     {
         id: 'action',
@@ -279,11 +336,11 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les fiches besoin
+           Les annonces
         </Typography>
       )}
       <TableExportButton 
-        entity={'JobPosition'}
+        entity={'JobPosting'}
         fileName={'Dépenses'}
         fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
         titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
@@ -305,10 +362,10 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListJobPositions({
+export default function TableListJobPostings({
   loading,
   rows,
-  onDeleteJobPosition,
+  onDeleteJobPosting,
   onFilterChange,
   paginator,
 }) {
@@ -414,7 +471,7 @@ export default function TableListJobPositions({
                 <StyledTableRow>
                   <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucune fiche besoin trouvée.
+                      Aucune annonce trouvée.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -472,7 +529,7 @@ export default function TableListJobPositions({
                           scope="row"
                           padding={column?.disablePadding ? "none" : "normal"}
                           key={index}
-                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/ressources-humaines/recrutement/fiches-besoin/details/${row?.id}`)}}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/ressources-humaines/recrutement/annonces/details/${row?.id}`)}}
                         >
                         {column?.render ? column?.render(row) : row[column?.id]}
                         </StyledTableCell>
@@ -496,7 +553,7 @@ export default function TableListJobPositions({
                         }}
                       >
                         <Link
-                          to={`/online/ressources-humaines/recrutement/fiches-besoin/details/${row?.id}`}
+                          to={`/online/ressources-humaines/recrutement/annonces/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -505,7 +562,7 @@ export default function TableListJobPositions({
                           </MenuItem>
                         </Link>
                         <Link
-                          to={`/online/ressources-humaines/recrutement/fiches-besoin/modifier/${row?.id}`}
+                          to={`/online/ressources-humaines/recrutement/annonces/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -515,7 +572,7 @@ export default function TableListJobPositions({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteJobPosition(row?.id);
+                            onDeleteJobPosting(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

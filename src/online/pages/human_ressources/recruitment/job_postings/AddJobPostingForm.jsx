@@ -12,11 +12,11 @@ import * as yup from 'yup';
 import TheTextField from '../../../../../_shared/components/form-fields/TheTextField';
 import TheFileField from '../../../../../_shared/components/form-fields/TheFileField';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_JOB_CANDIDATE } from '../../../../../_shared/graphql/queries/JobCandidateQueries';
+import { GET_JOB_POSTING } from '../../../../../_shared/graphql/queries/JobPostingQueries';
 import {
-  POST_JOB_CANDIDATE,
-  PUT_JOB_CANDIDATE,
-} from '../../../../../_shared/graphql/mutations/JobCandidateMutations';
+  POST_JOB_POSTING,
+  PUT_JOB_POSTING,
+} from '../../../../../_shared/graphql/mutations/JobPostingMutations';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_JOB_POSITIONS } from '../../../../../_shared/graphql/queries/JobPositionQueries';
@@ -32,7 +32,7 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function AddJobCandidateForm({ idJobCandidate, title }) {
+export default function AddJobPostingForm({ idJobPosting, title }) {
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({});
@@ -57,22 +57,22 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let { cv, coverLetter, files, ...jobCandidateCopy } = values;
-      jobCandidateCopy.jobPosition = jobCandidateCopy.jobPosition
-        ? jobCandidateCopy.jobPosition.id
+      let { cv, coverLetter, files, ...jobPostingCopy } = values;
+      jobPostingCopy.jobPosition = jobPostingCopy.jobPosition
+        ? jobPostingCopy.jobPosition.id
         : null;
-      if (idJobCandidate && idJobCandidate != '') {
-        onUpdateJobCandidate({
-          id: jobCandidateCopy.id,
-          jobCandidateData: jobCandidateCopy,
+      if (idJobPosting && idJobPosting != '') {
+        onUpdateJobPosting({
+          id: jobPostingCopy.id,
+          jobPostingData: jobPostingCopy,
           cv: cv,
           coverLetter: coverLetter,
           files: files
         });
       } else
-        createJobCandidate({
+        createJobPosting({
           variables: {
-            jobCandidateData: jobCandidateCopy,
+            jobPostingData: jobPostingCopy,
             cv: cv,
             coverLetter: coverLetter,
             files: files,
@@ -89,7 +89,7 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
     fetchPolicy: 'network-only',
   });
 
-  const [createJobCandidate, { loading: loadingPost }] = useMutation(POST_JOB_CANDIDATE, {
+  const [createJobPosting, { loading: loadingPost }] = useMutation(POST_JOB_POSTING, {
     onCompleted: (data) => {
       console.log(data);
       setNotifyAlert({
@@ -97,19 +97,19 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
         message: 'Ajouté avec succès',
         type: 'success',
       });
-      let { __typename, ...jobCandidateCopy } = data.createJobCandidate.jobCandidate;
-      //   formik.setValues(jobCandidateCopy);
-      navigate('/online/ressources-humaines/recrutement/vivier-candidats/liste');
+      let { __typename, ...jobPostingCopy } = data.createJobPosting.jobPosting;
+      //   formik.setValues(jobPostingCopy);
+      navigate('/online/ressources-humaines/recrutement/annonces/liste');
     },
-    update(cache, { data: { createJobCandidate } }) {
-      const newJobCandidate = createJobCandidate.jobCandidate;
+    update(cache, { data: { createJobPosting } }) {
+      const newJobPosting = createJobPosting.jobPosting;
 
       cache.modify({
         fields: {
-          jobCandidates(existingJobCandidates = { totalCount: 0, nodes: [] }) {
+          jobPostings(existingJobPostings = { totalCount: 0, nodes: [] }) {
             return {
-              totalCount: existingJobCandidates.totalCount + 1,
-              nodes: [newJobCandidate, ...existingJobCandidates.nodes],
+              totalCount: existingJobPostings.totalCount + 1,
+              nodes: [newJobPosting, ...existingJobPostings.nodes],
             };
           },
         },
@@ -124,7 +124,7 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
       });
     },
   });
-  const [updateJobCandidate, { loading: loadingPut }] = useMutation(PUT_JOB_CANDIDATE, {
+  const [updateJobPosting, { loading: loadingPut }] = useMutation(PUT_JOB_POSTING, {
     onCompleted: (data) => {
       console.log(data);
       setNotifyAlert({
@@ -132,28 +132,28 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
         message: 'Modifié avec succès',
         type: 'success',
       });
-      let { __typename, ...jobCandidateCopy } = data.updateJobCandidate.jobCandidate;
-      //   formik.setValues(jobCandidateCopy);
-      navigate('/online/ressources-humaines/recrutement/vivier-candidats/liste');
+      let { __typename, ...jobPostingCopy } = data.updateJobPosting.jobPosting;
+      //   formik.setValues(jobPostingCopy);
+      navigate('/online/ressources-humaines/recrutement/annonces/liste');
     },
-    update(cache, { data: { updateJobCandidate } }) {
-      const updatedJobCandidate = updateJobCandidate.jobCandidate;
+    update(cache, { data: { updateJobPosting } }) {
+      const updatedJobPosting = updateJobPosting.jobPosting;
 
       cache.modify({
         fields: {
-          jobCandidates(
-            existingJobCandidates = { totalCount: 0, nodes: [] },
+          jobPostings(
+            existingJobPostings = { totalCount: 0, nodes: [] },
             { readField },
           ) {
-            const updatedJobCandidates = existingJobCandidates.nodes.map((jobCandidate) =>
-              readField('id', jobCandidate) === updatedJobCandidate.id
-                ? updatedJobCandidate
-                : jobCandidate,
+            const updatedJobPostings = existingJobPostings.nodes.map((jobPosting) =>
+              readField('id', jobPosting) === updatedJobPosting.id
+                ? updatedJobPosting
+                : jobPosting,
             );
 
             return {
-              totalCount: existingJobCandidates.totalCount,
-              nodes: updatedJobCandidates,
+              totalCount: existingJobPostings.totalCount,
+              nodes: updatedJobPostings,
             };
           },
         },
@@ -168,14 +168,14 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
       });
     },
   });
-  const onUpdateJobCandidate = (variables) => {
+  const onUpdateJobPosting = (variables) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment modifier ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        updateJobCandidate({ variables });
+        updateJobPosting({ variables });
       },
     });
   };
@@ -187,29 +187,29 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
       fetchMore: fetchMoreDatas,
     } = useQuery(GET_DATAS_JOB, { fetchPolicy: 'network-only' });
 
-  const [getJobCandidate, { loading: loadingJobCandidate }] = useLazyQuery(GET_JOB_CANDIDATE, {
+  const [getJobPosting, { loading: loadingJobPosting }] = useLazyQuery(GET_JOB_POSTING, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, folder, employee, ...jobCandidateCopy } =  data.jobCandidate;
-      jobCandidateCopy.jobPlatform = jobCandidateCopy.jobPlatform ? Number(jobCandidateCopy.jobPlatform.id): null;
-      jobCandidateCopy.availabilityDate = jobCandidateCopy.availabilityDate ? dayjs(jobCandidateCopy.availabilityDate) : null;
-      formik.setValues(jobCandidateCopy);
+      let { __typename, folder, employee, ...jobPostingCopy } =  data.jobPosting;
+      jobPostingCopy.jobPlatform = jobPostingCopy.jobPlatform ? Number(jobPostingCopy.jobPlatform.id): null;
+      jobPostingCopy.availabilityDate = jobPostingCopy.availabilityDate ? dayjs(jobPostingCopy.availabilityDate) : null;
+      formik.setValues(jobPostingCopy);
     },
     onError: (err) => console.log(err),
   });
 
   React.useEffect(() => {
-    if (idJobCandidate) {
-      getJobCandidate({ variables: { id: idJobCandidate } });
+    if (idJobPosting) {
+      getJobPosting({ variables: { id: idJobPosting } });
     }
-  }, [idJobCandidate]);
+  }, [idJobPosting]);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
         {title}: <em><u>{formik.values.cardNumber}</u></em>
       </Typography>
-      {loadingJobCandidate && <ProgressService type="form" />}
-      {!loadingJobCandidate && (
+      {loadingJobPosting && <ProgressService type="form" />}
+      {!loadingJobPosting && (
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={{ xs: 2, md: 3 }}>
             <Grid item xs={12} sm={6} md={3}>
@@ -386,7 +386,7 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
             <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
-                  to="/online/ressources-humaines/recrutement/vivier-candidats/liste"
+                  to="/online/ressources-humaines/recrutement/annonces/liste"
                   className="no_style"
                 >
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>

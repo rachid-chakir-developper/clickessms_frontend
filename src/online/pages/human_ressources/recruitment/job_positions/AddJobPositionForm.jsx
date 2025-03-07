@@ -18,8 +18,9 @@ import {
 } from '../../../../../_shared/graphql/mutations/JobPositionMutations';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import TheDesktopDatePicker from '../../../../../_shared/components/form-fields/TheDesktopDatePicker';
-import ImageFileField from '../../../../../_shared/components/form-fields/ImageFileField';
 import { CONTRACT_TYPES } from '../../../../../_shared/tools/constants';
+import { GET_ESTABLISHMENTS } from '../../../../../_shared/graphql/queries/EstablishmentQueries';
+import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -39,13 +40,16 @@ export default function AddJobPositionForm({ idJobPosition, title }) {
       title: '',
       sector: '',
       contractType: CONTRACT_TYPES.CDI,
+      hiringDate: null,
       duration: '',
       description: '',
       observation: '',
+      establishment: null,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       let jobPositionCopy = {...values};
+      jobPositionCopy.establishment = jobPositionCopy.establishment ? jobPositionCopy.establishment.id : null;
       if (idJobPosition && idJobPosition != '') {
         onUpdateJobPosition({
           id: jobPositionCopy.id,
@@ -154,12 +158,21 @@ export default function AddJobPositionForm({ idJobPosition, title }) {
   const [getJobPosition, { loading: loadingJobPosition }] = useLazyQuery(GET_JOB_POSITION, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, folder, name, ...jobPositionCopy } =  data.jobPosition;
-      jobPositionCopy.expirationDate = jobPositionCopy.expirationDate ? dayjs(jobPositionCopy.expirationDate) : null;
+      let { __typename, folder, employee, ...jobPositionCopy } =  data.jobPosition;
+      jobPositionCopy.hiringDate = jobPositionCopy.hiringDate ? dayjs(jobPositionCopy.hiringDate) : null;
       formik.setValues(jobPositionCopy);
     },
     onError: (err) => console.log(err),
   });
+
+  const {
+      loading: loadingEstablishments,
+      data: establishmentsData,
+      error: establishmentsError,
+      fetchMore: fetchMoreEstablishments,
+    } = useQuery(GET_ESTABLISHMENTS, {
+      fetchPolicy: 'network-only',
+    });
 
   React.useEffect(() => {
     if (idJobPosition) {
@@ -231,6 +244,33 @@ export default function AddJobPositionForm({ idJobPosition, title }) {
                   label="Durée"
                   value={formik.values.duration}
                   onChange={(e) => formik.setFieldValue('duration', e.target.value)}
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <Item>
+                <TheAutocomplete
+                  options={establishmentsData?.establishments?.nodes}
+                  label="Structure concernée"
+                  placeholder="Choisissez une structure"
+                  multiple={false}
+                  value={formik.values.establishment}
+                  onChange={(e, newValue) =>
+                    formik.setFieldValue('establishment', newValue)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3} >
+              <Item>
+                <TheDesktopDatePicker
+                  label="Date d'embauche prévue"
+                  value={formik.values.hiringDate}
+                  onChange={(date) =>
+                    formik.setFieldValue('hiringDate', date)
+                  }
                   disabled={loadingPost || loadingPut}
                 />
               </Item>

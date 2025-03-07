@@ -398,9 +398,15 @@ export const modules: Module[] = [
         pages: [
           {
             id: 'job_position',
-            name: ' Fiche besoin ',
+            name: 'Fiches besoin',
             path: '/online/ressources-humaines/recrutement/fiches-besoin',
             icon: <PersonSearchIcon  />,
+          },
+          {
+            id: 'job_posting',
+            name: 'Diffusions',
+            path: '/online/ressources-humaines/recrutement/annonces',
+            icon: <CampaignIcon   />,
           },
           {
             id: 'candidates-pool',
