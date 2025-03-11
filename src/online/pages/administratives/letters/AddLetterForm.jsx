@@ -33,6 +33,9 @@ import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutoc
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
+import { GET_PARTNERS } from '../../../../_shared/graphql/queries/PartnerQueries';
+import { GET_SUPPLIERS } from '../../../../_shared/graphql/queries/SupplierQueries';
+import { GET_FINANCIERS } from '../../../../_shared/graphql/queries/FinancierQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -64,6 +67,12 @@ export default function AddLetterForm({ idLetter, title }) {
       employees: [],
       beneficiaries: [],
       employee: null,
+      sender: {
+        type: '',
+        id: null,
+        name: '',
+        otherSender: ''
+      },
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -72,6 +81,33 @@ export default function AddLetterForm({ idLetter, title }) {
       letterCopy.employees = letterCopy.employees.map((i) => i?.id);
       letterCopy.beneficiaries = letterCopy.beneficiaries.map((i) => i?.id);
       letterCopy.employee = letterCopy.employee ? letterCopy.employee.id : null;
+      
+      // Process sender data
+      if (letterCopy.sender && letterCopy.sender.type) {
+        // Only include sender if a type is selected
+        const senderData = {
+          type: letterCopy.sender.type,
+          name: letterCopy.sender.name || '',
+          otherSender: letterCopy.sender.otherSender || ''
+        };
+        
+        // Add the appropriate ID based on sender type
+        if (letterCopy.sender.type === 'PARTNER' && letterCopy.sender.id) {
+          senderData.partner = letterCopy.sender.id;
+        } else if (letterCopy.sender.type === 'SUPPLIER' && letterCopy.sender.id) {
+          senderData.supplier = letterCopy.sender.id;
+        } else if (letterCopy.sender.type === 'FINANCIER' && letterCopy.sender.id) {
+          senderData.financier = letterCopy.sender.id;
+        } else if (letterCopy.sender.type === 'EMPLOYEE' && letterCopy.sender.id) {
+          senderData.employee = letterCopy.sender.id;
+        }
+        
+        letterCopy.sender = senderData;
+      } else {
+        // If no sender type is selected, don't include sender in the request
+        delete letterCopy.sender;
+      }
+      
       if (idLetter && idLetter != '') {
         onUpdateLetter({
           id: letterCopy.id,
@@ -117,6 +153,80 @@ const [getEmployees, {
     getEmployees({ variables: { employeeFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
   }
 
+  // Fetch partners data
+  const {
+    loading: loadingPartners,
+    data: partnersData,
+    error: partnersError,
+  } = useQuery(GET_PARTNERS, {
+    fetchPolicy: 'network-only',
+    variables: { page: 1, limit: 100 }
+  });
+
+  // Fetch suppliers data
+  const {
+    loading: loadingSuppliers,
+    data: suppliersData,
+    error: suppliersError,
+  } = useQuery(GET_SUPPLIERS, {
+    fetchPolicy: 'network-only',
+    variables: { page: 1, limit: 100 }
+  });
+
+  // Fetch financiers data
+  const {
+    loading: loadingFinanciers,
+    data: financiersData,
+    error: financiersError,
+  } = useQuery(GET_FINANCIERS, {
+    fetchPolicy: 'network-only',
+    variables: { page: 1, limit: 100 }
+  });
+
+  // Handle sender type change
+  const handleSenderTypeChange = (e) => {
+    const senderType = e.target.value;
+    formik.setFieldValue('sender', {
+      ...formik.values.sender,
+      type: senderType,
+      id: null,
+      name: '',
+    });
+  };
+
+  // Handle sender selection change
+  const handleSenderChange = (e) => {
+    const senderId = e.target.value;
+    let senderName = '';
+    let senderObject = null;
+
+    switch (formik.values.sender.type) {
+      case 'PARTNER':
+        senderObject = partnersData?.partners?.nodes.find(p => p.id === senderId);
+        senderName = senderObject?.name || '';
+        break;
+      case 'SUPPLIER':
+        senderObject = suppliersData?.suppliers?.nodes.find(s => s.id === senderId);
+        senderName = senderObject?.name || '';
+        break;
+      case 'FINANCIER':
+        senderObject = financiersData?.financiers?.nodes.find(f => f.id === senderId);
+        senderName = senderObject?.name || '';
+        break;
+      case 'EMPLOYEE':
+        senderObject = employeesData?.employees?.nodes.find(e => e.id === senderId);
+        senderName = senderObject ? `${senderObject.firstName} ${senderObject.lastName}` : '';
+        break;
+      default:
+        break;
+    }
+
+    formik.setFieldValue('sender', {
+      ...formik.values.sender,
+      id: senderId,
+      name: senderName,
+    });
+  };
 
   const [createLetter, { loading: loadingPost }] = useMutation(POST_LETTER, {
     onCompleted: (data) => {
@@ -228,6 +338,38 @@ const [getEmployees, {
       letterCopy.beneficiaries = letterCopy.beneficiaries
         ? letterCopy.beneficiaries.map((i) => i?.beneficiary)
         : [];
+        
+      // Process sender data if it exists
+      if (letterCopy.sender) {
+        const senderData = {
+          type: letterCopy.sender.senderType || '',
+          id: null,
+          name: letterCopy.sender.name || '',
+          otherSender: letterCopy.sender.otherSender || ''
+        };
+        
+        // Set the appropriate ID based on sender type
+        if (letterCopy.sender.senderType === 'PARTNER' && letterCopy.sender.partner) {
+          senderData.id = letterCopy.sender.partner.id;
+        } else if (letterCopy.sender.senderType === 'SUPPLIER' && letterCopy.sender.supplier) {
+          senderData.id = letterCopy.sender.supplier.id;
+        } else if (letterCopy.sender.senderType === 'FINANCIER' && letterCopy.sender.financier) {
+          senderData.id = letterCopy.sender.financier.id;
+        } else if (letterCopy.sender.senderType === 'EMPLOYEE' && letterCopy.sender.employee) {
+          senderData.id = letterCopy.sender.employee.id;
+        }
+        
+        letterCopy.sender = senderData;
+      } else {
+        // Initialize empty sender if none exists
+        letterCopy.sender = {
+          type: '',
+          id: null,
+          name: '',
+          otherSender: ''
+        };
+      }
+      
       formik.setValues(letterCopy);
     },
     onError: (err) => console.log(err),
@@ -297,6 +439,126 @@ const [getEmployees, {
                 />
               </Item>
             </Grid>
+            
+            {/* Sender Type Selection */}
+            <Grid item xs={12} sm={6} md={4}>
+              <Item>
+                <FormControl fullWidth>
+                  <InputLabel>Type d'expéditeur</InputLabel>
+                  <Select
+                    value={formik.values.sender.type}
+                    onChange={handleSenderTypeChange}
+                    disabled={loadingPost || loadingPut}
+                  >
+                    <MenuItem value="">Sélectionner</MenuItem>
+                    <MenuItem value="PARTNER">Partenaire</MenuItem>
+                    <MenuItem value="SUPPLIER">Fournisseur</MenuItem>
+                    <MenuItem value="FINANCIER">Financeur</MenuItem>
+                    <MenuItem value="EMPLOYEE">Employé</MenuItem>
+                    <MenuItem value="OTHER">Autre</MenuItem>
+                  </Select>
+                </FormControl>
+              </Item>
+            </Grid>
+            
+            {/* Sender Selection based on type */}
+            <Grid item xs={12} sm={6} md={4}>
+              <Item>
+                {formik.values.sender.type === 'PARTNER' && (
+                  <FormControl fullWidth>
+                    <InputLabel>Partenaire</InputLabel>
+                    <Select
+                      value={formik.values.sender.id || ''}
+                      onChange={handleSenderChange}
+                      disabled={loadingPost || loadingPut || loadingPartners}
+                    >
+                      <MenuItem value="">Sélectionner un partenaire</MenuItem>
+                      {partnersData?.partners?.nodes?.map((partner) => (
+                        <MenuItem key={partner.id} value={partner.id}>
+                          {partner.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+                
+                {formik.values.sender.type === 'SUPPLIER' && (
+                  <FormControl fullWidth>
+                    <InputLabel>Fournisseur</InputLabel>
+                    <Select
+                      value={formik.values.sender.id || ''}
+                      onChange={handleSenderChange}
+                      disabled={loadingPost || loadingPut || loadingSuppliers}
+                    >
+                      <MenuItem value="">Sélectionner un fournisseur</MenuItem>
+                      {suppliersData?.suppliers?.nodes?.map((supplier) => (
+                        <MenuItem key={supplier.id} value={supplier.id}>
+                          {supplier.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+                
+                {formik.values.sender.type === 'FINANCIER' && (
+                  <FormControl fullWidth>
+                    <InputLabel>Financeur</InputLabel>
+                    <Select
+                      value={formik.values.sender.id || ''}
+                      onChange={handleSenderChange}
+                      disabled={loadingPost || loadingPut || loadingFinanciers}
+                    >
+                      <MenuItem value="">Sélectionner un financeur</MenuItem>
+                      {financiersData?.financiers?.nodes?.map((financier) => (
+                        <MenuItem key={financier.id} value={financier.id}>
+                          {financier.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+                
+                {formik.values.sender.type === 'EMPLOYEE' && (
+                  <TheAutocomplete
+                    options={employeesData?.employees?.nodes}
+                    onInput={(e) => {
+                      onGetEmployees(e.target.value)
+                    }}
+                    label="Employé expéditeur"
+                    placeholder="Sélectionner un employé"
+                    value={formik.values.sender.id ? employeesData?.employees?.nodes.find(e => e.id === formik.values.sender.id) : null}
+                    onChange={(e, newValue) => {
+                      formik.setFieldValue('sender', {
+                        ...formik.values.sender,
+                        type: 'EMPLOYEE',
+                        id: newValue?.id || null,
+                        name: newValue ? `${newValue.firstName} ${newValue.lastName}` : '',
+                      });
+                    }}
+                    disabled={loadingPost || loadingPut}
+                  />
+                )}
+                
+                {formik.values.sender.type === 'OTHER' && (
+                  <TheTextField
+                    variant="outlined"
+                    label="Autre expéditeur"
+                    value={formik.values.sender.otherSender || ''}
+                    onChange={(e) =>
+                      formik.setFieldValue('sender', {
+                        ...formik.values.sender,
+                        type: 'OTHER',
+                        id: null,
+                        name: '',
+                        otherSender: e.target.value
+                      })
+                    }
+                    disabled={loadingPost || loadingPut}
+                  />
+                )}
+              </Item>
+            </Grid>
+            
             <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <TheFileField
@@ -308,6 +570,7 @@ const [getEmployees, {
                 />
               </Item>
             </Grid>
+            
             <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <TheAutocomplete

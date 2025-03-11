@@ -342,3 +342,19 @@ export const truncateText = (text, maxLength = 20) => {
   }
   return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
 };
+
+// Fonction pour formater un prix avec séparateur de milliers et 2 décimales
+export const formatPrice = (price) => {
+  if (price === null || price === undefined) {
+    return '0,00';
+  }
+  
+  // Convertir en nombre si c'est une chaîne
+  const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+  
+  // Formater le prix avec séparateur de milliers et 2 décimales
+  return numPrice.toLocaleString('fr-FR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+};

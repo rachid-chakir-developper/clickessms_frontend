@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 
 import { Link, useNavigate } from 'react-router-dom';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
@@ -27,6 +27,9 @@ import {
   PUT_PARTNER,
 } from '../../../../_shared/graphql/mutations/PartnerMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
+import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
+import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -66,11 +69,20 @@ export default function AddPartnerForm({ idPartner, title }) {
       description: '',
       observation: '',
       partnerType: 'INDIVIDUAL',
+      establishments: [],
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       let { photo, ...partnerFormCopy } = values;
       let { coverImage, ...partnerCopy } = partnerFormCopy;
+      
+      // Convertir les objets d'établissements en tableaux d'IDs
+      if (partnerCopy.establishments && partnerCopy.establishments.length > 0) {
+        partnerCopy.establishments = partnerCopy.establishments.map((item) => item?.id);
+      } else {
+        partnerCopy.establishments = [];
+      }
+      
       if (idPartner && idPartner != '') {
         onUpdatePartner({
           id: partnerCopy.id,
@@ -183,6 +195,16 @@ export default function AddPartnerForm({ idPartner, title }) {
     onCompleted: (data) => {
       let { __typename, ...partnerCopy1 } = data.partner;
       let { folder, ...partnerCopy } = partnerCopy1;
+      
+      // Formatage des établissements pour le formulaire
+      if (partnerCopy.establishments && partnerCopy.establishments.length > 0) {
+        partnerCopy.establishments = partnerCopy.establishments.map(
+          (item) => item.establishment
+        );
+      } else {
+        partnerCopy.establishments = [];
+      }
+      
       formik.setValues(partnerCopy);
     },
     onError: (err) => console.log(err),
@@ -192,6 +214,16 @@ export default function AddPartnerForm({ idPartner, title }) {
       getPartner({ variables: { id: idPartner } });
     }
   }, [idPartner]);
+
+  // Requête pour récupérer les établissements
+  const {
+    loading: loadingEstablishments,
+    data: establishmentsData,
+    error: establishmentsError,
+  } = useQuery(GET_ESTABLISHMENTS, {
+    fetchPolicy: 'network-only',
+  });
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
@@ -452,6 +484,22 @@ export default function AddPartnerForm({ idPartner, title }) {
                     formik.setFieldValue('bankName', e.target.value)
                   }
                   disabled={loadingPost || loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+              <Item>
+                <TheAutocomplete
+                  options={establishmentsData?.establishments?.nodes || []}
+                  label="Structures associées"
+                  placeholder="Ajouter des structures"
+                  limitTags={3}
+                  multiple
+                  value={formik.values.establishments}
+                  onChange={(e, newValue) =>
+                    formik.setFieldValue('establishments', newValue)
+                  }
+                  disabled={loadingPost || loadingPut || loadingEstablishments}
                 />
               </Item>
             </Grid>

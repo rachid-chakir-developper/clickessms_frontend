@@ -14,7 +14,6 @@ export const EMPLOYEE_PHONE_INFOS = gql`
     email
     mobile
     fix
-    photo
     coverImage
     isActive
   }

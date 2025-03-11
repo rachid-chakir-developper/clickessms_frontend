@@ -10,7 +10,6 @@ export const SUPPLIER_PHONE_INFOS = gql`
     mobile
     fix
     email
-    photo
     isVerified
     isActive
   }

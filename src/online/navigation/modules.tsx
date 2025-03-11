@@ -105,7 +105,7 @@ export const modules: Module[] = [
       },
       {
         id: 'task-plan',
-        name: 'Plan d’action',
+        name: "Plan d'action",
         path: '/online/qualites/plan-action',
         icon: <MapIcon />,
         hidden(authorizationSystem) {
@@ -237,7 +237,7 @@ export const modules: Module[] = [
       },
       {
         id: 'beneficiary-admissions',
-        name: 'Demandes d’admissions',
+        name: "Demandes d'admissions",
         path: '/online/ressources-humaines/admissions-beneficiaires',
         icon: <AssignmentIndIcon />,
         hidden(authorizationSystem) {
@@ -383,6 +383,12 @@ export const modules: Module[] = [
         icon: <DateRangeIcon />,
       },
       {
+        id: 'advances',
+        name: 'Acomptes',
+        path: '/online/ressources-humaines/acomptes',
+        icon: <WalletIcon />,
+      },
+      {
         id: 'bdes',
         name: 'BDES',
         path: '/online/ressources-humaines/bdes',
@@ -408,7 +414,7 @@ export const modules: Module[] = [
       },
       {
         id: 'company-agreement',
-        name: 'Accord d’entreprise',
+        name: "Accord d'entreprise",
         path(session) {
           const {user}= session
           return user?.company?.companyMedia?.companyAgreement
@@ -625,7 +631,7 @@ export const modules: Module[] = [
       },
       {
         id: 'billing',
-        name: 'Facturation de l’activité',
+        name: "Facturation de l'activité",
         path: '/online/ventes/factures',
         icon: <RequestQuoteIcon />,
       },
@@ -768,7 +774,7 @@ export const modules: Module[] = [
     entries: [
       {
         id: 'purchase-request-investment',
-        name: 'Demande d’achat / Investissement',
+        name: "Demande d'achat / Investissement",
         path: '/online/achats/depenses-engagements',
         icon: <ShoppingBasketIcon />,
       },
@@ -949,7 +955,7 @@ export const modules: Module[] = [
       },
       {
         id: 'company-agreement',
-        name: 'Accord d’entreprise',
+        name: "Accord d'entreprise",
         path(session) {
           const {user}= session
           return user?.company?.companyMedia?.companyAgreement

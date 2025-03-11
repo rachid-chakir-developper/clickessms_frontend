@@ -415,7 +415,7 @@ export default function TableListLetters({
                     </StyledTableCell>
                     <StyledTableCell align="left">{row.title}</StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDateTime(row?.entryDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="left"></StyledTableCell>
+                    <StyledTableCell align="left">{row.sender?.name}</StyledTableCell>
                     <StyledTableCell align="left">
                       <Stack direction="row" flexWrap='wrap' spacing={1}>
                         {row?.establishments?.map((establishment, index) => {
