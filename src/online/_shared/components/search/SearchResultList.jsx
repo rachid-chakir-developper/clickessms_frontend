@@ -233,7 +233,7 @@ const SearchResultList = ({ results, loading, keyword }) => {
             {results?.suppliers?.nodes?.map((supplier, index) => (
               <React.Fragment key={index}>
                 <Link
-                  to={`/online/achats/fournisseurs/modifier/${supplier?.id}`}
+                  to={`/online/achats/fournisseurs/details/${supplier?.id}`}
                   className="no_style"
                 >
                   <ListItem alignItems="flex-start">
