@@ -18,11 +18,6 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
-  getCallTypeLabel,
-  getFormatDate,
-  getFormatDateTime,
-} from '../../../../_shared/tools/functions';
-import {
   Article,
   Delete,
   Done,
@@ -30,10 +25,18 @@ import {
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Stack, TablePagination } from '@mui/material';
+import AppLabel from '../../../../_shared/components/app/label/AppLabel';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import { render } from 'react-dom';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import { getCallTypeLabel, getCritAirVignetteLabel, getOwnershipTypeLabel, getFormatDateTime } from '../../../../_shared/tools/functions';
+import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
+import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -94,45 +97,82 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
-      id: 'typeCall',
+      id: 'callType',
+      property: 'call_type',
+      exportField: 'call_type',
       numeric: false,
       disablePadding: true,
+      isDefault: true,
       label: "Type de l'appel",
+      render: ({callType}) =>getCallTypeLabel(callType),
     },
     {
-        id: 'title',
-        numeric: false,
-        disablePadding: false,
-        label: 'Libellé',
+      id: 'title',
+      property: 'title',
+      exportField: 'title',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: "Libellé",
     },
     {
-        id: 'entryDateTime',
-        numeric: false,
-        disablePadding: false,
-        label: 'Date',
+      id: 'entryDateTime',
+      property: 'entry_date_time',
+      exportField: 'entry_date_time',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: "Date",
+      render: ({entryDateTime}) =>getFormatDateTime(entryDateTime),
     },
     {
-        id: 'caller',
-        numeric: false,
-        disablePadding: false,
-        label: 'Qui a appelé ?',
+      id: 'Caller',
+      property: 'caller__name',
+      exportField: ['caller__name'],
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: "Qui a appelé ?",
+      render: ({caller}) => caller?.name,
     },
     {
-        id: 'establishments',
-        numeric: false,
-        disablePadding: false,
-        label: 'Structures concernées',
+      id: 'establishments',
+      property: 'establishments__establishment_name',
+      exportField: ['establishments__establishment__name'],
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: "Structures concernées ?",
+      render: ({establishments}) => establishments && establishments.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+      {establishments?.map((establishment, index) => {
+        return (
+          <EstablishmentChip
+            key={index}
+            establishment={establishment?.establishment}
+          />
+        );
+      })}
+    </Stack>
     },
     {
-        id: 'employees',
-        numeric: false,
-        disablePadding: false,
-        label: 'Employés concernés',
+      id: 'employees',
+      property: 'employees__employee__first_name',
+      exportField: ['employees__employee__first_name', 'employees__employee__last_name'],
+      numeric: false,
+      disablePadding: false,
+      isDefault: true,
+      disableClickDetail: true,
+      sortDisabled: true,
+      label: 'Employée(s)',
+      render: ({employees}) => employees && employees.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+          <ChipGroupWithPopover people={employees?.map((employee)=>employee?.employee)} />
+    </Stack>
     },
     {
         id: 'action',
         numeric: true,
         disablePadding: false,
+        isDefault: true,
         label: 'Actions',
     },
 ];
@@ -145,9 +185,10 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    selectedColumns = []
   } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property, sortDisabled=false) => (event) => {
+    if(!sortDisabled) onRequestSort(event, property);
   };
 
   return (
@@ -164,7 +205,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </StyledTableCell>
-        {headCells.map((headCell) => (
+        {selectedColumns.map((headCell) => (
           <StyledTableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -172,9 +213,10 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+              hideSortIcon={headCell.sortDisabled}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.property, headCell?.sortDisabled)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -191,7 +233,10 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onFilterChange } = props;
+  const [selectedColumns, setSelectedColumns] = React.useState(
+    headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
+  );
 
   return (
     <Toolbar
@@ -225,10 +270,14 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les appels
+          Les véhicules
         </Typography>
       )}
-
+      <TableExportButton 
+        entity={'Call'}
+        fileName={'Appels'}
+        fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
+        titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>
@@ -236,11 +285,12 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <TableFilterButton headCells={headCells} 
+          onFilterChange={(currentColumns)=>{
+            setSelectedColumns(currentColumns);
+            onFilterChange(headCells?.filter(c=> currentColumns?.includes(c.id)))
+          }
+        }/>
       )}
     </Toolbar>
   );
@@ -250,14 +300,16 @@ export default function TableListCalls({
   loading,
   rows,
   onDeleteCall,
-  onUpdateCallState,
+  onFilterChange,
+  paginator,
 }) {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -274,6 +326,7 @@ export default function TableListCalls({
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    onFilterChange({orderBy: `${isAsc ? '-' : ''}${property}`})
   };
 
   const handleSelectAllClick = (event) => {
@@ -319,17 +372,20 @@ export default function TableListCalls({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
+  const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+      <Paper sx={{ width: '100%', mb: 2 }} >
+        <EnhancedTableToolbar numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
+            border="0"
             size="medium"
           >
             <EnhancedTableHead
+              selectedColumns={selectedColumns}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -340,16 +396,16 @@ export default function TableListCalls({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="8">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="8">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucune appel trouvé.
+                      Aucun véhicule trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -399,68 +455,20 @@ export default function TableListCalls({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                    <Stack direction="row" flexWrap='wrap' spacing={1}>
-                      <Chip
-                        label={getCallTypeLabel(row?.callType)}
-                        variant="outlined"
-                      />
-                    </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{row.title}</StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDateTime(row?.entryDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="left"></StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.establishments?.map((establishment, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={establishment?.establishment?.name}
-                                  src={
-                                    establishment?.establishment?.logo
-                                      ? establishment?.establishment?.logo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={establishment?.establishment?.name}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.employees?.map((employee, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={employee?.employee?.firstName}
-                                  src={
-                                    employee?.employee?.photo
-                                      ? employee?.employee?.photo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={employee?.employee?.firstName}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>
-                    </StyledTableCell>
+                    {
+                      selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
+                        return <StyledTableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding={column?.disablePadding ? "none" : "normal"}
+                          key={index}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/administratif/appels/details/${row?.id}`)}}
+                        >
+                        {column?.render ? column?.render(row) : row[column?.id]}
+                        </StyledTableCell>
+                      })
+                    }
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -526,7 +534,7 @@ export default function TableListCalls({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={6} />
+                  <StyledTableCell colSpan={selectedColumns.length + 1} />
                 </StyledTableRow>
               )}
             </TableBody>

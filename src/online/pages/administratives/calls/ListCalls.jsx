@@ -3,7 +3,6 @@ import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
-import CallItemCard from './CallItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Add } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
@@ -33,6 +32,7 @@ export default function ListCalls() {
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
     setCallFilter(newFilter);
+    setPaginator({ ...paginator, page: 1 });
   };
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
@@ -50,55 +50,61 @@ export default function ListCalls() {
 
   React.useEffect(() => {
     getCalls();
-  }, [callFilter, paginator]);
+  }, [paginator]);
+  
+  const [deleteCall, { loading: loadingDelete }] = useMutation(
+    DELETE_CALL,
+    {
+      onCompleted: (datas) => {
+        if (datas.deleteCall.deleted) {
+          setNotifyAlert({
+            isOpen: true,
+            message: 'Supprimé avec succès',
+            type: 'success',
+          });
+        } else {
+          setNotifyAlert({
+            isOpen: true,
+            message: `Non Supprimé ! ${datas.deleteCall.message}.`,
+            type: 'error',
+          });
+        }
+      },
+      update(cache, { data: { deleteCall } }) {
+        console.log('Updating cache after deletion:', deleteCall);
 
-  const [deleteCall, { loading: loadingDelete }] = useMutation(DELETE_CALL, {
-    onCompleted: (datas) => {
-      if (datas.deleteCall.deleted) {
-        setNotifyAlert({
-          isOpen: true,
-          message: 'Supprimé avec succès',
-          type: 'success',
+        const deletedCallId = deleteCall.id;
+
+        cache.modify({
+          fields: {
+            calls(
+              existingCalls = { totalCount: 0, nodes: [] },
+              { readField },
+            ) {
+              const updatedCalls = existingCalls.nodes.filter(
+                (call) => readField('id', call) !== deletedCallId,
+              );
+
+              console.log('Updated calls:', updatedCalls);
+
+              return {
+                totalCount: existingCalls.totalCount - 1,
+                nodes: updatedCalls,
+              };
+            },
+          },
         });
-      } else {
+      },
+      onError: (err) => {
+        console.log(err);
         setNotifyAlert({
           isOpen: true,
-          message: `Non Supprimé ! ${datas.deleteCall.message}.`,
+          message: 'Non Supprimé ! Veuillez réessayer.',
           type: 'error',
         });
-      }
+      },
     },
-    update(cache, { data: { deleteCall } }) {
-      console.log('Updating cache after deletion:', deleteCall);
-
-      const deletedCallId = deleteCall.id;
-
-      cache.modify({
-        fields: {
-          calls(existingCalls = { totalCount: 0, nodes: [] }, { readField }) {
-            const updatedCalls = existingCalls.nodes.filter(
-              (call) => readField('id', call) !== deletedCallId,
-            );
-
-            console.log('Updated calls:', updatedCalls);
-
-            return {
-              totalCount: existingCalls.totalCount - 1,
-              nodes: updatedCalls,
-            };
-          },
-        },
-      });
-    },
-    onError: (err) => {
-      console.log(err);
-      setNotifyAlert({
-        isOpen: true,
-        message: 'Non Supprimé ! Veuillez réessayer.',
-        type: 'error',
-      });
-    },
-  });
+  );
 
   const onDeleteCall = (id) => {
     setConfirmDialog({
@@ -111,7 +117,6 @@ export default function ListCalls() {
       },
     });
   };
-
   const [updateCallState, { loading: loadingPutState }] = useMutation(
     PUT_CALL_STATE,
     {
@@ -175,15 +180,15 @@ export default function ListCalls() {
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
             {loadingCalls && (
-              <Grid key={'pgrs'} item xs={2} sm={4} md={3}>
+              <Grid key={'pgrs'} item xs={12} sm={6} md={4}>
                 <ProgressService type="mediaCard" />
               </Grid>
             )}
             {callsData?.calls?.nodes?.length < 1 && !loadingCalls && (
-              <Alert severity="warning">Aucun appel trouvé.</Alert>
+              <Alert severity="warning">Aucun véhicule trouvé.</Alert>
             )}
             {callsData?.calls?.nodes?.map((call, index) => (
-              <Grid item xs={2} sm={4} md={3} key={index}>
+              <Grid item xs={12} sm={6} md={4} key={index}>
                 <Item>
                   <CallItemCard
                     call={call}
@@ -201,6 +206,8 @@ export default function ListCalls() {
           loading={loadingCalls}
           rows={callsData?.calls?.nodes || []}
           onDeleteCall={onDeleteCall}
+          onFilterChange={(newFilter) => handleFilterChange({ ...callFilter, ...newFilter })}
+          paginator={paginator}
         />
       </Grid>
       <Grid item xs={12}>

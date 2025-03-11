@@ -9,6 +9,8 @@ import {
   ButtonBase,
   Typography,
   Divider,
+  Chip,
+  Link as MuiLink,
 } from '@mui/material';
 
 import { LETTER_RECAP } from '../../../../_shared/graphql/queries/LetterQueries';
@@ -97,10 +99,10 @@ function LetterMiniInfos({ letter }) {
       }}
     >
       <Grid container spacing={2}>
-        {letter?.image && letter?.image != '' && (
+        {letter?.document && letter?.document !== '' && (
           <Grid item>
             <ButtonBase sx={{ width: 128, height: 'auto' }}>
-              <Img alt="complex" src={letter?.image} />
+              <Img alt="document" src={letter?.document} />
             </ButtonBase>
           </Grid>
         )}
@@ -113,20 +115,17 @@ function LetterMiniInfos({ letter }) {
               <Typography gutterBottom variant="subtitle1" component="div">
                 {letter?.title}
               </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b> {`${getFormatDateTime(letter?.createdAt)}`}{' '}
-                <br />
-                <b>Dernière modification: </b>
-                {`${getFormatDateTime(letter?.updatedAt)}`}
+              <Typography gutterBottom variant="subtitle1" component="div">
+                Type de courrier : <b>{letter?.letterType === 'INCOMING' ? 'Entrant' : 'Sortant'}</b>
               </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Date début prévue: </b>{' '}
-                {`${getFormatDateTime(letter?.startingDateTime)}`} <br />
-                <b>Date fin prévue: </b>{' '}
-                {`${getFormatDateTime(letter?.endingDateTime)}`}
+              <Typography gutterBottom variant="subtitle1" component="div">
+                Date et heure : <b>{getFormatDateTime(letter?.entryDateTime)}</b>
               </Typography>
+              {letter?.document && (
+                <Typography gutterBottom variant="subtitle1" component="div">
+                  Pièce jointe : <MuiLink href={letter?.document} target="_blank" rel="noopener">Voir le document</MuiLink>
+                </Typography>
+              )}
             </Grid>
           </Grid>
         </Grid>
@@ -147,18 +146,97 @@ function LetterOtherInfos({ letter }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
-      <Typography gutterBottom variant="subtitle3" component="h3">
-        Les Personnes accompagnées
-      </Typography>
-      <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-        {letter?.beneficiaries?.map((beneficiary, index) => (
-          <Grid item xs={12} sm={12} md={12} key={index}>
-            <Item>
-              <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
-            </Item>
+      {letter?.sender && (
+        <>
+          <Typography gutterBottom variant="subtitle3" component="h3">
+            Expéditeur
+          </Typography>
+          <Typography gutterBottom variant="body1" component="div">
+            <b>Type: </b>
+            {letter?.sender?.senderType === 'PARTNER' 
+              ? 'Partenaire'
+              : letter?.sender?.senderType === 'SUPPLIER'
+                ? 'Fournisseur'
+                : letter?.sender?.senderType === 'FINANCIER'
+                  ? 'Financeur'
+                  : letter?.sender?.senderType === 'EMPLOYEE'
+                    ? 'Employé'
+                    : letter?.sender?.senderType === 'OTHER'
+                      ? 'Autre'
+                      : ''}
+          </Typography>
+          <Typography gutterBottom variant="body1" component="div">
+            <b>Nom: </b>
+            {letter?.sender?.senderType === 'EMPLOYEE' && letter?.sender?.employee
+              ? `${letter?.sender?.employee?.firstName} ${letter?.sender?.employee?.lastName}`
+              : letter?.sender?.senderType === 'PARTNER' && letter?.sender?.partner
+                ? letter?.sender?.partner?.name
+                : letter?.sender?.senderType === 'SUPPLIER' && letter?.sender?.supplier
+                  ? letter?.sender?.supplier?.name
+                  : letter?.sender?.senderType === 'FINANCIER' && letter?.sender?.financier
+                    ? letter?.sender?.financier?.name
+                    : letter?.sender?.senderType === 'OTHER'
+                      ? letter?.sender?.otherSender
+                      : letter?.sender?.name || ''}
+          </Typography>
+          <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+        </>
+      )}
+
+      {letter?.establishments && letter?.establishments.length > 0 && (
+        <>
+          <Typography gutterBottom variant="subtitle3" component="h3">
+            Structures concernées
+          </Typography>
+          <Grid container spacing={1} sx={{ marginBottom: 2 }}>
+            {letter?.establishments?.map((est, index) => (
+              <Grid item key={index}>
+                <Chip 
+                  label={est?.establishment?.name} 
+                  variant="outlined"
+                />
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
+          <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+        </>
+      )}
+
+      {letter?.employees && letter?.employees.length > 0 && (
+        <>
+          <Typography gutterBottom variant="subtitle3" component="h3">
+            Employés concernés
+          </Typography>
+          <Grid container spacing={1} sx={{ marginBottom: 2 }}>
+            {letter?.employees?.map((emp, index) => (
+              <Grid item key={index}>
+                <Chip 
+                  label={`${emp?.employee?.firstName} ${emp?.employee?.lastName}`}
+                  variant="outlined"
+                />
+              </Grid>
+            ))}
+          </Grid>
+          <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+        </>
+      )}
+
+      {letter?.beneficiaries && letter?.beneficiaries.length > 0 && (
+        <>
+          <Typography gutterBottom variant="subtitle3" component="h3">
+            Personnes accompagnées
+          </Typography>
+          <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
+            {letter?.beneficiaries?.map((beneficiary, index) => (
+              <Grid item xs={12} sm={12} md={12} key={index}>
+                <Item>
+                  <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
+                </Item>
+              </Grid>
+            ))}
+          </Grid>
+        </>
+      )}
     </Paper>
   );
 }

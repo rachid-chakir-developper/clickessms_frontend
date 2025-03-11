@@ -111,20 +111,13 @@ function CallMiniInfos({ call }) {
               <Typography gutterBottom variant="subtitle1" component="div">
                 {call?.title}
               </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b> {`${getFormatDateTime(call?.createdAt)}`}{' '}
-                <br />
-                <b>Dernière modification: </b>
-                {`${getFormatDateTime(call?.updatedAt)}`}
+              <Typography gutterBottom variant="subtitle1" component="div">
+                Type d'appel : <b>{call?.callType === 'INCOMING' ? 'Entrant' : 'Sortant'}</b>
+              </Typography>
+              <Typography gutterBottom variant="subtitle1" component="div">
+                Date et heure : <b>{getFormatDateTime(call?.entryDateTime)}</b>
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Date début prévue: </b>{' '}
-                {`${getFormatDateTime(call?.startingDateTime)}`} <br />
-                <b>Date fin prévue: </b>{' '}
-                {`${getFormatDateTime(call?.endingDateTime)}`}
-              </Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -145,6 +138,72 @@ function CallOtherInfos({ call }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
+      {call?.caller && (
+        <>
+          <Typography gutterBottom variant="subtitle3" component="h3">
+            Appelant
+          </Typography>
+          <Typography gutterBottom variant="body1" component="div">
+            {call?.caller?.callerType === 'PhoneNumber' 
+              ? call?.caller?.phoneNumber 
+              : call?.caller?.callerType === 'Employee' 
+                ? `${call?.caller?.employee?.firstName} ${call?.caller?.employee?.lastName}`
+                : call?.caller?.callerType === 'Beneficiary'
+                  ? `${call?.caller?.beneficiary?.firstName} ${call?.caller?.beneficiary?.lastName}`
+                  : call?.caller?.callerType === 'Client'
+                    ? call?.caller?.client?.name
+                    : call?.caller?.callerType === 'Establishment'
+                      ? call?.caller?.establishment?.name
+                      : call?.caller?.callerType === 'Partner'
+                        ? call?.caller?.partner?.name
+                        : call?.caller?.callerType === 'Supplier'
+                          ? call?.caller?.supplier?.name
+                          : ''}
+          </Typography>
+          <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+        </>
+      )}
+
+      {call?.establishments && call?.establishments.length > 0 && (
+        <>
+          <Typography gutterBottom variant="subtitle3" component="h3">
+            Structures concernées
+          </Typography>
+          <Grid container spacing={1} sx={{ marginBottom: 2 }}>
+            {call?.establishments?.map((est, index) => (
+              <Grid item key={index}>
+                <Paper variant="outlined" sx={{ padding: 1 }}>
+                  <Typography variant="body2">
+                    {est?.establishment?.name}
+                  </Typography>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+          <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+        </>
+      )}
+
+      {call?.employees && call?.employees.length > 0 && (
+        <>
+          <Typography gutterBottom variant="subtitle3" component="h3">
+            Employés concernés
+          </Typography>
+          <Grid container spacing={1} sx={{ marginBottom: 2 }}>
+            {call?.employees?.map((emp, index) => (
+              <Grid item key={index}>
+                <Paper variant="outlined" sx={{ padding: 1 }}>
+                  <Typography variant="body2">
+                    {`${emp?.employee?.firstName} ${emp?.employee?.lastName}`}
+                  </Typography>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+          <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+        </>
+      )}
+
       <Typography gutterBottom variant="subtitle3" component="h3">
         Les Personnes accompagnées
       </Typography>

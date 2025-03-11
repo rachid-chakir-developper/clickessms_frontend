@@ -31,7 +31,7 @@ import {
   MoreVert,
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
@@ -259,6 +259,7 @@ export default function TableListLetters({
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const navigate = useNavigate();
 
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -303,6 +304,13 @@ export default function TableListLetters({
       );
     }
     setSelected(newSelected);
+  };
+
+  const handleRowClick = (event, id) => {
+    if (event.target.closest('input[type="checkbox"]') || event.target.closest('button')) {
+      return;
+    }
+    navigate(`/online/administratif/courriers/details/${id}`);
   };
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
@@ -389,6 +397,7 @@ export default function TableListLetters({
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
+                    onClick={(event) => handleRowClick(event, row.id)}
                   >
                     <StyledTableCell padding="checkbox">
                       <Checkbox
