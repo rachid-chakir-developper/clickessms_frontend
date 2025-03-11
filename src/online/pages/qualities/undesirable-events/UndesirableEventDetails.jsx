@@ -197,21 +197,6 @@ function UndesirableEventMiniInfos({ undesirableEvent }) {
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b>
-                {`${getFormatDateTime(undesirableEvent?.createdAt)}`} <br />
-                <b>Dernière modification: </b>
-                {`${getFormatDateTime(undesirableEvent?.updatedAt)}`}
-              </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Date début : </b>
-                {`${getFormatDateTime(undesirableEvent?.startingDateTime)}`}
-                <br />
-                <b>Date fin: </b>
-                {`${getFormatDateTime(undesirableEvent?.endingDateTime)}`}
-              </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
                 <b>Progression: </b>
                 <CircularProgressWithLabel value={undesirableEvent?.completionPercentage}/>
               </Typography>
