@@ -7,29 +7,18 @@ import { EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
 export const JOB_POSTING_MINI_INFOS = gql`
   fragment JobPostingMiniInfosFragment on JobPostingType {
     id
-    firstName
-    lastName
-    email
-    phone
-    jobTitle
-    rating
-    isActive
+    title
   }
 `;
 
 export const JOB_POSTING_BASIC_INFOS = gql`
   fragment JobPostingBasicInfosFragment on JobPostingType {
     ...JobPostingMiniInfosFragment
-    availabilityDate
+    publicationDate
+    expirationDate
     description
-    cv
-    coverLetter
     employee{
       ...EmployeeMiniInfosFragment
-    }
-    jobPlatform{
-      id
-      name
     }
     jobPosition {
       ...JobPositionMiniInfosFragment
@@ -44,20 +33,34 @@ export const JOB_POSTING_BASIC_INFOS = gql`
   ${JOB_POSITION_MINI_INFOS}
 `;
 
+export const JOB_POSTING_PLATFORM_DETAILS = gql`
+  fragment JobPostingPlatformFragment on JobPostingPlatformType {
+    id
+    postLink
+    jobPlatform{
+      id
+      name
+    }
+  }
+`;
+
 export const JOB_POSTING_DETAILS = gql`
   fragment JobPostingDetailsFragment on JobPostingType {
     ...JobPostingBasicInfosFragment
+    jobPlatforms{
+      ...JobPostingPlatformFragment
+    }
     observation
   }
   ${JOB_POSTING_BASIC_INFOS}
+  ${JOB_POSTING_PLATFORM_DETAILS}
 `;
 
 export const JOB_POSTING_RECAP_DETAILS = gql`
   fragment JobPostingRecapDetailsFragment on JobPostingType {
-    ...JobPostingBasicInfosFragment
-    observation
+    ...JobPostingDetailsFragment
     createdAt
     updatedAt
   }
-  ${JOB_POSTING_BASIC_INFOS}
+  ${JOB_POSTING_DETAILS}
 `;

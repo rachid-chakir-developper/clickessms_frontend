@@ -50,6 +50,7 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
       rating: 0,
       availabilityDate:  null,
       isActive: true,
+      jobPosition: null,
       description: '',
       observation: '',
       files: [],
@@ -57,6 +58,9 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       let { cv, coverLetter, files, ...jobCandidateCopy } = values;
+      jobCandidateCopy.jobPosition = jobCandidateCopy.jobPosition
+        ? jobCandidateCopy.jobPosition.id
+        : null;
       if (idJobCandidate && idJobCandidate != '') {
         onUpdateJobCandidate({
           id: jobCandidateCopy.id,
@@ -75,6 +79,14 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
           },
         });
     },
+  });
+  const {
+    loading: loadingJobPositions,
+    data: jobPositionsData,
+    error: jobPositionsError,
+    fetchMore: fetchMoreJobPositions,
+  } = useQuery(GET_JOB_POSITIONS, {
+    fetchPolicy: 'network-only',
   });
 
   const [createJobCandidate, { loading: loadingPost }] = useMutation(POST_JOB_CANDIDATE, {
@@ -200,6 +212,20 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
       {!loadingJobCandidate && (
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={{ xs: 2, md: 3 }}>
+            <Grid item xs={12} sm={6} md={3}>
+              <Item>
+                <TheAutocomplete
+                  options={jobPositionsData?.jobPositions?.nodes}
+                  label="Fiche besoin"
+                  placeholder="Choisissez une fiche ?"
+                  multiple={false}
+                  value={formik.values.jobPosition}
+                  onChange={(e, newValue) =>
+                    formik.setFieldValue('jobPosition', newValue)
+                  }
+                />
+              </Item>
+            </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Item>
                 <TheTextField

@@ -25,14 +25,18 @@ import {
   MoreVert,
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Rating} from '@mui/material';
+import AppLabel from '../../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import TableExportButton from '../../../../_shared/components/data_tools/export/TableExportButton';
+import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
 import TableFilterButton from '../../../../_shared/components/table/TableFilterButton';
-import { getFormatDate, stripHtml, truncateText } from '../../../../../_shared/tools/functions';
+import { formatCurrencyAmount, getFormatDate, truncateText } from '../../../../../_shared/tools/functions';
 import JobPositionChip from '../job_positions/JobPositionChip';
 import EmployeeChip from '../../employees/EmployeeChip';
+import FileViewer from '../../../../../_shared/components/media/FileViewer';
+import JobCandidateStatusLabelMenu from './JobCandidateStatusLabelMenu';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -101,23 +105,59 @@ const headCells = [,
       label: 'Réference',
     },
     {
-        id: 'title',
-        property: 'title',
-        exportField: 'title',
+        id: 'firstName',
+        property: 'first_name',
+        exportField: 'first_name',
         numeric: false,
         disablePadding: true,
         isDefault: true,
-        label: 'Titre',
+        label: 'Prénom',
     },
     {
-        id: 'description',
-        property: 'description',
-        exportField: 'description',
+        id: 'lastName',
+        property: 'last_name',
+        exportField: 'last_name',
         numeric: false,
-        disablePadding: false,
+        disablePadding: true,
         isDefault: true,
-        label: 'Description',
-        render: ({description})=> <Tooltip title={stripHtml(description)}>{truncateText(description, 160)}</Tooltip>
+        label: 'Nom',
+    },
+    {
+        id: 'jobTitle',
+        property: 'job_title',
+        exportField: 'job_title',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Métier',
+    },
+    {
+        id: 'email',
+        property: 'email',
+        exportField: 'email',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'E-mail',
+    },
+    {
+        id: 'phone',
+        property: 'phone',
+        exportField: 'phone',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Tél',
+    },
+    {
+        id: 'availabilityDate',
+        property: 'availability_date',
+        exportField: 'availability_date',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Disponible le',
+        render: ({availabilityDate})=> getFormatDate(availabilityDate)
     },
     {
         id: 'employee',
@@ -143,24 +183,68 @@ const headCells = [,
         render: ({jobPosition}) => jobPosition && <JobPositionChip jobPosition={jobPosition}/>
     },
     {
-        id: 'publicationDate',
-        property: 'publication_date',
-        exportField: 'publication_date',
+        id: 'jobPlatform',
+        property: 'job_platform__name',
+        exportField: ['job_platform__name'],
         numeric: false,
-        disablePadding: true,
+        disablePadding: false,
         isDefault: true,
-        label: 'Publiée le',
-        render: ({publicationDate})=> getFormatDate(publicationDate)
+        label: 'Source',
+        render: ({jobPlatform})=> jobPlatform?.name
     },
     {
-        id: 'expirationDate',
-        property: 'expiration_date',
-        exportField: 'expiration_date',
+        id: 'rating',
+        property: 'rating',
+        exportField: 'rating',
         numeric: false,
-        disablePadding: true,
+        disablePadding: false,
         isDefault: true,
-        label: 'Expire le',
-        render: ({expirationDate})=> getFormatDate(expirationDate)
+        label: 'Note',
+        render: ({rating})=> <Rating value={rating} readOnly />
+    },
+    {
+        id: 'cv',
+        property: 'cv',
+        exportField: 'cv',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'CV',
+        render: ({cv, firstName, lastName})=> <FileViewer size="small" fileUrl={cv} fileName={`cv-${firstName}-${lastName}`} />
+    },
+    {
+        id: 'coverLetter',
+        property: 'cover_letter',
+        exportField: 'cover_letter',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Lettre de motivation',
+        render: ({coverLetter, firstName, lastName})=> <FileViewer size="small" fileUrl={coverLetter} fileName={`Lettre-de-motivation-${firstName}-${lastName}`} />
+    },
+    {
+        id: 'description',
+        property: 'description',
+        exportField: 'description',
+        numeric: false,
+        disablePadding: false,
+        label: 'Description',
+        render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
+    },
+    {
+        id: 'status',
+        property: 'status',
+        exportField: 'status',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        label: 'Status',
+        render: (data)=> <JobCandidateStatusLabelMenu jobCandidate={data} />
     },
     {
         id: 'action',
@@ -264,11 +348,11 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-           Les annonces
+           Vivier candidats
         </Typography>
       )}
       <TableExportButton 
-        entity={'JobPosting'}
+        entity={'JobCandidate'}
         fileName={'Dépenses'}
         fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
         titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
@@ -290,10 +374,10 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListJobPostings({
+export default function TableListJobCandidates({
   loading,
   rows,
-  onDeleteJobPosting,
+  onDeleteJobCandidate,
   onFilterChange,
   paginator,
 }) {
@@ -399,7 +483,7 @@ export default function TableListJobPostings({
                 <StyledTableRow>
                   <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucune annonce trouvée.
+                      Aucun candidat trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -457,7 +541,7 @@ export default function TableListJobPostings({
                           scope="row"
                           padding={column?.disablePadding ? "none" : "normal"}
                           key={index}
-                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/ressources-humaines/recrutement/annonces/details/${row?.id}`)}}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/ressources-humaines/recrutement/vivier-candidats/details/${row?.id}`)}}
                         >
                         {column?.render ? column?.render(row) : row[column?.id]}
                         </StyledTableCell>
@@ -481,7 +565,7 @@ export default function TableListJobPostings({
                         }}
                       >
                         <Link
-                          to={`/online/ressources-humaines/recrutement/annonces/details/${row?.id}`}
+                          to={`/online/ressources-humaines/recrutement/vivier-candidats/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -490,7 +574,7 @@ export default function TableListJobPostings({
                           </MenuItem>
                         </Link>
                         <Link
-                          to={`/online/ressources-humaines/recrutement/annonces/modifier/${row?.id}`}
+                          to={`/online/ressources-humaines/recrutement/vivier-candidats/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -500,7 +584,7 @@ export default function TableListJobPostings({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteJobPosting(row?.id);
+                            onDeleteJobCandidate(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

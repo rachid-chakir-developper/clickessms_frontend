@@ -24,15 +24,13 @@ import {
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Rating} from '@mui/material';
-import AppLabel from '../../../../../_shared/components/app/label/AppLabel';
+import { Alert, MenuItem, Popover, Rating} from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import TableExportButton from '../../../../_shared/components/data_tools/export/TableExportButton';
-import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
 import TableFilterButton from '../../../../_shared/components/table/TableFilterButton';
-import { formatCurrencyAmount, getFormatDate, truncateText } from '../../../../../_shared/tools/functions';
+import { getFormatDate, truncateText } from '../../../../../_shared/tools/functions';
 import JobPositionChip from '../job_positions/JobPositionChip';
 import EmployeeChip from '../../employees/EmployeeChip';
 import FileViewer from '../../../../../_shared/components/media/FileViewer';
@@ -168,18 +166,6 @@ const headCells = [,
         sortDisabled: true,
         label: 'Ajouté par',
         render: ({employee}) => <EmployeeChip employee={employee} />
-    },
-    {
-        id: 'bank_account',
-        property: 'bank_account__name',
-        exportField: ['bank_account__name'],
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        disableClickDetail: true,
-        sortDisabled: true,
-        label: 'Fiche besoin',
-        render: ({jobPosition}) => jobPosition && <JobPositionChip jobPosition={jobPosition}/>
     },
     {
         id: 'jobPlatform',

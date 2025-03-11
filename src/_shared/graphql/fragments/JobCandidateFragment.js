@@ -1,7 +1,6 @@
 // JobCandidateFragment.js
 
 import { gql } from '@apollo/client';
-import { JOB_POSITION_MINI_INFOS } from './JobPositionFragment';
 import { EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
 
 export const JOB_CANDIDATE_MINI_INFOS = gql`
@@ -31,9 +30,6 @@ export const JOB_CANDIDATE_BASIC_INFOS = gql`
       id
       name
     }
-    jobPosition {
-      ...JobPositionMiniInfosFragment
-    }
     folder {
       id
       name
@@ -41,7 +37,6 @@ export const JOB_CANDIDATE_BASIC_INFOS = gql`
   }
   ${EMPLOYEE_MINI_INFOS}
   ${JOB_CANDIDATE_MINI_INFOS}
-  ${JOB_POSITION_MINI_INFOS}
 `;
 
 export const JOB_CANDIDATE_DETAILS = gql`

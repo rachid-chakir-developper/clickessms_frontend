@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import { Stack, Box, Typography, Button, InputAdornment, Divider, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
+import { Stack, Box, Typography, Button, InputAdornment, Divider, MenuItem, FormControl, InputLabel, Select, IconButton } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -23,6 +23,8 @@ import { GET_JOB_POSITIONS } from '../../../../../_shared/graphql/queries/JobPos
 import TheDesktopDatePicker from '../../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import RatingField from '../../../../../_shared/components/form-fields/RatingField';
 import { GET_DATAS_JOB } from '../../../../../_shared/graphql/queries/DataQueries';
+import TextEditorField from '../../../../../_shared/components/form-fields/TextEditorField';
+import { Close } from '@mui/icons-material';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -38,44 +40,37 @@ export default function AddJobPostingForm({ idJobPosting, title }) {
   const validationSchema = yup.object({});
   const formik = useFormik({
     initialValues: {
-      cv: undefined,
-      coverLetter: undefined,
       number: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      jobTitle: '',
-      jobPlatform: null,
-      rating: 0,
-      availabilityDate:  null,
-      isActive: true,
+      title: '',
+      publicationDate:  null,
+      expirationDate:  null,
       jobPosition: null,
       description: '',
       observation: '',
-      files: [],
+      jobPlatforms: []
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let { cv, coverLetter, files, ...jobPostingCopy } = values;
+      let jobPostingCopy = { ...values };
       jobPostingCopy.jobPosition = jobPostingCopy.jobPosition
         ? jobPostingCopy.jobPosition.id
         : null;
+      if (!jobPostingCopy?.jobPlatforms) jobPostingCopy['jobPlatforms'] = [];
+      let items = [];
+      jobPostingCopy.jobPlatforms.forEach((item) => {
+        let { __typename, ...itemCopy } = item;
+        items.push(itemCopy);
+      });
+      jobPostingCopy.jobPlatforms = items;
       if (idJobPosting && idJobPosting != '') {
         onUpdateJobPosting({
           id: jobPostingCopy.id,
           jobPostingData: jobPostingCopy,
-          cv: cv,
-          coverLetter: coverLetter,
-          files: files
         });
       } else
         createJobPosting({
           variables: {
             jobPostingData: jobPostingCopy,
-            cv: cv,
-            coverLetter: coverLetter,
-            files: files,
           },
         });
     },
@@ -187,12 +182,44 @@ export default function AddJobPostingForm({ idJobPosting, title }) {
       fetchMore: fetchMoreDatas,
     } = useQuery(GET_DATAS_JOB, { fetchPolicy: 'network-only' });
 
+    const addJobPlatform = () => {
+      formik.setValues({
+        ...formik.values,
+        jobPlatforms: [
+          ...formik.values.jobPlatforms,
+          { postLink: '',
+            jobPlatform: null,
+          },
+        ],
+      });
+    };
+    
+    const removeJobPlatform = (index) => {
+      const updatedJobPlatforms = [...formik.values.jobPlatforms];
+      updatedJobPlatforms.splice(index, 1);
+    
+      formik.setValues({
+        ...formik.values,
+        jobPlatforms: updatedJobPlatforms,
+      });
+    };
+
   const [getJobPosting, { loading: loadingJobPosting }] = useLazyQuery(GET_JOB_POSTING, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       let { __typename, folder, employee, ...jobPostingCopy } =  data.jobPosting;
-      jobPostingCopy.jobPlatform = jobPostingCopy.jobPlatform ? Number(jobPostingCopy.jobPlatform.id): null;
-      jobPostingCopy.availabilityDate = jobPostingCopy.availabilityDate ? dayjs(jobPostingCopy.availabilityDate) : null;
+      jobPostingCopy.publicationDate = jobPostingCopy.publicationDate ? dayjs(jobPostingCopy.publicationDate) : null;
+      jobPostingCopy.expirationDate = jobPostingCopy.expirationDate ? dayjs(jobPostingCopy.expirationDate) : null;
+      if (!jobPostingCopy?.jobPlatforms) jobPostingCopy['jobPlatforms'] = [];
+      let items = [];
+      jobPostingCopy.jobPlatforms.forEach((item) => {
+        let { __typename, ...itemCopy } = item;
+        itemCopy.jobPlatform = itemCopy.jobPlatform
+        ? Number(itemCopy.jobPlatform.id)
+        : null;
+        items.push(itemCopy);
+      });
+      jobPostingCopy.jobPlatforms = items;
       formik.setValues(jobPostingCopy);
     },
     onError: (err) => console.log(err),
@@ -226,60 +253,13 @@ export default function AddJobPostingForm({ idJobPosting, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Prénom"
-                  value={formik.values.firstName}
-                  onChange={(e) => formik.setFieldValue('firstName', e.target.value)}
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Nom"
-                  value={formik.values.lastName}
-                  onChange={(e) => formik.setFieldValue('lastName', e.target.value)}
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Métier"
-                  value={formik.values.jobTitle}
-                  onChange={(e) => formik.setFieldValue('jobTitle', e.target.value)}
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
             <Grid item xs={12} sm={6} md={3} >
               <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="E-mail"
-                  value={formik.values.email}
-                  onChange={(e) =>
-                    formik.setFieldValue('email', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3} >
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Tél"
-                  value={formik.values.phone}
-                  onChange={(e) =>
-                    formik.setFieldValue('phone', e.target.value)
+                <TheDesktopDatePicker
+                  label="Publiée le"
+                  value={formik.values.publicationDate}
+                  onChange={(date) =>
+                    formik.setFieldValue('publicationDate', date)
                   }
                   disabled={loadingPost || loadingPut}
                 />
@@ -288,78 +268,36 @@ export default function AddJobPostingForm({ idJobPosting, title }) {
             <Grid item xs={12} sm={6} md={3} >
               <Item>
                 <TheDesktopDatePicker
-                  label="Disponible le"
-                  value={formik.values.availabilityDate}
+                  label="Expire le"
+                  value={formik.values.expirationDate}
                   onChange={(date) =>
-                    formik.setFieldValue('availabilityDate', date)
+                    formik.setFieldValue('expirationDate', date)
                   }
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={3} >
+            <Grid item xs={12} sm={12} md={12}>
               <Item>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
-                  Source
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="jobPlatform"
-                    label="Source"
-                    value={formik.values.jobPlatform}
-                    onChange={(e) =>
-                      formik.setFieldValue('jobPlatform', e.target.value)
-                    }
-                    disabled={loadingPost || loadingPut}
-                  >
-                    <MenuItem value={null}>
-                      <em>Choisissez une source</em>
-                    </MenuItem>
-                    {dataData?.jobPlatforms?.map((data, index) => {
-                      return (
-                        <MenuItem key={index} value={data.id}>
-                          {data.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Item>
-                <RatingField
-                  size="large"
+                <TheTextField
                   variant="outlined"
-                  label="Note"
-                  value={formik.values.rating}
-                  onChange={(e) => formik.setFieldValue('rating', e)}
+                  label="Titre"
+                  value={formik.values.title}
+                  onChange={(e) => formik.setFieldValue('title', e.target.value)}
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Item>
-                <TheFileField
+            <Grid item xs={12} sm={12} md={12}>
+              <Item sx={{ minHeight: '400px', height: 'calc(100% - 190px);' }}>
+                <TextEditorField
                   variant="outlined"
-                  label="CV"
-                  fileValue={formik.values.cv}
-                  onChange={(cvFile) =>
-                    formik.setFieldValue('cv', cvFile)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Item>
-                <TheFileField
-                  variant="outlined"
-                  label="Lettre de motivation"
-                  fileValue={formik.values.coverLetter}
-                  onChange={(coverLetterFile) =>
-                    formik.setFieldValue('coverLetter', coverLetterFile)
+                  label="Description"
+                  multiline
+                  rows={8}
+                  value={formik.values.description}
+                  onChange={(value) =>
+                    formik.setFieldValue('description', value)
                   }
                   disabled={loadingPost || loadingPut}
                 />
@@ -369,19 +307,89 @@ export default function AddJobPostingForm({ idJobPosting, title }) {
               <Divider variant="middle" />
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Détail"
-                  multiline
-                  rows={8}
-                  value={formik.values.description}
-                  onChange={(e) =>
-                    formik.setFieldValue('description', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
+              <Grid
+                container
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}
+              >
+                <Grid item xs={12} sm={12} md={12} >
+                    {formik.values?.jobPlatforms?.map((item, index) => (
+                      <Grid
+                        container
+                        spacing={{ xs: 2, md: 3 }}
+                        columns={{ xs: 4, sm: 8, md: 12 }}
+                        key={index}
+                      >
+                        
+                        <Grid item xs={12} sm={4} md={4} >
+                          <Item>
+                            <FormControl fullWidth>
+                              <InputLabel id="demo-simple-select-label">
+                                Source
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-label"
+                                id="jobPlatform"
+                                label="Source"
+                                value={item.jobPlatform}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`jobPlatforms.${index}.jobPlatform`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              >
+                                <MenuItem value={null}>
+                                  <em>Choisissez une source</em>
+                                </MenuItem>
+                                {dataData?.jobPlatforms?.map((data, index) => {
+                                  return (
+                                    <MenuItem key={index} value={data.id}>
+                                      {data.name}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                            </FormControl>
+                          </Item>
+                        </Grid>
+                        <Grid item xs={12} sm={8} md={8} >
+                          <Item sx={{position: 'relative'}}>
+                            <TheTextField
+                              variant="outlined"
+                              label="Lien"
+                              value={item.postLink}
+                              onChange={(e) => formik.setFieldValue(`jobPlatforms.${index}.postLink`, e.target.value)}
+                              disabled={loadingPost || loadingPut}
+                            />
+                            <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                              onClick={() => removeJobPlatform(index)}
+                              edge="end"
+                              color="error"
+                            >
+                              <Close />
+                            </IconButton>
+                          </Item>
+                        </Grid>
+                      </Grid>
+                    ))}
+                </Grid>
+                <Grid
+                  xs={12}
+                  sm={12}
+                  md={12}
+                  item
+                >
+                  <Box sx={{ padding: 2, display: 'flex', justifyContent: 'flex-end', alignItems:'start' , borderStyle: 'dashed', borderWidth: 2, borderColor: '#f1f1f1', backgroundColor: '#fcfcfc'}}>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={addJobPlatform}
+                      disabled={loadingPost || loadingPut}
+                    >
+                      Ajouter une plateforme
+                    </Button>
+                  </Box>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>

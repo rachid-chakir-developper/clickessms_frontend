@@ -157,16 +157,6 @@ function JobCandidateMiniInfos({ jobCandidate }) {
               <Typography variant="subtitle1" component="div">
                 <b>Réference:</b> {jobCandidate?.number}
               </Typography>
-              {jobCandidate?.jobPosition && (
-                <>
-                  <Paper sx={{ padding: 2 }} variant="outlined">
-                    <Typography variant="h6" gutterBottom>
-                      Fiche besoin postulée
-                    </Typography>
-                    <JobPositionChip jobPosition={jobCandidate?.jobPosition} />
-                  </Paper>
-                </>
-              )}
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Paper sx={{ padding: 2 }} variant="outlined">
                 <Typography variant="h6" sx={{textDecoration: 'underline'}} gutterBottom>

@@ -43,6 +43,21 @@ export const PUT_JOB_CANDIDATE = gql`
   ${JOB_CANDIDATE_BASIC_INFOS}
 `;
 
+export const PUT_JOB_CANDIDATE_FIELDS = gql`
+  mutation UpdateJobCandidateFields($id: ID!, $jobCandidateData: JobCandidateInput!) {
+    updateJobCandidateFields(id: $id, jobCandidateData: $jobCandidateData) {
+      done
+      success
+      message
+      jobCandidate {
+        ...JobCandidateBasicInfosFragment
+      }
+    }
+  }
+  ${JOB_CANDIDATE_BASIC_INFOS}
+`;
+
+
 export const DELETE_JOB_CANDIDATE = gql`
   mutation DeleteJobCandidate($id: ID!) {
     deleteJobCandidate(id: $id) {
