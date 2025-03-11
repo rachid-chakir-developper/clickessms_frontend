@@ -8,7 +8,7 @@ import { TICKET_RECAP } from '../../../../_shared/graphql/queries/TicketQueries'
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDate, getFormatDateTime, getPriorityLabel } from '../../../../_shared/tools/functions';
 import EstablishmentItemCard from '../../companies/establishments/EstablishmentItemCard';
-import { AssignmentInd, Check, Edit } from '@mui/icons-material';
+import { AssignmentInd, Check, Edit, Event, Person, Business, Flag, FactCheck, Description, DateRange, Assignment } from '@mui/icons-material';
 import TicketStatusLabelMenu from './TicketStatusLabelMenu';
 import TaskActionStatusLabelMenu from '../actions/TaskActionStatusLabelMenu';
 import TicketTabs from './tickets-tabs/TicketTabs';
@@ -55,18 +55,129 @@ export default function TicketDetails({ticketId}) {
             </Button>
           </Link>
         </Box>}
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={6}>
             <TicketMiniInfos ticket={ticketData?.ticket} />
           </Grid>
           <Grid item xs={6}>
+            <TicketOtherInfos ticket={ticketData?.ticket} />
+          </Grid>
+          <Grid item xs={12} sx={{ marginY: 2 }}>
+            <Divider />
+          </Grid>
+          <Grid item xs={12}>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Analyse
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {ticketData?.ticket?.description}
+                {ticketData?.ticket?.description || "Aucune analyse disponible"}
               </Typography>
+            </Paper>
+          </Grid>
+          {ticketData?.ticket?.isHaveEfcReport && ticketData?.ticket?.efcReports && ticketData?.ticket?.efcReports.length > 0 && (
+            <Grid item xs={12}>
+              <Paper sx={{ padding: 2 }} variant="outlined">
+                <Typography gutterBottom variant="subtitle3" component="h3">
+                  CREX et déclarations aux autorités compétentes
+                </Typography>
+                {ticketData?.ticket?.efcReports.map((report, index) => (
+                  <Box key={index} sx={{ mb: 2, p: 2, backgroundColor: index % 2 === 0 ? '#f9f9f9' : '#ffffff' }}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="body1">
+                          <strong>Intitulé CREX:</strong> {report.title || "Non spécifié"}
+                        </Typography>
+                        {report.efcDate && (
+                          <Typography variant="body1">
+                            <strong>Date:</strong> {getFormatDate(report.efcDate)}
+                          </Typography>
+                        )}
+                        {report.document && (
+                          <Typography variant="body1">
+                            <strong>Document:</strong> <Link to={report.document} target="_blank" rel="noopener">Voir le document</Link>
+                          </Typography>
+                        )}
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        {report.declarationDate && (
+                          <Typography variant="body1">
+                            <strong>Date de déclaration:</strong> {getFormatDate(report.declarationDate)}
+                          </Typography>
+                        )}
+                        {report.employees && report.employees.length > 0 && (
+                          <Typography variant="body1">
+                            <strong>Participants:</strong>
+                            <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mt: 1 }}>
+                              {report.employees.map((employee, i) => (
+                                <Chip 
+                                  key={i} 
+                                  avatar={<Avatar>{employee.firstName?.charAt(0)}{employee.lastName?.charAt(0)}</Avatar>} 
+                                  label={`${employee.firstName} ${employee.lastName}`} 
+                                  variant="outlined" 
+                                  size="small"
+                                />
+                              ))}
+                            </Stack>
+                          </Typography>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </Box>
+                ))}
+              </Paper>
+            </Grid>
+          )}
+          <Grid item xs={12}>
+            <Paper sx={{ padding: 2 }}>
+              <Typography gutterBottom variant="subtitle3" component="h3">
+                Actions
+              </Typography>
+              {ticketData?.ticket?.actions && ticketData?.ticket?.actions.length > 0 ? (
+                ticketData?.ticket?.actions.map((action, index) => (
+                  <Box key={index} sx={{ mb: 2, p: 2, backgroundColor: index % 2 === 0 ? '#f9f9f9' : '#ffffff' }}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12}>
+                        <Typography variant="body1">
+                          <strong>Description:</strong> {action.description}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={4}>
+                        {action.dueDate && (
+                          <Typography variant="body1">
+                            <strong>Échéance:</strong> {getFormatDate(action.dueDate)}
+                          </Typography>
+                        )}
+                      </Grid>
+                      <Grid item xs={12} md={4}>
+                        <Typography variant="body1">
+                          <strong>Statut:</strong> <TaskActionStatusLabelMenu taskAction={action} />
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={4}>
+                        {action.employees && action.employees.length > 0 && (
+                          <Typography variant="body1">
+                            <strong>Personnes concernées:</strong>
+                            <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mt: 1 }}>
+                              {action.employees.map((employee, i) => (
+                                <Chip 
+                                  key={i} 
+                                  avatar={<Avatar>{employee.firstName?.charAt(0)}{employee.lastName?.charAt(0)}</Avatar>} 
+                                  label={`${employee.firstName} ${employee.lastName}`} 
+                                  variant="outlined" 
+                                  size="small"
+                                />
+                              ))}
+                            </Stack>
+                          </Typography>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </Box>
+                ))
+              ) : (
+                <Typography variant="body1">Aucune action associée</Typography>
+              )}
             </Paper>
           </Grid>
           <Grid item xs={12} sx={{ marginY: 3 }}>
@@ -111,17 +222,8 @@ function TicketMiniInfos({ ticket }) {
                 <Typography gutterBottom variant="subtitle1" component="div">
                   Réference : <b>{ticket?.number}</b>
                 </Typography>
-                <Typography gutterBottom variant="h6" component="div">
-                  {ticket?.title}
-                </Typography>
                 <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-                <Typography variant="body2" color="text.secondary">
-                  <b>Crée le: </b> {`${getFormatDateTime(ticket?.createdAt)}`}{' '}
-                  <br />
-                  <b>Dernière modification: </b>
-                  {`${getFormatDateTime(ticket?.updatedAt)}`}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
                   <b>Priorité de ticket</b>
                   <Chip
                     color="info"
@@ -129,10 +231,32 @@ function TicketMiniInfos({ ticket }) {
                     sx={{ marginLeft: 1 }}
                   />
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
                   <b>Status: </b>
                   <TicketStatusLabelMenu ticket={ticket} />
                 </Typography>
+                {ticket?.employee && (
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                    <b>Employé responsable: </b> 
+                    <Chip
+                      avatar={<Avatar>{ticket.employee.firstName?.charAt(0)}{ticket.employee.lastName?.charAt(0)}</Avatar>}
+                      label={`${ticket.employee.firstName} ${ticket.employee.lastName}`}
+                      variant="outlined"
+                      size="small"
+                      sx={{ marginLeft: 1 }}
+                    />
+                  </Typography>
+                )}
+                {ticket?.folder && (
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                    <b>Dossier: </b> {ticket.folder.number} - <b> </b>{ticket.folder.name}
+                  </Typography>
+                )}
+                {ticket?.undesirableEvent && (
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                    <b>Événement indésirable: </b> {ticket.undesirableEvent.title}
+                  </Typography>
+                )}
               </Grid>
             </Grid>
           </Grid>
@@ -142,11 +266,9 @@ function TicketMiniInfos({ ticket }) {
   );
 }
 
-
-
 function TicketOtherInfos({ ticket }) {
   return (<>
-      {ticket?.establishments.length > 0 && (
+      {ticket?.establishments && ticket?.establishments.length > 0 && (
         <Paper
           variant="outlined"
           sx={{
