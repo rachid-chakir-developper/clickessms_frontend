@@ -30,11 +30,14 @@ import {
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
+import { Alert, Avatar, Chip, MenuItem, Popover, Stack, TablePagination } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
+import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
+import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -96,45 +99,82 @@ function stableSort(array, comparator) {
 const headCells = [
     {
       id: 'typeLetter',
+      property: 'letter_type',
+      exportField: 'letter_type',
       numeric: false,
       disablePadding: true,
+      isDefault: true,
       label: "Type de courrier",
+      render: ({letterType}) => getLetterTypeLabel(letterType),
     },
     {
-        id: 'title',
-        numeric: false,
-        disablePadding: false,
-        label: 'Libellé',
+      id: 'title',
+      property: 'title',
+      exportField: 'title',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: "Libellé",
     },
     {
-        id: 'entryDateTime',
-        numeric: false,
-        disablePadding: false,
-        label: 'Date',
+      id: 'entryDateTime',
+      property: 'entry_date_time',
+      exportField: 'entry_date_time',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: "Date",
+      render: ({entryDateTime}) => getFormatDateTime(entryDateTime),
     },
     {
-        id: 'sender',
-        numeric: false,
-        disablePadding: false,
-        label: 'Qui a envoyé ?',
+      id: 'sender',
+      property: 'sender__name',
+      exportField: ['sender__name'],
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: "Qui a envoyé ?",
+      render: ({sender}) => sender?.name,
     },
     {
-        id: 'establishments',
-        numeric: false,
-        disablePadding: false,
-        label: 'Structures concernées',
+      id: 'establishments',
+      property: 'establishments__establishment__name',
+      exportField: ['establishments__establishment__name'],
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: "Structures concernées",
+      render: ({establishments}) => establishments && establishments.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+        {establishments?.map((establishment, index) => {
+          return (
+            <EstablishmentChip
+              key={index}
+              establishment={establishment?.establishment}
+            />
+          );
+        })}
+      </Stack>
     },
     {
-        id: 'employees',
-        numeric: false,
-        disablePadding: false,
-        label: 'Employés concernés',
+      id: 'employees',
+      property: 'employees__employee__first_name',
+      exportField: ['employees__employee__first_name', 'employees__employee__last_name'],
+      numeric: false,
+      disablePadding: false,
+      isDefault: true,
+      disableClickDetail: true,
+      sortDisabled: true,
+      label: 'Employé(s)',
+      render: ({employees}) => employees && employees.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+          <ChipGroupWithPopover people={employees?.map((employee)=>employee?.employee)} />
+      </Stack>
     },
     {
-        id: 'action',
-        numeric: true,
-        disablePadding: false,
-        label: 'Actions',
+      id: 'action',
+      numeric: true,
+      disablePadding: false,
+      isDefault: true,
+      label: 'Actions',
     },
 ];
 
@@ -146,9 +186,10 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    selectedColumns = []
   } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property, sortDisabled=false) => (event) => {
+    if(!sortDisabled) onRequestSort(event, property);
   };
 
   return (
@@ -165,20 +206,21 @@ function EnhancedTableHead(props) {
             }}
           />
         </StyledTableCell>
-        {headCells.map((headCell) => (
+        {selectedColumns.map((headCell) => (
           <StyledTableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
+            sortDirection={orderBy === headCell.property ? order : false}
           >
             <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              hideSortIcon={headCell.sortDisabled}
+              active={orderBy === headCell.property}
+              direction={orderBy === headCell.property ? order : 'asc'}
+              onClick={createSortHandler(headCell.property, headCell?.sortDisabled)}
             >
               {headCell.label}
-              {orderBy === headCell.id ? (
+              {orderBy === headCell.property ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </Box>
@@ -192,7 +234,10 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onFilterChange } = props;
+  const [selectedColumns, setSelectedColumns] = React.useState(
+    headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
+  );
 
   return (
     <Toolbar
@@ -229,7 +274,13 @@ function EnhancedTableToolbar(props) {
           Les courriers
         </Typography>
       )}
-
+      
+      <TableExportButton 
+        entity={'Letter'}
+        fileName={'Courriers'}
+        fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
+        titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
+        
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>
@@ -237,11 +288,13 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <TableFilterButton 
+          headCells={headCells} 
+          onFilterChange={(currentColumns)=>{
+            setSelectedColumns(currentColumns);
+            onFilterChange(headCells?.filter(c=> currentColumns?.includes(c.id)))
+          }}
+        />
       )}
     </Toolbar>
   );
@@ -251,14 +304,15 @@ export default function TableListLetters({
   loading,
   rows,
   onDeleteLetter,
-  onUpdateLetterState,
+  onFilterChange,
+  paginator,
 }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
   const navigate = useNavigate();
 
   const { setDialogListLibrary } = useFeedBacks();
@@ -276,6 +330,9 @@ export default function TableListLetters({
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    if (onFilterChange) {
+      onFilterChange({orderBy: `${isAsc ? '-' : ''}${property}`});
+    }
   };
 
   const handleSelectAllClick = (event) => {
@@ -328,10 +385,14 @@ export default function TableListLetters({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
+  const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar 
+          numSelected={selected.length} 
+          onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}
+        />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -339,6 +400,7 @@ export default function TableListLetters({
             size="medium"
           >
             <EnhancedTableHead
+              selectedColumns={selectedColumns}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -349,16 +411,16 @@ export default function TableListLetters({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="8">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="8">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucune courrier trouvé.
+                      Aucun courrier trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -409,48 +471,20 @@ export default function TableListLetters({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                    <Stack direction="row" flexWrap='wrap' spacing={1}>
-                      <Chip
-                        label={getLetterTypeLabel(row?.letterType)}
-                        variant="outlined"
-                      />
-                    </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{row.title}</StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDateTime(row?.entryDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="left">{row.sender?.name}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.establishments?.map((establishment, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={establishment?.establishment?.name}
-                                  src={
-                                    establishment?.establishment?.logo
-                                      ? establishment?.establishment?.logo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={establishment?.establishment?.name}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <ChipGroupWithPopover people={row?.employees?.map((employee, index)=> employee?.employee)} />
-                    </StyledTableCell>
+                    {
+                      selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
+                        return <StyledTableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding={column?.disablePadding ? "none" : "normal"}
+                          key={index}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/administratif/courriers/details/${row?.id}`)}}
+                        >
+                        {column?.render ? column?.render(row) : row[column?.id]}
+                        </StyledTableCell>
+                      })
+                    }
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -516,7 +550,7 @@ export default function TableListLetters({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={6} />
+                  <StyledTableCell colSpan={selectedColumns.length + 1} />
                 </StyledTableRow>
               )}
             </TableBody>
