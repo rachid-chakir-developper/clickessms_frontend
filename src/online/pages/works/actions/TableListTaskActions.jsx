@@ -138,7 +138,7 @@ const headCells = [
         isDefault: true,
         label: 'Échéance',
         render: ({dueDate})=> getFormatDate(dueDate)
-    },,
+    },
     {
         id: 'employees',
         property: 'employees__first_name',

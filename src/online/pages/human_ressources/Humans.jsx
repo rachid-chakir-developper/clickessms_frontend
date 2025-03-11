@@ -7,6 +7,7 @@ import Meetings from './meetings/Meetings';
 import EmployeeContracts from './employees/employee-contracts/EmployeeContracts';
 import BeneficiaryAdmissions from './beneficiary_admissions/BeneficiaryAdmissions';
 import Advances from './advances/Advances';
+import Recruitment from './recruitment/Recruitment';
 
 export default function Humans() {
   return (
@@ -19,6 +20,7 @@ export default function Humans() {
         <Route path={`contrats/*`} element={<EmployeeContracts />} />
         <Route path={`planning/*`} element={<Planning />} />
         <Route path={`acomptes/*`} element={<Advances />} />
+        <Route path={`recrutement/*`} element={<Recruitment />} />
         <Route path="/" element={<Navigate to={`reunions`} replace />} />
       </Routes>
     </Box>

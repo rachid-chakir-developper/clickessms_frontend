@@ -336,10 +336,16 @@ export function filterMap<I, O>(
 }
 
 
+export const stripHtml = (html) => {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  return doc.body.textContent || "";
+};
+
 export const truncateText = (text, maxLength = 20) => {
   if (typeof text !== 'string') {
     return '';
   }
+  text = stripHtml(text)
   return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
 };
 

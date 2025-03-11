@@ -380,15 +380,10 @@ const [getEmployees, {
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
-              <Item></Item>
             </Grid>
             <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <SearchNumbersAutocomplete
-                  options={beneficiariesData?.beneficiaries?.nodes}
-                        onInput={(e) => {
-                          onGetBeneficiaries(e.target.value)
-                        }}
                   label="Qui a appelé ?"
                   placeholder="qui a appelé ?"
                   value={formik.values.caller}
@@ -416,10 +411,12 @@ const [getEmployees, {
               <Item>
                 <TheAutocomplete
                   options={employeesData?.employees?.nodes}
-onInput={(e) => {
-                          onGetEmployees(e.target.value)
-                        }}
-
+                  onInput={(e) => {
+                    onGetEmployees(e.target.value)
+                  }}
+                  onFocus={(e) => {
+                    onGetEmployees(e.target.value)
+                  }}
                   label="Employées concernées"
                   placeholder="Ajouter un employé"
                   value={formik.values.employees}
@@ -433,9 +430,12 @@ onInput={(e) => {
               <Item>
                 <TheAutocomplete
                   options={beneficiariesData?.beneficiaries?.nodes}
-                        onInput={(e) => {
-                          onGetBeneficiaries(e.target.value)
-                        }}
+                  onInput={(e) => {
+                    onGetBeneficiaries(e.target.value)
+                  }}
+                  onFocus={(e) => {
+                    onGetBeneficiaries(e.target.value)
+                  }}
                   label="Personnes accompagnées"
                   placeholder="Ajouter une personne accompagnée"
                   limitTags={3}

@@ -218,7 +218,7 @@ function BankCardOtherInfos({ bankCard }) {
         <>
           <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
             <Typography variant="h6" gutterBottom>
-              Structure Associés
+              Structures associés
             </Typography>
             <EstablishmentChip establishment={bankCard?.bankAccount?.establishment} />
           </Paper>

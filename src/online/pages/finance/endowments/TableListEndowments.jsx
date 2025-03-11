@@ -164,7 +164,7 @@ const headCells = [
       isDefault: true,
       label: 'Fréquence',
       render: ({recurrenceRule}) => <>{getRecurrenceLabel(recurrenceRule)}</>
-    },,
+    },
     {
       id: 'gender',
       property: 'gender',

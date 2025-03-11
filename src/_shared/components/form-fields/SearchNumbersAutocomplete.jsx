@@ -218,6 +218,7 @@ export default function SearchNumbersAutocomplete(props) {
           placeholder={props?.placeholder}
           variant="outlined"
           onChange={handleSearch}
+          onFocus={handleSearch}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault(); // Empêcher la soumission par défaut du formulaire

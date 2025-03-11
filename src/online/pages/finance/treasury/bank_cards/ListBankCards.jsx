@@ -108,7 +108,7 @@ export default function ListBankCards() {
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link to="/online/finance/tresorerie/cartes-bancaires/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter un logiciel
+              Ajouter une carte bancaire
             </Button>
           </Link>
         </Box>

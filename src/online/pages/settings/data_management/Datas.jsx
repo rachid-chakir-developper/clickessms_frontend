@@ -31,6 +31,7 @@ const modulesToManage = [
     datas: [
       { name: "Genre", description: '', type: 'HumanGender' },
       { name: "Statut professionnel", description: '', type: 'ProfessionalStatus' },
+      { name: "Plateforme de travail", description: '', type: 'jobPlatform' },
     ],
   },
   {
@@ -102,7 +103,7 @@ const modulesToManage = [
   {
     title: 'finance - Les natures comptables',
     type: 'AccountingNature',
-  },,
+  },
 ];
 
 function CustomTabPanel(props) {

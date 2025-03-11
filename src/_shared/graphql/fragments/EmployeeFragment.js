@@ -13,6 +13,7 @@ export const EMPLOYEE_PHONE_INFOS = gql`
     position
     email
     mobile
+    photo
     fix
     coverImage
     isActive
