@@ -61,6 +61,17 @@ export const ESTABLISHMENT_MANAGER_DETAILS = gql`
   ${EMPLOYEE_BASIC_INFOS}
 `;
 
+export const ACTIVITY_AUTHORIZATION_DETAILS = gql`
+  fragment ActivityAuthorizationFragment on ActivityAuthorizationType {
+    id
+    document
+    startingDateTime
+    endingDateTime
+    capacity
+    temporaryCapacity
+  }
+`;
+
 export const ESTABLISHMENT_BASIC_INFOS = gql`
   fragment EstablishmentBasicInfosFragment on EstablishmentType {
     ...EstablishmentMiniInfosFragment
@@ -91,17 +102,6 @@ export const ESTABLISHMENT_BASIC_INFOS = gql`
   ${ESTABLISHMENT_MINI_INFOS}
   ${FOLDER_MINI_INFOS}
   ${ESTABLISHMENT_MANAGER_DETAILS}
-`;
-
-export const ACTIVITY_AUTHORIZATION_DETAILS = gql`
-  fragment ActivityAuthorizationFragment on ActivityAuthorizationType {
-    id
-    document
-    startingDateTime
-    endingDateTime
-    capacity
-    temporaryCapacity
-  }
 `;
 
 export const ESTABLISHMENT_DETAILS = gql`

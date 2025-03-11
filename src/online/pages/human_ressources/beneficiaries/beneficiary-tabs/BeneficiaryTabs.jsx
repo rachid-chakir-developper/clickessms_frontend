@@ -113,8 +113,8 @@ export default function BeneficiaryTabs({beneficiary}) {
                 <LinkTab label="Formation / Experience" href="/spam" />
                 <LinkTab label="Documents" href="/spam" />
                 <LinkTab label="Absences" href="/spam" />
-                <LinkTab label="Evénements / Transmissions" href="/spam" />
-                <LinkTab label="Evénements indésirables" href="/spam" />
+                <LinkTab label="Événements / Transmissions" href="/spam" />
+                <LinkTab label="Événements indésirables" href="/spam" />
                 <LinkTab label="Admissions" href="/drafts" />
                 <LinkTab label="Entrées / sorties" href="/trash" />
                 <LinkTab label="Statuts" href="/trash" />

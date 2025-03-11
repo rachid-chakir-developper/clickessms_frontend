@@ -4,7 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
-
+/src/online/pages/human_ressources/advances
 # testing
 /coverage
 

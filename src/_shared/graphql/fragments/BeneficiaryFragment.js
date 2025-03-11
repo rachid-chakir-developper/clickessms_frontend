@@ -18,7 +18,6 @@ export const BENEFICIARY_PHONE_INFOS = gql`
     email
     mobile
     fix
-    photo
     coverImage
     isActive
   }
