@@ -307,7 +307,7 @@ function DialogGenerateInvoice({ open, onClose, onConfirm }) {
 }
 
 
-export default function GenerateInvoiceButton({ buttonType="button", lable="Ajouter une facture" }) {
+export default function GenerateInvoiceButton({ buttonType="button", label="Ajouter une facture" }) {
   const [isDialogGenerateInvoiceOpen, setDialogGenerateInvoiceOpen] = React.useState(false);
 
   const DialogGenerateInvoiceOpen = () => {
@@ -322,10 +322,10 @@ export default function GenerateInvoiceButton({ buttonType="button", lable="Ajou
     <>
       {buttonType==="button" && 
         <Button variant="contained" onClick={DialogGenerateInvoiceOpen} endIcon={<Add />}>
-        {lable}
+        {label}
       </Button>
       }
-      {buttonType==="buttonIcon" && <Tooltip title={lable}>
+      {buttonType==="buttonIcon" && <Tooltip title={label}>
         <IconButton onClick={DialogGenerateInvoiceOpen}>
           <ReceiptLong />
         </IconButton>

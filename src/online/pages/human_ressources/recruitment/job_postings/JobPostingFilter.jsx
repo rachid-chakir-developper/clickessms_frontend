@@ -126,22 +126,22 @@ const JobPostingFilter = ({ onFilterChange }) => {
         <Grid item xs={12} sm={6} md={4}>
             <Item>
                 <TheAutocomplete
-                        options={jobPositionsData?.jobPositions?.nodes}
-                        onInput={(e) => {
-                          onGetJobPositions(e.target.value)
-                        }}
-                        onFocus={(e) => {
-                          onGetJobPositions(e.target.value)
-                        }}
-                        label="Fiche besoin"
-                        limitTags={3}
-                        value={selectedJobPositions}
-                        onChange={(event, newValue) => {
-                          setFilterSelectedJobPositions(newValue)
-                          setFilterValues({ ...filterValues, jobPositions: newValue.map((v) => v.id) })
-                          onFilterChange({ ...filterValues, jobPositions: newValue.map((v) => v.id) })
-                        }}
-                      />
+                    options={jobPositionsData?.jobPositions?.nodes}
+                    onInput={(e) => {
+                      onGetJobPositions(e.target.value)
+                    }}
+                    onFocus={(e) => {
+                      onGetJobPositions(e.target.value)
+                    }}
+                    label="Fiche besoin"
+                    limitTags={3}
+                    value={selectedJobPositions}
+                    onChange={(event, newValue) => {
+                      setFilterSelectedJobPositions(newValue)
+                      setFilterValues({ ...filterValues, jobPositions: newValue.map((v) => v.id) })
+                      onFilterChange({ ...filterValues, jobPositions: newValue.map((v) => v.id) })
+                    }}
+                  />
             </Item>
         </Grid>
     </Grid>

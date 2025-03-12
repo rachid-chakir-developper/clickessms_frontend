@@ -58,6 +58,19 @@ export const PUT_JOB_CANDIDATE_APPLICATION_FIELDS = gql`
 `;
 
 
+export const GENERATE_JOB_CANDIDATE_APPLICATION = gql`
+  mutation GenerateJobCandidateApplication($generateJobCandidateApplicationData: GenerateJobCandidateApplicationInput!) {
+    generateJobCandidateApplication(generateJobCandidateApplicationData: $generateJobCandidateApplicationData) {
+      success
+      message
+      jobCandidateApplications{
+        ...JobCandidateApplicationBasicInfosFragment
+      }
+    }
+  }
+  ${JOB_CANDIDATE_APPLICATION_BASIC_INFOS}
+`;
+
 export const DELETE_JOB_CANDIDATE_APPLICATION = gql`
   mutation DeleteJobCandidateApplication($id: ID!) {
     deleteJobCandidateApplication(id: $id) {

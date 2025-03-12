@@ -23,6 +23,7 @@ import { getFormatDate, getFormatDateTime } from '../../../../../_shared/tools/f
 import { Edit } from '@mui/icons-material';
 import EmployeeChip from '../../employees/EmployeeChip';
 import FileViewer from '../../../../../_shared/components/media/FileViewer';
+import GenerateJobCandidateApplicationButton from './GenerateJobCandidateApplicationButton';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -182,6 +183,7 @@ function JobCandidateMiniInfos({ jobCandidate }) {
                     <b>Tél:</b> {jobCandidate?.mobile}
                   </Typography>
                 </Box>
+                <GenerateJobCandidateApplicationButton size="small" jobCandidate={jobCandidate}/>
               </Paper>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">

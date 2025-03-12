@@ -34,6 +34,7 @@ import { getFormatDate, truncateText } from '../../../../../_shared/tools/functi
 import JobPositionChip from '../job_positions/JobPositionChip';
 import EmployeeChip from '../../employees/EmployeeChip';
 import FileViewer from '../../../../../_shared/components/media/FileViewer';
+import GenerateJobCandidateApplicationButton from './GenerateJobCandidateApplicationButton';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -547,6 +548,7 @@ export default function TableListJobCandidates({
                             Détails
                           </MenuItem>
                         </Link>
+                        <GenerateJobCandidateApplicationButton jobCandidate={row} buttonType="menuItem"/>
                         <Link
                           to={`/online/ressources-humaines/recrutement/vivier-candidats/modifier/${row?.id}`}
                           className="no_style"

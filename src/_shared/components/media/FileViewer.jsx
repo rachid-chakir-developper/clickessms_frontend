@@ -4,17 +4,17 @@ import { Visibility, Download } from "@mui/icons-material";
 
 const FileViewer = ({ title, fileUrl, fileName = "document", size="medium" }) => {
   if (!fileUrl) {
-    return <p>Aucun fichier disponible.</p>;
+    return <Typography variant="p" gutterBottom>{(title && title!=='') ? 'Aucun fichier disponible.' : '-'}</Typography>;
   }
 
   return (
     <Box>
       {/* Bouton pour voir le fichier */}
-      {title && title!=='' &&<Typography variant="h6" gutterBottom>
+      {title && title!=='' && <Typography variant="h6" gutterBottom>
         {title}
       </Typography>}
       {!fileUrl ? <Typography variant="p" gutterBottom>
-        Aucun fichier disponible.
+        {(title && title!=='') ? 'Aucun fichier disponible.' : '-'}
       </Typography> : 
       <>
         <Tooltip title="Voir">

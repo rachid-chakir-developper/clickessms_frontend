@@ -1,22 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Button,
-  MenuItem,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  tableCellClasses,
-  alpha,
-  TableContainer,
   IconButton,
   Tooltip,
 } from '@mui/material';
-import { Euro, PermContactCalendar, Person, ReceiptLong } from '@mui/icons-material';
+import { PermContactCalendar } from '@mui/icons-material';
 import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { GENERATE_BENEFICIARY_FROM_BENEFICIARY_ADMISSION } from '../../../../_shared/graphql/mutations/BeneficiaryAdmissionMutations';

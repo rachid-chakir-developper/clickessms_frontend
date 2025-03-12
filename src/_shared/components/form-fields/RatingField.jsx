@@ -10,13 +10,12 @@ const RatingField = ({
   size = "medium" 
 }) => {
   return (
-    <Paper display="flex" flexDirection="column" variant={variant}
-    sx={{padding: 4}}>
-      {label && (
-        <Typography variant="subtitle1" sx={{ mb: 1 }}>
-          {label}
-        </Typography>
-      )}
+    <Paper  sx={{padding: 4, display:"flex", flexDirection:"column", alignItems: 'center'}} variant={variant}>
+        {label && (
+          <Typography variant="subtitle1" sx={{ mb: 1 }}>
+            {label}
+          </Typography>
+        )}
       <Rating
         name="rating-field"
         value={value}
