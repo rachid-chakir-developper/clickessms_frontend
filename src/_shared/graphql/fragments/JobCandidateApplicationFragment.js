@@ -3,6 +3,7 @@
 import { gql } from '@apollo/client';
 import { JOB_POSITION_MINI_INFOS } from './JobPositionFragment';
 import { EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
+import { JOB_CANDIDATE_MINI_INFOS } from './JobCandidateFragment';
 
 export const JOB_CANDIDATE_APPLICATION_MINI_INFOS = gql`
   fragment JobCandidateApplicationMiniInfosFragment on JobCandidateApplicationType {
@@ -35,6 +36,9 @@ export const JOB_CANDIDATE_APPLICATION_BASIC_INFOS = gql`
     jobPosition {
       ...JobPositionMiniInfosFragment
     }
+    jobCandidate {
+      ...JobCandidateMiniInfosFragment
+    }
     folder {
       id
       name
@@ -43,6 +47,7 @@ export const JOB_CANDIDATE_APPLICATION_BASIC_INFOS = gql`
   ${EMPLOYEE_MINI_INFOS}
   ${JOB_CANDIDATE_APPLICATION_MINI_INFOS}
   ${JOB_POSITION_MINI_INFOS}
+  ${JOB_CANDIDATE_MINI_INFOS}
 `;
 
 export const JOB_CANDIDATE_APPLICATION_DETAILS = gql`

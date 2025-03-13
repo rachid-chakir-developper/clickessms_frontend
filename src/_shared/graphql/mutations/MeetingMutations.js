@@ -37,6 +37,20 @@ export const PUT_MEETING_STATE = gql`
   ${MEETING_BASIC_INFOS}
 `;
 
+
+export const GENERATE_MEETING = gql`
+  mutation GenerateMeeting($generateMeetingData: GenerateMeetingInput!) {
+    generateMeeting(generateMeetingData: $generateMeetingData) {
+      success
+      message
+      meetings{
+        ...MeetingBasicInfosFragment
+      }
+    }
+  }
+  ${MEETING_BASIC_INFOS}
+`;
+
 export const DELETE_MEETING = gql`
   mutation DeleteMeeting($id: ID!) {
     deleteMeeting(id: $id) {

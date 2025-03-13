@@ -737,3 +737,18 @@ export const CAREER_ENTRY_TYPES = {
     OTHER: "Nom de l'entité liée à l'expérience",
   }
 };
+
+export const JOB_CANDIDATE_APPLICATION_STATUS = {
+  PENDING: "PENDING",
+  INTERESTED: "INTERESTED",
+  INTERVIEW: "INTERVIEW",
+  REJECTED: "REJECTED",
+  ACCEPTED: "ACCEPTED",
+  ALL: [
+    { value: "PENDING", label: "En attente" },
+    { value: "INTERESTED", label: "Intéressant"},
+    { value: "INTERVIEW", label: "Entretien prévu"},
+    { value: "REJECTED", label: "Rejeté"},
+    { value: "ACCEPTED", label: "Accepté"},
+  ],
+};

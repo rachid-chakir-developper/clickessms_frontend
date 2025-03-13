@@ -6,6 +6,8 @@ import CustomizedStatusLabelMenu from '../../../../../_shared/components/app/men
 import { useAuthorizationSystem } from '../../../../../_shared/context/AuthorizationSystemProvider';
 import { PUT_JOB_CANDIDATE_APPLICATION_FIELDS } from '../../../../../_shared/graphql/mutations/JobCandidateApplicationMutations';
 import { useSession } from '../../../../../_shared/context/SessionProvider';
+import { JOB_CANDIDATE_APPLICATION_STATUS } from '../../../../../_shared/tools/constants';
+import GenerateMeetingButton from './GenerateMeetingButton';
 
 
 export default function JobCandidateApplicationStatusLabelMenu({jobCandidateApplication}) {
@@ -82,6 +84,7 @@ export default function JobCandidateApplicationStatusLabelMenu({jobCandidateAppl
             onChange={(status)=> {updateJobCandidateApplicationFields({ variables: {id: jobCandidateApplication?.id, jobCandidateApplicationData: {status}} })}}
             disabled={!canManageHumanRessources && !canChangeStatus()}
         />
+        {jobCandidateApplication?.status===JOB_CANDIDATE_APPLICATION_STATUS.INTERVIEW && <GenerateMeetingButton buttonType="buttonIcon" jobCandidateApplication={jobCandidateApplication} />}
       </Box>
 
         {/* Modal pour demander le commentaire */}

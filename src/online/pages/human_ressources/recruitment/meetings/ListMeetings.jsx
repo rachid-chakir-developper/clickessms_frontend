@@ -29,7 +29,7 @@ const Item = styled(Stack)(({ theme }) => ({
 
 export default function ListMeetings() {
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
-  const [meetingFilter, setMeetingFilter] = React.useState(null);
+  const [meetingFilter, setMeetingFilter] = React.useState({meetingMode : 'CANDIDATE_INTERVIEW'});
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
     setMeetingFilter(newFilter);
