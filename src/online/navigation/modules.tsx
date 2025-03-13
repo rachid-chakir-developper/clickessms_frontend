@@ -420,6 +420,12 @@ export const modules: Module[] = [
             path: '/online/ressources-humaines/recrutement/vivier-candidats',
             icon: <ContactsIcon />,
           },
+          {
+            id: 'interviews-candidates',
+            name: 'Entretiens',
+            path: '/online/ressources-humaines/recrutement/entretiens',
+            icon: <AssignmentIcon />,
+          },
         ],
       },
       {

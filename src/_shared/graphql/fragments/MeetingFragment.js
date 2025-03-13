@@ -4,6 +4,8 @@ import { gql } from '@apollo/client';
 import { BENEFICIARY_MINI_INFOS } from './BeneficiaryFragment';
 import { EMPLOYEE_BASIC_INFOS, EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
 import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
+import { JOB_POSITION_MINI_INFOS } from './JobPositionFragment';
+import { JOB_CANDIDATE_MINI_INFOS } from './JobCandidateFragment';
 
 export const MEETING_ESTABLISHMENT_DETAILS = gql`
   fragment MeetingEstablishmentTypeFragment on MeetingEstablishmentType {
@@ -47,6 +49,12 @@ export const MEETING_BASIC_INFOS = gql`
     participants {
       ...MeetingParticipantTypeFragment
     }
+    jobPosition {
+      ...JobPositionMiniInfosFragment
+    }
+    jobCandidate {
+      ...JobCandidateMiniInfosFragment
+    }
     folder {
       id
       number
@@ -55,6 +63,8 @@ export const MEETING_BASIC_INFOS = gql`
   }
   ${MEETING_ESTABLISHMENT_DETAILS}
   ${EMPLOYEE_MEETING_ITEM_DETAILS}
+  ${JOB_POSITION_MINI_INFOS}
+  ${JOB_CANDIDATE_MINI_INFOS}
 `;
 
 export const BENEFICIARY_MEETING_ITEM_DETAILS = gql`

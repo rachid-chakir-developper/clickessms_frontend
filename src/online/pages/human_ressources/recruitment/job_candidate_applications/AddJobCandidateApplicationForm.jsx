@@ -80,14 +80,17 @@ export default function AddJobCandidateApplicationForm({ idJobCandidateApplicati
         });
     },
   });
-  const {
-    loading: loadingJobPositions,
-    data: jobPositionsData,
-    error: jobPositionsError,
-    fetchMore: fetchMoreJobPositions,
-  } = useQuery(GET_JOB_POSITIONS, {
-    fetchPolicy: 'network-only',
-  });
+  
+  const [getJobPositions, {
+      loading: loadingJobPositions,
+      data: jobPositionsData,
+      error: jobPositionsError,
+      fetchMore: fetchMoreJobPositions,
+    }] = useLazyQuery(GET_JOB_POSITIONS, { variables: { jobPositionFilter : null, page: 1, limit: 10 } });
+    
+    const onGetJobPositions = (keyword)=>{
+      getJobPositions({ variables: { jobPositionFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+    }
 
   const [createJobCandidateApplication, { loading: loadingPost }] = useMutation(POST_JOB_CANDIDATE_APPLICATION, {
     onCompleted: (data) => {
@@ -216,6 +219,12 @@ export default function AddJobCandidateApplicationForm({ idJobCandidateApplicati
               <Item>
                 <TheAutocomplete
                   options={jobPositionsData?.jobPositions?.nodes}
+                  onInput={(e) => {
+                    onGetJobPositions(e.target.value)
+                  }}
+                  onFocus={(e) => {
+                    onGetJobPositions(e.target.value)
+                  }}
                   label="Fiche besoin"
                   placeholder="Choisissez une fiche ?"
                   multiple={false}

@@ -115,7 +115,7 @@ export default function TheAutocomplete({
           helperText={helperText}
           error={error}
           onInput={onInput}
-          onFocus={onFocus}
+          onFocus={onFocus ? onFocus : onInput}
           onKeyDown={onKeyDown}
           onClick={onClick}
           size={size}

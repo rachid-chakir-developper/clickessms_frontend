@@ -275,7 +275,7 @@ const [getEmployees, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       let { __typename, ...meetingCopy1 } = data.meeting;
-      let { folder, ...meetingCopy } = meetingCopy1;
+      let { folder, jobPosition, jobCandidate, ...meetingCopy } = meetingCopy1;
       meetingCopy.startingDateTime = dayjs(meetingCopy.startingDateTime);
       meetingCopy.endingDateTime = dayjs(meetingCopy.endingDateTime);
       meetingCopy.participants = meetingCopy.participants

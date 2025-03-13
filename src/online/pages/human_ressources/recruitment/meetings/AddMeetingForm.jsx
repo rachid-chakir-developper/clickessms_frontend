@@ -9,23 +9,25 @@ import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
-import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
-import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_MEETING } from '../../../../_shared/graphql/queries/MeetingQueries';
+import TheTextField from '../../../../../_shared/components/form-fields/TheTextField';
+import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { GET_MEETING } from '../../../../../_shared/graphql/queries/MeetingQueries';
 import {
   POST_MEETING,
   PUT_MEETING,
-} from '../../../../_shared/graphql/mutations/MeetingMutations';
-import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import TheDateTimePicker from '../../../../_shared/components/form-fields/TheDateTimePicker';
-import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
-import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
-import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
-import SelectCheckmarks from '../../../../_shared/components/form-fields/SelectCheckmarks';
-import { GET_DATAS_MEETING } from '../../../../_shared/graphql/queries/DataQueries';
-import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
+} from '../../../../../_shared/graphql/mutations/MeetingMutations';
+import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
+import TheDateTimePicker from '../../../../../_shared/components/form-fields/TheDateTimePicker';
+import { GET_BENEFICIARIES } from '../../../../../_shared/graphql/queries/BeneficiaryQueries';
+import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
+import { GET_EMPLOYEES } from '../../../../../_shared/graphql/queries/EmployeeQueries';
+import SelectCheckmarks from '../../../../../_shared/components/form-fields/SelectCheckmarks';
+import { GET_DATAS_MEETING } from '../../../../../_shared/graphql/queries/DataQueries';
+import { GET_ESTABLISHMENTS } from '../../../../../_shared/graphql/queries/EstablishmentQueries';
 import { Close } from '@mui/icons-material';
-import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
+import TheDesktopDatePicker from '../../../../../_shared/components/form-fields/TheDesktopDatePicker';
+import { GET_JOB_CANDIDATES } from '../../../../../_shared/graphql/queries/JobCandidateQueries';
+import { GET_JOB_POSITIONS } from '../../../../../_shared/graphql/queries/JobPositionQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -41,7 +43,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
   const navigate = useNavigate();
   const validationSchema = yup.object({
     topics: yup
-      .string("Entrez l'objet de la réunion")
+      .string("Entrez l'objet de l'entretien")
       .required("L'ordre du jour est obligatoire"),
   });
   const formik = useFormik({
@@ -49,7 +51,7 @@ export default function AddMeetingForm({ idMeeting, title }) {
       number: '',
       title: '',
       topics: '',
-      meetingMode: 'SIMPLE',
+      meetingMode: 'CANDIDATE_INTERVIEW',
       videoCallLink: '',
       startingDateTime: dayjs(new Date()),
       endingDateTime: dayjs(new Date()),
@@ -64,7 +66,9 @@ export default function AddMeetingForm({ idMeeting, title }) {
       meetingTypes: [],
       otherReasons: '',
       meetingDecisions: [],
-      meetingReviewPoints: []
+      meetingReviewPoints: [],
+      jobPosition: null,
+      jobCandidate: null,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -75,6 +79,9 @@ export default function AddMeetingForm({ idMeeting, title }) {
       meetingCopy.meetingTypes = meetingCopy.meetingTypes.map((i) => i?.id);
       meetingCopy.establishments = meetingCopy.establishments.map((i) => i?.id);
       meetingCopy.employee = meetingCopy.employee ? meetingCopy.employee.id : null;
+      meetingCopy.jobPosition = meetingCopy.jobPosition ? meetingCopy.jobPosition.id : null;
+      meetingCopy.jobCandidate = meetingCopy.jobCandidate ? meetingCopy.jobCandidate.id : null;
+    
       if (!meetingCopy?.meetingDecisions) meetingCopy['meetingDecisions'] = [];
       let items = [];
       meetingCopy.meetingDecisions.forEach((item) => {
@@ -131,14 +138,27 @@ const [getEmployees, {
     fetchMore: fetchMoreDatas,
   } = useQuery(GET_DATAS_MEETING, { fetchPolicy: 'network-only' });
 
-  const {
-    loading: loadingEstablishments,
-    data: establishmentsData,
-    error: establishmentsError,
-    fetchMore: fetchMoreEstablishments,
-  } = useQuery(GET_ESTABLISHMENTS, {
-    fetchPolicy: 'network-only',
-  });
+  
+  const [getJobPositions, {
+      loading: loadingJobPositions,
+      data: jobPositionsData,
+      error: jobPositionsError,
+      fetchMore: fetchMoreJobPositions,
+    }] = useLazyQuery(GET_JOB_POSITIONS, { variables: { jobPositionFilter : null, page: 1, limit: 10 } });
+    
+    const onGetJobPositions = (keyword)=>{
+      getJobPositions({ variables: { jobPositionFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+    }
+    const [getJobCandidates, {
+        loading: loadingJobCandidates,
+        data: jobCandidatesData,
+        error: jobCandidatesError,
+        fetchMore: fetchMoreJobCandidates,
+      }] = useLazyQuery(GET_JOB_CANDIDATES, { variables: { jobCandidateFilter : null, page: 1, limit: 10 } });
+      
+      const onGetJobCandidates = (keyword)=>{
+        getJobCandidates({ variables: { jobCandidateFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+      }
 
   
   const addMeetingDecision = () => {
@@ -275,7 +295,7 @@ const [getEmployees, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       let { __typename, ...meetingCopy1 } = data.meeting;
-      let { folder, jobPosition, jobCandidate, ...meetingCopy } = meetingCopy1;
+      let { folder, ...meetingCopy } = meetingCopy1;
       meetingCopy.startingDateTime = dayjs(meetingCopy.startingDateTime);
       meetingCopy.endingDateTime = dayjs(meetingCopy.endingDateTime);
       meetingCopy.participants = meetingCopy.participants
@@ -329,7 +349,7 @@ const [getEmployees, {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if(activeStep >= 1) navigate('/online/administratif/reunions/liste');
+    if(activeStep >= 1) navigate('/online/ressources-humaines/recrutement/entretiens/liste');
     else if (formik.values.id)
       setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });
@@ -426,7 +446,7 @@ const [getEmployees, {
                     <Item>
                       <SelectCheckmarks
                         options={dataData?.meetingTypes}
-                        label="Type de réunion"
+                        label="Type de entretien"
                         placeholder="Ajouter un type"
                         limitTags={3}
                         value={formik.values.meetingTypes}
@@ -439,32 +459,40 @@ const [getEmployees, {
                   <Grid item xs={12} sm={6} md={4}>
                     <Item>
                       <TheAutocomplete
-                        options={establishmentsData?.establishments?.nodes}
-                        label="Structures concernées"
-                        placeholder="Ajouter une structure"
-                        limitTags={3}
-                        value={formik.values.establishments}
+                        options={jobPositionsData?.jobPositions?.nodes}
+                        onInput={(e) => {
+                          onGetJobPositions(e.target.value)
+                        }}
+                        onFocus={(e) => {
+                          onGetJobPositions(e.target.value)
+                        }}
+                        label="Fiche besoin"
+                        placeholder="Choisissez une fiche ?"
+                        multiple={false}
+                        value={formik.values.jobPosition}
                         onChange={(e, newValue) =>
-                          formik.setFieldValue('establishments', newValue)
+                          formik.setFieldValue('jobPosition', newValue)
                         }
+                        disabled={loadingPost || loadingPut}
                       />
                     </Item>
                     <Item>
                       <TheAutocomplete
-                        options={beneficiariesData?.beneficiaries?.nodes}
+                        options={jobCandidatesData?.jobCandidates?.nodes}
                         onInput={(e) => {
-                          onGetBeneficiaries(e.target.value)
+                          onGetJobCandidates(e.target.value)
                         }}
                         onFocus={(e) => {
-                          onGetBeneficiaries(e.target.value)
+                          onGetJobCandidates(e.target.value)
                         }}
-                        label="Personnes accompagnées concernés"
-                        placeholder="Ajouter une personne accompagnée"
-                        limitTags={3}
-                        value={formik.values.beneficiaries}
+                        label="Candidat"
+                        placeholder="Choisissez un candidat ?"
+                        multiple={false}
+                        value={formik.values.jobCandidate}
                         onChange={(e, newValue) =>
-                          formik.setFieldValue('beneficiaries', newValue)
+                          formik.setFieldValue('jobCandidate', newValue)
                         }
+                        disabled={loadingPost || loadingPut}
                       />
                     </Item>
                   </Grid>
@@ -478,13 +506,16 @@ const [getEmployees, {
                         onFocus={(e) => {
                           onGetEmployees(e.target.value)
                         }}
-                        label="Personnes invités"
-                        placeholder="Ajouter une personne"
+                        label="Recruteur(s)"
+                        placeholder="Ajouter un recruteur"
                         limitTags={3}
                         value={formik.values.participants}
                         onChange={(e, newValue) =>
                           formik.setFieldValue('participants', newValue)
                         }
+                        disabled={loadingPost || loadingPut}
+
+                        
                       />
                     </Item>
                     <Item>
@@ -496,13 +527,14 @@ const [getEmployees, {
                         onFocus={(e) => {
                           onGetEmployees(e.target.value)
                         }}
-                        label="Personnes absentes"
-                        placeholder="Ajouter une personne"
+                        label="Recruteur(s) absente(s)"
+                        placeholder="Ajouter un recruteur"
                         limitTags={3}
                         value={formik.values.absentParticipants}
                         onChange={(e, newValue) =>
                           formik.setFieldValue('absentParticipants', newValue)
                         }
+                        disabled={loadingPost || loadingPut}
                       />
                     </Item>
                   </Grid>
@@ -689,7 +721,7 @@ onInput={(e) => {
             <Grid item xs={12} sm={12} md={12} >
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
-                  to="/online/administratif/reunions/liste"
+                  to="/online/ressources-humaines/recrutement/entretiens/liste"
                   className="no_style"
                 >
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>
