@@ -4,45 +4,45 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
 import { useAuthorizationSystem } from '../../../../../_shared/context/AuthorizationSystemProvider';
 import {
-  DELETE_JOB_CANDIDATE,
-} from '../../../../../_shared/graphql/mutations/JobCandidateMutations';
-import { GET_JOB_CANDIDATES } from '../../../../../_shared/graphql/queries/JobCandidateQueries';
-import JobCandidateFilter from './JobCandidateFilter';
+  DELETE_JOB_CANDIDATE_APPLICATION,
+} from '../../../../../_shared/graphql/mutations/JobCandidateApplicationMutations';
+import { GET_JOB_CANDIDATE_APPLICATIONS } from '../../../../../_shared/graphql/queries/JobCandidateApplicationQueries';
+import JobCandidateApplicationFilter from './JobCandidateApplicationFilter';
 import PaginationControlled from '../../../../../_shared/components/helpers/PaginationControlled';
-import TableListJobCandidates from './TableListJobCandidates';
+import TableListJobCandidateApplications from './TableListJobCandidateApplications';
 import { Link } from 'react-router-dom';
 import { Box, Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 
-export default function ListJobCandidates() {
+export default function ListJobCandidateApplications() {
   const authorizationSystem = useAuthorizationSystem();
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
-  const [jobCandidateFilter, setJobCandidateFilter] = React.useState(null);
+  const [jobCandidateApplicationFilter, setJobCandidateApplicationFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
-    setJobCandidateFilter(newFilter);
+    setJobCandidateApplicationFilter(newFilter);
   };
 
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const [
-    getJobCandidates,
+    getJobCandidateApplications,
     {
-      loading: loadingJobCandidates,
-      data: jobCandidatesData,
-      error: jobCandidatesError,
-      fetchMore: fetchMoreJobCandidates,
+      loading: loadingJobCandidateApplications,
+      data: jobCandidateApplicationsData,
+      error: jobCandidateApplicationsError,
+      fetchMore: fetchMoreJobCandidateApplications,
     },
-  ] = useLazyQuery(GET_JOB_CANDIDATES, {
-    variables: { jobCandidateFilter, page: paginator.page, limit: paginator.limit },
+  ] = useLazyQuery(GET_JOB_CANDIDATE_APPLICATIONS, {
+    variables: { jobCandidateApplicationFilter, page: paginator.page, limit: paginator.limit },
   });
 
   React.useEffect(() => {
-    getJobCandidates();
-  }, [jobCandidateFilter, paginator]);
+    getJobCandidateApplications();
+  }, [jobCandidateApplicationFilter, paginator]);
 
-  const [deleteJobCandidate, { loading: loadingDelete }] = useMutation(DELETE_JOB_CANDIDATE, {
+  const [deleteJobCandidateApplication, { loading: loadingDelete }] = useMutation(DELETE_JOB_CANDIDATE_APPLICATION, {
     onCompleted: (datas) => {
-      if (datas.deleteJobCandidate.deleted) {
+      if (datas.deleteJobCandidateApplication.deleted) {
         setNotifyAlert({
           isOpen: true,
           message: 'Supprimé avec succès',
@@ -51,28 +51,28 @@ export default function ListJobCandidates() {
       } else {
         setNotifyAlert({
           isOpen: true,
-          message: `Non supprimé ! ${datas.deleteJobCandidate.message}.`,
+          message: `Non supprimé ! ${datas.deleteJobCandidateApplication.message}.`,
           type: 'error',
         });
       }
     },
-    update(cache, { data: { deleteJobCandidate } }) {
-      console.log('Updating cache after deletion:', deleteJobCandidate);
+    update(cache, { data: { deleteJobCandidateApplication } }) {
+      console.log('Updating cache after deletion:', deleteJobCandidateApplication);
 
-      const deletedJobCandidateId = deleteJobCandidate.id;
+      const deletedJobCandidateApplicationId = deleteJobCandidateApplication.id;
 
       cache.modify({
         fields: {
-          jobCandidates(existingJobCandidates = { totalCount: 0, nodes: [] }, { readField }) {
-            const updatedJobCandidates = existingJobCandidates.nodes.filter(
-              (jobCandidate) => readField('id', jobCandidate) !== deletedJobCandidateId,
+          jobCandidateApplications(existingJobCandidateApplications = { totalCount: 0, nodes: [] }, { readField }) {
+            const updatedJobCandidateApplications = existingJobCandidateApplications.nodes.filter(
+              (jobCandidateApplication) => readField('id', jobCandidateApplication) !== deletedJobCandidateApplicationId,
             );
 
-            console.log('Updated jobCandidates:', updatedJobCandidates);
+            console.log('Updated jobCandidateApplications:', updatedJobCandidateApplications);
 
             return {
-              totalCount: existingJobCandidates.totalCount - 1,
-              nodes: updatedJobCandidates,
+              totalCount: existingJobCandidateApplications.totalCount - 1,
+              nodes: updatedJobCandidateApplications,
             };
           },
         },
@@ -88,14 +88,14 @@ export default function ListJobCandidates() {
     },
   });
 
-  const onDeleteJobCandidate = (id) => {
+  const onDeleteJobCandidateApplication = (id) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment supprimer ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        deleteJobCandidate({ variables: { id: id } });
+        deleteJobCandidateApplication({ variables: { id: id } });
       },
     });
   };
@@ -114,20 +114,20 @@ export default function ListJobCandidates() {
         </Box>
       </Grid>
       <Grid item xs={12}>
-        <JobCandidateFilter onFilterChange={handleFilterChange} />
+        <JobCandidateApplicationFilter onFilterChange={handleFilterChange} />
       </Grid>
       <Grid item xs={12}>
-        <TableListJobCandidates
-          loading={loadingJobCandidates}
-          rows={jobCandidatesData?.jobCandidates?.nodes || []}
-          onDeleteJobCandidate={onDeleteJobCandidate}
-          onFilterChange={(newFilter) => handleFilterChange({ ...jobCandidateFilter, ...newFilter })}
+        <TableListJobCandidateApplications
+          loading={loadingJobCandidateApplications}
+          rows={jobCandidateApplicationsData?.jobCandidateApplications?.nodes || []}
+          onDeleteJobCandidateApplication={onDeleteJobCandidateApplication}
+          onFilterChange={(newFilter) => handleFilterChange({ ...jobCandidateApplicationFilter, ...newFilter })}
           paginator={paginator}
         />
       </Grid>
       <Grid item xs={12}>
         <PaginationControlled
-          totalItems={jobCandidatesData?.jobCandidates?.totalCount} // Nombre total d'éléments
+          totalItems={jobCandidateApplicationsData?.jobCandidateApplications?.totalCount} // Nombre total d'éléments
           itemsPerPage={paginator.limit} // Nombre d'éléments par page
           currentPage={paginator.page}
           onChange={(page) => setPaginator({ ...paginator, page })}

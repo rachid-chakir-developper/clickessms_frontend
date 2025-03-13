@@ -15,7 +15,7 @@ import {
   Rating,
 } from '@mui/material';
 
-import { JOB_CANDIDATE_RECAP } from '../../../../../_shared/graphql/queries/JobCandidateQueries';
+import { JOB_CANDIDATE_APPLICATION_RECAP } from '../../../../../_shared/graphql/queries/JobCandidateApplicationQueries';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import JobPositionChip from '../job_positions/JobPositionChip';
 import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
@@ -39,19 +39,19 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-export default function JobCandidateDetails() {
-  let { idJobCandidate } = useParams();
+export default function JobCandidateApplicationDetails() {
+  let { idJobCandidateApplication } = useParams();
 
   const [
-    getJobCandidate,
-    { loading: loadingJobCandidate, data: jobCandidateData, error: jobCandidateError },
-  ] = useLazyQuery(JOB_CANDIDATE_RECAP);
+    getJobCandidateApplication,
+    { loading: loadingJobCandidateApplication, data: jobCandidateApplicationData, error: jobCandidateApplicationError },
+  ] = useLazyQuery(JOB_CANDIDATE_APPLICATION_RECAP);
 
   React.useEffect(() => {
-    if (idJobCandidate) {
-      getJobCandidate({ variables: { id: idJobCandidate } });
+    if (idJobCandidateApplication) {
+      getJobCandidateApplication({ variables: { id: idJobCandidateApplication } });
     }
-  }, [idJobCandidate]);
+  }, [idJobCandidateApplication]);
 
   return (
     <Stack>
@@ -66,35 +66,35 @@ export default function JobCandidateDetails() {
             </Button>
           </Link>
         </Box>
-        <Link to={`/online/ressources-humaines/recrutement/vivier-candidats/modifier/${jobCandidateData?.jobCandidate?.id}`} className="no_style">
+        <Link to={`/online/ressources-humaines/recrutement/vivier-candidats/modifier/${jobCandidateApplicationData?.jobCandidateApplication?.id}`} className="no_style">
           <Button variant="outlined" startIcon={<Edit />} size="small">
             Modifier
           </Button>
         </Link>
       </Box>
-      {loadingJobCandidate ? (
+      {loadingJobCandidateApplication ? (
         <ProgressService type="form" />
       ) : (
-        jobCandidateData?.jobCandidate && <JobCandidateDetailsPage jobCandidate={jobCandidateData.jobCandidate} />
+        jobCandidateApplicationData?.jobCandidateApplication && <JobCandidateApplicationDetailsPage jobCandidateApplication={jobCandidateApplicationData.jobCandidateApplication} />
       )}
     </Stack>
   );
 }
 
-const JobCandidateDetailsPage = ({ jobCandidate }) => {
+const JobCandidateApplicationDetailsPage = ({ jobCandidateApplication }) => {
   const {
     description,
     observation
-  } = jobCandidate;
+  } = jobCandidateApplication;
 
   return (
     <Box sx={{ width: '100%' }}>
       <Grid container spacing={3}>
         <Grid item xs={6}>
-          <JobCandidateMiniInfos jobCandidate={jobCandidate} />
+          <JobCandidateApplicationMiniInfos jobCandidateApplication={jobCandidateApplication} />
         </Grid>
         <Grid item xs={6}>
-          <JobCandidateOtherInfos jobCandidate={jobCandidate} />
+          <JobCandidateApplicationOtherInfos jobCandidateApplication={jobCandidateApplication} />
         </Grid>
         <Grid item xs={12}>
           <Divider />
@@ -131,7 +131,7 @@ const JobCandidateDetailsPage = ({ jobCandidate }) => {
   );
 }
 
-function JobCandidateMiniInfos({ jobCandidate }) {
+function JobCandidateApplicationMiniInfos({ jobCandidateApplication }) {
   return (
     <Paper
       variant="outlined"
@@ -144,10 +144,10 @@ function JobCandidateMiniInfos({ jobCandidate }) {
       }}
     >
       <Grid container spacing={2}>
-        {jobCandidate?.image && (
+        {jobCandidateApplication?.image && (
           <Grid item>
             <ButtonBase sx={{ width: 128, height: 'auto' }}>
-              <Img alt="Bank Card" src={jobCandidate?.image} />
+              <Img alt="Bank Card" src={jobCandidateApplication?.image} />
             </ButtonBase>
           </Grid>
         )}
@@ -155,15 +155,15 @@ function JobCandidateMiniInfos({ jobCandidate }) {
           <Grid item xs container direction="column" spacing={2}>
             <Grid item>
               <Typography variant="subtitle1" component="div">
-                <b>Réference:</b> {jobCandidate?.number}
+                <b>Réference:</b> {jobCandidateApplication?.number}
               </Typography>
-              {jobCandidate?.jobPosition && (
+              {jobCandidateApplication?.jobPosition && (
                 <>
                   <Paper sx={{ padding: 2 }} variant="outlined">
                     <Typography variant="h6" gutterBottom>
                       Fiche besoin postulée
                     </Typography>
-                    <JobPositionChip jobPosition={jobCandidate?.jobPosition} />
+                    <JobPositionChip jobPosition={jobCandidateApplication?.jobPosition} />
                   </Paper>
                 </>
               )}
@@ -174,31 +174,31 @@ function JobCandidateMiniInfos({ jobCandidate }) {
                 </Typography>
                 <Box sx={{paddingLeft: 4}}>
                   <Typography variant="subtitle1" component="div">
-                    <b>Nom:</b> {jobCandidate?.firstName}
+                    <b>Nom:</b> {jobCandidateApplication?.firstName}
                   </Typography>
                   <Typography variant="subtitle1" component="div">
-                    <b>Prénom:</b> {jobCandidate?.lastName}
+                    <b>Prénom:</b> {jobCandidateApplication?.lastName}
                   </Typography>
                   <Typography variant="subtitle1" component="div">
-                    <b>Métier:</b> {jobCandidate?.jobTitle}
+                    <b>Métier:</b> {jobCandidateApplication?.jobTitle}
                   </Typography>
                   <Typography variant="subtitle1" component="div">
-                    <b>Disponible le:</b> {getFormatDate(jobCandidate?.availabilityDate)}
+                    <b>Disponible le:</b> {getFormatDate(jobCandidateApplication?.availabilityDate)}
                   </Typography>
                   <Typography variant="subtitle1" component="div">
-                    <b>E-mail:</b> {jobCandidate?.email}
+                    <b>E-mail:</b> {jobCandidateApplication?.email}
                   </Typography>
                   <Typography variant="subtitle1" component="div">
-                    <b>Tél:</b> {jobCandidate?.mobile}
+                    <b>Tél:</b> {jobCandidateApplication?.mobile}
                   </Typography>
                 </Box>
               </Paper>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
                 <b>Crée le: </b>{' '}
-                {`${getFormatDateTime(jobCandidate?.createdAt)}`} <br />
+                {`${getFormatDateTime(jobCandidateApplication?.createdAt)}`} <br />
                 <b>Dernière modification: </b>
-                {`${getFormatDateTime(jobCandidate?.updatedAt)}`}
+                {`${getFormatDateTime(jobCandidateApplication?.updatedAt)}`}
               </Typography>
             </Grid>
           </Grid>
@@ -208,8 +208,8 @@ function JobCandidateMiniInfos({ jobCandidate }) {
   );
 }
 
-function JobCandidateOtherInfos({ jobCandidate }) {
-  const {firstName, lastName,  cv, coverLetter} = jobCandidate
+function JobCandidateApplicationOtherInfos({ jobCandidateApplication }) {
+  const {firstName, lastName,  cv, coverLetter} = jobCandidateApplication
   return (
     <Paper
       variant="outlined"
@@ -221,13 +221,13 @@ function JobCandidateOtherInfos({ jobCandidate }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
-      {jobCandidate?.employee && (
+      {jobCandidateApplication?.employee && (
         <>
           <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
             <Typography variant="h6" gutterBottom>
               Ajouté par
             </Typography>
-            <EmployeeChip employee={jobCandidate?.employee} />
+            <EmployeeChip employee={jobCandidateApplication?.employee} />
           </Paper>
         </>
       )}<>
@@ -235,7 +235,7 @@ function JobCandidateOtherInfos({ jobCandidate }) {
         <Typography variant="h6" gutterBottom>
           Note
         </Typography>
-        <Rating value={jobCandidate?.rating} readOnly />
+        <Rating value={jobCandidateApplication?.rating} readOnly />
       </Paper>
       <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
         <FileViewer title="CV" fileUrl={cv} fileName={`cv-${firstName}-${lastName}`} />

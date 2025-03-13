@@ -1,14 +1,14 @@
 import * as React from 'react';
-import AddJobCandidateForm from './AddJobCandidateForm';
+import AddJobCandidateApplicationForm from './AddJobCandidateApplicationForm';
 import { useParams } from 'react-router-dom';
 
-export default function AddJobCandidate() {
-  let { idJobCandidate } = useParams();
+export default function AddJobCandidateApplication() {
+  let { idJobCandidateApplication } = useParams();
   return (
-    <AddJobCandidateForm
-      idJobCandidate={idJobCandidate}
+    <AddJobCandidateApplicationForm
+      idJobCandidateApplication={idJobCandidateApplication}
       title={
-        idJobCandidate && idJobCandidate > 0 ? `Modifier le candidat` : `Ajouter un candidat`
+        idJobCandidateApplication && idJobCandidateApplication > 0 ? `Modifier le candidat` : `Ajouter un candidat`
       }
     />
   );

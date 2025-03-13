@@ -5,7 +5,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import { Stack } from '@mui/material';
-import JobCandidates from './JobCandidates';
+import JobCandidateApplications from './JobCandidateApplications';
 import JobPostings from './JobPostings';
 
 function CustomTabPanel(props) {
@@ -99,14 +99,14 @@ export default function JobPositionTabs({jobPosition}) {
                 role="navigation"
             >
                 <LinkTab label="Diffusions" href="/spam" />
-                <LinkTab label="Candidats" href="/spam" />
+                <LinkTab label="Candidatures" href="/spam" />
             </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
           <JobPostings jobPosition={jobPosition} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          <JobCandidates jobPosition={jobPosition} />
+          <JobCandidateApplications jobPosition={jobPosition} />
         </CustomTabPanel>
     </Box>
   );

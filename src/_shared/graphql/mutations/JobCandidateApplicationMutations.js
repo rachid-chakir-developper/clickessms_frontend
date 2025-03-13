@@ -44,7 +44,7 @@ export const PUT_JOB_CANDIDATE_APPLICATION = gql`
 `;
 
 export const PUT_JOB_CANDIDATE_APPLICATION_FIELDS = gql`
-  mutation UpdateJobCandidateApplicationFields($id: ID!, $jobCandidateApplicationData: JobCandidateApplicationInput!) {
+  mutation UpdateJobCandidateApplicationFields($id: ID!, $jobCandidateApplicationData: JobCandidateApplicationFieldInput!) {
     updateJobCandidateApplicationFields(id: $id, jobCandidateApplicationData: $jobCandidateApplicationData) {
       done
       success

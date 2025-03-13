@@ -36,7 +36,7 @@ import { formatCurrencyAmount, getFormatDate, truncateText } from '../../../../.
 import JobPositionChip from '../job_positions/JobPositionChip';
 import EmployeeChip from '../../employees/EmployeeChip';
 import FileViewer from '../../../../../_shared/components/media/FileViewer';
-import JobCandidateStatusLabelMenu from './JobCandidateStatusLabelMenu';
+import JobCandidateApplicationStatusLabelMenu from './JobCandidateApplicationStatusLabelMenu';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -176,7 +176,6 @@ const headCells = [,
         exportField: ['job_position__title'],
         numeric: false,
         disablePadding: false,
-        isDefault: true,
         disableClickDetail: true,
         sortDisabled: true,
         label: 'Fiche besoin',
@@ -244,7 +243,7 @@ const headCells = [,
         isDefault: true,
         disableClickDetail: true,
         label: 'Status',
-        render: (data)=> <JobCandidateStatusLabelMenu jobCandidate={data} />
+        render: (data)=> <JobCandidateApplicationStatusLabelMenu jobCandidateApplication={data} />
     },
     {
         id: 'action',
@@ -352,7 +351,7 @@ function EnhancedTableToolbar(props) {
         </Typography>
       )}
       <TableExportButton 
-        entity={'JobCandidate'}
+        entity={'JobCandidateApplication'}
         fileName={'Dépenses'}
         fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
         titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
@@ -374,10 +373,10 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListJobCandidates({
+export default function TableListJobCandidateApplications({
   loading,
   rows,
-  onDeleteJobCandidate,
+  onDeleteJobCandidateApplication,
   onFilterChange,
   paginator,
 }) {
@@ -584,7 +583,7 @@ export default function TableListJobCandidates({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteJobCandidate(row?.id);
+                            onDeleteJobCandidateApplication(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

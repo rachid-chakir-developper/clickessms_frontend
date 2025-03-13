@@ -12,11 +12,11 @@ import * as yup from 'yup';
 import TheTextField from '../../../../../_shared/components/form-fields/TheTextField';
 import TheFileField from '../../../../../_shared/components/form-fields/TheFileField';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_JOB_CANDIDATE } from '../../../../../_shared/graphql/queries/JobCandidateQueries';
+import { GET_JOB_CANDIDATE_APPLICATION } from '../../../../../_shared/graphql/queries/JobCandidateApplicationQueries';
 import {
-  POST_JOB_CANDIDATE,
-  PUT_JOB_CANDIDATE,
-} from '../../../../../_shared/graphql/mutations/JobCandidateMutations';
+  POST_JOB_CANDIDATE_APPLICATION,
+  PUT_JOB_CANDIDATE_APPLICATION,
+} from '../../../../../_shared/graphql/mutations/JobCandidateApplicationMutations';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_JOB_POSITIONS } from '../../../../../_shared/graphql/queries/JobPositionQueries';
@@ -32,7 +32,7 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function AddJobCandidateForm({ idJobCandidate, title }) {
+export default function AddJobCandidateApplicationForm({ idJobCandidateApplication, title }) {
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({});
@@ -57,22 +57,22 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let { cv, coverLetter, files, ...jobCandidateCopy } = values;
-      jobCandidateCopy.jobPosition = jobCandidateCopy.jobPosition
-        ? jobCandidateCopy.jobPosition.id
+      let { cv, coverLetter, files, ...jobCandidateApplicationCopy } = values;
+      jobCandidateApplicationCopy.jobPosition = jobCandidateApplicationCopy.jobPosition
+        ? jobCandidateApplicationCopy.jobPosition.id
         : null;
-      if (idJobCandidate && idJobCandidate != '') {
-        onUpdateJobCandidate({
-          id: jobCandidateCopy.id,
-          jobCandidateData: jobCandidateCopy,
+      if (idJobCandidateApplication && idJobCandidateApplication != '') {
+        onUpdateJobCandidateApplication({
+          id: jobCandidateApplicationCopy.id,
+          jobCandidateApplicationData: jobCandidateApplicationCopy,
           cv: cv,
           coverLetter: coverLetter,
           files: files
         });
       } else
-        createJobCandidate({
+        createJobCandidateApplication({
           variables: {
-            jobCandidateData: jobCandidateCopy,
+            jobCandidateApplicationData: jobCandidateApplicationCopy,
             cv: cv,
             coverLetter: coverLetter,
             files: files,
@@ -89,7 +89,7 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
     fetchPolicy: 'network-only',
   });
 
-  const [createJobCandidate, { loading: loadingPost }] = useMutation(POST_JOB_CANDIDATE, {
+  const [createJobCandidateApplication, { loading: loadingPost }] = useMutation(POST_JOB_CANDIDATE_APPLICATION, {
     onCompleted: (data) => {
       console.log(data);
       setNotifyAlert({
@@ -97,19 +97,19 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
         message: 'Ajouté avec succès',
         type: 'success',
       });
-      let { __typename, ...jobCandidateCopy } = data.createJobCandidate.jobCandidate;
-      //   formik.setValues(jobCandidateCopy);
+      let { __typename, ...jobCandidateApplicationCopy } = data.createJobCandidateApplication.jobCandidateApplication;
+      //   formik.setValues(jobCandidateApplicationCopy);
       navigate('/online/ressources-humaines/recrutement/vivier-candidats/liste');
     },
-    update(cache, { data: { createJobCandidate } }) {
-      const newJobCandidate = createJobCandidate.jobCandidate;
+    update(cache, { data: { createJobCandidateApplication } }) {
+      const newJobCandidateApplication = createJobCandidateApplication.jobCandidateApplication;
 
       cache.modify({
         fields: {
-          jobCandidates(existingJobCandidates = { totalCount: 0, nodes: [] }) {
+          jobCandidateApplications(existingJobCandidateApplications = { totalCount: 0, nodes: [] }) {
             return {
-              totalCount: existingJobCandidates.totalCount + 1,
-              nodes: [newJobCandidate, ...existingJobCandidates.nodes],
+              totalCount: existingJobCandidateApplications.totalCount + 1,
+              nodes: [newJobCandidateApplication, ...existingJobCandidateApplications.nodes],
             };
           },
         },
@@ -124,7 +124,7 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
       });
     },
   });
-  const [updateJobCandidate, { loading: loadingPut }] = useMutation(PUT_JOB_CANDIDATE, {
+  const [updateJobCandidateApplication, { loading: loadingPut }] = useMutation(PUT_JOB_CANDIDATE_APPLICATION, {
     onCompleted: (data) => {
       console.log(data);
       setNotifyAlert({
@@ -132,28 +132,28 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
         message: 'Modifié avec succès',
         type: 'success',
       });
-      let { __typename, ...jobCandidateCopy } = data.updateJobCandidate.jobCandidate;
-      //   formik.setValues(jobCandidateCopy);
+      let { __typename, ...jobCandidateApplicationCopy } = data.updateJobCandidateApplication.jobCandidateApplication;
+      //   formik.setValues(jobCandidateApplicationCopy);
       navigate('/online/ressources-humaines/recrutement/vivier-candidats/liste');
     },
-    update(cache, { data: { updateJobCandidate } }) {
-      const updatedJobCandidate = updateJobCandidate.jobCandidate;
+    update(cache, { data: { updateJobCandidateApplication } }) {
+      const updatedJobCandidateApplication = updateJobCandidateApplication.jobCandidateApplication;
 
       cache.modify({
         fields: {
-          jobCandidates(
-            existingJobCandidates = { totalCount: 0, nodes: [] },
+          jobCandidateApplications(
+            existingJobCandidateApplications = { totalCount: 0, nodes: [] },
             { readField },
           ) {
-            const updatedJobCandidates = existingJobCandidates.nodes.map((jobCandidate) =>
-              readField('id', jobCandidate) === updatedJobCandidate.id
-                ? updatedJobCandidate
-                : jobCandidate,
+            const updatedJobCandidateApplications = existingJobCandidateApplications.nodes.map((jobCandidateApplication) =>
+              readField('id', jobCandidateApplication) === updatedJobCandidateApplication.id
+                ? updatedJobCandidateApplication
+                : jobCandidateApplication,
             );
 
             return {
-              totalCount: existingJobCandidates.totalCount,
-              nodes: updatedJobCandidates,
+              totalCount: existingJobCandidateApplications.totalCount,
+              nodes: updatedJobCandidateApplications,
             };
           },
         },
@@ -168,14 +168,14 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
       });
     },
   });
-  const onUpdateJobCandidate = (variables) => {
+  const onUpdateJobCandidateApplication = (variables) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment modifier ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        updateJobCandidate({ variables });
+        updateJobCandidateApplication({ variables });
       },
     });
   };
@@ -187,29 +187,29 @@ export default function AddJobCandidateForm({ idJobCandidate, title }) {
       fetchMore: fetchMoreDatas,
     } = useQuery(GET_DATAS_JOB, { fetchPolicy: 'network-only' });
 
-  const [getJobCandidate, { loading: loadingJobCandidate }] = useLazyQuery(GET_JOB_CANDIDATE, {
+  const [getJobCandidateApplication, { loading: loadingJobCandidateApplication }] = useLazyQuery(GET_JOB_CANDIDATE_APPLICATION, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, folder, employee, ...jobCandidateCopy } =  data.jobCandidate;
-      jobCandidateCopy.jobPlatform = jobCandidateCopy.jobPlatform ? Number(jobCandidateCopy.jobPlatform.id): null;
-      jobCandidateCopy.availabilityDate = jobCandidateCopy.availabilityDate ? dayjs(jobCandidateCopy.availabilityDate) : null;
-      formik.setValues(jobCandidateCopy);
+      let { __typename, folder, employee, ...jobCandidateApplicationCopy } =  data.jobCandidateApplication;
+      jobCandidateApplicationCopy.jobPlatform = jobCandidateApplicationCopy.jobPlatform ? Number(jobCandidateApplicationCopy.jobPlatform.id): null;
+      jobCandidateApplicationCopy.availabilityDate = jobCandidateApplicationCopy.availabilityDate ? dayjs(jobCandidateApplicationCopy.availabilityDate) : null;
+      formik.setValues(jobCandidateApplicationCopy);
     },
     onError: (err) => console.log(err),
   });
 
   React.useEffect(() => {
-    if (idJobCandidate) {
-      getJobCandidate({ variables: { id: idJobCandidate } });
+    if (idJobCandidateApplication) {
+      getJobCandidateApplication({ variables: { id: idJobCandidateApplication } });
     }
-  }, [idJobCandidate]);
+  }, [idJobCandidateApplication]);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
         {title}: <em><u>{formik.values.cardNumber}</u></em>
       </Typography>
-      {loadingJobCandidate && <ProgressService type="form" />}
-      {!loadingJobCandidate && (
+      {loadingJobCandidateApplication && <ProgressService type="form" />}
+      {!loadingJobCandidateApplication && (
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={{ xs: 2, md: 3 }}>
             <Grid item xs={12} sm={6} md={3}>

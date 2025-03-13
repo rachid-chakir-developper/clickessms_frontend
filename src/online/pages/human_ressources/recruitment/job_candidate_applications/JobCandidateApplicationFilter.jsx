@@ -28,7 +28,7 @@ const Item = styled(Stack)(({ theme }) => ({
     color: theme.palette.text.secondary,
   }));
 
-const JobCandidateFilter = ({ onFilterChange }) => {
+const JobCandidateApplicationFilter = ({ onFilterChange }) => {
   const [filterValues, setFilterValues] = useState({
     startingDateTime: null,
     endingDateTime: null,
@@ -148,4 +148,4 @@ const JobCandidateFilter = ({ onFilterChange }) => {
   );
 };
 
-export default JobCandidateFilter;
+export default JobCandidateApplicationFilter;

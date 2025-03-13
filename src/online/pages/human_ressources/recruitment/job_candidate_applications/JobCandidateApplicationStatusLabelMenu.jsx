@@ -4,11 +4,11 @@ import { Cancel, CheckCircle, Done, Euro, EventAvailable, HourglassTop, Star } f
 import { useMutation } from '@apollo/client';
 import CustomizedStatusLabelMenu from '../../../../../_shared/components/app/menu/CustomizedStatusLabelMenu';
 import { useAuthorizationSystem } from '../../../../../_shared/context/AuthorizationSystemProvider';
-import { PUT_JOB_CANDIDATE_FIELDS } from '../../../../../_shared/graphql/mutations/JobCandidateMutations';
+import { PUT_JOB_CANDIDATE_APPLICATION_FIELDS } from '../../../../../_shared/graphql/mutations/JobCandidateApplicationMutations';
 import { useSession } from '../../../../../_shared/context/SessionProvider';
 
 
-export default function JobCandidateStatusLabelMenu({jobCandidate}) {
+export default function JobCandidateApplicationStatusLabelMenu({jobCandidateApplication}) {
   const { user } = useSession();
   const authorizationSystem = useAuthorizationSystem();
   const canManageHumanRessources = authorizationSystem.requestAuthorization({
@@ -16,11 +16,11 @@ export default function JobCandidateStatusLabelMenu({jobCandidate}) {
   }).authorized;
 
   const canChangeStatus = ()=>{
-    const workerIds = jobCandidate?.workers?.map(w => w?.employee?.id)
+    const workerIds = jobCandidateApplication?.workers?.map(w => w?.employee?.id)
     if(!workerIds?.includes(user?.employee?.id)) return false
-    return jobCandidate?.status === 'PAID' || jobCandidate?.status === 'UNPAID'
+    return jobCandidateApplication?.status === 'PAID' || jobCandidateApplication?.status === 'UNPAID'
   }
-  const ALL_JOB_CANDIDATEE_STATUS = [
+  const ALL_JOB_CANDIDATE_APPLICATIONE_STATUS = [
     { value: 'PENDING', label: 'En attente', icon: <HourglassTop />, color: 'default' },
     { value: 'INTERESTED', label: 'Intéressant', icon: <Star />, color: 'primary' },  // Nouveau statut
     { value: 'INTERVIEW', label: 'Entretien prévu', icon: <EventAvailable />, color: 'info' },  // Nouveau statut
@@ -28,36 +28,36 @@ export default function JobCandidateStatusLabelMenu({jobCandidate}) {
     { value: 'ACCEPTED', label: 'Accepté', icon: <CheckCircle />, color: 'success' },  // Nouveau statut
   ];
   
-  const JOB_CANDIDATEE_STATUS = [
+  const JOB_CANDIDATE_APPLICATIONE_STATUS = [
     { value: 'PENDING', label: 'En attente', icon: <HourglassTop />, color: 'default' },
     { value: 'INTERESTED', label: 'Intéressant', icon: <Star />, color: 'primary' },  // Nouveau statut
     { value: 'INTERVIEW', label: 'Entretien prévu', icon: <EventAvailable />, color: 'info' },  // Nouveau statut
     { value: 'REJECTED', label: 'Rejeté', icon: <Cancel />, color: 'warning' },
     { value: 'ACCEPTED', label: 'Accepté', icon: <CheckCircle />, color: 'success' },  // Nouveau statut
   ];
-    const [updateJobCandidateFields, { loading: loadingPut }] = useMutation(PUT_JOB_CANDIDATE_FIELDS, {
+    const [updateJobCandidateApplicationFields, { loading: loadingPut }] = useMutation(PUT_JOB_CANDIDATE_APPLICATION_FIELDS, {
       onCompleted: (data) => {
         console.log(data);
-        if(data.updateJobCandidateFields.success) setOpenDialog(true);
+        // if(data.updateJobCandidateApplicationFields.success) setOpenDialog(true);
       },
-      update(cache, { data: { updateJobCandidateFields } }) {
-        const updatedJobCandidate = updateJobCandidateFields.jobCandidate;
+      update(cache, { data: { updateJobCandidateApplicationFields } }) {
+        const updatedJobCandidateApplication = updateJobCandidateApplicationFields.jobCandidateApplication;
   
         cache.modify({
           fields: {
-            jobCandidates(
-              existingJobCandidates = { totalCount: 0, nodes: [] },
+            jobCandidateApplications(
+              existingJobCandidateApplications = { totalCount: 0, nodes: [] },
               { readField },
             ) {
-              const updatedJobCandidates = existingJobCandidates.nodes.map((jobCandidate) =>
-                readField('id', jobCandidate) === updatedJobCandidate.id
-                  ? updatedJobCandidate
-                  : jobCandidate,
+              const updatedJobCandidateApplications = existingJobCandidateApplications.nodes.map((jobCandidateApplication) =>
+                readField('id', jobCandidateApplication) === updatedJobCandidateApplication.id
+                  ? updatedJobCandidateApplication
+                  : jobCandidateApplication,
               );
   
               return {
-                totalCount: existingJobCandidates.totalCount,
-                nodes: updatedJobCandidates,
+                totalCount: existingJobCandidateApplications.totalCount,
+                nodes: updatedJobCandidateApplications,
               };
             },
           },
@@ -75,11 +75,11 @@ export default function JobCandidateStatusLabelMenu({jobCandidate}) {
     <Box>
       <Box display="flex" alignItems="center">
         <CustomizedStatusLabelMenu
-            options={canManageHumanRessources ? ALL_JOB_CANDIDATEE_STATUS : JOB_CANDIDATEE_STATUS}
-            status={jobCandidate?.status}
-            type="jobCandidate"
+            options={canManageHumanRessources ? ALL_JOB_CANDIDATE_APPLICATIONE_STATUS : JOB_CANDIDATE_APPLICATIONE_STATUS}
+            status={jobCandidateApplication?.status}
+            type="jobCandidateApplication"
             loading={loadingPut}
-            onChange={(status)=> {updateJobCandidateFields({ variables: {id: jobCandidate?.id, jobCandidateData: {status}} })}}
+            onChange={(status)=> {updateJobCandidateApplicationFields({ variables: {id: jobCandidateApplication?.id, jobCandidateApplicationData: {status}} })}}
             disabled={!canManageHumanRessources && !canChangeStatus()}
         />
       </Box>
