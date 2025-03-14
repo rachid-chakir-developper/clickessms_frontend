@@ -19,7 +19,7 @@ import {
 } from '../../../../_shared/graphql/mutations/BeneficiaryMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { GET_DATAS_BENEFICIARY } from '../../../../_shared/graphql/queries/DataQueries';
-import { Close } from '@mui/icons-material';
+import { Close, ArrowBack } from '@mui/icons-material';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
@@ -593,9 +593,19 @@ const [getEmployees, {
   };
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <Typography component="div" variant="h5"  sx={{ marginBottom: 4 }}>
-        {title} {formik.values.number}
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography component="div" variant="h5">
+          {title} {formik.values.number}
+        </Typography>
+        <Link
+          to="/online/ressources-humaines/beneficiaires/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
+      </Box>
       {loadingBeneficiary && <ProgressService type="form" />}
       {!loadingBeneficiary && (
         <form onSubmit={formik.handleSubmit}>
@@ -699,7 +709,7 @@ const [getEmployees, {
                     <Item>
                       <TheTextField
                         variant="outlined"
-                        label="Nom d’usage"
+                        label="Nom d'usage"
                         value={formik.values.preferredName}
                         onChange={(e) =>
                           formik.setFieldValue('preferredName', e.target.value)
@@ -1243,12 +1253,12 @@ const [getEmployees, {
                             <Item>
                               <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">
-                                  Type de document d’admission
+                                  Type de document d'admission
                                 </InputLabel>
                                 <Select
                                   labelId="demo-simple-select-label"
                                   id="demo-simple-select"
-                                  label="Type de document d’admission"
+                                  label="Type de document d'admission"
                                   value={item.admissionDocumentType}
                                   onChange={(e) =>
                                     formik.setFieldValue(`beneficiaryAdmissionDocuments.${index}.admissionDocumentType`, e.target.value)
@@ -1286,7 +1296,7 @@ const [getEmployees, {
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
-                                label="Date d’admission"
+                                label="Date d'admission"
                                 value={item.startingDate}
                                 onChange={(date) =>
                                   formik.setFieldValue(`beneficiaryAdmissionDocuments.${index}.startingDate`, date)
@@ -1395,7 +1405,7 @@ const [getEmployees, {
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
-                                label="Date d’entrée"
+                                label="Date d'entrée"
                                 value={item.entryDate}
                                 onChange={(date) =>
                                   formik.setFieldValue(`beneficiaryEntries.${index}.entryDate`, date)
@@ -1408,7 +1418,7 @@ const [getEmployees, {
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
-                                label="Date d’'échéance"
+                                label="Date d'échéance"
                                 value={item.dueDate}
                                 onChange={(date) =>
                                   formik.setFieldValue(`beneficiaryEntries.${index}.dueDate`, date)

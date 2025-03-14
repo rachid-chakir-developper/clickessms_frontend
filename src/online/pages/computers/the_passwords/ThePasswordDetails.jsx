@@ -6,7 +6,7 @@ import { Grid, Typography, Avatar } from '@mui/material';
 import { GET_RECAP_THE_PASSWORD } from '../../../../_shared/graphql/queries/ThePasswordQueries';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import styled from '@emotion/styled';
-import { Devices, Edit } from '@mui/icons-material';
+import { Devices, Edit, ArrowBack } from '@mui/icons-material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 
 const Item = styled(Stack)(({ theme }) => ({
@@ -32,12 +32,20 @@ export default function ThePasswordDetails() {
 
   return (
     <Stack>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/informatique/mots-de-passe/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         <Link
           to={`/online/informatique/mots-de-passe/modifier/${thePasswordData?.thePassword?.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
         </Link>

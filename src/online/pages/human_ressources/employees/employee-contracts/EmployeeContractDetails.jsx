@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
   Box,
@@ -9,11 +9,13 @@ import {
   ButtonBase,
   Typography,
   Divider,
+  Button,
 } from '@mui/material';
+import { ArrowBack } from '@mui/icons-material';
 
 import { EMPLOYEE_CONTRACT_RECAP } from '../../../../../_shared/graphql/queries/EmployeeContractQueries';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
-import { getFormatDateTime } from '../../../../../_shared/tools/functions';
+import { getFormatDateTime, getFormatDate } from '../../../../../_shared/tools/functions';
 import EmployeeItemCard from '../../../human_ressources/employees/EmployeeItemCard';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -43,6 +45,24 @@ export default function EmployeeContractDetails() {
   if (loadingEmployeeContract) return <ProgressService type="form" />;
   return (
     <>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/ressources-humaines/contrats/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
+        <Link
+          to={`/online/ressources-humaines/contrats/modifier/${employeeContractData?.employeeContract?.id}`}
+          className="no_style"
+        >
+          <Button variant="outlined">
+            Modifier
+          </Button>
+        </Link>
+      </Box>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
@@ -116,24 +136,41 @@ function EmployeeContractMiniInfos({ employeeContract }) {
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
-                Réference : <b>{employeeContract?.number}</b>
+                Référence : <b>{employeeContract?.number}</b>
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {employeeContract?.name}
+                {employeeContract?.title}
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b>{' '}
-                {`${getFormatDateTime(employeeContract?.createdAt)}`} <br />
-                <b>Dernière modification: </b>
-                {`${getFormatDateTime(employeeContract?.updatedAt)}`}
+              <Typography variant="body2" gutterBottom>
+                <b>Type de contrat :</b> {employeeContract?.contractType || 'Non spécifié'}
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                <b>Poste :</b> {employeeContract?.position || 'Non spécifié'}
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                <b>Salaire mensuel brut :</b> {employeeContract?.monthlyGrossSalary || 0} €
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                <b>Salaire :</b> {employeeContract?.salary || 0} €
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+              <Typography variant="body2" gutterBottom>
+                <b>Jours de congés payés initiaux :</b> {employeeContract?.initialPaidLeaveDays || 0}
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                <b>Jours de RTT initiaux :</b> {employeeContract?.initialRwtDays || 0}
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                <b>Jours temporaires initiaux :</b> {employeeContract?.initialTemporaryDays || 0}
+              </Typography>
+              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Date début prévue: </b>{' '}
-                {`${getFormatDateTime(employeeContract?.startingDateTime)}`} <br />
-                <b>Date fin prévue: </b>{' '}
-                {`${getFormatDateTime(employeeContract?.endingDateTime)}`}
+                <b>Date début: </b>{' '}
+                {`${getFormatDate(employeeContract?.startingDate)}`} <br />
+                <b>Date fin: </b>{' '}
+                {employeeContract?.endingDate ? `${getFormatDate(employeeContract?.endingDate)}` : 'Non définie'}
               </Typography>
             </Grid>
           </Grid>

@@ -10,7 +10,6 @@ import {
   Divider,
   ButtonBase,
   Button,
-  List,
   Stack,
 } from '@mui/material';
 
@@ -18,7 +17,7 @@ import { JOB_POSITION_RECAP } from '../../../../../_shared/graphql/queries/JobPo
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
 import { getContractTypeLabel, getFormatDate, getFormatDateTime } from '../../../../../_shared/tools/functions';
-import { Edit } from '@mui/icons-material';
+import { Edit, ArrowBack, Description, Note, Work, BusinessCenter, Event } from '@mui/icons-material';
 import EmployeeChip from '../../employees/EmployeeChip';
 import JobPositionTabs from './job_position-tabs/JobPositionTabs';
 
@@ -53,19 +52,17 @@ export default function JobPositionDetails() {
 
   return (
     <Stack>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-        <Box sx={{marginX: 2}}>
-          <Link
-            to={`/online/ressources-humaines/recrutement/fiches-besoin/liste`}
-            className="no_style"
-          >
-            <Button variant="text" startIcon={<List />}  size="small">
-              Retour à la Liste
-            </Button>
-          </Link>
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/ressources-humaines/recrutement/fiches-besoin/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         <Link to={`/online/ressources-humaines/recrutement/fiches-besoin/modifier/${jobPositionData?.jobPosition?.id}`} className="no_style">
-          <Button variant="outlined" startIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
         </Link>
@@ -100,8 +97,8 @@ const JobPositionDetailsPage = ({ jobPosition }) => {
         {/* Description */}
         <Grid item xs={12}>
           <Paper sx={{ padding: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Description
+            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+              <Description sx={{ mr: 1 }} />Description
             </Typography>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography variant="body1">
@@ -114,8 +111,8 @@ const JobPositionDetailsPage = ({ jobPosition }) => {
         {/* Observation */}
         <Grid item xs={12}>
           <Paper sx={{ padding: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Observation
+            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+              <Note sx={{ mr: 1 }} />Observation
             </Typography>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography variant="body1">
@@ -158,7 +155,7 @@ function JobPositionMiniInfos({ jobPosition }) {
           <Grid item xs container direction="column" spacing={2}>
             <Grid item>
               <Typography variant="subtitle1" component="div">
-                <b>Réference:</b> {jobPosition?.number}
+                <b>Référence:</b> {jobPosition?.number}
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Paper sx={{ padding: 2 }} variant="outlined">
@@ -166,29 +163,44 @@ function JobPositionMiniInfos({ jobPosition }) {
                   Infos sur le poste demandé:
                 </Typography>
                 <Box sx={{paddingLeft: 4}}>
-                  <Typography variant="subtitle1" component="div">
-                    <b>Titre:</b> {jobPosition?.title}
-                  </Typography>
-                  <Typography variant="subtitle1" component="div">
-                    <b>Secteur:</b> {jobPosition?.sector}
-                  </Typography>
-                  <Typography variant="subtitle1" component="div">
-                    <b>Type du contrat:</b> {getContractTypeLabel(jobPosition?.contractType)}
-                  </Typography>
-                  <Typography variant="subtitle1" component="div">
-                    <b>Date d'embauche prévue:</b> {getFormatDate(jobPosition?.hiringDate)}
-                  </Typography>
-                  <Typography variant="subtitle1" component="div">
-                    <b>Duré:</b> {jobPosition?.duration}
-                  </Typography>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                    <Work fontSize="small" />
+                    <Typography variant="subtitle1" component="div">
+                      <b>Titre:</b> {jobPosition?.title}
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                    <BusinessCenter fontSize="small" />
+                    <Typography variant="subtitle1" component="div">
+                      <b>Secteur:</b> {jobPosition?.sector}
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                    <BusinessCenter fontSize="small" />
+                    <Typography variant="subtitle1" component="div">
+                      <b>Type du contrat:</b> {getContractTypeLabel(jobPosition?.contractType)}
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                    <Event fontSize="small" />
+                    <Typography variant="subtitle1" component="div">
+                      <b>Date d'embauche prévue:</b> {getFormatDate(jobPosition?.hiringDate) || "Non définie"}
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                    <Event fontSize="small" />
+                    <Typography variant="subtitle1" component="div">
+                      <b>Durée:</b> {jobPosition?.duration || "Non définie"}
+                    </Typography>
+                  </Stack>
                 </Box>
               </Paper>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b>{' '}
-                {`${getFormatDateTime(jobPosition?.createdAt)}`} <br />
-                <b>Dernière modification: </b>
-                {`${getFormatDateTime(jobPosition?.updatedAt)}`}
+                <b>Crée le:</b> {getFormatDateTime(jobPosition?.createdAt)}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                <b>Dernière modification:</b> {getFormatDateTime(jobPosition?.updatedAt)}
               </Typography>
             </Grid>
           </Grid>
@@ -214,7 +226,7 @@ function JobPositionOtherInfos({ jobPosition }) {
         <>
           <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
             <Typography variant="h6" gutterBottom>
-              Structures associés
+              Structures associées
             </Typography>
             <EstablishmentChip establishment={jobPosition?.establishment} />
           </Paper>

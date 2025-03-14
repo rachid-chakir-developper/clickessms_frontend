@@ -11,14 +11,14 @@ import {
   Divider,
   Button,
   Stack,
-  List,
+  List as ListIcon,
 } from '@mui/material';
 
 import { TRANSMISSION_EVENT_RECAP } from '../../../../_shared/graphql/queries/TransmissionEventQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDate, getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
-import { Edit } from '@mui/icons-material';
+import { Edit, ArrowBack } from '@mui/icons-material';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
 
@@ -45,19 +45,17 @@ export default function TransmissionEventDetails() {
   if (loadingTransmissionEvent) return <ProgressService type="form" />;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-        <Box sx={{marginX: 2}}>
-          <Link
-            to={`/online/activites/evenements/liste`}
-            className="no_style"
-          >
-            <Button variant="text" startIcon={<List />}  size="small">
-              Retour à la Liste
-            </Button>
-          </Link>
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/activites/evenements/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         <Link to={`/online/activites/evenements/modifier/${transmissionEventData?.transmissionEvent?.id}`} className="no_style">
-          <Button variant="outlined" startIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
         </Link>
@@ -136,13 +134,7 @@ function TransmissionEventMiniInfos({ transmissionEvent }) {
               <Typography gutterBottom variant="subtitle1" component="div">
                 {transmissionEvent?.title}
               </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b> {`${getFormatDateTime(transmissionEvent?.createdAt)}`}{' '}
-                <br />
-                <b>Dernière modification: </b>
-                {`${getFormatDateTime(transmissionEvent?.updatedAt)}`}
-              </Typography>
+          
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
                 <b>Date début: </b>{' '}

@@ -10,7 +10,6 @@ import {
   Divider,
   ButtonBase,
   Button,
-  List,
   Stack,
   Rating,
 } from '@mui/material';
@@ -20,7 +19,7 @@ import ProgressService from '../../../../../_shared/services/feedbacks/ProgressS
 import JobPositionChip from '../job_positions/JobPositionChip';
 import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
 import { getFormatDate, getFormatDateTime } from '../../../../../_shared/tools/functions';
-import { Edit } from '@mui/icons-material';
+import { Edit, ArrowBack, Description, Note, Person, Work, Email, Phone, Event, Star, Link as LinkIcon, InsertDriveFile } from '@mui/icons-material';
 import EmployeeChip from '../../employees/EmployeeChip';
 import FileViewer from '../../../../../_shared/components/media/FileViewer';
 
@@ -55,19 +54,17 @@ export default function JobCandidateDetails() {
 
   return (
     <Stack>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-        <Box sx={{marginX: 2}}>
-          <Link
-            to={`/online/ressources-humaines/recrutement/vivier-candidats/liste`}
-            className="no_style"
-          >
-            <Button variant="text" startIcon={<List />}  size="small">
-              Retour à la Liste
-            </Button>
-          </Link>
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/ressources-humaines/recrutement/vivier-candidats/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         <Link to={`/online/ressources-humaines/recrutement/vivier-candidats/modifier/${jobCandidateData?.jobCandidate?.id}`} className="no_style">
-          <Button variant="outlined" startIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
         </Link>
@@ -102,8 +99,8 @@ const JobCandidateDetailsPage = ({ jobCandidate }) => {
         {/* Description */}
         <Grid item xs={12}>
           <Paper sx={{ padding: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Description
+            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+              <Description sx={{ mr: 1 }} />Description
             </Typography>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography variant="body1">
@@ -116,8 +113,8 @@ const JobCandidateDetailsPage = ({ jobCandidate }) => {
         {/* Observation */}
         <Grid item xs={12}>
           <Paper sx={{ padding: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Observation
+            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+              <Note sx={{ mr: 1 }} />Observation
             </Typography>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography variant="body1">
@@ -147,7 +144,7 @@ function JobCandidateMiniInfos({ jobCandidate }) {
         {jobCandidate?.image && (
           <Grid item>
             <ButtonBase sx={{ width: 128, height: 'auto' }}>
-              <Img alt="Bank Card" src={jobCandidate?.image} />
+              <Img alt="Photo du candidat" src={jobCandidate?.image} />
             </ButtonBase>
           </Grid>
         )}
@@ -155,7 +152,7 @@ function JobCandidateMiniInfos({ jobCandidate }) {
           <Grid item xs container direction="column" spacing={2}>
             <Grid item>
               <Typography variant="subtitle1" component="div">
-                <b>Réference:</b> {jobCandidate?.number}
+                <b>Référence:</b> {jobCandidate?.number}
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Paper sx={{ padding: 2 }} variant="outlined">
@@ -163,32 +160,58 @@ function JobCandidateMiniInfos({ jobCandidate }) {
                   Infos sur le candidat:
                 </Typography>
                 <Box sx={{paddingLeft: 4}}>
-                  <Typography variant="subtitle1" component="div">
-                    <b>Nom:</b> {jobCandidate?.firstName}
-                  </Typography>
-                  <Typography variant="subtitle1" component="div">
-                    <b>Prénom:</b> {jobCandidate?.lastName}
-                  </Typography>
-                  <Typography variant="subtitle1" component="div">
-                    <b>Métier:</b> {jobCandidate?.jobTitle}
-                  </Typography>
-                  <Typography variant="subtitle1" component="div">
-                    <b>Disponible le:</b> {getFormatDate(jobCandidate?.availabilityDate)}
-                  </Typography>
-                  <Typography variant="subtitle1" component="div">
-                    <b>E-mail:</b> {jobCandidate?.email}
-                  </Typography>
-                  <Typography variant="subtitle1" component="div">
-                    <b>Tél:</b> {jobCandidate?.mobile}
-                  </Typography>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                    <Person fontSize="small" />
+                    <Typography variant="subtitle1" component="div">
+                      <b>Prénom:</b> {jobCandidate?.firstName}
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                    <Person fontSize="small" />
+                    <Typography variant="subtitle1" component="div">
+                      <b>Nom:</b> {jobCandidate?.lastName}
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                    <Work fontSize="small" />
+                    <Typography variant="subtitle1" component="div">
+                      <b>Métier:</b> {jobCandidate?.jobTitle}
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                    <Event fontSize="small" />
+                    <Typography variant="subtitle1" component="div">
+                      <b>Disponible le:</b> {getFormatDate(jobCandidate?.availabilityDate) || "Non définie"}
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                    <Email fontSize="small" />
+                    <Typography variant="subtitle1" component="div">
+                      <b>E-mail:</b> {jobCandidate?.email || "Non renseigné"}
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                    <Phone fontSize="small" />
+                    <Typography variant="subtitle1" component="div">
+                      <b>Tél:</b> {jobCandidate?.mobile || jobCandidate?.phone || "Non renseigné"}
+                    </Typography>
+                  </Stack>
+                  {jobCandidate?.jobPlatform && (
+                    <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                      <LinkIcon fontSize="small" />
+                      <Typography variant="subtitle1" component="div">
+                        <b>Source:</b> {jobCandidate?.jobPlatform?.name || "Non renseignée"}
+                      </Typography>
+                    </Stack>
+                  )}
                 </Box>
               </Paper>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b>{' '}
-                {`${getFormatDateTime(jobCandidate?.createdAt)}`} <br />
-                <b>Dernière modification: </b>
-                {`${getFormatDateTime(jobCandidate?.updatedAt)}`}
+                <b>Créé le:</b> {getFormatDateTime(jobCandidate?.createdAt)}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                <b>Dernière modification:</b> {getFormatDateTime(jobCandidate?.updatedAt)}
               </Typography>
             </Grid>
           </Grid>
@@ -199,7 +222,7 @@ function JobCandidateMiniInfos({ jobCandidate }) {
 }
 
 function JobCandidateOtherInfos({ jobCandidate }) {
-  const {firstName, lastName,  cv, coverLetter} = jobCandidate
+  const {firstName, lastName, cv, coverLetter} = jobCandidate
   return (
     <Paper
       variant="outlined"
@@ -212,28 +235,31 @@ function JobCandidateOtherInfos({ jobCandidate }) {
       }}
     >
       {jobCandidate?.employee && (
-        <>
-          <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
-            <Typography variant="h6" gutterBottom>
-              Ajouté par
-            </Typography>
-            <EmployeeChip employee={jobCandidate?.employee} />
-          </Paper>
-        </>
-      )}<>
+        <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
+          <Typography variant="h6" gutterBottom>
+            Ajouté par
+          </Typography>
+          <EmployeeChip employee={jobCandidate?.employee} />
+        </Paper>
+      )}
       <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
-        <Typography variant="h6" gutterBottom>
-          Note
+        <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+          <Star sx={{ mr: 1 }} />Note
         </Typography>
         <Rating value={jobCandidate?.rating} readOnly />
       </Paper>
       <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
+        <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+          <InsertDriveFile sx={{ mr: 1 }} />CV
+        </Typography>
         <FileViewer title="CV" fileUrl={cv} fileName={`cv-${firstName}-${lastName}`} />
       </Paper>
       <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
+        {/* <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+          <InsertDriveFile sx={{ mr: 1 }} />Lettre de motivation
+        </Typography> */}
         <FileViewer title="Lettre de motivation" fileUrl={coverLetter} fileName={`Lettre-de-motivation-${firstName}-${lastName}`} />
       </Paper>
-    </>
     </Paper>
   );
 }

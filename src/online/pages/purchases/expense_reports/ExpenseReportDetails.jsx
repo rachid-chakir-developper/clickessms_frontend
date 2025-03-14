@@ -30,6 +30,7 @@ import {
 import ExpenseReportStatusLabelMenu from './ExpenseReportStatusLabelMenu';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import { Edit, ArrowBack } from '@mui/icons-material';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -52,22 +53,20 @@ export default function ExpenseReportDetails() {
   if (loadingExpenseReport) return <ProgressService type="form" />;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-        <Box sx={{ marginX: 2 }}>
-          <Link
-            to={`/online/achats/notes-frais/liste`}
-            className="no_style"
-          >
-            <Button variant="text" startIcon={<List />} size="small">
-              Retour à la Liste
-            </Button>
-          </Link>
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to={`/online/achats/notes-frais/liste`}
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         <Link
           to={`/online/achats/notes-frais/modifier/${expenseReportData?.expenseReport.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
         </Link>

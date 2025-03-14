@@ -19,7 +19,7 @@ import ProgressService from '../../../../../_shared/services/feedbacks/ProgressS
 import BankAccountChip from '../bank_accounts/BankAccountChip';
 import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
 import { getFormatDate, getFormatDateTime } from '../../../../../_shared/tools/functions';
-import { Edit } from '@mui/icons-material';
+import { Edit, ArrowBack } from '@mui/icons-material';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -52,19 +52,17 @@ export default function BankCardDetails() {
 
   return (
     <Stack>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-        <Box sx={{marginX: 2}}>
-          <Link
-            to={`/online/finance/tresorerie/cartes-bancaires/liste`}
-            className="no_style"
-          >
-            <Button variant="text" startIcon={<List />}  size="small">
-              Retour à la Liste
-            </Button>
-          </Link>
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/finance/tresorerie/cartes-bancaires/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         <Link to={`/online/finance/tresorerie/cartes-bancaires/modifier/${bankCardData?.bankCard?.id}`} className="no_style">
-          <Button variant="outlined" startIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
         </Link>

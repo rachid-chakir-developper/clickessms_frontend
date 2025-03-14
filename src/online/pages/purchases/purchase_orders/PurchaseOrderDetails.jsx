@@ -106,12 +106,12 @@ export default function PurchaseOrderDetails() {
         <Typography variant="body1">
           <b>Montant total : </b> {formatCurrencyAmount(purchaseOrder?.totalTtc)}
         </Typography>
-        <Typography variant="body1">
+        {/* <Typography variant="body1">
           <b>Date de création : </b> {getFormatDateTime(purchaseOrder?.createdAt)}
         </Typography>
         <Typography variant="body1">
           <b>Dernière modification : </b> {getFormatDateTime(purchaseOrder?.updatedAt)}
-        </Typography>
+        </Typography> */}
         <Typography variant="body1">
           <b>Status : </b>
         </Typography>

@@ -6,7 +6,7 @@ import { Grid, Typography, Avatar } from '@mui/material';
 import { GET_PURCHASE_CONTRACT_RECAP } from '../../../../_shared/graphql/queries/PurchaseContractQueries';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import styled from '@emotion/styled';
-import { Devices, Edit } from '@mui/icons-material';
+import { Devices, Edit, ArrowBack } from '@mui/icons-material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 
@@ -33,12 +33,20 @@ export default function PurchaseContractDetails() {
 
   return (
     <Stack>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/achats/base-contrats/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         <Link
           to={`/online/achats/base-contrats/modifier/${purchaseContractData?.purchaseContract?.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
         </Link>
@@ -138,12 +146,12 @@ const PurchaseContractDetailsPage = ({ purchaseContract }) => {
             <Typography variant="body1">Référence: {number}</Typography>
             <Typography variant="body1">Capacité: {capacity}</Typography>
             <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-            <Typography variant="body1">
+            {/* <Typography variant="body1">
               Ajouté le: {getFormatDateTime(createdAt)}
             </Typography>
             <Typography variant="body1">
               Dernière modification: {getFormatDateTime(updatedAt)}
-            </Typography>
+            </Typography> */}
           </Paper>
           <Paper sx={{ padding: 2, marginTop:2 }}>
             <Typography variant="body1">Structure:</Typography>

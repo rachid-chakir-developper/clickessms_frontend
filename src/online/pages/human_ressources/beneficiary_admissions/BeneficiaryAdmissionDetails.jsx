@@ -15,7 +15,7 @@ import {
   Chip,
   Button,
   Stack,
-  List,
+  List as ListComponent,
   ListItem,
   ListItemText,
   Alert,
@@ -33,7 +33,7 @@ import {
 import BeneficiaryAdmissionStatusLabelMenu from './BeneficiaryAdmissionStatusLabelMenu';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
-import { Edit } from '@mui/icons-material';
+import { Edit, ArrowBack, List as ListIcon } from '@mui/icons-material';
 import BeneficiaryAdmissionTabs from './beneficiary_admissions-tabs/BeneficiaryAdmissionTabs';
 import FinancierChip from '../../partnerships/financiers/FinancierChip';
 
@@ -58,22 +58,20 @@ export default function BeneficiaryAdmissionDetails() {
   if (loadingBeneficiaryAdmission) return <ProgressService type="form" />;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-        <Box sx={{ marginX: 2 }}>
-          <Link
-            to={`/online/ressources-humaines/admissions-beneficiaires/liste`}
-            className="no_style"
-          >
-            <Button variant="text" startIcon={<List />} size="small">
-              Retour à la Liste
-            </Button>
-          </Link>
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/ressources-humaines/admissions-beneficiaires/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         <Link
           to={`/online/ressources-humaines/admissions-beneficiaires/modifier/${beneficiaryAdmissionData?.beneficiaryAdmission.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
         </Link>
@@ -227,7 +225,7 @@ function BeneficiaryAdmissionInfosPerso({ beneficiaryAdmission }) {
           <Typography variant="body2" color="textSecondary">
             <b>Prénom :</b> {firstName || '-'} <br />
             <b>Nom de naissance :</b> {lastName || '-'} <br />
-            <b>Nom d’usage :</b> {preferredName || '-'} <br />
+            <b>Nom d'usage :</b> {preferredName || '-'} <br />
             <b>Genre :</b> {getGenderLabel(gender) || '-'} <br />
             <b>Date de naissance :</b> {getFormatDate(birthDate) || '-'}<br />
             <b>Âge :</b> {age || '-'}<br />

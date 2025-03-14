@@ -2,13 +2,13 @@ import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import { Box, Grid, Paper, Typography, Divider, Chip, Button, Stack, List } from '@mui/material';
+import { Box, Grid, Paper, Typography, Divider, Chip, Button, Stack, List as ListComponent } from '@mui/material';
 
 import { BENEFICIARY_ABSENCE_RECAP } from '../../../../_shared/graphql/queries/BeneficiaryAbsenceQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDate, getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
-import { Edit } from '@mui/icons-material';
+import { Edit, ArrowBack, List as ListIcon } from '@mui/icons-material';
 import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 
@@ -39,19 +39,17 @@ export default function BeneficiaryAbsenceDetails() {
   if (loadingBeneficiaryAbsence) return <ProgressService type="form" />;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-        <Box sx={{marginX: 2}}>
-          <Link
-            to={`/online/activites/absences-beneficiaires/liste`}
-            className="no_style"
-          >
-            <Button variant="text" startIcon={<List />}  size="small">
-              Retour à la Liste
-            </Button>
-          </Link>
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/activites/absences-beneficiaires/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         <Link to={`/online/activites/absences-beneficiaires/modifier/${beneficiaryAbsenceData?.beneficiaryAbsence?.id}`} className="no_style">
-          <Button variant="outlined" startIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
         </Link>
@@ -132,8 +130,6 @@ function BeneficiaryAbsenceMiniInfos({ beneficiaryAbsence }) {
                 <Typography variant="body2" color="text.secondary">
                   <b>Crée le: </b>{' '}
                   {`${getFormatDateTime(beneficiaryAbsence?.createdAt)}`} <br />
-                  <b>Dernière modification: </b>
-                  {`${getFormatDateTime(beneficiaryAbsence?.updatedAt)}`}
                 </Typography>
                 <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
                 <Typography variant="body2" color="text.secondary">

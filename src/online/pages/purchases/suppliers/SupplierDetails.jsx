@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
-import { Box, Button, Divider, List, Paper, Stack, alpha } from '@mui/material';
+import { Box, Button, Divider, Paper, Stack, alpha, Chip } from '@mui/material';
 import { Grid, Typography, Avatar } from '@mui/material';
 import { GET_SUPPLIER } from '../../../../_shared/graphql/queries/SupplierQueries';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
-import { Edit } from '@mui/icons-material';
+import { Edit, ArrowBack, Business, Person, AccountBalance, LocationOn, Phone, Email, Language, Description, Note, Info, AttachMoney, Verified, VerifiedUser } from '@mui/icons-material';
 
 export default function SupplierDetails() {
   let { idSupplier } = useParams();
@@ -41,6 +41,7 @@ const SupplierDetailsPage = ({ supplier }) => {
     city,
     zipCode,
     address,
+    additionalAddress,
     mobile,
     fix,
     fax,
@@ -53,31 +54,30 @@ const SupplierDetailsPage = ({ supplier }) => {
     description,
     observation,
     isActive,
+    isVerified,
     createdAt,
     updatedAt,
   } = supplier;
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-        <Box sx={{marginX: 2}}>
-          <Link
-            to={`/online/achats/fournisseurs/liste`}
-            className="no_style"
-          >
-            <Button variant="text" startIcon={<List />}  size="small">
-              Retour à la Liste
-            </Button>
-          </Link>
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/achats/fournisseurs/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         <Link to={`/online/achats/fournisseurs/modifier/${id}`} className="no_style">
-          <Button variant="outlined" startIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
         </Link>
       </Box>
       <Grid container spacing={3}>
-        {/* Informations de l'employé */}
+        {/* Informations du fournisseur */}
         <Grid item xs={12} sm={4}>
           <Paper
             sx={{
@@ -126,74 +126,121 @@ const SupplierDetailsPage = ({ supplier }) => {
                   color: (theme) => theme.palette.primary.contrastText,
                 }}
               >
-                <Typography variant="h5" gutterBottom>
-                  {name}
+                <Typography variant="h5" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+                  {name} {isVerified && <VerifiedUser sx={{ ml: 1, color: 'success.main' }} />}
                 </Typography>
                 {address && address !== '' && (
-                  <Typography variant="body2">{address}</Typography>
+                  <Typography variant="body2" sx={{ textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <LocationOn sx={{ mr: 1, fontSize: 'small' }} />
+                    {address} {additionalAddress && additionalAddress} <br />
+                    {zipCode} {city}
+                  </Typography>
                 )}
                 {supplierType && supplierType !== '' && (
-                  <Typography variant="body2">
-                    Type:
+                  <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Business sx={{ mr: 1, fontSize: 'small' }} />Type:
                     {supplierType === 'BUSINESS' && <b> Entreprise</b>}
                     {supplierType === 'INDIVIDUAL' && <b> Particulier</b>}
                   </Typography>
                 )}
-                <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-                  {email}
+                <Typography variant="body2" sx={{ fontStyle: 'italic', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Email sx={{ mr: 1, fontSize: 'small' }} />{email}
                 </Typography>
+                {webSite && webSite !== '' && (
+                  <Typography variant="body2" sx={{ fontStyle: 'italic', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Language sx={{ mr: 1, fontSize: 'small' }} />{webSite}
+                  </Typography>
+                )}
                 {mobile && mobile !== '' && (
-                  <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-                    {mobile}
+                  <Typography variant="body2" sx={{ fontStyle: 'italic', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Phone sx={{ mr: 1, fontSize: 'small' }} />Mobile: {mobile}
                   </Typography>
                 )}
                 {fix && fix !== '' && (
-                  <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-                    {fix}
+                  <Typography variant="body2" sx={{ fontStyle: 'italic', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Phone sx={{ mr: 1, fontSize: 'small' }} />Fixe: {fix}
+                  </Typography>
+                )}
+                {fax && fax !== '' && (
+                  <Typography variant="body2" sx={{ fontStyle: 'italic', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Phone sx={{ mr: 1, fontSize: 'small' }} />Fax: {fax}
                   </Typography>
                 )}
               </Box>
             </Box>
           </Paper>
         </Grid>
-        {/* Autres informations de l'employé */}
+        {/* Autres informations du fournisseur */}
         <Grid item xs={12} sm={8}>
           <Paper sx={{ padding: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Informations supplémentaires
+            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+              <Info sx={{ mr: 1 }} />Informations supplémentaires
             </Typography>
             <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography variant="body1">Réference: {number}</Typography>
-              <Typography variant="body1">
-                Réference sur SAGE: {externalNumber}
+              <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Info sx={{ mr: 1, fontSize: 'small' }} />Référence: {number}
               </Typography>
-              <Typography variant="body1">
-                Nom de responsable: {managerName}
+              <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Info sx={{ mr: 1, fontSize: 'small' }} />Référence sur SAGE: {externalNumber}
               </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body1">
-                Ajouté le: {getFormatDateTime(createdAt)}
+              <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Person sx={{ mr: 1, fontSize: 'small' }} />Nom du responsable: {managerName}
               </Typography>
-              <Typography variant="body1">
-                Dernière modification: {getFormatDateTime(updatedAt)}
+              {otherContacts && (
+                <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                  <Phone sx={{ mr: 1, fontSize: 'small' }} />Autres contacts: {otherContacts}
+                </Typography>
+              )}
+              <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Verified sx={{ mr: 1, fontSize: 'small' }} />
+                Statut de vérification: 
+                {isVerified ? 
+                  <Chip 
+                    size="small" 
+                    color="success" 
+                    label="Vérifié" 
+                    sx={{ ml: 1 }}
+                    icon={<VerifiedUser />} 
+                  /> : 
+                  <Chip 
+                    size="small" 
+                    color="default" 
+                    label="Non vérifié" 
+                    sx={{ ml: 1 }} 
+                  />
+                }
               </Typography>
+              {/* <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+              <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Info sx={{ mr: 1, fontSize: 'small' }} />Ajouté le: {getFormatDateTime(createdAt)}
+              </Typography>
+              <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Info sx={{ mr: 1, fontSize: 'small' }} />Dernière modification: {getFormatDateTime(updatedAt)}
+              </Typography> */}
             </Paper>
-            <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-              Informations Bancaires
+          </Paper>
+          
+          <Paper sx={{ padding: 2, mt: 2 }}>
+            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+              <AccountBalance sx={{ mr: 1 }} />Informations Bancaires
             </Typography>
             <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography variant="body1">IBAN: {iban}</Typography>
-              <Typography variant="body1">BIC: {bic}</Typography>
-              <Typography variant="body1">
-                Nom de la banque: {bankName}
+              <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <AttachMoney sx={{ mr: 1, fontSize: 'small' }} />IBAN: {iban}
+              </Typography>
+              <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <AttachMoney sx={{ mr: 1, fontSize: 'small' }} />BIC: {bic}
+              </Typography>
+              <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <AccountBalance sx={{ mr: 1, fontSize: 'small' }} />Nom de la banque: {bankName}
               </Typography>
             </Paper>
           </Paper>
         </Grid>
         <Grid item xs={12} sm={12}>
           <Paper sx={{ padding: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Description
+            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+              <Description sx={{ mr: 1 }} />Description
             </Typography>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography variant="body1">
@@ -204,8 +251,8 @@ const SupplierDetailsPage = ({ supplier }) => {
         </Grid>
         <Grid item xs={12} sm={12}>
           <Paper sx={{ padding: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Observation
+            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+              <Note sx={{ mr: 1 }} />Observation
             </Typography>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography variant="body1">

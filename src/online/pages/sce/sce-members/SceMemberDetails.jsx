@@ -11,7 +11,8 @@ import {
   getFormatDate,
   getFormatDateTime,
 } from '../../../../_shared/tools/functions';
-import { Edit } from '@mui/icons-material';
+import { Edit, ArrowBack } from '@mui/icons-material';
+import { getSceMemberRoleLabel } from '../../../../_shared/tools/functions';
 
 export default function SceMemberDetails() {
   const authorizationSystem = useAuthorizationSystem();
@@ -29,16 +30,26 @@ export default function SceMemberDetails() {
 
   return (
     <Stack>
-      {canManageSce && <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
         <Link
-          to={`/online/cse/membres/modifier/${sceMemberData?.sceMember?.id}`}
+          to="/online/cse/membres/liste"
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
-            Modifier
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
           </Button>
         </Link>
-      </Box>}
+        {canManageSce && (
+          <Link
+            to={`/online/cse/membres/modifier/${sceMemberData?.sceMember?.id}`}
+            className="no_style"
+          >
+            <Button variant="outlined" endIcon={<Edit />}>
+              Modifier
+            </Button>
+          </Link>
+        )}
+      </Box>
       {sceMemberData?.sceMember && (
         <SceMemberDetailsPage sceMember={sceMemberData?.sceMember} />
       )}
@@ -52,6 +63,7 @@ const SceMemberDetailsPage = ({ sceMember }) => {
     employee,
     description,
     observation,
+    role,
   } = sceMember;
   const {
     photo,
@@ -138,6 +150,11 @@ const SceMemberDetailsPage = ({ sceMember }) => {
               <Typography variant="h5" gutterBottom>
                 {`${firstName} ${lastName}`}
               </Typography>
+              {role && (
+                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                  Rôle: {getSceMemberRoleLabel(role)}
+                </Typography>
+              )}
               {address && address !== '' && (
                 <Typography variant="body2">{address}</Typography>
               )}

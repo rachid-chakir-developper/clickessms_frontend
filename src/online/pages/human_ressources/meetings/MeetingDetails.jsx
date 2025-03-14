@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Box, Grid, Paper, Typography, Divider, Chip, Stack, Button, ListItem, ListItemIcon, ListItemText, List, Avatar } from '@mui/material';
+import { ArrowBack } from '@mui/icons-material';
 
 import { MEETING_RECAP } from '../../../../_shared/graphql/queries/MeetingQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
@@ -39,7 +40,15 @@ export default function MeetingDetails() {
   return (
     <>
       <Stack>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+          <Link
+            to="/online/ressources-humaines/cr-entretiens/liste"
+            className="no_style"
+          >
+            <Button variant="outlined" startIcon={<ArrowBack />}>
+              Retour à la liste
+            </Button>
+          </Link>
           <Link
             to={`/online/ressources-humaines/cr-entretiens/modifier/${meetingData?.meeting?.id}`}
             className="no_style"
@@ -149,13 +158,11 @@ function MeetingMiniInfos({ meeting }) {
                 <Typography gutterBottom variant="subtitle1" component="div">
                   {meeting?.topics}
                 </Typography>
-                <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-                <Typography variant="body2" color="text.secondary">
-                  <b>Crée le: </b> {`${getFormatDateTime(meeting?.createdAt)}`}{' '}
-                  <br />
-                  <b>Dernière modification: </b>
-                  {`${getFormatDateTime(meeting?.updatedAt)}`}
-                </Typography>
+                {meeting?.videoCallLink && (
+                  <Typography gutterBottom variant="subtitle1" component="div">
+                    Lien visioconférence : <Link to={meeting?.videoCallLink} target="_blank" rel="noopener noreferrer">{meeting?.videoCallLink}</Link>
+                  </Typography>
+                )}
                 <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
                 <Typography variant="body2" color="text.secondary">
                   <b>Date début: </b>{' '}

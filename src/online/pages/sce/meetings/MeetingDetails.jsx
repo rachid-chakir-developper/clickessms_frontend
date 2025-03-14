@@ -9,7 +9,7 @@ import ProgressService from '../../../../_shared/services/feedbacks/ProgressServ
 import { getFormatDate, getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
 import EstablishmentItemCard from '../../companies/establishments/EstablishmentItemCard';
-import { Check, CheckBoxOutlineBlank, Done, Edit, Note } from '@mui/icons-material';
+import { Check, CheckBoxOutlineBlank, Done, Edit, Note, ArrowBack, Description, VideoCall, Comment } from '@mui/icons-material';
 import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
@@ -39,7 +39,15 @@ export default function MeetingDetails() {
   return (
     <>
       <Stack>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+          <Link
+            to="/online/cse/reunions/liste"
+            className="no_style"
+          >
+            <Button variant="outlined" startIcon={<ArrowBack />}>
+              Retour à la liste
+            </Button>
+          </Link>
           <Link
             to={`/online/cse/reunions/modifier/${meetingData?.meeting?.id}`}
             className="no_style"
@@ -87,6 +95,63 @@ export default function MeetingDetails() {
           <Grid item xs={6}>
             <MeetingOtherInfos meeting={meetingData?.meeting} />
           </Grid>
+          
+          {/* Description section */}
+          {meetingData?.meeting?.description && (
+            <Grid item xs={12} sx={{ mt: 3 }}>
+              <Paper
+                variant="outlined"
+                sx={{
+                  p: 2,
+                  margin: 'auto',
+                  flexGrow: 1,
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <Description sx={{ mr: 1 }} />
+                  <Typography variant="h6" gutterBottom>
+                    Description
+                  </Typography>
+                </Box>
+                <Paper sx={{ padding: 2 }} variant="outlined">
+                  <Typography variant="body1">
+                    {meetingData?.meeting?.description}
+                  </Typography>
+                </Paper>
+              </Paper>
+            </Grid>
+          )}
+          
+          {/* Autres raisons section */}
+          {meetingData?.meeting?.otherReasons && (
+            <Grid item xs={12} sx={{ mt: 3 }}>
+              <Paper
+                variant="outlined"
+                sx={{
+                  p: 2,
+                  margin: 'auto',
+                  flexGrow: 1,
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <Comment sx={{ mr: 1 }} />
+                  <Typography variant="h6" gutterBottom>
+                    Autres raisons
+                  </Typography>
+                </Box>
+                <Paper sx={{ padding: 2 }} variant="outlined">
+                  <Typography variant="body1">
+                    {meetingData?.meeting?.otherReasons}
+                  </Typography>
+                </Paper>
+              </Paper>
+            </Grid>
+          )}
+          
           <Grid item xs={12} sx={{ marginY: 3 }}>
             <Divider sx={{ marginY: 3 }}/>
             <Typography gutterBottom variant="subtitle3" component="h1">
@@ -109,6 +174,35 @@ export default function MeetingDetails() {
           <Grid item xs={6}>
             <MeetingReviewPoints meeting={meetingData?.meeting} />
           </Grid>
+          
+          {/* Observation section */}
+          {meetingData?.meeting?.observation && (
+            <Grid item xs={12} sx={{ mt: 3 }}>
+              <Paper
+                variant="outlined"
+                sx={{
+                  p: 2,
+                  margin: 'auto',
+                  flexGrow: 1,
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <Note sx={{ mr: 1 }} />
+                  <Typography variant="h6" gutterBottom>
+                    Observation
+                  </Typography>
+                </Box>
+                <Paper sx={{ padding: 2 }} variant="outlined">
+                  <Typography variant="body1">
+                    {meetingData?.meeting?.observation}
+                  </Typography>
+                </Paper>
+              </Paper>
+            </Grid>
+          )}
+          
           <Grid item xs={12} sx={{ marginY: 3 }}>
             <Divider />
           </Grid>
@@ -149,6 +243,20 @@ function MeetingMiniInfos({ meeting }) {
                 <Typography gutterBottom variant="subtitle1" component="div">
                   {meeting?.topics}
                 </Typography>
+                {meeting?.videoCallLink && (
+                  <>
+                    <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <VideoCall sx={{ mr: 1 }} color="primary" />
+                      <Typography variant="body2">
+                        <b>Lien d'appel vidéo: </b>
+                        <a href={meeting.videoCallLink} target="_blank" rel="noopener noreferrer">
+                          {meeting.videoCallLink}
+                        </a>
+                      </Typography>
+                    </Box>
+                  </>
+                )}
                 <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
                 <Typography variant="body2" color="text.secondary">
                   <b>Crée le: </b> {`${getFormatDateTime(meeting?.createdAt)}`}{' '}
