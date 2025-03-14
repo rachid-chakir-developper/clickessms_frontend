@@ -36,7 +36,7 @@ import { formatCurrencyAmount, getFormatDate, truncateText } from '../../../../.
 import JobPositionChip from '../job_positions/JobPositionChip';
 import EmployeeChip from '../../employees/EmployeeChip';
 import FileViewer from '../../../../../_shared/components/media/FileViewer';
-import JobCandidateApplicationStatusLabelMenu from './JobCandidateApplicationStatusLabelMenu';
+import JobCandidateInformationSheetStatusLabelMenu from './JobCandidateInformationSheetStatusLabelMenu';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -243,7 +243,7 @@ const headCells = [,
         isDefault: true,
         disableClickDetail: true,
         label: 'Status',
-        render: (data)=> <JobCandidateApplicationStatusLabelMenu jobCandidateApplication={data} />
+        render: (data)=> <JobCandidateInformationSheetStatusLabelMenu jobCandidateInformationSheet={data} />
     },
     {
         id: 'action',
@@ -347,11 +347,11 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-           Les candidatures
+           Vivier candidats
         </Typography>
       )}
       <TableExportButton 
-        entity={'JobCandidateApplication'}
+        entity={'JobCandidateInformationSheet'}
         fileName={'Dépenses'}
         fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
         titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
@@ -373,10 +373,10 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-export default function TableListJobCandidateApplications({
+export default function TableListJobCandidateInformationSheets({
   loading,
   rows,
-  onDeleteJobCandidateApplication,
+  onDeleteJobCandidateInformationSheet,
   onFilterChange,
   paginator,
 }) {
@@ -482,7 +482,7 @@ export default function TableListJobCandidateApplications({
                 <StyledTableRow>
                   <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucune candidature trouvée.
+                      Aucun candidat trouvé.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -540,7 +540,7 @@ export default function TableListJobCandidateApplications({
                           scope="row"
                           padding={column?.disablePadding ? "none" : "normal"}
                           key={index}
-                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/ressources-humaines/recrutement/candidatures/details/${row?.id}`)}}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/ressources-humaines/recrutement/fiches-renseignement/details/${row?.id}`)}}
                         >
                         {column?.render ? column?.render(row) : row[column?.id]}
                         </StyledTableCell>
@@ -564,7 +564,7 @@ export default function TableListJobCandidateApplications({
                         }}
                       >
                         <Link
-                          to={`/online/ressources-humaines/recrutement/candidatures/details/${row?.id}`}
+                          to={`/online/ressources-humaines/recrutement/fiches-renseignement/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -573,7 +573,7 @@ export default function TableListJobCandidateApplications({
                           </MenuItem>
                         </Link>
                         <Link
-                          to={`/online/ressources-humaines/recrutement/candidatures/modifier/${row?.id}`}
+                          to={`/online/ressources-humaines/recrutement/fiches-renseignement/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -583,7 +583,7 @@ export default function TableListJobCandidateApplications({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteJobCandidateApplication(row?.id);
+                            onDeleteJobCandidateInformationSheet(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}

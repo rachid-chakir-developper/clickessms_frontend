@@ -104,15 +104,15 @@ export default function ListJobCandidateApplications() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
-          <Link to="/online/ressources-humaines/recrutement/vivier-candidats/ajouter" className="no_style">
+          <Link to="/online/ressources-humaines/recrutement/candidatures/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter un candidat
+              Ajouter une candidature
             </Button>
           </Link>
         </Box>
-      </Grid>
+      </Grid> */}
       <Grid item xs={12}>
         <JobCandidateApplicationFilter onFilterChange={handleFilterChange} />
       </Grid>

@@ -12,11 +12,11 @@ import * as yup from 'yup';
 import TheTextField from '../../../../../_shared/components/form-fields/TheTextField';
 import TheFileField from '../../../../../_shared/components/form-fields/TheFileField';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
-import { GET_JOB_CANDIDATE_APPLICATION } from '../../../../../_shared/graphql/queries/JobCandidateApplicationQueries';
+import { GET_JOB_CANDIDATE_INFORMATION_SHEET } from '../../../../../_shared/graphql/queries/JobCandidateInformationSheetQueries';
 import {
-  POST_JOB_CANDIDATE_APPLICATION,
-  PUT_JOB_CANDIDATE_APPLICATION,
-} from '../../../../../_shared/graphql/mutations/JobCandidateApplicationMutations';
+  POST_JOB_CANDIDATE_INFORMATION_SHEET,
+  PUT_JOB_CANDIDATE_INFORMATION_SHEET,
+} from '../../../../../_shared/graphql/mutations/JobCandidateInformationSheetMutations';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_JOB_POSITIONS } from '../../../../../_shared/graphql/queries/JobPositionQueries';
@@ -32,7 +32,7 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function AddJobCandidateApplicationForm({ idJobCandidateApplication, title }) {
+export default function AddJobCandidateInformationSheetForm({ idJobCandidateInformationSheet, title }) {
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({});
@@ -57,22 +57,22 @@ export default function AddJobCandidateApplicationForm({ idJobCandidateApplicati
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let { cv, coverLetter, files, ...jobCandidateApplicationCopy } = values;
-      jobCandidateApplicationCopy.jobPosition = jobCandidateApplicationCopy.jobPosition
-        ? jobCandidateApplicationCopy.jobPosition.id
+      let { cv, coverLetter, files, ...jobCandidateInformationSheetCopy } = values;
+      jobCandidateInformationSheetCopy.jobPosition = jobCandidateInformationSheetCopy.jobPosition
+        ? jobCandidateInformationSheetCopy.jobPosition.id
         : null;
-      if (idJobCandidateApplication && idJobCandidateApplication != '') {
-        onUpdateJobCandidateApplication({
-          id: jobCandidateApplicationCopy.id,
-          jobCandidateApplicationData: jobCandidateApplicationCopy,
+      if (idJobCandidateInformationSheet && idJobCandidateInformationSheet != '') {
+        onUpdateJobCandidateInformationSheet({
+          id: jobCandidateInformationSheetCopy.id,
+          jobCandidateInformationSheetData: jobCandidateInformationSheetCopy,
           cv: cv,
           coverLetter: coverLetter,
           files: files
         });
       } else
-        createJobCandidateApplication({
+        createJobCandidateInformationSheet({
           variables: {
-            jobCandidateApplicationData: jobCandidateApplicationCopy,
+            jobCandidateInformationSheetData: jobCandidateInformationSheetCopy,
             cv: cv,
             coverLetter: coverLetter,
             files: files,
@@ -92,7 +92,7 @@ export default function AddJobCandidateApplicationForm({ idJobCandidateApplicati
       getJobPositions({ variables: { jobPositionFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
     }
 
-  const [createJobCandidateApplication, { loading: loadingPost }] = useMutation(POST_JOB_CANDIDATE_APPLICATION, {
+  const [createJobCandidateInformationSheet, { loading: loadingPost }] = useMutation(POST_JOB_CANDIDATE_INFORMATION_SHEET, {
     onCompleted: (data) => {
       console.log(data);
       setNotifyAlert({
@@ -100,19 +100,19 @@ export default function AddJobCandidateApplicationForm({ idJobCandidateApplicati
         message: 'Ajouté avec succès',
         type: 'success',
       });
-      let { __typename, ...jobCandidateApplicationCopy } = data.createJobCandidateApplication.jobCandidateApplication;
-      //   formik.setValues(jobCandidateApplicationCopy);
-      navigate('/online/ressources-humaines/recrutement/candidatures/liste');
+      let { __typename, ...jobCandidateInformationSheetCopy } = data.createJobCandidateInformationSheet.jobCandidateInformationSheet;
+      //   formik.setValues(jobCandidateInformationSheetCopy);
+      navigate('/online/ressources-humaines/recrutement/fiches-renseignement/liste');
     },
-    update(cache, { data: { createJobCandidateApplication } }) {
-      const newJobCandidateApplication = createJobCandidateApplication.jobCandidateApplication;
+    update(cache, { data: { createJobCandidateInformationSheet } }) {
+      const newJobCandidateInformationSheet = createJobCandidateInformationSheet.jobCandidateInformationSheet;
 
       cache.modify({
         fields: {
-          jobCandidateApplications(existingJobCandidateApplications = { totalCount: 0, nodes: [] }) {
+          jobCandidateInformationSheets(existingJobCandidateInformationSheets = { totalCount: 0, nodes: [] }) {
             return {
-              totalCount: existingJobCandidateApplications.totalCount + 1,
-              nodes: [newJobCandidateApplication, ...existingJobCandidateApplications.nodes],
+              totalCount: existingJobCandidateInformationSheets.totalCount + 1,
+              nodes: [newJobCandidateInformationSheet, ...existingJobCandidateInformationSheets.nodes],
             };
           },
         },
@@ -127,7 +127,7 @@ export default function AddJobCandidateApplicationForm({ idJobCandidateApplicati
       });
     },
   });
-  const [updateJobCandidateApplication, { loading: loadingPut }] = useMutation(PUT_JOB_CANDIDATE_APPLICATION, {
+  const [updateJobCandidateInformationSheet, { loading: loadingPut }] = useMutation(PUT_JOB_CANDIDATE_INFORMATION_SHEET, {
     onCompleted: (data) => {
       console.log(data);
       setNotifyAlert({
@@ -135,28 +135,28 @@ export default function AddJobCandidateApplicationForm({ idJobCandidateApplicati
         message: 'Modifié avec succès',
         type: 'success',
       });
-      let { __typename, ...jobCandidateApplicationCopy } = data.updateJobCandidateApplication.jobCandidateApplication;
-      //   formik.setValues(jobCandidateApplicationCopy);
-      navigate(`/online/ressources-humaines/recrutement/fiches-besoin/details/${jobCandidateApplicationCopy?.jobPosition?.id}`);
+      let { __typename, ...jobCandidateInformationSheetCopy } = data.updateJobCandidateInformationSheet.jobCandidateInformationSheet;
+      //   formik.setValues(jobCandidateInformationSheetCopy);
+      navigate('/online/ressources-humaines/recrutement/fiches-renseignement/liste');
     },
-    update(cache, { data: { updateJobCandidateApplication } }) {
-      const updatedJobCandidateApplication = updateJobCandidateApplication.jobCandidateApplication;
+    update(cache, { data: { updateJobCandidateInformationSheet } }) {
+      const updatedJobCandidateInformationSheet = updateJobCandidateInformationSheet.jobCandidateInformationSheet;
 
       cache.modify({
         fields: {
-          jobCandidateApplications(
-            existingJobCandidateApplications = { totalCount: 0, nodes: [] },
+          jobCandidateInformationSheets(
+            existingJobCandidateInformationSheets = { totalCount: 0, nodes: [] },
             { readField },
           ) {
-            const updatedJobCandidateApplications = existingJobCandidateApplications.nodes.map((jobCandidateApplication) =>
-              readField('id', jobCandidateApplication) === updatedJobCandidateApplication.id
-                ? updatedJobCandidateApplication
-                : jobCandidateApplication,
+            const updatedJobCandidateInformationSheets = existingJobCandidateInformationSheets.nodes.map((jobCandidateInformationSheet) =>
+              readField('id', jobCandidateInformationSheet) === updatedJobCandidateInformationSheet.id
+                ? updatedJobCandidateInformationSheet
+                : jobCandidateInformationSheet,
             );
 
             return {
-              totalCount: existingJobCandidateApplications.totalCount,
-              nodes: updatedJobCandidateApplications,
+              totalCount: existingJobCandidateInformationSheets.totalCount,
+              nodes: updatedJobCandidateInformationSheets,
             };
           },
         },
@@ -171,14 +171,14 @@ export default function AddJobCandidateApplicationForm({ idJobCandidateApplicati
       });
     },
   });
-  const onUpdateJobCandidateApplication = (variables) => {
+  const onUpdateJobCandidateInformationSheet = (variables) => {
     setConfirmDialog({
       isOpen: true,
       title: 'ATTENTION',
       subTitle: 'Voulez vous vraiment modifier ?',
       onConfirm: () => {
         setConfirmDialog({ isOpen: false });
-        updateJobCandidateApplication({ variables });
+        updateJobCandidateInformationSheet({ variables });
       },
     });
   };
@@ -190,29 +190,29 @@ export default function AddJobCandidateApplicationForm({ idJobCandidateApplicati
       fetchMore: fetchMoreDatas,
     } = useQuery(GET_DATAS_JOB, { fetchPolicy: 'network-only' });
 
-  const [getJobCandidateApplication, { loading: loadingJobCandidateApplication }] = useLazyQuery(GET_JOB_CANDIDATE_APPLICATION, {
+  const [getJobCandidateInformationSheet, { loading: loadingJobCandidateInformationSheet }] = useLazyQuery(GET_JOB_CANDIDATE_INFORMATION_SHEET, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, folder, employee, ...jobCandidateApplicationCopy } =  data.jobCandidateApplication;
-      jobCandidateApplicationCopy.jobPlatform = jobCandidateApplicationCopy.jobPlatform ? Number(jobCandidateApplicationCopy.jobPlatform.id): null;
-      jobCandidateApplicationCopy.availabilityDate = jobCandidateApplicationCopy.availabilityDate ? dayjs(jobCandidateApplicationCopy.availabilityDate) : null;
-      formik.setValues(jobCandidateApplicationCopy);
+      let { __typename, folder, employee, ...jobCandidateInformationSheetCopy } =  data.jobCandidateInformationSheet;
+      jobCandidateInformationSheetCopy.jobPlatform = jobCandidateInformationSheetCopy.jobPlatform ? Number(jobCandidateInformationSheetCopy.jobPlatform.id): null;
+      jobCandidateInformationSheetCopy.availabilityDate = jobCandidateInformationSheetCopy.availabilityDate ? dayjs(jobCandidateInformationSheetCopy.availabilityDate) : null;
+      formik.setValues(jobCandidateInformationSheetCopy);
     },
     onError: (err) => console.log(err),
   });
 
   React.useEffect(() => {
-    if (idJobCandidateApplication) {
-      getJobCandidateApplication({ variables: { id: idJobCandidateApplication } });
+    if (idJobCandidateInformationSheet) {
+      getJobCandidateInformationSheet({ variables: { id: idJobCandidateInformationSheet } });
     }
-  }, [idJobCandidateApplication]);
+  }, [idJobCandidateInformationSheet]);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
         {title}: <em><u>{formik.values.cardNumber}</u></em>
       </Typography>
-      {loadingJobCandidateApplication && <ProgressService type="form" />}
-      {!loadingJobCandidateApplication && (
+      {loadingJobCandidateInformationSheet && <ProgressService type="form" />}
+      {!loadingJobCandidateInformationSheet && (
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={{ xs: 2, md: 3 }}>
             <Grid item xs={12} sm={6} md={3}>
@@ -395,7 +395,7 @@ export default function AddJobCandidateApplicationForm({ idJobCandidateApplicati
             <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
-                  to={`/online/ressources-humaines/recrutement/fiches-besoin/details/${formik.values.jobPosition?.id}`}
+                  to="/online/ressources-humaines/recrutement/fiches-renseignement/liste"
                   className="no_style"
                 >
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>

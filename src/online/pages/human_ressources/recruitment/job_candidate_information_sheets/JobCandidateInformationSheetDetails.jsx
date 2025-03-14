@@ -15,7 +15,7 @@ import {
   Rating,
 } from '@mui/material';
 
-import { JOB_CANDIDATE_APPLICATION_RECAP } from '../../../../../_shared/graphql/queries/JobCandidateApplicationQueries';
+import { JOB_CANDIDATE_INFORMATION_SHEET_RECAP } from '../../../../../_shared/graphql/queries/JobCandidateInformationSheetQueries';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import JobPositionChip from '../job_positions/JobPositionChip';
 import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
@@ -39,26 +39,26 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-export default function JobCandidateApplicationDetails() {
-  let { idJobCandidateApplication } = useParams();
+export default function JobCandidateInformationSheetDetails() {
+  let { idJobCandidateInformationSheet } = useParams();
 
   const [
-    getJobCandidateApplication,
-    { loading: loadingJobCandidateApplication, data: jobCandidateApplicationData, error: jobCandidateApplicationError },
-  ] = useLazyQuery(JOB_CANDIDATE_APPLICATION_RECAP);
+    getJobCandidateInformationSheet,
+    { loading: loadingJobCandidateInformationSheet, data: jobCandidateInformationSheetData, error: jobCandidateInformationSheetError },
+  ] = useLazyQuery(JOB_CANDIDATE_INFORMATION_SHEET_RECAP);
 
   React.useEffect(() => {
-    if (idJobCandidateApplication) {
-      getJobCandidateApplication({ variables: { id: idJobCandidateApplication } });
+    if (idJobCandidateInformationSheet) {
+      getJobCandidateInformationSheet({ variables: { id: idJobCandidateInformationSheet } });
     }
-  }, [idJobCandidateApplication]);
+  }, [idJobCandidateInformationSheet]);
 
   return (
     <Stack>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
         <Box sx={{marginX: 2}}>
           <Link
-            to={`/online/ressources-humaines/recrutement/fiches-besoin/details/${jobCandidateApplicationData?.jobCandidateApplication.jobPosition?.id}`}
+            to={`/online/ressources-humaines/recrutement/fiches-renseignement/liste`}
             className="no_style"
           >
             <Button variant="text" startIcon={<List />}  size="small">
@@ -66,35 +66,35 @@ export default function JobCandidateApplicationDetails() {
             </Button>
           </Link>
         </Box>
-        <Link to={`/online/ressources-humaines/recrutement/candidatures/modifier/${jobCandidateApplicationData?.jobCandidateApplication?.id}`} className="no_style">
+        <Link to={`/online/ressources-humaines/recrutement/fiches-renseignement/modifier/${jobCandidateInformationSheetData?.jobCandidateInformationSheet?.id}`} className="no_style">
           <Button variant="outlined" startIcon={<Edit />} size="small">
             Modifier
           </Button>
         </Link>
       </Box>
-      {loadingJobCandidateApplication ? (
+      {loadingJobCandidateInformationSheet ? (
         <ProgressService type="form" />
       ) : (
-        jobCandidateApplicationData?.jobCandidateApplication && <JobCandidateApplicationDetailsPage jobCandidateApplication={jobCandidateApplicationData.jobCandidateApplication} />
+        jobCandidateInformationSheetData?.jobCandidateInformationSheet && <JobCandidateInformationSheetDetailsPage jobCandidateInformationSheet={jobCandidateInformationSheetData.jobCandidateInformationSheet} />
       )}
     </Stack>
   );
 }
 
-const JobCandidateApplicationDetailsPage = ({ jobCandidateApplication }) => {
+const JobCandidateInformationSheetDetailsPage = ({ jobCandidateInformationSheet }) => {
   const {
     description,
     observation
-  } = jobCandidateApplication;
+  } = jobCandidateInformationSheet;
 
   return (
     <Box sx={{ width: '100%' }}>
       <Grid container spacing={3}>
         <Grid item xs={6}>
-          <JobCandidateApplicationMiniInfos jobCandidateApplication={jobCandidateApplication} />
+          <JobCandidateInformationSheetMiniInfos jobCandidateInformationSheet={jobCandidateInformationSheet} />
         </Grid>
         <Grid item xs={6}>
-          <JobCandidateApplicationOtherInfos jobCandidateApplication={jobCandidateApplication} />
+          <JobCandidateInformationSheetOtherInfos jobCandidateInformationSheet={jobCandidateInformationSheet} />
         </Grid>
         <Grid item xs={12}>
           <Divider />
@@ -131,7 +131,7 @@ const JobCandidateApplicationDetailsPage = ({ jobCandidateApplication }) => {
   );
 }
 
-function JobCandidateApplicationMiniInfos({ jobCandidateApplication }) {
+function JobCandidateInformationSheetMiniInfos({ jobCandidateInformationSheet }) {
   return (
     <Paper
       variant="outlined"
@@ -144,10 +144,10 @@ function JobCandidateApplicationMiniInfos({ jobCandidateApplication }) {
       }}
     >
       <Grid container spacing={2}>
-        {jobCandidateApplication?.image && (
+        {jobCandidateInformationSheet?.image && (
           <Grid item>
             <ButtonBase sx={{ width: 128, height: 'auto' }}>
-              <Img alt="Bank Card" src={jobCandidateApplication?.image} />
+              <Img alt="Bank Card" src={jobCandidateInformationSheet?.image} />
             </ButtonBase>
           </Grid>
         )}
@@ -155,15 +155,15 @@ function JobCandidateApplicationMiniInfos({ jobCandidateApplication }) {
           <Grid item xs container direction="column" spacing={2}>
             <Grid item>
               <Typography variant="subtitle1" component="div">
-                <b>Réference:</b> {jobCandidateApplication?.number}
+                <b>Réference:</b> {jobCandidateInformationSheet?.number}
               </Typography>
-              {jobCandidateApplication?.jobPosition && (
+              {jobCandidateInformationSheet?.jobPosition && (
                 <>
                   <Paper sx={{ padding: 2 }} variant="outlined">
                     <Typography variant="h6" gutterBottom>
                       Fiche besoin postulée
                     </Typography>
-                    <JobPositionChip jobPosition={jobCandidateApplication?.jobPosition} />
+                    <JobPositionChip jobPosition={jobCandidateInformationSheet?.jobPosition} />
                   </Paper>
                 </>
               )}
@@ -174,31 +174,31 @@ function JobCandidateApplicationMiniInfos({ jobCandidateApplication }) {
                 </Typography>
                 <Box sx={{paddingLeft: 4}}>
                   <Typography variant="subtitle1" component="div">
-                    <b>Nom:</b> {jobCandidateApplication?.firstName}
+                    <b>Nom:</b> {jobCandidateInformationSheet?.firstName}
                   </Typography>
                   <Typography variant="subtitle1" component="div">
-                    <b>Prénom:</b> {jobCandidateApplication?.lastName}
+                    <b>Prénom:</b> {jobCandidateInformationSheet?.lastName}
                   </Typography>
                   <Typography variant="subtitle1" component="div">
-                    <b>Métier:</b> {jobCandidateApplication?.jobTitle}
+                    <b>Métier:</b> {jobCandidateInformationSheet?.jobTitle}
                   </Typography>
                   <Typography variant="subtitle1" component="div">
-                    <b>Disponible le:</b> {getFormatDate(jobCandidateApplication?.availabilityDate)}
+                    <b>Disponible le:</b> {getFormatDate(jobCandidateInformationSheet?.availabilityDate)}
                   </Typography>
                   <Typography variant="subtitle1" component="div">
-                    <b>E-mail:</b> {jobCandidateApplication?.email}
+                    <b>E-mail:</b> {jobCandidateInformationSheet?.email}
                   </Typography>
                   <Typography variant="subtitle1" component="div">
-                    <b>Tél:</b> {jobCandidateApplication?.mobile}
+                    <b>Tél:</b> {jobCandidateInformationSheet?.mobile}
                   </Typography>
                 </Box>
               </Paper>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
                 <b>Crée le: </b>{' '}
-                {`${getFormatDateTime(jobCandidateApplication?.createdAt)}`} <br />
+                {`${getFormatDateTime(jobCandidateInformationSheet?.createdAt)}`} <br />
                 <b>Dernière modification: </b>
-                {`${getFormatDateTime(jobCandidateApplication?.updatedAt)}`}
+                {`${getFormatDateTime(jobCandidateInformationSheet?.updatedAt)}`}
               </Typography>
             </Grid>
           </Grid>
@@ -208,8 +208,8 @@ function JobCandidateApplicationMiniInfos({ jobCandidateApplication }) {
   );
 }
 
-function JobCandidateApplicationOtherInfos({ jobCandidateApplication }) {
-  const {firstName, lastName,  cv, coverLetter} = jobCandidateApplication
+function JobCandidateInformationSheetOtherInfos({ jobCandidateInformationSheet }) {
+  const {firstName, lastName,  cv, coverLetter} = jobCandidateInformationSheet
   return (
     <Paper
       variant="outlined"
@@ -221,13 +221,13 @@ function JobCandidateApplicationOtherInfos({ jobCandidateApplication }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
-      {jobCandidateApplication?.employee && (
+      {jobCandidateInformationSheet?.employee && (
         <>
           <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
             <Typography variant="h6" gutterBottom>
               Ajouté par
             </Typography>
-            <EmployeeChip employee={jobCandidateApplication?.employee} />
+            <EmployeeChip employee={jobCandidateInformationSheet?.employee} />
           </Paper>
         </>
       )}<>
@@ -235,7 +235,7 @@ function JobCandidateApplicationOtherInfos({ jobCandidateApplication }) {
         <Typography variant="h6" gutterBottom>
           Note
         </Typography>
-        <Rating value={jobCandidateApplication?.rating} readOnly />
+        <Rating value={jobCandidateInformationSheet?.rating} readOnly />
       </Paper>
       <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
         <FileViewer title="CV" fileUrl={cv} fileName={`cv-${firstName}-${lastName}`} />

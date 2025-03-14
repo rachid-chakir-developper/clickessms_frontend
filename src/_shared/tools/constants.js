@@ -752,3 +752,15 @@ export const JOB_CANDIDATE_APPLICATION_STATUS = {
     { value: "ACCEPTED", label: "Accepté"},
   ],
 };
+
+export const JOB_CANDIDATE_INFORMATION_SHEET_STATUS = {
+  PENDING: "PENDING",
+  REJECTED: "REJECTED",
+  ACCEPTED: "ACCEPTED",
+  ALL: [
+    { value: "PENDING", label: "En attente" },
+    { value: "REJECTED", label: "Rejeté"},
+    { value: "ACCEPTED", label: "Accepté"},
+  ],
+};
+

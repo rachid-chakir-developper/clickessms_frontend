@@ -8,7 +8,7 @@ export default function AddJobCandidateApplication() {
     <AddJobCandidateApplicationForm
       idJobCandidateApplication={idJobCandidateApplication}
       title={
-        idJobCandidateApplication && idJobCandidateApplication > 0 ? `Modifier le candidat` : `Ajouter un candidat`
+        idJobCandidateApplication && idJobCandidateApplication > 0 ? `Modifier la candidature` : `Ajouter une candidature`
       }
     />
   );
