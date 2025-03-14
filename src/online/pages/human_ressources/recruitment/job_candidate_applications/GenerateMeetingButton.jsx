@@ -13,7 +13,7 @@ import * as yup from 'yup';
 import dayjs from 'dayjs';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Add, Event, ReceiptLong, Refresh } from '@mui/icons-material';
-import { GENERATE_MEETING } from '../../../../../_shared/graphql/mutations/MeetingMutations';
+import { GENERATE_MEETING, POST_MEETING } from '../../../../../_shared/graphql/mutations/MeetingMutations';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
 import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
 import { useNavigate } from 'react-router-dom';
@@ -56,85 +56,57 @@ function DialogGenerateMeeting({ open, onClose, onConfirm, jobCandidateApplicati
 
     const formik = useFormik({
         initialValues: {
+            topics: '',
+            meetingMode: 'CANDIDATE_INTERVIEW',
             jobPosition: jobPosition?.id,
             jobCandidate: jobCandidate?.id,
-            availabilityDate:  jobCandidate?.availabilityDate ? dayjs(jobCandidate?.availabilityDate) : null,
-            description: jobCandidate?.description,
+            startingDateTime: null,
+            endingDateTime: null,
+            description: '',
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
         let valuesCopy = {...values};
+        valuesCopy.participants = valuesCopy.participants.map((i) => i?.id);
         handleOk(valuesCopy);
         },
     });
 
-    const [generateMeeting, { loading: loadingPost }] = useMutation(
-        GENERATE_MEETING,
-        {
-            onCompleted: (data) => {
-                console.log(data);
-                if (data.generateMeeting.success) {
-                    setNotifyAlert({
-                        isOpen: true,
-                        message: 'Ajouté avec succès',
-                        type: 'success',
-                    });
-                    // Utiliser une copie des données pour éviter de muter directement l'objet
-                    let { __typename, ...meetingsCopy } = data.generateMeeting.meetings;
-                    onClose();
-                    navigate(`/online/ressources-humaines/recrutement/vivier-candidats/details/${jobCandidate?.id}`);
-                } else {
-                    setNotifyAlert({
-                        isOpen: true,
-                        message: `Non ajouté ! Veuillez réessayer. ${data.generateMeeting.message}`,
-                        type: 'error',
-                    });
-                }
+      const [createMeeting, { loading: loadingPost }] = useMutation(POST_MEETING, {
+        onCompleted: (data) => {
+            console.log(data);
+            setNotifyAlert({
+                isOpen: true,
+                message: 'Ajouté avec succès',
+                type: 'success',
+            });
+            let { __typename, ...meetingCopy } = data.createMeeting.meeting;
+            //   formik.setValues(meetingCopy);
+            navigate(`/online/ressources-humaines/recrutement/entretiens/modifier/${meetingCopy?.id}`)
+        },
+        update(cache, { data: { createMeeting } }) {
+          const newMeeting = createMeeting.meeting;
+    
+          cache.modify({
+            fields: {
+              meetings(existingMeetings = { totalCount: 0, nodes: [] }) {
+                return {
+                  totalCount: existingMeetings.totalCount + 1,
+                  nodes: [newMeeting, ...existingMeetings.nodes],
+                };
+              },
             },
-            update(cache, { data: { generateMeeting } }) {
-                if (generateMeeting.success) {
-                    const newMeetings = generateMeeting.meetings;
-    
-                    cache.modify({
-                        fields: {
-                            meetings(existingMeetings = { totalCount: 0, nodes: [] }, { readField }) {
-                                // Ajouter ou mettre à jour chaque nouvelle candidature
-                                let updatedMeetings = [...existingMeetings.nodes];
-    
-                                // Ajouter ou mettre à jour les candidatures dans le cache
-                                newMeetings.forEach(newMeeting => {
-                                    const existingMeetingIndex = existingMeetings.nodes.findIndex(
-                                        (meeting) => readField('id', meeting) === newMeeting.id
-                                    );
-    
-                                    if (existingMeetingIndex > -1) {
-                                        // Mise à jour de l'élément existant
-                                        updatedMeetings[existingMeetingIndex] = newMeeting;
-                                    } else {
-                                        // Ajouter une nouvelle candidature
-                                        updatedMeetings = [newMeeting, ...updatedMeetings];
-                                    }
-                                });
-    
-                                return {
-                                    totalCount: updatedMeetings.length,
-                                    nodes: updatedMeetings,
-                                };
-                            },
-                        },
-                    });
-                }
-            },
-            onError: (err) => {
-                console.log(err);
-                setNotifyAlert({
-                    isOpen: true,
-                    message: 'Non ajouté ! Veuillez réessayer.',
-                    type: 'error',
-                });
-            },
-        }
-    );
+          });
+        },
+        onError: (err) => {
+          console.log(err);
+          setNotifyAlert({
+            isOpen: true,
+            message: 'Non ajouté ! Veuillez réessayer.',
+            type: 'error',
+          });
+        },
+      });
     
 const [getEmployees, {
     loading: loadingEmployees,
@@ -150,11 +122,11 @@ const [getEmployees, {
         setConfirmDialog({
         isOpen: true,
         title: 'ATTENTION',
-        subTitle: 'Voulez-vous vraiment générer la facture ?',
+        subTitle: 'Voulez-vous vraiment créer cet entretien ?',
         onConfirm: () => {
             setConfirmDialog({ isOpen: false });
-            generateMeeting({
-            variables: { generateMeetingData: values},
+            createMeeting({
+                variables: { meetingData: values},
             });
         },
         });
@@ -163,14 +135,13 @@ const [getEmployees, {
     React.useEffect(() => {
         if (open) {
             formik.setValues({
-                jobPositions: [],
+                topics: '',
+                meetingMode: 'CANDIDATE_INTERVIEW',
+                jobPosition: jobPosition?.id,
                 jobCandidate: jobCandidate?.id,
-                email: jobCandidate?.email,
-                phone: jobCandidate?.phone,
-                jobTitle: jobCandidate?.jobTitle,
-                rating: jobCandidate?.rating,
-                availabilityDate:  jobCandidate?.availabilityDate ? dayjs(jobCandidate?.availabilityDate) : null,
-                description: jobCandidate?.description,
+                startingDateTime: null,
+                endingDateTime: null,
+                description: '',
             })
         }
     }, [open]);
@@ -231,7 +202,7 @@ const [getEmployees, {
                 <Grid item xs={12} sm={12} md={6}>
                     <Item>
                         <TheDateTimePicker
-                            label="Date de fin"
+                            label="Date de et heure fin"
                             value={formik.values.endingDateTime}
                             onChange={(date) =>
                                 formik.setFieldValue('endingDateTime', date)
