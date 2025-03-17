@@ -23,6 +23,10 @@ import { getFormatDate, getFormatDateTime } from '../../../../../_shared/tools/f
 import { Edit } from '@mui/icons-material';
 import EmployeeChip from '../../employees/EmployeeChip';
 import FileViewer from '../../../../../_shared/components/media/FileViewer';
+import GenerateEmployeeButton from './GenerateEmployeeButton';
+import { JOB_CANDIDATE_INFORMATION_SHEET_STATUS } from '../../../../../_shared/tools/constants';
+import JobCandidateInformationSheetStatusLabelMenu from './JobCandidateInformationSheetStatusLabelMenu';
+import JobCandidateChip from '../job_candidates/JobCandidateChip';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -157,6 +161,16 @@ function JobCandidateInformationSheetMiniInfos({ jobCandidateInformationSheet })
               <Typography variant="subtitle1" component="div">
                 <b>Réference:</b> {jobCandidateInformationSheet?.number}
               </Typography>
+              {jobCandidateInformationSheet?.jobCandidate && (
+                <>
+                  <Paper sx={{ padding: 2 }} variant="outlined">
+                    <Typography variant="h6" gutterBottom>
+                      Candidat
+                    </Typography>
+                    <JobCandidateChip jobCandidate={jobCandidateInformationSheet?.jobCandidate} />
+                  </Paper>
+                </>
+              )}
               {jobCandidateInformationSheet?.jobPosition && (
                 <>
                   <Paper sx={{ padding: 2 }} variant="outlined">
@@ -183,14 +197,12 @@ function JobCandidateInformationSheetMiniInfos({ jobCandidateInformationSheet })
                     <b>Métier:</b> {jobCandidateInformationSheet?.jobTitle}
                   </Typography>
                   <Typography variant="subtitle1" component="div">
-                    <b>Disponible le:</b> {getFormatDate(jobCandidateInformationSheet?.availabilityDate)}
-                  </Typography>
-                  <Typography variant="subtitle1" component="div">
                     <b>E-mail:</b> {jobCandidateInformationSheet?.email}
                   </Typography>
                   <Typography variant="subtitle1" component="div">
                     <b>Tél:</b> {jobCandidateInformationSheet?.mobile}
                   </Typography>
+                  {jobCandidateInformationSheet?.status===JOB_CANDIDATE_INFORMATION_SHEET_STATUS.ACCEPTED && <GenerateEmployeeButton size="small" jobCandidateInformationSheet={jobCandidateInformationSheet}/>}
                 </Box>
               </Paper>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
@@ -200,6 +212,11 @@ function JobCandidateInformationSheetMiniInfos({ jobCandidateInformationSheet })
                 <b>Dernière modification: </b>
                 {`${getFormatDateTime(jobCandidateInformationSheet?.updatedAt)}`}
               </Typography>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="body2" color="textSecondary">
+                <b>Status :</b>
+              </Typography>
+              <JobCandidateInformationSheetStatusLabelMenu jobCandidateInformationSheet={jobCandidateInformationSheet} />
             </Grid>
           </Grid>
         </Grid>
@@ -231,18 +248,6 @@ function JobCandidateInformationSheetOtherInfos({ jobCandidateInformationSheet }
           </Paper>
         </>
       )}<>
-      <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
-        <Typography variant="h6" gutterBottom>
-          Note
-        </Typography>
-        <Rating value={jobCandidateInformationSheet?.rating} readOnly />
-      </Paper>
-      <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
-        <FileViewer title="CV" fileUrl={cv} fileName={`cv-${firstName}-${lastName}`} />
-      </Paper>
-      <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
-        <FileViewer title="Lettre de motivation" fileUrl={coverLetter} fileName={`Lettre-de-motivation-${firstName}-${lastName}`} />
-      </Paper>
     </>
     </Paper>
   );

@@ -37,6 +37,7 @@ import JobPositionChip from '../job_positions/JobPositionChip';
 import EmployeeChip from '../../employees/EmployeeChip';
 import FileViewer from '../../../../../_shared/components/media/FileViewer';
 import JobCandidateInformationSheetStatusLabelMenu from './JobCandidateInformationSheetStatusLabelMenu';
+import JobCandidateChip from '../job_candidates/JobCandidateChip';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -150,16 +151,6 @@ const headCells = [,
         label: 'Tél',
     },
     {
-        id: 'availabilityDate',
-        property: 'availability_date',
-        exportField: 'availability_date',
-        numeric: false,
-        disablePadding: true,
-        isDefault: true,
-        label: 'Disponible le',
-        render: ({availabilityDate})=> getFormatDate(availabilityDate)
-    },
-    {
         id: 'employee',
         property: 'employee__first_name',
         exportField: ['employee__first_name', 'employee__last_name'],
@@ -171,6 +162,17 @@ const headCells = [,
         render: ({employee}) => <EmployeeChip employee={employee} />
     },
     {
+        id: 'jobCandidate',
+        property: 'job_position__title',
+        exportField: ['job_position__title'],
+        numeric: false,
+        disablePadding: false,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Candidat',
+        render: ({jobCandidate}) => jobCandidate && <JobCandidateChip jobCandidate={jobCandidate}/>
+    },
+    {
         id: 'jobPosition',
         property: 'job_position__title',
         exportField: ['job_position__title'],
@@ -180,50 +182,6 @@ const headCells = [,
         sortDisabled: true,
         label: 'Fiche besoin',
         render: ({jobPosition}) => jobPosition && <JobPositionChip jobPosition={jobPosition}/>
-    },
-    {
-        id: 'jobPlatform',
-        property: 'job_platform__name',
-        exportField: ['job_platform__name'],
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        label: 'Source',
-        render: ({jobPlatform})=> jobPlatform?.name
-    },
-    {
-        id: 'rating',
-        property: 'rating',
-        exportField: 'rating',
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        label: 'Note',
-        render: ({rating})=> <Rating value={rating} readOnly />
-    },
-    {
-        id: 'cv',
-        property: 'cv',
-        exportField: 'cv',
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        disableClickDetail: true,
-        sortDisabled: true,
-        label: 'CV',
-        render: ({cv, firstName, lastName})=> <FileViewer size="small" fileUrl={cv} fileName={`cv-${firstName}-${lastName}`} />
-    },
-    {
-        id: 'coverLetter',
-        property: 'cover_letter',
-        exportField: 'cover_letter',
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        disableClickDetail: true,
-        sortDisabled: true,
-        label: 'Lettre de motivation',
-        render: ({coverLetter, firstName, lastName})=> <FileViewer size="small" fileUrl={coverLetter} fileName={`Lettre-de-motivation-${firstName}-${lastName}`} />
     },
     {
         id: 'description',
@@ -347,7 +305,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-           Vivier candidats
+          Les fiches de renseignement
         </Typography>
       )}
       <TableExportButton 
@@ -482,7 +440,7 @@ export default function TableListJobCandidateInformationSheets({
                 <StyledTableRow>
                   <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucun candidat trouvé.
+                      Aucune fiche de renseignement trouvée.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>

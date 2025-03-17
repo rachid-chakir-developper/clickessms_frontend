@@ -225,3 +225,12 @@ export const GET_DATAS_JOB = gql`
   ${DATA_BASIC_INFOS}
 `;
 
+export const GET_DATAS_JOB_CANDIDATE_INFORMATION_SHEET = gql`
+  query {
+    jobCandidateDocumentTypes: datas(typeData: "JobCandidateDocumentType") {
+      ...DataBasicInfosFragment
+    }
+  }
+  ${DATA_BASIC_INFOS}
+`;
+

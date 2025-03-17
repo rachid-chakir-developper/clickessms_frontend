@@ -8,7 +8,7 @@ export default function AddJobCandidateInformationSheet() {
     <AddJobCandidateInformationSheetForm
       idJobCandidateInformationSheet={idJobCandidateInformationSheet}
       title={
-        idJobCandidateInformationSheet && idJobCandidateInformationSheet > 0 ? `Modifier le candidat` : `Ajouter un candidat`
+        idJobCandidateInformationSheet && idJobCandidateInformationSheet > 0 ? `Modifier la fiche de renseignement` : `Ajouter une fiche de renseignement`
       }
     />
   );

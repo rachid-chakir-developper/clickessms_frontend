@@ -6,7 +6,7 @@ export default function TheFileField(props) {
   const [uploadedFile, setUploadedFile] = React.useState({ path: null, localUrl: null, file: null });
 
   // Génère un ID unique basé sur le label ou un ID aléatoire
-  const inputId = React.useMemo(() => `file-input-${props.label || Math.random()}`, [props.label]);
+  const inputId = React.useId();
 
   React.useEffect(() => {
     if (typeof props?.fileValue === "string") {

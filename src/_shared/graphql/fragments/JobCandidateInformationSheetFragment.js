@@ -4,6 +4,7 @@ import { gql } from '@apollo/client';
 import { JOB_POSITION_MINI_INFOS } from './JobPositionFragment';
 import { EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
 import { JOB_CANDIDATE_MINI_INFOS } from './JobCandidateFragment';
+import { DOCUMENT_RECORD_BASIC_DETAILS } from './DocumentRecordFragment';
 
 export const JOB_CANDIDATE_INFORMATION_SHEET_MINI_INFOS = gql`
   fragment JobCandidateInformationSheetMiniInfosFragment on JobCandidateInformationSheetType {
@@ -13,7 +14,6 @@ export const JOB_CANDIDATE_INFORMATION_SHEET_MINI_INFOS = gql`
     email
     phone
     jobTitle
-    rating
     status
     isActive
   }
@@ -22,16 +22,9 @@ export const JOB_CANDIDATE_INFORMATION_SHEET_MINI_INFOS = gql`
 export const JOB_CANDIDATE_INFORMATION_SHEET_BASIC_INFOS = gql`
   fragment JobCandidateInformationSheetBasicInfosFragment on JobCandidateInformationSheetType {
     ...JobCandidateInformationSheetMiniInfosFragment
-    availabilityDate
     description
-    cv
-    coverLetter
     employee{
       ...EmployeeMiniInfosFragment
-    }
-    jobPlatform{
-      id
-      name
     }
     jobPosition {
       ...JobPositionMiniInfosFragment
@@ -53,9 +46,13 @@ export const JOB_CANDIDATE_INFORMATION_SHEET_BASIC_INFOS = gql`
 export const JOB_CANDIDATE_INFORMATION_SHEET_DETAILS = gql`
   fragment JobCandidateInformationSheetDetailsFragment on JobCandidateInformationSheetType {
     ...JobCandidateInformationSheetBasicInfosFragment
+    documentRecords{
+      ... DocumentRecordBasicDetailsFragment
+    }
     observation
   }
   ${JOB_CANDIDATE_INFORMATION_SHEET_BASIC_INFOS}
+  ${DOCUMENT_RECORD_BASIC_DETAILS}
 `;
 
 export const JOB_CANDIDATE_INFORMATION_SHEET_RECAP_DETAILS = gql`

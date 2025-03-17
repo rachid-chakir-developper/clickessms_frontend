@@ -23,6 +23,10 @@ import { getFormatDate, getFormatDateTime } from '../../../../../_shared/tools/f
 import { Edit } from '@mui/icons-material';
 import EmployeeChip from '../../employees/EmployeeChip';
 import FileViewer from '../../../../../_shared/components/media/FileViewer';
+import GenerateMeetingButton from './GenerateMeetingButton';
+import JobCandidateApplicationStatusLabelMenu from './JobCandidateApplicationStatusLabelMenu';
+import { JOB_CANDIDATE_APPLICATION_STATUS } from '../../../../../_shared/tools/constants';
+import GenerateJobCandidateInformationSheetButton from './GenerateJobCandidateInformationSheetButton';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -191,6 +195,9 @@ function JobCandidateApplicationMiniInfos({ jobCandidateApplication }) {
                   <Typography variant="subtitle1" component="div">
                     <b>Tél:</b> {jobCandidateApplication?.mobile}
                   </Typography>
+                  {jobCandidateApplication?.status===JOB_CANDIDATE_APPLICATION_STATUS.INTERVIEW && <GenerateMeetingButton size="small" jobCandidateApplication={jobCandidateApplication}/>}
+                  {jobCandidateApplication?.status===JOB_CANDIDATE_APPLICATION_STATUS.ACCEPTED && <GenerateJobCandidateInformationSheetButton size="small" jobCandidateApplication={jobCandidateApplication}/>}
+
                 </Box>
               </Paper>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
@@ -200,6 +207,11 @@ function JobCandidateApplicationMiniInfos({ jobCandidateApplication }) {
                 <b>Dernière modification: </b>
                 {`${getFormatDateTime(jobCandidateApplication?.updatedAt)}`}
               </Typography>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="body2" color="textSecondary">
+                <b>Status :</b>
+              </Typography>
+              <JobCandidateApplicationStatusLabelMenu jobCandidateApplication={jobCandidateApplication} />
             </Grid>
           </Grid>
         </Grid>

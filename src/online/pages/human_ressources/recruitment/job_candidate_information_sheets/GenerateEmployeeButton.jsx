@@ -13,7 +13,7 @@ import * as yup from 'yup';
 import dayjs from 'dayjs';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Add, Event, ReceiptLong, Refresh } from '@mui/icons-material';
-import { GENERATE_MEETING, POST_MEETING } from '../../../../../_shared/graphql/mutations/MeetingMutations';
+import {  POST_EMPLOYEE } from '../../../../../_shared/graphql/mutations/EmployeeMutations';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
 import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +38,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function DialogGenerateMeeting({ open, onClose, onConfirm, jobCandidateInformationSheet }) {
+function DialogGenerateEmployee({ open, onClose, onConfirm, jobCandidateInformationSheet }) {
     const {jobCandidate, jobPosition } = jobCandidateInformationSheet
     const navigate = useNavigate();
     const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
@@ -57,7 +57,7 @@ function DialogGenerateMeeting({ open, onClose, onConfirm, jobCandidateInformati
     const formik = useFormik({
         initialValues: {
             topics: '',
-            meetingMode: 'CANDIDATE_INTERVIEW',
+            employeeMode: 'CANDIDATE_INTERVIEW',
             jobPosition: jobPosition?.id,
             jobCandidate: jobCandidate?.id,
             startingDateTime: null,
@@ -72,7 +72,7 @@ function DialogGenerateMeeting({ open, onClose, onConfirm, jobCandidateInformati
         },
     });
 
-      const [createMeeting, { loading: loadingPost }] = useMutation(POST_MEETING, {
+      const [createEmployee, { loading: loadingPost }] = useMutation(POST_EMPLOYEE, {
         onCompleted: (data) => {
             console.log(data);
             setNotifyAlert({
@@ -80,19 +80,19 @@ function DialogGenerateMeeting({ open, onClose, onConfirm, jobCandidateInformati
                 message: 'Ajouté avec succès',
                 type: 'success',
             });
-            let { __typename, ...meetingCopy } = data.createMeeting.meeting;
-            //   formik.setValues(meetingCopy);
-            navigate(`/online/ressources-humaines/recrutement/entretiens/modifier/${meetingCopy?.id}`)
+            let { __typename, ...employeeCopy } = data.createEmployee.employee;
+            //   formik.setValues(employeeCopy);
+            navigate(`/online/ressources-humaines/recrutement/entretiens/modifier/${employeeCopy?.id}`)
         },
-        update(cache, { data: { createMeeting } }) {
-          const newMeeting = createMeeting.meeting;
+        update(cache, { data: { createEmployee } }) {
+          const newEmployee = createEmployee.employee;
     
           cache.modify({
             fields: {
-              meetings(existingMeetings = { totalCount: 0, nodes: [] }) {
+              employees(existingEmployees = { totalCount: 0, nodes: [] }) {
                 return {
-                  totalCount: existingMeetings.totalCount + 1,
-                  nodes: [newMeeting, ...existingMeetings.nodes],
+                  totalCount: existingEmployees.totalCount + 1,
+                  nodes: [newEmployee, ...existingEmployees.nodes],
                 };
               },
             },
@@ -125,8 +125,8 @@ const [getEmployees, {
         subTitle: 'Voulez-vous vraiment créer cet entretien ?',
         onConfirm: () => {
             setConfirmDialog({ isOpen: false });
-            createMeeting({
-                variables: { meetingData: values},
+            createEmployee({
+                variables: { employeeData: values},
             });
         },
         });
@@ -136,7 +136,7 @@ const [getEmployees, {
         if (open) {
             formik.setValues({
                 topics: '',
-                meetingMode: 'CANDIDATE_INTERVIEW',
+                employeeMode: 'CANDIDATE_INTERVIEW',
                 jobPosition: jobPosition?.id,
                 jobCandidate: jobCandidate?.id,
                 startingDateTime: null,
@@ -260,43 +260,43 @@ const [getEmployees, {
 }
 
 
-export default function GenerateMeetingButton({ jobCandidateInformationSheet , buttonType="button", size="medium", label="Programmer un entretien" }) {
+export default function GenerateEmployeeButton({ jobCandidateInformationSheet , buttonType="button", size="medium", label="Programmer un entretien" }) {
     
-    const [isDialogGenerateMeetingOpen, setDialogGenerateMeetingOpen] = React.useState(false);
+    const [isDialogGenerateEmployeeOpen, setDialogGenerateEmployeeOpen] = React.useState(false);
 
-    const DialogGenerateMeetingOpen = () => {
-        setDialogGenerateMeetingOpen(true);
+    const DialogGenerateEmployeeOpen = () => {
+        setDialogGenerateEmployeeOpen(true);
     };
 
-    const handleDialogGenerateMeetingConfirm = (value) => {
+    const handleDialogGenerateEmployeeConfirm = (value) => {
         console.log('value data:', value);
-        setDialogGenerateMeetingOpen(false); // Fermer le dialogue après la confirmation
+        setDialogGenerateEmployeeOpen(false); // Fermer le dialogue après la confirmation
     };
     return (
         <>  
                 {buttonType==="button" && 
-                    <Button size={size} variant="outlined" onClick={DialogGenerateMeetingOpen} endIcon={<Event />}>
+                    <Button size={size} variant="outlined" onClick={DialogGenerateEmployeeOpen} endIcon={<Event />}>
                     {label}
                 </Button>
                 }
                 {buttonType==="buttonIcon" && <Tooltip title={label}>
-                    <IconButton size={size} onClick={DialogGenerateMeetingOpen}>
+                    <IconButton size={size} onClick={DialogGenerateEmployeeOpen}>
                         <Event size={size} />
                     </IconButton>
                 </Tooltip>
                 }
                 {buttonType==="menuItem" &&
                     <Tooltip title={label}>
-                        <MenuItem onClick={DialogGenerateMeetingOpen}>
+                        <MenuItem onClick={DialogGenerateEmployeeOpen}>
                             <Event sx={{ mr: 2 }} />
                             {label}
                         </MenuItem>
                     </Tooltip>
                 }
-            <DialogGenerateMeeting
-                open={isDialogGenerateMeetingOpen}
-                onClose={() => setDialogGenerateMeetingOpen(false)}
-                onConfirm={handleDialogGenerateMeetingConfirm}
+            <DialogGenerateEmployee
+                open={isDialogGenerateEmployeeOpen}
+                onClose={() => setDialogGenerateEmployeeOpen(false)}
+                onConfirm={handleDialogGenerateEmployeeConfirm}
                 jobCandidateInformationSheet={jobCandidateInformationSheet}
             />
         </>

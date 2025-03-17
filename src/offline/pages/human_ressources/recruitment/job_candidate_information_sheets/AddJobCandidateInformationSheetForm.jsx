@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import { Stack, Box, Typography, Button, InputAdornment, Divider, MenuItem, FormControl, InputLabel, Select, Step, StepLabel, StepContent, Stepper, IconButton } from '@mui/material';
+import { Stack, Box, Typography, Button, Divider, Step, StepLabel, StepContent, Stepper } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -18,14 +18,10 @@ import {
   PUT_JOB_CANDIDATE_INFORMATION_SHEET,
 } from '../../../../../_shared/graphql/mutations/JobCandidateInformationSheetMutations';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
-import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
 import { GET_JOB_POSITIONS } from '../../../../../_shared/graphql/queries/JobPositionQueries';
 import TheDesktopDatePicker from '../../../../../_shared/components/form-fields/TheDesktopDatePicker';
-import RatingField from '../../../../../_shared/components/form-fields/RatingField';
 import { GET_DATAS_JOB_CANDIDATE_INFORMATION_SHEET } from '../../../../../_shared/graphql/queries/DataQueries';
 import { NOTIFICATION_PERIOD_UNITS } from '../../../../../_shared/tools/constants';
-import { Close } from '@mui/icons-material';
-import TheSwitch from '../../../../../_shared/components/form-fields/theSwitch';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -35,7 +31,7 @@ const Item = styled(Stack)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function AddJobCandidateInformationSheetForm({ idJobCandidateInformationSheet, title }) {
+export default function AddJobCandidateInformationSheetForm({ accessToken, title }) {
    const [searchParams, setSearchParams] = useSearchParams();
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
@@ -257,12 +253,12 @@ export default function AddJobCandidateInformationSheetForm({ idJobCandidateInfo
   });
 
   React.useEffect(() => {
-    if (idJobCandidateInformationSheet) {
-      getJobCandidateInformationSheet({ variables: { id: idJobCandidateInformationSheet } });
+    if (accessToken) {
+      getJobCandidateInformationSheet({ variables: { accessToken: accessToken } });
     }
-  }, [idJobCandidateInformationSheet]);
+  }, [accessToken]);
     React.useEffect(() => {
-      if (searchParams.get('id') && !idJobCandidateInformationSheet) {
+      if (searchParams.get('id') && !accessToken) {
         getJobCandidateInformationSheet({ variables: { id: searchParams.get('id') } });
       }
     }, []);
@@ -306,7 +302,7 @@ export default function AddJobCandidateInformationSheetForm({ idJobCandidateInfo
           <Stepper
             activeStep={activeStep}
             orientation="vertical"
-            nonLinear={idJobCandidateInformationSheet ? true : false}
+            nonLinear={accessToken ? true : false}
           >
             <Step>
               <StepLabel

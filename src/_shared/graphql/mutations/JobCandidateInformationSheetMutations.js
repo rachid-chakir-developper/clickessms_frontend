@@ -6,13 +6,9 @@ import { JOB_CANDIDATE_INFORMATION_SHEET_BASIC_INFOS } from '../fragments/JobCan
 export const POST_JOB_CANDIDATE_INFORMATION_SHEET = gql`
   mutation CreateJobCandidateInformationSheet(
     $jobCandidateInformationSheetData: JobCandidateInformationSheetInput!
-    $cv: Upload
-    $coverLetter: Upload
   ) {
     createJobCandidateInformationSheet(
       jobCandidateInformationSheetData: $jobCandidateInformationSheetData
-      cv: $cv
-      coverLetter: $coverLetter
     ) {
       jobCandidateInformationSheet {
         ...JobCandidateInformationSheetBasicInfosFragment
@@ -26,14 +22,10 @@ export const PUT_JOB_CANDIDATE_INFORMATION_SHEET = gql`
   mutation UpdateJobCandidateInformationSheet(
     $id: ID!
     $jobCandidateInformationSheetData: JobCandidateInformationSheetInput!
-    $cv: Upload
-    $coverLetter: Upload
   ) {
     updateJobCandidateInformationSheet(
       id: $id
       jobCandidateInformationSheetData: $jobCandidateInformationSheetData
-      cv: $cv
-      coverLetter: $coverLetter
     ) {
       jobCandidateInformationSheet {
         ...JobCandidateInformationSheetBasicInfosFragment

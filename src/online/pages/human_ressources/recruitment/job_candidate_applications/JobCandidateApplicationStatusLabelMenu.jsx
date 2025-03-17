@@ -8,6 +8,7 @@ import { PUT_JOB_CANDIDATE_APPLICATION_FIELDS } from '../../../../../_shared/gra
 import { useSession } from '../../../../../_shared/context/SessionProvider';
 import { JOB_CANDIDATE_APPLICATION_STATUS } from '../../../../../_shared/tools/constants';
 import GenerateMeetingButton from './GenerateMeetingButton';
+import GenerateJobCandidateInformationSheetButton from './GenerateJobCandidateInformationSheetButton';
 
 
 export default function JobCandidateApplicationStatusLabelMenu({jobCandidateApplication}) {
@@ -85,6 +86,8 @@ export default function JobCandidateApplicationStatusLabelMenu({jobCandidateAppl
             disabled={!canManageHumanRessources && !canChangeStatus()}
         />
         {jobCandidateApplication?.status===JOB_CANDIDATE_APPLICATION_STATUS.INTERVIEW && <GenerateMeetingButton buttonType="buttonIcon" jobCandidateApplication={jobCandidateApplication} />}
+        {jobCandidateApplication?.status===JOB_CANDIDATE_APPLICATION_STATUS.ACCEPTED && <GenerateJobCandidateInformationSheetButton buttonType="buttonIcon" jobCandidateApplication={jobCandidateApplication} />}
+
       </Box>
 
         {/* Modal pour demander le commentaire */}

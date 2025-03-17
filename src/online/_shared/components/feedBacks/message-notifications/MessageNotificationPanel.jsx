@@ -37,7 +37,7 @@ export default function MessageNotificationPanel() {
   ] = useLazyQuery(GET_MSG_NOTIFICATIONS, {
       variables: { page, limit: 6 },
       onCompleted: (data) => {
-        console.log(data);
+        // console.log(data);
         const messageNotifications =  data?.messageNotifications?.nodes?.filter((messageNotification)=> !messageNotification?.isRead)
         if(messageNotifications?.length > 0){
           onOpenMessageNotificationModal(messageNotifications)

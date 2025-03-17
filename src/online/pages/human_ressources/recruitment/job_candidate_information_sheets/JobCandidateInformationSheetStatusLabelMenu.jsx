@@ -7,7 +7,7 @@ import { useAuthorizationSystem } from '../../../../../_shared/context/Authoriza
 import { PUT_JOB_CANDIDATE_INFORMATION_SHEET_FIELDS } from '../../../../../_shared/graphql/mutations/JobCandidateInformationSheetMutations';
 import { useSession } from '../../../../../_shared/context/SessionProvider';
 import { JOB_CANDIDATE_INFORMATION_SHEET_STATUS } from '../../../../../_shared/tools/constants';
-import GenerateMeetingButton from './GenerateMeetingButton';
+import GenerateEmployeeButton from './GenerateEmployeeButton';
 
 
 export default function JobCandidateInformationSheetStatusLabelMenu({jobCandidateInformationSheet}) {
@@ -24,16 +24,12 @@ export default function JobCandidateInformationSheetStatusLabelMenu({jobCandidat
   }
   const ALL_JOB_CANDIDATE_INFORMATION_SHEETE_STATUS = [
     { value: 'PENDING', label: 'En attente', icon: <HourglassTop />, color: 'default' },
-    { value: 'INTERESTED', label: 'Intéressant', icon: <Star />, color: 'primary' },  // Nouveau statut
-    { value: 'INTERVIEW', label: 'Entretien prévu', icon: <EventAvailable />, color: 'info' },  // Nouveau statut
     { value: 'REJECTED', label: 'Rejeté', icon: <Cancel />, color: 'warning' },
     { value: 'ACCEPTED', label: 'Accepté', icon: <CheckCircle />, color: 'success' },  // Nouveau statut
   ];
   
   const JOB_CANDIDATE_INFORMATION_SHEETE_STATUS = [
     { value: 'PENDING', label: 'En attente', icon: <HourglassTop />, color: 'default' },
-    { value: 'INTERESTED', label: 'Intéressant', icon: <Star />, color: 'primary' },  // Nouveau statut
-    { value: 'INTERVIEW', label: 'Entretien prévu', icon: <EventAvailable />, color: 'info' },  // Nouveau statut
     { value: 'REJECTED', label: 'Rejeté', icon: <Cancel />, color: 'warning' },
     { value: 'ACCEPTED', label: 'Accepté', icon: <CheckCircle />, color: 'success' },  // Nouveau statut
   ];
@@ -84,7 +80,7 @@ export default function JobCandidateInformationSheetStatusLabelMenu({jobCandidat
             onChange={(status)=> {updateJobCandidateInformationSheetFields({ variables: {id: jobCandidateInformationSheet?.id, jobCandidateInformationSheetData: {status}} })}}
             disabled={!canManageHumanRessources && !canChangeStatus()}
         />
-        {jobCandidateInformationSheet?.status===JOB_CANDIDATE_INFORMATION_SHEET_STATUS.INTERVIEW && <GenerateMeetingButton buttonType="buttonIcon" jobCandidateInformationSheet={jobCandidateInformationSheet} />}
+        {jobCandidateInformationSheet?.status===JOB_CANDIDATE_INFORMATION_SHEET_STATUS.ACCEPTED && <GenerateEmployeeButton buttonType="buttonIcon" jobCandidateInformationSheet={jobCandidateInformationSheet} />}
       </Box>
 
         {/* Modal pour demander le commentaire */}

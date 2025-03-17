@@ -143,6 +143,7 @@ export default function AddBeneficiaryForm({ idBeneficiary, title }) {
           let { __typename, ...itemCopy } = item;
           items.push(itemCopy);
         });
+        beneficiaryCopy.documentRecords = items;
 
         if (beneficiaryCopy?.id && beneficiaryCopy?.id != '') {
           onUpdateBeneficiary({

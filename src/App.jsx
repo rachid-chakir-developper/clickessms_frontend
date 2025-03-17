@@ -41,7 +41,7 @@ function App() {
   });
 
   return (
-    <Box sx={{ flexGrow: 1, p: 3, width: '100%', minHeight: '100vh'}}>
+    <Box sx={{ flexGrow: 1, p: 3, width: '100%', minHeight: '100vh', boxSizing: 'border-box'}}>
       <ThemeProvider theme={theme}>
         <ApolloProvider>
           <SessionProvider>
@@ -52,9 +52,7 @@ function App() {
                     <Route
                       path="/offline/*"
                       element={
-                        <AuthGuardRoute guest>
                           <Offline />
-                        </AuthGuardRoute>
                       }
                     />
                     <Route

@@ -24,6 +24,7 @@ import { Edit } from '@mui/icons-material';
 import EmployeeChip from '../../employees/EmployeeChip';
 import FileViewer from '../../../../../_shared/components/media/FileViewer';
 import GenerateJobCandidateApplicationButton from './GenerateJobCandidateApplicationButton';
+import JobCandidateTabs from './job_candidate-tabs/JobCandidateTabs';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -125,6 +126,11 @@ const JobCandidateDetailsPage = ({ jobCandidate }) => {
                 {observation || "Aucune observation pour l'instant"}
               </Typography>
             </Paper>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={12}>
+          <Paper sx={{ padding: 2 }}>
+            <JobCandidateTabs jobCandidate={jobCandidate}/>
           </Paper>
         </Grid>
       </Grid>
