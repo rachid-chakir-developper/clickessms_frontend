@@ -12,7 +12,6 @@ import {
   getFormatDateTime,
 } from '../../../../_shared/tools/functions';
 import { Edit, ArrowBack } from '@mui/icons-material';
-import { getSceMemberRoleLabel } from '../../../../_shared/tools/functions';
 
 export default function SceMemberDetails() {
   const authorizationSystem = useAuthorizationSystem();
@@ -150,11 +149,6 @@ const SceMemberDetailsPage = ({ sceMember }) => {
               <Typography variant="h5" gutterBottom>
                 {`${firstName} ${lastName}`}
               </Typography>
-              {role && (
-                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                  Rôle: {getSceMemberRoleLabel(role)}
-                </Typography>
-              )}
               {address && address !== '' && (
                 <Typography variant="body2">{address}</Typography>
               )}

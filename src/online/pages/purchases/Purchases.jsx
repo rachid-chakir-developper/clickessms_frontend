@@ -14,7 +14,7 @@ export default function Purchases() {
         <Route path={`fournisseurs/*`} element={<Suppliers />} />
         <Route path={`depenses-engagements/*`} element={<Expenses />} />
         <Route path={`bons-commandes/*`} element={<PurchaseOrders />} />
-        <Route path={`notes-frais*`} element={<ExpenseReports />} />
+        <Route path={`notes-frais/*`} element={<ExpenseReports />} />
         <Route path={`base-contrats/*`} element={<PurchaseContracts />} />
         <Route path="/" element={<Navigate to={`depenses-engagements`} replace />} />
       </Routes>
