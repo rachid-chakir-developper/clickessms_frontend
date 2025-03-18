@@ -10,7 +10,6 @@ import {
   Typography,
   Divider,
   Button,
-  List,
 } from '@mui/material';
 
 import { BUDGET_RECAP } from '../../../../_shared/graphql/queries/BudgetQueries';
@@ -24,7 +23,7 @@ import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard'
 import EstablishmentItemCard from '../../companies/establishments/EstablishmentItemCard';
 import BudgetStatusLabelMenu from './BudgetStatusLabelMenu';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
-import { Edit } from '@mui/icons-material';
+import { Edit, ArrowBack, Info, Description, Note, Business, Money, Event, AccountBalance } from '@mui/icons-material';
 import AccountingNatureTreeViewForm from './AccountingNatureTreeViewForm';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -54,58 +53,65 @@ export default function BudgetDetails() {
   if (loadingBudget) return <ProgressService type="form" />;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-        <Box sx={{marginX: 2}}>
-          <Link
-            to={`/online/finance/budgets/liste`}
-            className="no_style"
-          >
-            <Button variant="text" startIcon={<List />}  size="small">
-              Retour à la Liste
-            </Button>
-          </Link>
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/finance/budgets/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         <Link to={`/online/finance/budgets/modifier/${budgetData?.budget?.id}`} className="no_style">
-          <Button variant="outlined" startIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
         </Link>
       </Box>
       <Box sx={{ width: '100%' }}>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid container spacing={2}>
           <Grid item xs={7}>
             <BudgetMiniInfos budget={budgetData?.budget} />
           </Grid>
           <Grid item xs={5}>
             <BudgetOtherInfos budget={budgetData?.budget} />
           </Grid>
-          <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
+          <Grid item xs={12} sx={{ marginTop: 2, marginBottom: 2 }}>
             <Divider />
           </Grid>
           <Grid item xs={6}>
             <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography gutterBottom variant="subtitle3" component="h3">
-                Description
+              <Typography gutterBottom variant="h6" component="div" sx={{ display: 'flex', alignItems: 'center' }}>
+                <Description sx={{ mr: 1 }} />Description
               </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {budgetData?.budget?.description}
-              </Typography>
+              <Paper sx={{ padding: 2 }} variant="outlined">
+                <Typography variant="body1">
+                  {budgetData?.budget?.description ? budgetData?.budget?.description : "Aucune description pour l'instant"}
+                </Typography>
+              </Paper>
             </Paper>
           </Grid>
           <Grid item xs={6}>
             <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography gutterBottom variant="subtitle3" component="h3">
-                Observation
+              <Typography gutterBottom variant="h6" component="div" sx={{ display: 'flex', alignItems: 'center' }}>
+                <Note sx={{ mr: 1 }} />Observation
               </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {budgetData?.budget?.observation}
-              </Typography>
+              <Paper sx={{ padding: 2 }} variant="outlined">
+                <Typography variant="body1">
+                  {budgetData?.budget?.observation ? budgetData?.budget?.observation : "Aucune observation pour l'instant"}
+                </Typography>
+              </Paper>
             </Paper>
           </Grid>
-          <Grid item xs={12} sm={12} md={12}>
-            <Item>
-              <AccountingNatureTreeViewForm budget={budgetData?.budget} disabled={true}/>
-            </Item>
+          <Grid item xs={12} sx={{ marginTop: 2, marginBottom: 2 }}>
+            <Paper sx={{ padding: 2 }} variant="outlined">
+              <Typography gutterBottom variant="h6" component="div" sx={{ display: 'flex', alignItems: 'center' }}>
+                <AccountBalance sx={{ mr: 1 }} />Nature comptable
+              </Typography>
+              <Paper sx={{ padding: 2 }} variant="outlined">
+                <AccountingNatureTreeViewForm budget={budgetData?.budget} disabled={true}/>
+              </Paper>
+            </Paper>
           </Grid>
         </Grid>
       </Box>
@@ -133,6 +139,9 @@ function BudgetMiniInfos({ budget }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
+      <Typography gutterBottom variant="h6" component="div" sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <Info sx={{ mr: 1 }} />Informations principales
+      </Typography>
       <Grid container spacing={2}>
         {budget?.image && budget?.image != '' && (
           <Grid item>
@@ -144,30 +153,32 @@ function BudgetMiniInfos({ budget }) {
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                Réference : <b>{budget?.number}</b>
+              <Typography gutterBottom variant="body1" component="div" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Info sx={{ mr: 1, fontSize: 'small' }} />Référence : <b>{budget?.number}</b>
               </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {budget?.name}
+              <Typography gutterBottom variant="body1" component="div" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Description sx={{ mr: 1, fontSize: 'small' }} />Nom : <b>{budget?.name}</b>
               </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                Montant prévu : {formatCurrencyAmount(budget?.amountAllocated)}
+              <Typography gutterBottom variant="body1" component="div" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Money sx={{ mr: 1, fontSize: 'small' }} />Montant prévu : <b>{formatCurrencyAmount(budget?.amountAllocated)}</b>
               </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                Montant dépensé : {formatCurrencyAmount(budget?.amountSpent)}
+              <Typography gutterBottom variant="body1" component="div" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Money sx={{ mr: 1, fontSize: 'small' }} />Montant dépensé : <b>{formatCurrencyAmount(budget?.amountSpent)}</b>
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Année: </b>{' '}
+              <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Event sx={{ mr: 1, fontSize: 'small' }} /><b>Année: </b>{' '}
                 {getFormatDate(budget?.startingDate, 'YYYY')}
               </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b>{' '}
-                {`${getFormatDateTime(budget?.createdAt)}`} <br />
-                <b>Dernière modification: </b>
-                {`${getFormatDateTime(budget?.updatedAt)}`}
+              {/* <Divider sx={{ marginTop: 2, marginBottom: 2 }} /> */}
+              {/* <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Info sx={{ mr: 1, fontSize: 'small' }} /><b>Créé le: </b>{' '}
+                {`${getFormatDateTime(budget?.createdAt)}`}
               </Typography>
+              <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Info sx={{ mr: 1, fontSize: 'small' }} /><b>Dernière modification: </b>
+                {`${getFormatDateTime(budget?.updatedAt)}`}
+              </Typography> */}
             </Grid>
           </Grid>
         </Grid>
@@ -190,8 +201,8 @@ function BudgetOtherInfos({ budget }) {
     >
       {budget?.establishment && (
         <>
-          <Typography variant="h6" gutterBottom>
-            Structure
+          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Business sx={{ mr: 1 }} />Structure
           </Typography>
           <Paper sx={{ padding: 2 }} variant="outlined">
             <EstablishmentChip
@@ -199,6 +210,9 @@ function BudgetOtherInfos({ budget }) {
               />
           </Paper>
           <Paper sx={{ padding: 2, marginY: 1 }} variant="outlined">
+            <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+              <Info sx={{ mr: 1, fontSize: 'small' }} /><b>Status :</b>
+            </Typography>
             <BudgetStatusLabelMenu budget={budget} />
           </Paper>
         </>

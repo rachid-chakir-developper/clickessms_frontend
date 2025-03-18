@@ -11,13 +11,29 @@ import {
   Divider,
   Button,
   Stack,
+  Avatar,
+  Chip,
 } from '@mui/material';
 
 import { GET_UNDESIRABLE_EVENTS, UNDESIRABLE_EVENT_RECAP } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
-import { Done, Edit } from '@mui/icons-material';
+import { 
+  Done, 
+  Edit, 
+  Person, 
+  Business, 
+  Group, 
+  Event, 
+  Room, 
+  Warning, 
+  Assignment, 
+  Description, 
+  Attachment,
+  Flag,
+  ArrowBack
+} from '@mui/icons-material';
 import UndesirableEventTabs from './undesirable-events-tabs/UndesirableEventTabs';
 import { POST_UNDESIRABLE_EVENT_TICKET } from '../../../../_shared/graphql/mutations/UndesirableEventMutations';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
@@ -96,22 +112,32 @@ export default function UndesirableEventDetails() {
   if (loadingUndesirableEvent) return <ProgressService type="form" />;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1}}>
-        {canManageQuality && <Button variant="contained" endIcon={<Done />}
-        sx={{mx: 2}}
-        onClick={() => {
-          onCreateUndesirableEventTicket(undesirableEventData?.undesirableEvent?.id);
-        }}>
-          Analyser
-        </Button>}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1}}>
         <Link
-          to={`/online/qualites/evenements-indesirables/modifier/${undesirableEventData?.undesirableEvent?.id}`}
+          to="/online/qualites/evenements-indesirables/liste"
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
-            Modifier
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
           </Button>
         </Link>
+        <Box>
+          {canManageQuality && <Button variant="contained" endIcon={<Done />}
+          sx={{mx: 2}}
+          onClick={() => {
+            onCreateUndesirableEventTicket(undesirableEventData?.undesirableEvent?.id);
+          }}>
+            Analyser
+          </Button>}
+          <Link
+            to={`/online/qualites/evenements-indesirables/modifier/${undesirableEventData?.undesirableEvent?.id}`}
+            className="no_style"
+          >
+            <Button variant="outlined" endIcon={<Edit />} size="small">
+              Modifier
+            </Button>
+          </Link>
+        </Box>
       </Box>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -192,24 +218,26 @@ function UndesirableEventMiniInfos({ undesirableEvent }) {
               <Typography gutterBottom variant="subtitle1" component="div">
                 Réference : <b>{undesirableEvent?.number}</b>
               </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
+              <Typography gutterBottom variant="subtitle1" component="div" sx={{ fontWeight: 'bold' }}>
                 {undesirableEvent?.title}
               </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b>
-                {`${getFormatDateTime(undesirableEvent?.createdAt)}`} <br />
-                <b>Dernière modification: </b>
-                {`${getFormatDateTime(undesirableEvent?.updatedAt)}`}
-              </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Date début : </b>
-                {`${getFormatDateTime(undesirableEvent?.startingDateTime)}`}
-                <br />
-                <b>Date fin: </b>
-                {`${getFormatDateTime(undesirableEvent?.endingDateTime)}`}
-              </Typography>
+              
+              <Box sx={{ display: 'flex', alignItems: 'center', mt: 1, mb: 1 }}>
+                <Event sx={{ mr: 1, color: 'text.secondary' }} />
+                <Typography variant="body2" color="text.secondary">
+                  <b>Date de signalement :</b> {getFormatDateTime(undesirableEvent?.startingDateTime)}
+                </Typography>
+              </Box>
+              
+              {undesirableEvent?.employee && (
+                <Box sx={{ display: 'flex', alignItems: 'center', mt: 1, mb: 1 }}>
+                  <Person sx={{ mr: 1, color: 'text.secondary' }} />
+                  <Typography variant="body2" color="text.secondary">
+                    <b>Déclarant principal :</b> {undesirableEvent?.employee?.firstName} {undesirableEvent?.employee?.lastName}
+                  </Typography>
+                </Box>
+              )}
+              
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
                 <b>Progression: </b>
@@ -219,7 +247,7 @@ function UndesirableEventMiniInfos({ undesirableEvent }) {
               <Typography variant="body2" color="text.secondary">
                 <b>Status: </b>
               </Typography>
-              <UndesirableEventStatusLabelMenu  undesirableEvent={undesirableEvent}/>
+              <UndesirableEventStatusLabelMenu undesirableEvent={undesirableEvent}/>
             </Grid>
           </Grid>
         </Grid>
@@ -240,36 +268,236 @@ function UndesirableEventOtherInfos({ undesirableEvent }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
-      <Typography gutterBottom variant="subtitle3" component="h3">
-        Les Personnes accompagnées
+      {/* Structures concernées */}
+      <Typography gutterBottom variant="subtitle3" component="h3" sx={{ display: 'flex', alignItems: 'center' }}>
+        <Business sx={{ mr: 1 }} /> Structures concernées
+      </Typography>
+      <Grid container spacing={1} sx={{ mb: 2 }}>
+        {undesirableEvent?.establishments && undesirableEvent.establishments.length > 0 ? (
+          undesirableEvent.establishments.map((establishment, index) => (
+            <Grid item key={index}>
+              <Chip 
+                label={establishment.name} 
+                variant="outlined" 
+                size="small"
+              />
+            </Grid>
+          ))
+        ) : (
+          <Grid item>
+            <Typography variant="body2" color="text.secondary">
+              Aucune structure spécifiée
+            </Typography>
+          </Grid>
+        )}
+      </Grid>
+      
+      <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+      
+      {/* Déclarants */}
+      <Typography gutterBottom variant="subtitle3" component="h3" sx={{ display: 'flex', alignItems: 'center' }}>
+        <Person sx={{ mr: 1 }} /> Déclarants
+      </Typography>
+      {undesirableEvent?.declarants && undesirableEvent.declarants.length > 0 ? (
+        <Stack direction="row" spacing={1} flexWrap="wrap">
+          {undesirableEvent.declarants.map((declarant, index) => (
+            <Chip
+              key={index}
+              avatar={<Avatar>{declarant.firstName?.[0] || ''}{declarant.lastName?.[0] || ''}</Avatar>}
+              label={`${declarant.firstName} ${declarant.lastName}`}
+              variant="outlined"
+              sx={{ mb: 1 }}
+            />
+          ))}
+        </Stack>
+      ) : (
+        <Typography variant="body2" color="text.secondary">
+          Aucun autre déclarant
+        </Typography>
+      )}
+      
+      <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+      
+      {/* Personnes accompagnées */}
+      <Typography gutterBottom variant="subtitle3" component="h3" sx={{ display: 'flex', alignItems: 'center' }}>
+        <Group sx={{ mr: 1 }} /> Personnes accompagnées
       </Typography>
       <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-        {undesirableEvent?.beneficiaries?.map((beneficiary, index) => (
-          <Grid item xs={12} sm={12} md={12} key={index}>
-            <Item>
-              <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
-            </Item>
+        {undesirableEvent?.beneficiaries && undesirableEvent.beneficiaries.length > 0 ? (
+          undesirableEvent.beneficiaries.map((beneficiary, index) => (
+            <Grid item xs={12} sm={12} md={12} key={index}>
+              <Item>
+                <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
+              </Item>
+            </Grid>
+          ))
+        ) : (
+          <Grid item xs={12}>
+            <Typography variant="body2" color="text.secondary">
+              Aucune personne accompagnée concernée
+            </Typography>
           </Grid>
-        ))}
+        )}
       </Grid>
+      
+      {/* Professionnels concernés */}
       <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-      <Typography gutterBottom variant="subtitle3" component="h3">
-        Informations Supplémentaires
+      <Typography gutterBottom variant="subtitle3" component="h3" sx={{ display: 'flex', alignItems: 'center' }}>
+        <Person sx={{ mr: 1 }} /> Professionnels concernés
       </Typography>
-      <Typography variant="body2" color="text.secondary">
-        <b>Type d'événement:: </b>{undesirableEvent?.undesirableEventType}<br />
-        <b>Sévérité: </b>{undesirableEvent?.severity}<br />
-        <b>Fréquence: </b>{undesirableEvent?.frequency?.name}<br />
-        <b>Actions prises: </b>{undesirableEvent?.actionsTakenText}<br />
-        <b>Date des faits: </b>{getFormatDateTime(undesirableEvent?.courseFactsDateTime)}<br />
-        <b>Lieu des faits: </b>{undesirableEvent?.courseFactsPlace}<br />
-        <b>Circumstances de l'événement: </b>{undesirableEvent?.circumstanceEventText}<br />
-        <b>Personnes notifiées: </b>{undesirableEvent?.notifiedPersons?.map(person => person.name).join(', ')}<br />
-        <b>Autres personnes notifiées: </b>{undesirableEvent?.otherNotifiedPersons}<br />
-        <b>Établissements: </b>{undesirableEvent?.establishments?.map(establishment => establishment.name).join(', ')}<br />
-        <b>Employés: </b>{undesirableEvent?.employees?.map(employee => employee.name).join(', ')}<br />
-        <b>Employé en charge: </b>{undesirableEvent?.employee?.name}
+      {undesirableEvent?.employees && undesirableEvent.employees.length > 0 ? (
+        <Stack direction="row" spacing={1} flexWrap="wrap">
+          {undesirableEvent.employees.map((employee, index) => (
+            <Chip
+              key={index}
+              avatar={<Avatar>{employee.firstName?.[0] || ''}{employee.lastName?.[0] || ''}</Avatar>}
+              label={`${employee.firstName} ${employee.lastName}`}
+              variant="outlined"
+              sx={{ mb: 1 }}
+            />
+          ))}
+        </Stack>
+      ) : (
+        <Typography variant="body2" color="text.secondary">
+          Aucun professionnel concerné
+        </Typography>
+      )}
+      
+      {/* Familles concernées */}
+      {undesirableEvent?.concernedFamilies && (
+        <>
+          <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+          <Typography gutterBottom variant="subtitle3" component="h3" sx={{ display: 'flex', alignItems: 'center' }}>
+            <Group sx={{ mr: 1 }} /> Familles concernées
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {undesirableEvent.concernedFamilies}
+          </Typography>
+        </>
+      )}
+      
+      <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+      
+      {/* Déroulement des faits */}
+      <Typography gutterBottom variant="subtitle3" component="h3" sx={{ display: 'flex', alignItems: 'center' }}>
+        <Event sx={{ mr: 1 }} /> Déroulement des faits
       </Typography>
+      
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+          <Event sx={{ mr: 1, fontSize: 'small' }} />
+          <b>Date des faits:</b> {getFormatDateTime(undesirableEvent?.courseFactsDateTime)}
+        </Typography>
+        
+        <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+          <Room sx={{ mr: 1, fontSize: 'small' }} />
+          <b>Lieu des faits:</b> {undesirableEvent?.courseFactsPlace || 'Non spécifié'}
+        </Typography>
+      </Box>
+      
+      {undesirableEvent?.circumstanceEventText && (
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'flex-start' }}>
+            <Description sx={{ mr: 1, fontSize: 'small', mt: 0.5 }} />
+            <Box>
+              <b>Circonstances de l'événement:</b>
+              <Typography variant="body2" sx={{ whiteSpace: 'pre-line', mt: 0.5 }}>
+                {undesirableEvent.circumstanceEventText}
+              </Typography>
+            </Box>
+          </Typography>
+        </Box>
+      )}
+        
+      <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+      
+      {/* Informations Supplémentaires */}
+      <Typography gutterBottom variant="subtitle3" component="h3" sx={{ display: 'flex', alignItems: 'center' }}>
+        <Assignment sx={{ mr: 1 }} /> Informations Supplémentaires
+      </Typography>
+      
+      <Box>
+        <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+          <Warning sx={{ mr: 1, fontSize: 'small' }} />
+          <b>Type d'événement: </b>{undesirableEvent?.undesirableEventType}
+        </Typography>
+        
+        {undesirableEvent?.normalTypes && undesirableEvent.normalTypes.length > 0 && (
+          <Box sx={{ ml: 3, mb: 1 }}>
+            <Typography variant="body2" color="text.secondary">
+              <b>Types spécifiques: </b>
+              {undesirableEvent.normalTypes.map((type) => type.name).join(', ')}
+            </Typography>
+          </Box>
+        )}
+        
+        {undesirableEvent?.seriousTypes && undesirableEvent.seriousTypes.length > 0 && (
+          <Box sx={{ ml: 3, mb: 1 }}>
+            <Typography variant="body2" color="text.secondary">
+              <b>Types graves: </b>
+              {undesirableEvent.seriousTypes.map((type) => type.name).join(', ')}
+            </Typography>
+          </Box>
+        )}
+        
+        {undesirableEvent?.otherTypes && (
+          <Box sx={{ ml: 3, mb: 1 }}>
+            <Typography variant="body2" color="text.secondary">
+              <b>Autres types: </b>
+              {undesirableEvent.otherTypes}
+            </Typography>
+          </Box>
+        )}
+        
+        <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+          <Flag sx={{ mr: 1, fontSize: 'small' }} />
+          <b>Sévérité: </b>{undesirableEvent?.severity}
+        </Typography>
+        
+        <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+          <Event sx={{ mr: 1, fontSize: 'small' }} />
+          <b>Fréquence: </b>{undesirableEvent?.frequency?.name || 'Non spécifiée'}
+        </Typography>
+        
+        {/* Personnes notifiées */}
+        {undesirableEvent?.notifiedPersons && undesirableEvent.notifiedPersons.length > 0 && (
+          <Box sx={{ mb: 1 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+              <b>Personnes immédiatement prévenues: </b>
+            </Typography>
+            <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ ml: 3 }}>
+              {undesirableEvent.notifiedPersons.map((person, index) => (
+                <Chip
+                  key={index}
+                  size="small"
+                  label={`${person.firstName} ${person.lastName}`}
+                  variant="outlined"
+                />
+              ))}
+            </Stack>
+          </Box>
+        )}
+        
+        {undesirableEvent?.otherNotifiedPersons && (
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+            <b>Autres personnes prévenues: </b>{undesirableEvent.otherNotifiedPersons}
+          </Typography>
+        )}
+        
+        {undesirableEvent?.actionsTakenText && (
+          <Box sx={{ mb: 1 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'flex-start' }}>
+              <Assignment sx={{ mr: 1, fontSize: 'small', mt: 0.5 }} />
+              <Box>
+                <b>Actions prises: </b>
+                <Typography variant="body2" sx={{ whiteSpace: 'pre-line', mt: 0.5 }}>
+                  {undesirableEvent.actionsTakenText}
+                </Typography>
+              </Box>
+            </Typography>
+          </Box>
+        )}
+      </Box>
     </Paper>
   );
 }

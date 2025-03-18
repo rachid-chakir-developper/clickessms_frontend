@@ -15,6 +15,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import { ArrowBack } from '@mui/icons-material';
 
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import ImageFileField from '../../../../_shared/components/form-fields/ImageFileField';
@@ -218,6 +219,16 @@ export default function AddEmployeeForm({ idEmployee, title }) {
   }, [idEmployee]);
   return (
     <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/ressources-humaines/employes/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
+      </Box>
       <Typography component="div" variant="h5">
         {title} {formik.values.firstName} {formik.values.lastName}
       </Typography>
@@ -295,7 +306,7 @@ export default function AddEmployeeForm({ idEmployee, title }) {
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Nom d’usage"
+                  label="Nom d'usage"
                   id="preferredName"
                   value={formik.values.preferredName}
                   onChange={(e) =>

@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
   Box,
@@ -9,12 +9,14 @@ import {
   ButtonBase,
   Typography,
   Divider,
+  Button,
 } from '@mui/material';
 
 import { CALL_RECAP } from '../../../../_shared/graphql/queries/CallQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
+import { ArrowBack, Edit, Business, PersonOutline, Phone, Event, Description, Note, Group, People, Info } from '@mui/icons-material';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -37,35 +39,71 @@ export default function CallDetails() {
   if (loadingCall) return <ProgressService type="form" />;
   return (
     <>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/administratif/appels/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
+        {callData?.call && (
+          <Link to={`/online/administratif/appels/modifier/${callData.call.id}`} className="no_style">
+            <Button variant="outlined" endIcon={<Edit />}>
+              Modifier
+            </Button>
+          </Link>
+        )}
+      </Box>
       <Box sx={{ width: '100%' }}>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid container spacing={2}>
           <Grid item xs={7}>
             <CallMiniInfos call={callData?.call} />
           </Grid>
           <Grid item xs={5}>
             <CallOtherInfos call={callData?.call} />
           </Grid>
-          <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
+          <Grid item xs={12} sx={{ marginTop: 2, marginBottom: 2 }}>
             <Divider />
           </Grid>
           <Grid item xs={6}>
             <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography gutterBottom variant="subtitle3" component="h3">
-                Description
+              <Typography gutterBottom variant="h6" component="div" sx={{ display: 'flex', alignItems: 'center' }}>
+                <Description sx={{ mr: 1 }} />Description
               </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {callData?.call?.description}
-              </Typography>
+              <Paper sx={{ padding: 2 }} variant="outlined">
+                <Typography variant="body1">
+                  {callData?.call?.description ? callData?.call?.description : "Aucune description pour l'instant"}
+                </Typography>
+              </Paper>
             </Paper>
           </Grid>
           <Grid item xs={6}>
             <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography gutterBottom variant="subtitle3" component="h3">
-                Observation
+              <Typography gutterBottom variant="h6" component="div" sx={{ display: 'flex', alignItems: 'center' }}>
+                <Note sx={{ mr: 1 }} />Observation
               </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {callData?.call?.observation}
+              <Paper sx={{ padding: 2 }} variant="outlined">
+                <Typography variant="body1">
+                  {callData?.call?.observation ? callData?.call?.observation : "Aucune observation pour l'instant"}
+                </Typography>
+              </Paper>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} sx={{ marginTop: 2, marginBottom: 2 }}>
+            <Paper sx={{ padding: 2 }} variant="outlined">
+              <Typography gutterBottom variant="h6" component="div" sx={{ display: 'flex', alignItems: 'center' }}>
+                <Info sx={{ mr: 1 }} />Informations supplémentaires
               </Typography>
+              <Paper sx={{ padding: 2 }} variant="outlined">
+                <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                  <Info sx={{ mr: 1, fontSize: 'small' }} />Ajouté le: {getFormatDateTime(callData?.call?.createdAt)}
+                </Typography>
+                <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                  <Info sx={{ mr: 1, fontSize: 'small' }} />Dernière modification: {getFormatDateTime(callData?.call?.updatedAt)}
+                </Typography>
+              </Paper>
             </Paper>
           </Grid>
         </Grid>
@@ -94,6 +132,9 @@ function CallMiniInfos({ call }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
+      <Typography gutterBottom variant="h6" component="div" sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <Info sx={{ mr: 1 }} />Informations principales
+      </Typography>
       <Grid container spacing={2}>
         {call?.image && call?.image != '' && (
           <Grid item>
@@ -105,17 +146,17 @@ function CallMiniInfos({ call }) {
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                Réference : <b>{call?.number}</b>
+              <Typography gutterBottom variant="body1" component="div" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Info sx={{ mr: 1, fontSize: 'small' }} />Réference : <b>{call?.number}</b>
               </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {call?.title}
+              <Typography gutterBottom variant="body1" component="div" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Description sx={{ mr: 1, fontSize: 'small' }} />Libellé : <b>{call?.title}</b>
               </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                Type d'appel : <b>{call?.callType === 'INCOMING' ? 'Entrant' : 'Sortant'}</b>
+              <Typography gutterBottom variant="body1" component="div" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Phone sx={{ mr: 1, fontSize: 'small' }} />Type d'appel : <b>{call?.callType === 'INCOMING' ? 'Entrant' : 'Sortant'}</b>
               </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                Date et heure : <b>{getFormatDateTime(call?.entryDateTime)}</b>
+              <Typography gutterBottom variant="body1" component="div" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <Event sx={{ mr: 1, fontSize: 'small' }} />Date et heure : <b>{getFormatDateTime(call?.entryDateTime)}</b>
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
             </Grid>
@@ -138,36 +179,42 @@ function CallOtherInfos({ call }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
+      <Typography gutterBottom variant="h6" component="div" sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <Group sx={{ mr: 1 }} />Personnes concernées
+      </Typography>
+      
       {call?.caller && (
         <>
-          <Typography gutterBottom variant="subtitle3" component="h3">
-            Appelant
+          <Typography gutterBottom variant="subtitle1" component="div" sx={{ display: 'flex', alignItems: 'center' }}>
+            <Phone sx={{ mr: 1, fontSize: 'small' }} />Appelant
           </Typography>
-          <Typography gutterBottom variant="body1" component="div">
-            {call?.caller?.callerType === 'PhoneNumber' 
-              ? call?.caller?.phoneNumber 
-              : call?.caller?.callerType === 'Employee' 
-                ? `${call?.caller?.employee?.firstName} ${call?.caller?.employee?.lastName}`
-                : call?.caller?.callerType === 'Beneficiary'
-                  ? `${call?.caller?.beneficiary?.firstName} ${call?.caller?.beneficiary?.lastName}`
-                  : call?.caller?.callerType === 'Client'
-                    ? call?.caller?.client?.name
-                    : call?.caller?.callerType === 'Establishment'
-                      ? call?.caller?.establishment?.name
-                      : call?.caller?.callerType === 'Partner'
-                        ? call?.caller?.partner?.name
-                        : call?.caller?.callerType === 'Supplier'
-                          ? call?.caller?.supplier?.name
-                          : ''}
-          </Typography>
+          <Paper variant="outlined" sx={{ padding: 1, mb: 2 }}>
+            <Typography gutterBottom variant="body1" component="div">
+              {call?.caller?.callerType === 'PhoneNumber' 
+                ? call?.caller?.phoneNumber 
+                : call?.caller?.callerType === 'Employee' 
+                  ? `${call?.caller?.employee?.firstName} ${call?.caller?.employee?.lastName}`
+                  : call?.caller?.callerType === 'Beneficiary'
+                    ? `${call?.caller?.beneficiary?.firstName} ${call?.caller?.beneficiary?.lastName}`
+                    : call?.caller?.callerType === 'Client'
+                      ? call?.caller?.client?.name
+                      : call?.caller?.callerType === 'Establishment'
+                        ? call?.caller?.establishment?.name
+                        : call?.caller?.callerType === 'Partner'
+                          ? call?.caller?.partner?.name
+                          : call?.caller?.callerType === 'Supplier'
+                            ? call?.caller?.supplier?.name
+                            : ''}
+            </Typography>
+          </Paper>
           <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
         </>
       )}
 
       {call?.establishments && call?.establishments.length > 0 && (
         <>
-          <Typography gutterBottom variant="subtitle3" component="h3">
-            Structures concernées
+          <Typography gutterBottom variant="subtitle1" component="div" sx={{ display: 'flex', alignItems: 'center' }}>
+            <Business sx={{ mr: 1, fontSize: 'small' }} />Structures concernées
           </Typography>
           <Grid container spacing={1} sx={{ marginBottom: 2 }}>
             {call?.establishments?.map((est, index) => (
@@ -186,8 +233,8 @@ function CallOtherInfos({ call }) {
 
       {call?.employees && call?.employees.length > 0 && (
         <>
-          <Typography gutterBottom variant="subtitle3" component="h3">
-            Employés concernés
+          <Typography gutterBottom variant="subtitle1" component="div" sx={{ display: 'flex', alignItems: 'center' }}>
+            <PersonOutline sx={{ mr: 1, fontSize: 'small' }} />Employés concernés
           </Typography>
           <Grid container spacing={1} sx={{ marginBottom: 2 }}>
             {call?.employees?.map((emp, index) => (
@@ -204,18 +251,22 @@ function CallOtherInfos({ call }) {
         </>
       )}
 
-      <Typography gutterBottom variant="subtitle3" component="h3">
-        Les Personnes accompagnées
-      </Typography>
-      <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-        {call?.beneficiaries?.map((beneficiary, index) => (
-          <Grid item xs={12} sm={12} md={12} key={index}>
-            <Item>
-              <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
-            </Item>
+      {call?.beneficiaries && call?.beneficiaries.length > 0 && (
+        <>
+          <Typography gutterBottom variant="subtitle1" component="div" sx={{ display: 'flex', alignItems: 'center' }}>
+            <People sx={{ mr: 1, fontSize: 'small' }} />Personnes accompagnées
+          </Typography>
+          <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
+            {call?.beneficiaries?.map((beneficiary, index) => (
+              <Grid item xs={12} sm={12} md={12} key={index}>
+                <Item>
+                  <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
+                </Item>
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
+        </>
+      )}
     </Paper>
   );
 }

@@ -32,7 +32,7 @@ import {
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
@@ -254,6 +254,7 @@ export default function TableListMeetings({
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const navigate = useNavigate();
 
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -315,6 +316,15 @@ export default function TableListMeetings({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
+
+  const handleRowClick = (event, id) => {
+    if (!event.target.closest('button') && 
+        !event.target.closest('input[type="checkbox"]') &&
+        !event.target.closest('.MuiIconButton-root')) {
+      navigate(`/online/ressources-humaines/cr-entretiens/details/${id}`);
+    }
+  };
+
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -384,6 +394,7 @@ export default function TableListMeetings({
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
+                    onClick={(event) => handleRowClick(event, row.id)}
                   >
                     <StyledTableCell padding="checkbox">
                       <Checkbox

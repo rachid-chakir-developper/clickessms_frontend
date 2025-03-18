@@ -23,7 +23,7 @@ import {
   getFormatDateTime,
   getPaymentMethodLabel,
 } from '../../../../_shared/tools/functions';
-import {Edit } from '@mui/icons-material';
+import {Edit, ArrowBack } from '@mui/icons-material';
 import ExpenseStatusLabelMenu from './ExpenseStatusLabelMenu';
 import ExpenseTabs from './expenses-tabs/ExpenseTabs';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
@@ -51,22 +51,20 @@ export default function ExpenseDetails() {
   if (loadingExpense) return <ProgressService type="form" />;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-        <Box sx={{ marginX: 2 }}>
-          <Link
-            to={`/online/achats/depenses-engagements/liste`}
-            className="no_style"
-          >
-            <Button variant="text" startIcon={<List />} size="small">
-              Retour à la Liste
-            </Button>
-          </Link>
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to={`/online/achats/depenses-engagements/liste`}
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         <Link
           to={`/online/achats/depenses-engagements/modifier/${expenseData?.expense.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
         </Link>
@@ -169,10 +167,10 @@ function ExpenseMiniInfos({ expense }) {
               <Typography variant="subtitle1" color="textSecondary"><b>Nom de la banque :</b> {expense?.bankName}</Typography></>
             }
             <Divider sx={{ my: 2 }} />
-            <Typography variant="body2" color="textSecondary">
+            {/* <Typography variant="body2" color="textSecondary">
               <b>Créé le :</b> {getFormatDateTime(expense?.createdAt)} <br />
               <b>Dernière modification :</b> {getFormatDateTime(expense?.updatedAt)}
-            </Typography>
+            </Typography> */}
           </Grid>
         </Grid>
       </Grid>

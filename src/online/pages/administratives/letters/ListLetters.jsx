@@ -210,6 +210,14 @@ export default function ListLetters() {
           loading={loadingLetters}
           rows={lettersData?.letters?.nodes || []}
           onDeleteLetter={onDeleteLetter}
+          onFilterChange={(filterOptions) => {
+            console.log('Table filter change:', filterOptions);
+            // Si c'est le tri
+            if (filterOptions.orderBy) {
+              setLetterFilter(prev => ({ ...(prev || {}), orderBy: filterOptions.orderBy }));
+            }
+          }}
+          paginator={paginator}
         />
       </Grid>
       <Grid item xs={12}>

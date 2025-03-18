@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
-import { Box, Button, Divider, Paper, Stack, alpha, Typography, Grid, Avatar, List } from '@mui/material';
+import { Box, Button, Divider, Paper, Stack, alpha, Typography, Grid, Avatar, List as ListComponent } from '@mui/material';
 import styled from '@emotion/styled';
-import { Devices, Edit } from '@mui/icons-material';
+import { Devices, Edit, ArrowBack, List as ListIcon } from '@mui/icons-material';
 import { GET_RECAP_BENEFICIARY_EXPENSE } from '../../../../_shared/graphql/queries/BeneficiaryExpenseQueries';
 import { getFormatDate, getFormatDateTime, getGenderLabel, getPaymentMethodLabel } from '../../../../_shared/tools/functions';
 import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
@@ -31,19 +31,17 @@ export default function BeneficiaryExpenseDetails() {
 
   return (
     <Stack>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-        <Box sx={{marginX: 2}}>
-          <Link
-            to={`/online/activites/depenses/liste`}
-            className="no_style"
-          >
-            <Button variant="text" startIcon={<List />}  size="small">
-              Retour à la Liste
-            </Button>
-          </Link>
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/activites/depenses/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         <Link to={`/online/activites/depenses/modifier/${beneficiaryExpenseData?.beneficiaryExpense?.id}`} className="no_style">
-          <Button variant="outlined" startIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
         </Link>

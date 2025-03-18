@@ -23,7 +23,7 @@ import {
 import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
 import EmployeeChip from '../../../human_ressources/employees/EmployeeChip';
 import ListCashRegisterTransactions from './transactions/ListCashRegisterTransactions';
-import { Edit } from '@mui/icons-material';
+import { Edit, ArrowBack } from '@mui/icons-material';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -49,22 +49,20 @@ export default function CashRegisterDetails() {
   return (
     <>
       <Box sx={{ width: '100%' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-          <Box sx={{ marginX: 2 }}>
-            <Link
-              to={`/online/finance/tresorerie/caisses/liste`}
-              className="no_style"
-            >
-              <Button variant="text" startIcon={<List />} size="small">
-                Retour à la Liste
-              </Button>
-            </Link>
-          </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+          <Link
+            to="/online/finance/tresorerie/caisses/liste"
+            className="no_style"
+          >
+            <Button variant="outlined" startIcon={<ArrowBack />}>
+              Retour à la liste
+            </Button>
+          </Link>
           <Link
             to={`/online/finance/tresorerie/caisses/modifier/${cashRegisterData?.cashRegister?.id}`}
             className="no_style"
           >
-            <Button variant="outlined" endIcon={<Edit />} size="small">
+            <Button variant="outlined" endIcon={<Edit />}>
               Modifier
             </Button>
           </Link>

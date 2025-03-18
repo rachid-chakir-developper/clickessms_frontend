@@ -2,13 +2,13 @@ import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import { Box, Grid, Paper, Typography, Divider, Chip, Button } from '@mui/material';
+import { Box, Grid, Paper, Typography, Divider, Chip, Button, Stack } from '@mui/material';
 
 import { EMPLOYEE_ABSENCE_RECAP } from '../../../../_shared/graphql/queries/EmployeeAbsenceQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import { getFormatDateTime } from '../../../../_shared/tools/functions';
+import { getFormatDateTime, getFormatDate, getLeaveTypeLabel } from '../../../../_shared/tools/functions';
 import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard';
-import { Edit } from '@mui/icons-material';
+import { Edit, ArrowBack, Description, Note, Event, Group, Category, Folder } from '@mui/icons-material';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -37,12 +37,20 @@ export default function EmployeeAbsenceDetails() {
   if (loadingEmployeeAbsence) return <ProgressService type="form" />;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/planning/absences-employes/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         <Link
           to={`/online/planning/absences-employes/modifier/${employeeAbsenceData?.employeeAbsence?.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
         </Link>
@@ -64,24 +72,44 @@ export default function EmployeeAbsenceDetails() {
           </Grid>
           <Grid item xs={6}>
             <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography gutterBottom variant="subtitle3" component="h3">
-                Commentaire
+              <Typography gutterBottom variant="subtitle3" component="h3" sx={{ display: 'flex', alignItems: 'center' }}>
+                <Description sx={{ marginRight: 1 }} /> Commentaire
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {employeeAbsenceData?.employeeAbsence?.comment}
+                {employeeAbsenceData?.employeeAbsence?.comment || employeeAbsenceData?.employeeAbsence?.message || "Aucun commentaire"}
               </Typography>
             </Paper>
           </Grid>
           <Grid item xs={6}>
             <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography gutterBottom variant="subtitle3" component="h3">
-                Observation
+              <Typography gutterBottom variant="subtitle3" component="h3" sx={{ display: 'flex', alignItems: 'center' }}>
+                <Note sx={{ marginRight: 1 }} /> Observation
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {employeeAbsenceData?.employeeAbsence?.observation}
+                {employeeAbsenceData?.employeeAbsence?.observation || "Aucune observation"}
               </Typography>
             </Paper>
           </Grid>
+          {employeeAbsenceData?.employeeAbsence?.document && (
+            <Grid item xs={12} sx={{ marginTop: 2 }}>
+              <Paper sx={{ padding: 2 }} variant="outlined">
+                <Typography gutterBottom variant="subtitle3" component="h3" sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Folder sx={{ marginRight: 1 }} /> Justificatif
+                </Typography>
+                <Box sx={{ mt: 1 }}>
+                  <Button
+                    variant="outlined"
+                    component="a"
+                    href={employeeAbsenceData.employeeAbsence.document}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Consulter le justificatif
+                  </Button>
+                </Box>
+              </Paper>
+            </Grid>
+          )}
         </Grid>
       </Box>
     </>
@@ -114,26 +142,38 @@ function EmployeeAbsenceMiniInfos({ employeeAbsence }) {
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs>
                 <Typography gutterBottom variant="subtitle1" component="div">
-                  Réference : <b>{employeeAbsence?.number}</b>
+                  Référence : <b>{employeeAbsence?.number}</b>
                 </Typography>
                 <Typography gutterBottom variant="subtitle1" component="div">
                   {employeeAbsence?.title}
                 </Typography>
                 <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-                <Typography variant="body2" color="text.secondary">
-                  <b>Crée le: </b>{' '}
-                  {`${getFormatDateTime(employeeAbsence?.createdAt)}`} <br />
-                  <b>Dernière modification: </b>
-                  {`${getFormatDateTime(employeeAbsence?.updatedAt)}`}
-                </Typography>
+                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                  <Category fontSize="small" />
+                  <Typography variant="body2" color="text.secondary">
+                    <b>Type d'absence:</b> {getLeaveTypeLabel(employeeAbsence?.leaveType)}
+                  </Typography>
+                </Stack>
                 <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-                <Typography variant="body2" color="text.secondary">
-                  <b>Date début prévue: </b>{' '}
-                  {`${getFormatDateTime(employeeAbsence?.startingDateTime)}`}{' '}
-                  <br />
-                  <b>Date fin prévue: </b>{' '}
-                  {`${getFormatDateTime(employeeAbsence?.endingDateTime)}`}
-                </Typography>
+                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                  <Event fontSize="small" />
+                  <Typography variant="body2" color="text.secondary">
+                    <b>Date début:</b> {getFormatDate(employeeAbsence?.startingDateTime)}
+                  </Typography>
+                </Stack>
+                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                  <Event fontSize="small" />
+                  <Typography variant="body2" color="text.secondary">
+                    <b>Date fin:</b> {getFormatDate(employeeAbsence?.endingDateTime)}
+                  </Typography>
+                </Stack>
+                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                  <Event fontSize="small" />
+                  <Typography variant="body2" color="text.secondary">
+                    <b>Durée:</b> {employeeAbsence?.duration} {employeeAbsence?.duration > 1 ? 'jours' : 'jour'}
+                  </Typography>
+                </Stack>
+                <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               </Grid>
             </Grid>
           </Grid>
@@ -150,18 +190,32 @@ function EmployeeAbsenceMiniInfos({ employeeAbsence }) {
             theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
         }}
       >
-        <Typography gutterBottom variant="subtitle3" component="h3">
-          Motif
+        <Typography gutterBottom variant="subtitle3" component="h3" sx={{ display: 'flex', alignItems: 'center' }}>
+          <Category sx={{ marginRight: 1 }} /> Motifs
         </Typography>
-        {employeeAbsence?.reasons?.map((reason, index) => (
-          <Chip
-            color="info"
-            key={index}
-            label={reason?.name}
-            sx={{ marginRight: 1 }}
-          />
-        ))}
-        <Chip label={employeeAbsence?.otherReasons} />
+        <Box>
+          {employeeAbsence?.reasons?.map((reason, index) => (
+            <Chip
+              color="info"
+              key={index}
+              label={reason?.name}
+              sx={{ marginRight: 1, marginBottom: 1 }}
+            />
+          ))}
+          {employeeAbsence?.otherReasons && (
+            <Chip 
+              label={employeeAbsence?.otherReasons} 
+              variant="filled" 
+              color="primary"
+              sx={{ marginRight: 1, marginBottom: 1 }} 
+            />
+          )}
+          {(!employeeAbsence?.reasons || employeeAbsence?.reasons.length === 0) && !employeeAbsence?.otherReasons && (
+            <Typography variant="body2" color="text.secondary">
+              Aucun motif spécifié
+            </Typography>
+          )}
+        </Box>
       </Paper>
     </>
   );
@@ -179,8 +233,8 @@ function EmployeeAbsenceOtherInfos({ employeeAbsence }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
-      <Typography gutterBottom variant="subtitle3" component="h3">
-        Les Employés
+      <Typography gutterBottom variant="subtitle3" component="h3" sx={{ display: 'flex', alignItems: 'center' }}>
+        <Group sx={{ marginRight: 1 }} /> Les Employés
       </Typography>
       <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
         {employeeAbsence?.employees?.map((employee, index) => (
@@ -190,6 +244,16 @@ function EmployeeAbsenceOtherInfos({ employeeAbsence }) {
             </Item>
           </Grid>
         ))}
+        {employeeAbsence?.employee && (
+          <Grid item xs={12} sm={12} md={12} sx={{ mt: 2 }}>
+            <Paper sx={{ padding: 2 }} variant="outlined">
+              <Typography variant="subtitle3" gutterBottom>
+                Déclaré par:
+              </Typography>
+              <EmployeeItemCard employee={employeeAbsence?.employee} />
+            </Paper>
+          </Grid>
+        )}
       </Grid>
     </Paper>
   );

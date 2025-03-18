@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
   Box,
@@ -10,6 +10,7 @@ import {
   Typography,
   Divider,
   Chip,
+  Button,
 } from '@mui/material';
 
 import { MSG_NOTIFICATION_RECAP } from '../../../../_shared/graphql/queries/MessageNotificationQueries';
@@ -21,6 +22,7 @@ import {
 } from '../../../../_shared/tools/functions';
 import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard';
 import EstablishmentItemCard from '../../companies/establishments/EstablishmentItemCard';
+import { ArrowBack, Edit } from '@mui/icons-material';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -49,6 +51,24 @@ export default function MessageNotificationDetails() {
   if (loadingMessageNotification) return <ProgressService type="form" />;
   return (
     <>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/cse/notifications-messages/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
+        <Link
+          to={`/online/cse/notifications-messages/modifier/${messageNotificationData?.messageNotification?.id}`}
+          className="no_style"
+        >
+          <Button variant="outlined" endIcon={<Edit />}>
+            Modifier
+          </Button>
+        </Link>
+      </Box>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>

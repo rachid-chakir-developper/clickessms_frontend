@@ -10,7 +10,6 @@ import {
   Divider,
   ButtonBase,
   Button,
-  List,
   Stack,
   Rating,
 } from '@mui/material';
@@ -20,7 +19,7 @@ import ProgressService from '../../../../../_shared/services/feedbacks/ProgressS
 import JobPositionChip from '../job_positions/JobPositionChip';
 import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
 import { getFormatDate, getFormatDateTime } from '../../../../../_shared/tools/functions';
-import { Edit } from '@mui/icons-material';
+import { Edit, ArrowBack, Description, Note, Work, Event, Link as LinkIcon } from '@mui/icons-material';
 import EmployeeChip from '../../employees/EmployeeChip';
 import FileViewer from '../../../../../_shared/components/media/FileViewer';
 
@@ -55,19 +54,17 @@ export default function JobPostingDetails() {
 
   return (
     <Stack>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-        <Box sx={{marginX: 2}}>
-          <Link
-            to={`/online/ressources-humaines/recrutement/annonces/liste`}
-            className="no_style"
-          >
-            <Button variant="text" startIcon={<List />}  size="small">
-              Retour à la Liste
-            </Button>
-          </Link>
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/ressources-humaines/recrutement/annonces/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         <Link to={`/online/ressources-humaines/recrutement/annonces/modifier/${jobPostingData?.jobPosting?.id}`} className="no_style">
-          <Button variant="outlined" startIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
         </Link>
@@ -83,6 +80,7 @@ export default function JobPostingDetails() {
 
 const JobPostingDetailsPage = ({ jobPosting }) => {
   const {
+    title,
     description,
     observation
   } = jobPosting;
@@ -101,18 +99,27 @@ const JobPostingDetailsPage = ({ jobPosting }) => {
         </Grid>
         {/* Description */}
         <Grid item xs={12}>
-          <Typography variant="subtitle1" component="div">
-            <b>Titre:</b> {jobPosting?.title}
-          </Typography>
           <Paper sx={{ padding: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Description
+            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+              <Work sx={{ mr: 1 }} />Titre de l'annonce
+            </Typography>
+            <Paper sx={{ padding: 2 }} variant="outlined">
+              <Typography variant="h6" component="div">
+                {title || "Aucun titre défini"}
+              </Typography>
+            </Paper>
+          </Paper>
+        </Grid>
+        <Grid item xs={12}>
+          <Paper sx={{ padding: 2 }}>
+            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+              <Description sx={{ mr: 1 }} />Description
             </Typography>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography
                 gutterBottom
                 component="div"
-                dangerouslySetInnerHTML={{ __html: description }}
+                dangerouslySetInnerHTML={{ __html: description || "Aucune description pour l'instant" }}
               />
             </Paper>
           </Paper>
@@ -121,8 +128,8 @@ const JobPostingDetailsPage = ({ jobPosting }) => {
         {/* Observation */}
         <Grid item xs={12}>
           <Paper sx={{ padding: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Observation
+            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+              <Note sx={{ mr: 1 }} />Observation
             </Typography>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography variant="body1">
@@ -160,11 +167,11 @@ function JobPostingMiniInfos({ jobPosting }) {
           <Grid item xs container direction="column" spacing={2}>
             <Grid item>
               <Typography variant="subtitle1" component="div">
-                <b>Réference:</b> {jobPosting?.number}
+                <b>Référence:</b> {jobPosting?.number}
               </Typography>
               {jobPosting?.jobPosition && (
                 <>
-                  <Paper sx={{ padding: 2 }} variant="outlined">
+                  <Paper sx={{ padding: 2, marginTop: 2 }} variant="outlined">
                     <Typography variant="h6" gutterBottom>
                       Fiche besoin postulée
                     </Typography>
@@ -173,12 +180,18 @@ function JobPostingMiniInfos({ jobPosting }) {
                 </>
               )}
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                <b>Crée le: </b>{' '}
-                {`${getFormatDateTime(jobPosting?.createdAt)}`} <br />
-                <b>Dernière modification: </b>
-                {`${getFormatDateTime(jobPosting?.updatedAt)}`}
-              </Typography>
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                <Event fontSize="small" />
+                <Typography variant="body2" color="text.secondary">
+                  <b>Publiée le:</b> {getFormatDate(jobPosting?.publicationDate) || "Non définie"}
+                </Typography>
+              </Stack>
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                <Event fontSize="small" />
+                <Typography variant="body2" color="text.secondary">
+                  <b>Expire le:</b> {getFormatDate(jobPosting?.expirationDate) || "Non définie"}
+                </Typography>
+              </Stack>
             </Grid>
           </Grid>
         </Grid>
@@ -210,26 +223,22 @@ function JobPostingOtherInfos({ jobPosting }) {
         </Paper>
       )}
 
-      <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-
-      <Typography variant="body2" color="text.secondary">
-        <b>Publiée le: </b> {`${getFormatDate(publicationDate)}`} <br />
-        <b>Expire le: </b> {`${getFormatDate(expirationDate)}`}
-      </Typography>
-
       {jobPlatforms?.length > 0 && (
-        <>
-          <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-          <Typography variant="h6">Publié sur :</Typography>
+        <Paper sx={{ padding: 2, marginTop: 2 }} variant="outlined">
+          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+            <LinkIcon sx={{ mr: 1 }} />Plateformes de diffusion
+          </Typography>
           {jobPlatforms.map((jobPlatform, index) => (
-            <Typography key={index} variant="body2" sx={{ mt: 1 }}>
-              <b>{jobPlatform?.jobPlatform?.name}</b> :{' '}
+            <Box key={index} sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+              <Typography variant="body1" sx={{ fontWeight: 'bold', mr: 1 }}>
+                {jobPlatform?.jobPlatform?.name}:
+              </Typography>
               <a href={jobPlatform.postLink} target="_blank" rel="noopener noreferrer">
                 {jobPlatform.postLink}
               </a>
-            </Typography>
+            </Box>
           ))}
-        </>
+        </Paper>
       )}
     </Paper>
   );

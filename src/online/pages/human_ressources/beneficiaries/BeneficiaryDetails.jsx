@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
-import { Box, Button, Divider, List, Paper, Stack, alpha } from '@mui/material';
+import { Box, Button, Divider, List as ListComponent, Paper, Stack, alpha } from '@mui/material';
 import { Grid, Typography, Avatar } from '@mui/material';
 // Assurez-vous d'importer dayjs si vous l'utilisez pour la gestion des dates
 
@@ -11,7 +11,7 @@ import {
   getFormatDateTime,
   getGenderLabel,
 } from '../../../../_shared/tools/functions';
-import { Edit } from '@mui/icons-material';
+import { Edit, ArrowBack, List as ListIcon } from '@mui/icons-material';
 import BeneficiaryTabs from './beneficiary-tabs/BeneficiaryTabs';
 import CustomFieldValuesDetails from '../../../../_shared/components/form-fields/costum-fields/CustomFieldValuesDetails';
 
@@ -29,25 +29,25 @@ export default function BeneficiaryDetails() {
 
   return (
     <Stack>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-        <Box sx={{ marginX: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/ressources-humaines/beneficiaires/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
+        <Box>
           <Link
-            to={`/online/ressources-humaines/beneficiaires/liste`}
+            to={`/online/ressources-humaines/beneficiaires/modifier/${beneficiaryData?.beneficiary?.id}`}
             className="no_style"
           >
-            <Button variant="text" startIcon={<List />} size="small">
-              Retour à la Liste
+            <Button variant="outlined" endIcon={<Edit />}>
+              Modifier
             </Button>
           </Link>
         </Box>
-        <Link
-          to={`/online/ressources-humaines/beneficiaires/modifier/${beneficiaryData?.beneficiary?.id}`}
-          className="no_style"
-        >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
-            Modifier
-          </Button>
-        </Link>
       </Box>
       {beneficiaryData?.beneficiary && (
         <BeneficiaryDetailsPage beneficiary={beneficiaryData?.beneficiary} />

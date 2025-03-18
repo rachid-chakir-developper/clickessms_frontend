@@ -15,7 +15,7 @@ import {
 
 import { GET_POST_RECAP } from '../../../../_shared/graphql/queries/PostQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import { Edit, FileCopy } from '@mui/icons-material';
+import { Edit, FileCopy, ArrowBack } from '@mui/icons-material';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 import FileCard from '../../../_shared/components/library/FileCard';
 
@@ -58,16 +58,26 @@ export default function PostDetails() {
   return (
     <>
       <Box sx={{ width: '100%' }}>
-        {canManageSceModules && <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
           <Link
-            to={`/online/cse/articles/modifier/${postData?.post?.id}`}
+            to="/online/cse/articles/liste"
             className="no_style"
           >
-            <Button variant="outlined" endIcon={<Edit />}>
-              Modifier
+            <Button variant="outlined" startIcon={<ArrowBack />}>
+              Retour à la liste
             </Button>
           </Link>
-        </Box>}
+          {canManageSceModules && (
+            <Link
+              to={`/online/cse/articles/modifier/${postData?.post?.id}`}
+              className="no_style"
+            >
+              <Button variant="outlined" endIcon={<Edit />}>
+                Modifier
+              </Button>
+            </Link>
+          )}
+        </Box>
         <Grid
             container
             spacing={{ xs: 2, md: 3 }}

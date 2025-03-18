@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
   Box,
@@ -9,6 +9,7 @@ import {
   ButtonBase,
   Typography,
   Divider,
+  Button,
 } from '@mui/material';
 
 import { BANK_ACCOUNT_RECAP } from '../../../../../_shared/graphql/queries/BankAccountQueries';
@@ -19,6 +20,7 @@ import {
   getFormatDate,
 } from '../../../../../_shared/tools/functions';
 import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
+import { ArrowBack, Edit } from '@mui/icons-material';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -47,6 +49,21 @@ export default function BankAccountDetails() {
   if (loadingBankAccount) return <ProgressService type="form" />;
   return (
     <>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+        <Link
+          to="/online/finance/tresorerie/comptes-bancaires/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
+        <Link to={`/online/finance/tresorerie/comptes-bancaires/modifier/${bankAccountData?.bankAccount?.id}`} className="no_style">
+          <Button variant="outlined" endIcon={<Edit />}>
+            Modifier
+          </Button>
+        </Link>
+      </Box>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
