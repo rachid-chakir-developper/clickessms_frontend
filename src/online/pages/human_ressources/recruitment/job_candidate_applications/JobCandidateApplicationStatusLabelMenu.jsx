@@ -9,6 +9,7 @@ import { useSession } from '../../../../../_shared/context/SessionProvider';
 import { JOB_CANDIDATE_APPLICATION_STATUS } from '../../../../../_shared/tools/constants';
 import GenerateMeetingButton from './GenerateMeetingButton';
 import GenerateJobCandidateInformationSheetButton from './GenerateJobCandidateInformationSheetButton';
+import DialogSendMail from '../../../../_shared/components/the_mailer/DialogSendMail';
 
 
 export default function JobCandidateApplicationStatusLabelMenu({jobCandidateApplication}) {
@@ -41,7 +42,11 @@ export default function JobCandidateApplicationStatusLabelMenu({jobCandidateAppl
     const [updateJobCandidateApplicationFields, { loading: loadingPut }] = useMutation(PUT_JOB_CANDIDATE_APPLICATION_FIELDS, {
       onCompleted: (data) => {
         console.log(data);
-        // if(data.updateJobCandidateApplicationFields.success) setOpenDialog(true);
+        if(data.updateJobCandidateApplicationFields.success) {
+          const jobCandidateApplication = data?.updateJobCandidateApplicationFields?.jobCandidateApplication;
+          if(![JOB_CANDIDATE_APPLICATION_STATUS.INTERVIEW, JOB_CANDIDATE_APPLICATION_STATUS.ACCEPTED].includes(jobCandidateApplication?.status))
+             setOpenDialog(true);
+        }
       },
       update(cache, { data: { updateJobCandidateApplicationFields } }) {
         const updatedJobCandidateApplication = updateJobCandidateApplicationFields.jobCandidateApplication;
@@ -89,17 +94,9 @@ export default function JobCandidateApplicationStatusLabelMenu({jobCandidateAppl
         {jobCandidateApplication?.status===JOB_CANDIDATE_APPLICATION_STATUS.ACCEPTED && <GenerateJobCandidateInformationSheetButton buttonType="buttonIcon" jobCandidateApplication={jobCandidateApplication} />}
 
       </Box>
-
         {/* Modal pour demander le commentaire */}
-        <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth={true} maxWidth="md">
-          <DialogTitle>Ajouter un commentaire</DialogTitle>
-          <DialogContent>
-            
-          </DialogContent>
-          <DialogActions>
-              <Button color="inherit" onClick={handleCloseDialog}>Annuler</Button>
-          </DialogActions>
-        </Dialog>
+        <DialogSendMail open={openDialog} onClose={handleCloseDialog} jobCandidateApplication={jobCandidateApplication}
+         onSend={(values) => console.log("Email envoyé avec :", values)} />
     </Box>
   );
 }
