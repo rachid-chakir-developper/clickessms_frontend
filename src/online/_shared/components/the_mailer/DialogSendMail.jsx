@@ -47,7 +47,7 @@ const DialogSendMail = ({ open, onClose, onSend, jobCandidateApplication }) => {
 
     useEffect(()=>{
         if(open){
-            getDefaultSentEmail({ variables: { defaultSentEmailFilter : {jobCandidateApplication: jobCandidateApplication?.id} } });
+            getDefaultSentEmail({ variables: { defaultSentEmailFilter : {jobCandidateApplication: jobCandidateApplication?.id} }, fetchPolicy: 'network-only'});
         }
     }, [open])
     return (
@@ -55,7 +55,9 @@ const DialogSendMail = ({ open, onClose, onSend, jobCandidateApplication }) => {
         <DialogTitle>Envoyer un Email</DialogTitle>
         <DialogContent>
             <Box sx={{paddingTop: 2}}>
-                <EmailForm onChange={(values) => setFormValues(values)} defaultEmail={DefaultSentEmailData?.defaultSentEmail} loading={loadingDefaultSentEmail || loadingSend}/>
+                <EmailForm onChange={setFormValues} 
+                    defaultEmail={DefaultSentEmailData?.defaultSentEmail} 
+                    loading={loadingDefaultSentEmail || loadingSend}/>
             </Box>
         </DialogContent>
         <DialogActions>

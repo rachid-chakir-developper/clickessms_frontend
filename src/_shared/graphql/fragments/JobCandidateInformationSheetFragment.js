@@ -23,6 +23,7 @@ export const JOB_CANDIDATE_INFORMATION_SHEET_BASIC_INFOS = gql`
   fragment JobCandidateInformationSheetBasicInfosFragment on JobCandidateInformationSheetType {
     ...JobCandidateInformationSheetMiniInfosFragment
     description
+    comment
     employee{
       ...EmployeeMiniInfosFragment
     }

@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import TheTextField from '../../../../../_shared/components/form-fields/TheTextField';
 import { GET_EMPLOYEES } from '../../../../../_shared/graphql/queries/EmployeeQueries';
 import TheDateTimePicker from '../../../../../_shared/components/form-fields/TheDateTimePicker';
+import DialogSendMail from '../../../../_shared/components/the_mailer/DialogSendMail';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -63,6 +64,7 @@ function DialogGenerateMeeting({ open, onClose, onConfirm, jobCandidateApplicati
             startingDateTime: null,
             endingDateTime: null,
             description: '',
+            participants: []
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -82,7 +84,7 @@ function DialogGenerateMeeting({ open, onClose, onConfirm, jobCandidateApplicati
             });
             let { __typename, ...meetingCopy } = data.createMeeting.meeting;
             //   formik.setValues(meetingCopy);
-            navigate(`/online/ressources-humaines/recrutement/entretiens/modifier/${meetingCopy?.id}`)
+            onClose(meetingCopy)
         },
         update(cache, { data: { createMeeting } }) {
           const newMeeting = createMeeting.meeting;
@@ -142,6 +144,7 @@ const [getEmployees, {
                 startingDateTime: null,
                 endingDateTime: null,
                 description: '',
+                participants: []
             })
         }
     }, [open]);
@@ -214,7 +217,7 @@ const [getEmployees, {
                 <Grid item xs={12} sm={12} md={12} >
                     <Item>
                         <TheAutocomplete
-                            options={employeesData?.employees?.nodes}
+                            options={employeesData?.employees?.nodes || []}
                             onInput={(e) => {
                                 onGetEmployees(e.target.value)
                             }}
@@ -260,7 +263,7 @@ const [getEmployees, {
 }
 
 
-export default function GenerateMeetingButton({ jobCandidateApplication , buttonType="button", size="medium", label="Programmer un entretien" }) {
+export default function GenerateMeetingButton({ onGenerated, jobCandidateApplication , buttonType="button", size="medium", label="Programmer un entretien" }) {
     
     const [isDialogGenerateMeetingOpen, setDialogGenerateMeetingOpen] = React.useState(false);
 
@@ -272,6 +275,11 @@ export default function GenerateMeetingButton({ jobCandidateApplication , button
         console.log('value data:', value);
         setDialogGenerateMeetingOpen(false); // Fermer le dialogue après la confirmation
     };
+    const [openDialog, setOpenDialog] = React.useState(false);
+      const handleCloseDialog = () => {
+        setOpenDialog(false);
+      };
+    
     return (
         <>  
                 {buttonType==="button" && 
@@ -295,10 +303,17 @@ export default function GenerateMeetingButton({ jobCandidateApplication , button
                 }
             <DialogGenerateMeeting
                 open={isDialogGenerateMeetingOpen}
-                onClose={() => setDialogGenerateMeetingOpen(false)}
+                onClose={(meeting) => {
+                    setDialogGenerateMeetingOpen(false)
+                    if(meeting && meeting?.id) setOpenDialog(true);
+                    if(onGenerated && meeting && meeting?.id) onGenerated(meeting)
+                }}
                 onConfirm={handleDialogGenerateMeetingConfirm}
                 jobCandidateApplication={jobCandidateApplication}
             />
+            {/* Modal pour demander le commentaire */}
+            <DialogSendMail open={openDialog} onClose={handleCloseDialog} jobCandidateApplication={jobCandidateApplication}
+                onSend={(values) => console.log("Email envoyé avec :", values)} />
         </>
     );
 }

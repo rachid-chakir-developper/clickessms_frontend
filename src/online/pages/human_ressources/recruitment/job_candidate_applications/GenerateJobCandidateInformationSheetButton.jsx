@@ -15,11 +15,9 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { Add, AssignmentInd, ReceiptLong, Refresh } from '@mui/icons-material';
 import { POST_JOB_CANDIDATE_INFORMATION_SHEET } from '../../../../../_shared/graphql/mutations/JobCandidateInformationSheetMutations';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
-import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
 import { useNavigate } from 'react-router-dom';
 import TheTextField from '../../../../../_shared/components/form-fields/TheTextField';
-import { GET_EMPLOYEES } from '../../../../../_shared/graphql/queries/EmployeeQueries';
-import TheDateTimePicker from '../../../../../_shared/components/form-fields/TheDateTimePicker';
+import DialogSendMail from '../../../../_shared/components/the_mailer/DialogSendMail';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -55,7 +53,7 @@ function DialogGenerateJobCandidateInformationSheet({ open, onClose, onConfirm, 
         initialValues: {
             jobPosition: jobPosition?.id,
             jobCandidate: jobCandidate?.id,
-            message: '',
+            comment: '',
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -74,7 +72,7 @@ function DialogGenerateJobCandidateInformationSheet({ open, onClose, onConfirm, 
             });
             let { __typename, ...jobCandidateInformationSheetCopy } = data.createJobCandidateInformationSheet.jobCandidateInformationSheet;
             //   formik.setValues(jobCandidateInformationSheetCopy);
-            navigate(`/online/ressources-humaines/recrutement/fiches-renseignement/modifier/${jobCandidateInformationSheetCopy?.id}`)
+            onClose(jobCandidateInformationSheetCopy)
         },
         update(cache, { data: { createJobCandidateInformationSheet } }) {
             const newJobCandidateInformationSheet = createJobCandidateInformationSheet.jobCandidateInformationSheet;
@@ -135,7 +133,7 @@ function DialogGenerateJobCandidateInformationSheet({ open, onClose, onConfirm, 
             formik.setValues({
                 jobPosition: jobPosition?.id,
                 jobCandidate: jobCandidate?.id,
-                message: '',
+                comment: '',
             })
         }
     }, [open]);
@@ -148,7 +146,7 @@ function DialogGenerateJobCandidateInformationSheet({ open, onClose, onConfirm, 
             </DialogTitle>
             {/* Sous-titre ajouté ici */}
             <Typography variant="subtitle2" sx={{ px: 2, color: (theme) => theme.palette.text.secondary  }}>
-                Un email sera envoyé au candidat avec un lien sécurisé pour compléter sa fiche de renseignement.
+                Le candidat verra votre commentaire sur le formulaire de saisie de ses informations et de ses documents.
             </Typography>
             <IconButton
                 aria-label="close"
@@ -169,12 +167,12 @@ function DialogGenerateJobCandidateInformationSheet({ open, onClose, onConfirm, 
                             <Item>
                                 <TheTextField
                                     variant="outlined"
-                                    label="Message (facultatif)"
+                                    label="Commentaire (facultatif)"
                                     multiline
                                     rows={8}
-                                    value={formik.values.message}
+                                    value={formik.values.comment}
                                     onChange={(e) =>
-                                    formik.setFieldValue('message', e.target.value)
+                                    formik.setFieldValue('comment', e.target.value)
                                     }
                                     disabled={loadingPost}
                                 />
@@ -193,7 +191,7 @@ function DialogGenerateJobCandidateInformationSheet({ open, onClose, onConfirm, 
 }
 
 
-export default function GenerateJobCandidateInformationSheetButton({ jobCandidateApplication , buttonType="button", size="medium", label="Générer la fiche de renseignement" }) {
+export default function GenerateJobCandidateInformationSheetButton({ onGenerated, jobCandidateApplication , buttonType="button", size="medium", label="Générer la fiche de renseignement" }) {
     
     const [isDialogGenerateJobCandidateInformationSheetOpen, setDialogGenerateJobCandidateInformationSheetOpen] = React.useState(false);
 
@@ -205,6 +203,11 @@ export default function GenerateJobCandidateInformationSheetButton({ jobCandidat
         console.log('value data:', value);
         setDialogGenerateJobCandidateInformationSheetOpen(false); // Fermer le dialogue après la confirmation
     };
+    const [openDialog, setOpenDialog] = React.useState(false);
+      const handleCloseDialog = () => {
+        setOpenDialog(false);
+      };
+    
     return (
         <>  
                 {buttonType==="button" && 
@@ -228,10 +231,18 @@ export default function GenerateJobCandidateInformationSheetButton({ jobCandidat
                 }
             <DialogGenerateJobCandidateInformationSheet
                 open={isDialogGenerateJobCandidateInformationSheetOpen}
-                onClose={() => setDialogGenerateJobCandidateInformationSheetOpen(false)}
+                onClose={(jobCandidateInformationSheet) => {
+                    setDialogGenerateJobCandidateInformationSheetOpen(false)
+                    if(jobCandidateInformationSheet && jobCandidateInformationSheet?.id) setOpenDialog(true);
+                    if(onGenerated && jobCandidateInformationSheet && jobCandidateInformationSheet?.id) onGenerated(jobCandidateInformationSheet)
+                }}
                 onConfirm={handleDialogGenerateJobCandidateInformationSheetConfirm}
                 jobCandidateApplication={jobCandidateApplication}
             />
+            
+            {/* Modal pour demander le commentaire */}
+            <DialogSendMail open={openDialog} onClose={handleCloseDialog} jobCandidateApplication={jobCandidateApplication}
+                onSend={(values) => console.log("Email envoyé avec :", values)} />
         </>
     );
 }

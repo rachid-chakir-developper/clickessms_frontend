@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { Cancel, CheckCircle, Done, Euro, EventAvailable, HourglassTop, Star } from '@mui/icons-material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { Cancel, CheckCircle, Done, Email, Euro, EventAvailable, HourglassTop, Star } from '@mui/icons-material';
 import { useMutation } from '@apollo/client';
 import CustomizedStatusLabelMenu from '../../../../../_shared/components/app/menu/CustomizedStatusLabelMenu';
 import { useAuthorizationSystem } from '../../../../../_shared/context/AuthorizationSystemProvider';
@@ -44,7 +44,7 @@ export default function JobCandidateApplicationStatusLabelMenu({jobCandidateAppl
         console.log(data);
         if(data.updateJobCandidateApplicationFields.success) {
           const jobCandidateApplication = data?.updateJobCandidateApplicationFields?.jobCandidateApplication;
-          if(![JOB_CANDIDATE_APPLICATION_STATUS.INTERVIEW, JOB_CANDIDATE_APPLICATION_STATUS.ACCEPTED].includes(jobCandidateApplication?.status))
+          if(![JOB_CANDIDATE_APPLICATION_STATUS.PENDING, JOB_CANDIDATE_APPLICATION_STATUS.INTERVIEW, JOB_CANDIDATE_APPLICATION_STATUS.ACCEPTED].includes(jobCandidateApplication?.status))
              setOpenDialog(true);
         }
       },
@@ -90,6 +90,9 @@ export default function JobCandidateApplicationStatusLabelMenu({jobCandidateAppl
             onChange={(status)=> {updateJobCandidateApplicationFields({ variables: {id: jobCandidateApplication?.id, jobCandidateApplicationData: {status}} })}}
             disabled={!canManageHumanRessources && !canChangeStatus()}
         />
+        {/* {<IconButton size="small" onClick={()=>setOpenDialog(true)}>
+          <Email size="small" />
+        </IconButton>} */}
         {jobCandidateApplication?.status===JOB_CANDIDATE_APPLICATION_STATUS.INTERVIEW && <GenerateMeetingButton buttonType="buttonIcon" jobCandidateApplication={jobCandidateApplication} />}
         {jobCandidateApplication?.status===JOB_CANDIDATE_APPLICATION_STATUS.ACCEPTED && <GenerateJobCandidateInformationSheetButton buttonType="buttonIcon" jobCandidateApplication={jobCandidateApplication} />}
 

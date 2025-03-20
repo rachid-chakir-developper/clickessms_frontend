@@ -48,11 +48,11 @@ export default function TheAutocomplete({
       noOptionsText="Pas de résultat"
       id={id}
       limitTags={limitTags}
-      options={options}
+      options={options || []}
       disableCloseOnSelect={multiple}
       getOptionLabel={getLabel}
       filterSelectedOptions
-      isOptionEqualToValue={(option, value) => option.id === value.id}
+      isOptionEqualToValue={(option, value) => option?.id === value?.id}
       value={value}
       onInputChange={onInputChange}
       onChange={onChange}
