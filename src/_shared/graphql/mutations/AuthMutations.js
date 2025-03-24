@@ -32,3 +32,22 @@ export const LOGOUT_USER = gql`
     }
   }
 `;
+
+export const PUT_MY_FIRST_PASSWORD = gql`
+  mutation firstPasswordChange(
+    $oldPassword: String!
+    $newPassword1: String!
+    $newPassword2: String!
+  ) {
+    firstPasswordChange(
+      oldPassword: $oldPassword
+      newPassword1: $newPassword1
+      newPassword2: $newPassword2
+    ) {
+      success
+      errors
+      token
+      refreshToken
+    }
+  }
+`;

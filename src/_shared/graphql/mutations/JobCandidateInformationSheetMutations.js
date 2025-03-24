@@ -20,11 +20,13 @@ export const POST_JOB_CANDIDATE_INFORMATION_SHEET = gql`
 
 export const PUT_JOB_CANDIDATE_INFORMATION_SHEET = gql`
   mutation UpdateJobCandidateInformationSheet(
-    $id: ID!
+    $id: ID
+    $accessToken: String
     $jobCandidateInformationSheetData: JobCandidateInformationSheetInput!
   ) {
     updateJobCandidateInformationSheet(
       id: $id
+      accessToken: $accessToken
       jobCandidateInformationSheetData: $jobCandidateInformationSheetData
     ) {
       jobCandidateInformationSheet {
@@ -36,8 +38,8 @@ export const PUT_JOB_CANDIDATE_INFORMATION_SHEET = gql`
 `;
 
 export const PUT_JOB_CANDIDATE_INFORMATION_SHEET_FIELDS = gql`
-  mutation UpdateJobCandidateInformationSheetFields($id: ID!, $jobCandidateInformationSheetData: JobCandidateInformationSheetFieldInput!) {
-    updateJobCandidateInformationSheetFields(id: $id, jobCandidateInformationSheetData: $jobCandidateInformationSheetData) {
+  mutation UpdateJobCandidateInformationSheetFields($id: ID, $accessToken: String, $jobCandidateInformationSheetData: JobCandidateInformationSheetFieldInput!) {
+    updateJobCandidateInformationSheetFields(id: $id, accessToken: $accessToken, jobCandidateInformationSheetData: $jobCandidateInformationSheetData) {
       done
       success
       message

@@ -162,7 +162,7 @@ export default function ListMessageNotifications() {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
-          <Link to="/online/cse/message-notifications/ajouter" className="no_style">
+          <Link to="/online/cse/notifications-messages/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
               Ajouter une annonce
             </Button>

@@ -73,6 +73,9 @@ export const TASK_BASIC_INFOS = gql`
     priority
     workLevel
     status
+    employee {
+      ...EmployeeBasicInfosFragment
+    }
     establishments {
       ...TaskEstablishmentTypeFragment
     }
@@ -85,6 +88,7 @@ export const TASK_BASIC_INFOS = gql`
   }
   ${TASK_MINI_BASIC_INFOS}
   ${FOLDER_MINI_INFOS}
+  ${EMPLOYEE_BASIC_INFOS}
   ${TASK_ESTABLISHMENT_DETAILS}
   ${TASK_WORKER_DETAILS}
 `;

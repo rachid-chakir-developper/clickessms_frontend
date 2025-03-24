@@ -107,6 +107,18 @@ const headCells = [
       label: 'Titre',
     },
     {
+        id: 'employee',
+        property: 'employee__first_name',
+        exportField: ['employee__first_name', 'employee__last_name'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Ajouté par',
+        render: ({employee}) => employee && <EmployeeChip employee={employee} />
+    },
+    {
         id: 'establishments',
         property: 'establishments__establishment__name',
         exportField: ['establishments__establishment__name'],

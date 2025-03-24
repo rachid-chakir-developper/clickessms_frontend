@@ -14,6 +14,8 @@ import {
   AccordionDetails,
   Chip,
   Button,
+  Stack,
+  List,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -35,8 +37,9 @@ import TaskMaterialsList from '../../../_shared/components/utils/TaskMaterialsLi
 import SignatureCard from '../../../_shared/components/feedBacks/SignatureCard';
 import { Edit, Star, StarBorder } from '@mui/icons-material';
 import TaskStatusLabelMenu from './TaskStatusLabelMenu';
-import EstablishmentItemCard from '../../companies/establishments/EstablishmentItemCard';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import TaskTabs from './tasks-tabs/TaskTabs';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -60,6 +63,16 @@ export default function TaskDetails() {
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1}}>
+        <Box sx={{marginX: 2}}>
+          <Link
+            to={`/online/travaux/interventions/liste`}
+            className="no_style"
+          >
+            <Button variant="text" startIcon={<List />}  size="small">
+              Retour à la Liste
+            </Button>
+          </Link>
+        </Box>
         <Link
           to={`/online/travaux/interventions/modifier/${taskData?.task.id}`}
           className="no_style"
@@ -212,20 +225,26 @@ function TaskOtherInfos({ task }) {
                   </Typography>
                 </Paper>
               </Box>
+              {task?.employee && (
+                <>
+                  <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
+                    <Typography variant="h6" gutterBottom>
+                      Ajouté par
+                    </Typography>
+                    <EmployeeChip employee={task?.employee} />
+                  </Paper>
+                </>
+              )}<></>
               {task?.establishments.length > 0 && (
                   <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
                     <Typography variant="h6" gutterBottom>
                       Les structures concernées
                     </Typography>
-                      <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-                        {task?.establishments?.map((establishment, index) => (
-                          <Grid item xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
-                            <Item>
-                              <EstablishmentItemCard establishment={establishment.establishment} />
-                            </Item>
-                          </Grid>
-                        ))}
-                      </Grid>
+                    <Stack direction="row" flexWrap='wrap' spacing={1}>
+                      {task?.establishments?.map((establishment, index) => (
+                          <EstablishmentChip establishment={establishment.establishment} key={index}/>
+                      ))}
+                    </Stack>
                   </Paper>
               )}
               <Box sx={{ marginY: 2 }}>

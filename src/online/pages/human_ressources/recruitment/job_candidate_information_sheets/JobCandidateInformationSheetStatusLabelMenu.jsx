@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { Cancel, CheckCircle, Done, Euro, EventAvailable, HourglassTop, Star } from '@mui/icons-material';
+import { Cancel, CheckCircle, Done, Euro, EventAvailable, HourglassTop, Send, Star } from '@mui/icons-material';
 import { useMutation } from '@apollo/client';
 import CustomizedStatusLabelMenu from '../../../../../_shared/components/app/menu/CustomizedStatusLabelMenu';
 import { useAuthorizationSystem } from '../../../../../_shared/context/AuthorizationSystemProvider';
@@ -24,12 +24,14 @@ export default function JobCandidateInformationSheetStatusLabelMenu({jobCandidat
   }
   const ALL_JOB_CANDIDATE_INFORMATION_SHEETE_STATUS = [
     { value: 'PENDING', label: 'En attente', icon: <HourglassTop />, color: 'default' },
+    { value: 'SENT', label: 'Envoyé', icon: <Send />, color: 'info' },
     { value: 'REJECTED', label: 'Rejeté', icon: <Cancel />, color: 'warning' },
     { value: 'ACCEPTED', label: 'Accepté', icon: <CheckCircle />, color: 'success' },  // Nouveau statut
   ];
   
   const JOB_CANDIDATE_INFORMATION_SHEETE_STATUS = [
     { value: 'PENDING', label: 'En attente', icon: <HourglassTop />, color: 'default' },
+    { value: 'SENT', label: 'Envoyé', icon: <Send />, color: 'info' },
     { value: 'REJECTED', label: 'Rejeté', icon: <Cancel />, color: 'warning' },
     { value: 'ACCEPTED', label: 'Accepté', icon: <CheckCircle />, color: 'success' },  // Nouveau statut
   ];

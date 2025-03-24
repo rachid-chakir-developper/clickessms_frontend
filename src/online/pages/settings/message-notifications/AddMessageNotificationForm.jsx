@@ -21,6 +21,7 @@ import ProgressService from '../../../../_shared/services/feedbacks/ProgressServ
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import { MSG_NOTIF_TYPES } from '../../../../_shared/tools/constants';
+import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -40,6 +41,7 @@ export default function AddMessageNotificationForm({ idMessageNotification, titl
       title: '',
       messageNotificationType: MSG_NOTIF_TYPES.SYSTEM,
       message: '',
+      isActive: true,
       establishments: []
     },
     validationSchema: validationSchema,
@@ -246,6 +248,18 @@ export default function AddMessageNotificationForm({ idMessageNotification, titl
                   imageValue={formik.values.image}
                   onChange={(imageFile) =>
                     formik.setFieldValue('image', imageFile)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="Activé"
+                  checked={formik.values.isActive}
+                  value={formik.values.isActive}
+                  onChange={(e) =>
+                    formik.setFieldValue('isActive', e.target.checked)
                   }
                   disabled={loadingPost || loadingPut}
                 />

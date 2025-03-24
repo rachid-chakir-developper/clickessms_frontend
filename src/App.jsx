@@ -18,6 +18,7 @@ import { FeedBacksProvider } from './_shared/context/feedbacks/FeedBacksProvider
 import { SessionProvider } from './_shared/context/SessionProvider';
 import AuthGuardRoute from './_shared/guards/AuthGuardRoute';
 import { Box } from '@mui/material';
+import Auth from './online/pages/auth/Auth';
 
 // Configurer Day.js pour utiliser le local français
 // dayjs.locale('fr');
@@ -60,6 +61,14 @@ function App() {
                       element={
                         <AuthGuardRoute authenticated>
                           <Online />
+                        </AuthGuardRoute>
+                      }
+                    />
+                    <Route
+                      path="/connexion/*"
+                      element={
+                        <AuthGuardRoute mustChangePassword>
+                          <Auth />
                         </AuthGuardRoute>
                       }
                     />

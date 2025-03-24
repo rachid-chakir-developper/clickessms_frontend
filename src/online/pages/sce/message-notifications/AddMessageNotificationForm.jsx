@@ -21,6 +21,7 @@ import ProgressService from '../../../../_shared/services/feedbacks/ProgressServ
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import { MSG_NOTIF_TYPES } from '../../../../_shared/tools/constants';
+import TheSwitch from '../../../../_shared/components/form-fields/theSwitch';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -40,6 +41,7 @@ export default function AddMessageNotificationForm({ idMessageNotification, titl
       title: '',
       messageNotificationType: MSG_NOTIF_TYPES.SCE,
       message: '',
+      isActive: true,
       establishments: []
     },
     validationSchema: validationSchema,
@@ -74,7 +76,7 @@ export default function AddMessageNotificationForm({ idMessageNotification, titl
       });
       let { __typename, ...messageNotificationCopy } = data.createMessageNotification.messageNotification;
       //   formik.setValues(messageNotificationCopy);
-      navigate('/online/cse/message-notifications/liste');
+      navigate('/online/cse/notifications-messages/liste');
     },
     update(cache, { data: { createMessageNotification } }) {
       const newMessageNotification = createMessageNotification.messageNotification;
@@ -109,7 +111,7 @@ export default function AddMessageNotificationForm({ idMessageNotification, titl
       });
       let { __typename, ...messageNotificationCopy } = data.updateMessageNotification.messageNotification;
       //   formik.setValues(messageNotificationCopy);
-      navigate('/online/cse/message-notifications/liste');
+      navigate('/online/cse/notifications-messages/liste');
     },
     update(cache, { data: { updateMessageNotification } }) {
       const updatedMessageNotification = updateMessageNotification.messageNotification;
@@ -232,6 +234,18 @@ export default function AddMessageNotificationForm({ idMessageNotification, titl
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
+              <Item>
+                <TheSwitch
+                  variant="outlined"
+                  label="Activé"
+                  checked={formik.values.isActive}
+                  value={formik.values.isActive}
+                  onChange={(e) =>
+                    formik.setFieldValue('isActive', e.target.checked)
+                  }
+                  disabled={loadingPost || loadingPut}
+                />
+              </Item>
             </Grid>
             <Grid item xs={12} sm={8} md={8}>
               <Item>
@@ -250,7 +264,7 @@ export default function AddMessageNotificationForm({ idMessageNotification, titl
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
-                <Link to="/online/cse/message-notifications/liste" className="no_style">
+                <Link to="/online/cse/notifications-messages/liste" className="no_style">
                   <Button variant="outlined" sx={{ marginRight: '10px' }}>
                     Annuler
                   </Button>

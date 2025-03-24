@@ -363,13 +363,6 @@ export default function TableListLetters({
     setSelected(newSelected);
   };
 
-  const handleRowClick = (event, id) => {
-    if (event.target.closest('input[type="checkbox"]') || event.target.closest('button')) {
-      return;
-    }
-    navigate(`/online/administratif/courriers/details/${id}`);
-  };
-
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows?.
@@ -459,7 +452,6 @@ export default function TableListLetters({
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
-                    onClick={(event) => handleRowClick(event, row.id)}
                   >
                     <StyledTableCell padding="checkbox">
                       <Checkbox

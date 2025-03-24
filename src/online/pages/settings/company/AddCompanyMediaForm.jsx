@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import { Stack, Box, Typography, Button, Divider } from '@mui/material';
+import { Stack, Box, Typography, Button, Divider, Paper } from '@mui/material';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -33,10 +33,15 @@ export default function AddCompanyMediaForm({ idCompanyMedia = null, title = '' 
   const formik = useFormik({
     initialValues: {
       collectiveAgreement: undefined,
+      collectiveAgreementUrl: undefined,
       companyAgreement: undefined,
+      companyAgreementUrl: undefined,
       laborLaw: undefined,
+      laborLawUrl: '',
       associationsFoundationsCode: undefined,
+      associationsFoundationsCodeUrl: '',
       safcCode: undefined,
+      safcCodeUrl: '',
       sceShopUrl: '',
       blogUrl: '',
     },
@@ -126,6 +131,7 @@ export default function AddCompanyMediaForm({ idCompanyMedia = null, title = '' 
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
             <Grid item xs={2} sm={4} md={4}>
+            <Paper variant="outlined">
               <Item>
                 <TheFileField
                   variant="outlined"
@@ -137,8 +143,19 @@ export default function AddCompanyMediaForm({ idCompanyMedia = null, title = '' 
                   disabled={loadingPut}
                 />
               </Item>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Lien Convention collective"
+                  value={formik.values.collectiveAgreementUrl}
+                  onChange={(e) => formik.setFieldValue('collectiveAgreementUrl', e.target.value)}
+                  disabled={loadingPut}
+                />
+              </Item>
+              </Paper>
             </Grid>
             <Grid item xs={2} sm={4} md={4}>
+            <Paper variant="outlined">
               <Item>
                 <TheFileField
                   variant="outlined"
@@ -150,21 +167,43 @@ export default function AddCompanyMediaForm({ idCompanyMedia = null, title = '' 
                   disabled={loadingPut}
                 />
               </Item>
-            </Grid>
-            <Grid item xs={2} sm={4} md={4}>
               <Item>
-                <TheFileField
+                <TheTextField
                   variant="outlined"
-                  label="Droit du travail"
-                  fileValue={formik.values.laborLaw}
-                  onChange={(file) =>
-                    formik.setFieldValue('laborLaw', file)
-                  }
+                  label="Lien accord d’entreprise"
+                  value={formik.values.companyAgreementUrl}
+                  onChange={(e) => formik.setFieldValue('companyAgreementUrl', e.target.value)}
                   disabled={loadingPut}
                 />
               </Item>
+              </Paper>
             </Grid>
             <Grid item xs={2} sm={4} md={4}>
+              <Paper variant="outlined">
+                <Item>
+                  <TheFileField
+                    variant="outlined"
+                    label="Droit du travail"
+                    fileValue={formik.values.laborLaw}
+                    onChange={(file) =>
+                      formik.setFieldValue('laborLaw', file)
+                    }
+                    disabled={loadingPut}
+                  />
+                </Item>
+                <Item>
+                  <TheTextField
+                    variant="outlined"
+                    label="Lien Droit du travail"
+                    value={formik.values.laborLawUrl}
+                    onChange={(e) => formik.setFieldValue('laborLawUrl', e.target.value)}
+                    disabled={loadingPut}
+                  />
+                </Item>
+              </Paper>
+            </Grid>
+            <Grid item xs={2} sm={4} md={4}>
+            <Paper variant="outlined">
               <Item>
                 <TheFileField
                   variant="outlined"
@@ -176,8 +215,19 @@ export default function AddCompanyMediaForm({ idCompanyMedia = null, title = '' 
                   disabled={loadingPut}
                 />
               </Item>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Lien Code des associations et fondations"
+                  value={formik.values.associationsFoundationsCodeUrl}
+                  onChange={(e) => formik.setFieldValue('associationsFoundationsCodeUrl', e.target.value)}
+                  disabled={loadingPut}
+                />
+              </Item>
+              </Paper>
             </Grid>
             <Grid item xs={2} sm={4} md={4}>
+            <Paper variant="outlined">
               <Item>
                 <TheFileField
                   variant="outlined"
@@ -190,8 +240,19 @@ export default function AddCompanyMediaForm({ idCompanyMedia = null, title = '' 
                   disabled={loadingPut}
                 />
               </Item>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Lien CASF"
+                  value={formik.values.safcCodeUrl}
+                  onChange={(e) => formik.setFieldValue('safcCodeUrl', e.target.value)}
+                  disabled={loadingPut}
+                />
+              </Item>
+              </Paper>
             </Grid>
             <Grid item xs={2} sm={4} md={4}>
+            <Paper variant="outlined">
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -210,6 +271,7 @@ export default function AddCompanyMediaForm({ idCompanyMedia = null, title = '' 
                   disabled={loadingPut}
                 />
               </Item>
+            </Paper>
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>

@@ -13,6 +13,7 @@ import { GET_FRAME_DOCUMENTS } from '../../../../_shared/graphql/queries/FrameDo
 import FrameDocumentFilter from './FrameDocumentFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
 import TableListFrameDocuments from './TableListFrameDocuments';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -23,6 +24,10 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListFrameDocuments() {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageAdministrative = authorizationSystem.requestAuthorization({
+    type: 'manageAdministrative',
+  }).authorized;
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [frameDocumentFilter, setFrameDocumentFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
@@ -119,7 +124,7 @@ export default function ListFrameDocuments() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      {canManageAdministrative && <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
             to="/online/administratif/documents-trames/ajouter"
@@ -130,7 +135,7 @@ export default function ListFrameDocuments() {
             </Button>
           </Link>
         </Box>
-      </Grid>
+      </Grid>}
       <Grid item xs={12}>
         <FrameDocumentFilter onFilterChange={handleFilterChange} />
       </Grid>

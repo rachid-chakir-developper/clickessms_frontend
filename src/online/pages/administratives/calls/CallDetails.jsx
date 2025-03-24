@@ -10,6 +10,7 @@ import {
   Typography,
   Divider,
   Button,
+  Stack,
 } from '@mui/material';
 
 import { CALL_RECAP } from '../../../../_shared/graphql/queries/CallQueries';
@@ -17,6 +18,7 @@ import ProgressService from '../../../../_shared/services/feedbacks/ProgressServ
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
 import { ArrowBack, Edit, Business, PersonOutline, Phone, Event, Description, Note, Group, People, Info } from '@mui/icons-material';
+import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -256,15 +258,11 @@ function CallOtherInfos({ call }) {
           <Typography gutterBottom variant="subtitle1" component="div" sx={{ display: 'flex', alignItems: 'center' }}>
             <People sx={{ mr: 1, fontSize: 'small' }} />Personnes accompagnées
           </Typography>
-          <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
+          <Stack direction="row" flexWrap='wrap' spacing={1}>
             {call?.beneficiaries?.map((beneficiary, index) => (
-              <Grid item xs={12} sm={12} md={12} key={index}>
-                <Item>
-                  <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
-                </Item>
-              </Grid>
+              <BeneficiaryChip beneficiary={beneficiary?.beneficiary} key={index}/>
             ))}
-          </Grid>
+          </Stack>
         </>
       )}
     </Paper>

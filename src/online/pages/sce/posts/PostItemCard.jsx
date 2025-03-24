@@ -136,24 +136,6 @@ export default function PostItemCard({
               </MenuItem>
             </Tooltip>
           )}
-          {onUpdatePostState && (
-            <Tooltip title={!post?.isActive ? 'Activer' : 'Désactiver'}>
-              <MenuItem
-                aria-label={!post?.isActive ? 'play' : 'pause'}
-                onClick={() => {
-                  onUpdatePostState(post?.id);
-                  handleCloseMenu();
-                }}
-              >
-                {!post?.isActive ? (
-                  <PlayArrowRounded />
-                ) : (
-                  <PauseRounded />
-                )}
-                {!post?.isActive ? 'Activer' : 'Désactiver'}
-              </MenuItem>
-            </Tooltip>
-          )}
           <Tooltip title="Modifier">
             <Link
               to={`/online/cse/articles/modifier/${post?.id}`}

@@ -12,7 +12,7 @@ export default function Sce() {
       <Routes>
         <Route path={`membres/*`} element={<SceMembers />} />
         <Route path={`reunions/*`} element={<Meetings />} />
-        <Route path={`message-notifications/*`} element={<MessageNotifications />} />
+        <Route path={`notifications-messages/*`} element={<MessageNotifications />} />
         <Route path={`avantages/*`} element={<SceBenefits />} />
         <Route path={`articles/*`} element={<Posts />} />
         <Route path="/" element={<Navigate to={`membres`} replace />} />

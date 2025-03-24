@@ -11,6 +11,10 @@ export const DOCUMENT_RECORD_MINI_INFOS = gql`
             id
             name
         }
+        jobCandidateDocumentType{
+            id
+            name
+        }
         startingDate
         endingDate
         description

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Paper } from '@mui/material';
+import { Box, Button, Grid, Paper, Stack } from '@mui/material';
 import AppPieChart from './charts/AppPieChart';
 import Tasks from './charts/Tasks';
 import AppChart from './charts/AppChart';
@@ -10,6 +10,9 @@ import ProgressService from '../../../_shared/services/feedbacks/ProgressService
 import LeaveDayInfos from './charts/LeaveDayInfos';
 import TaskActions from './charts/TaskActions';
 import UndesirableEvents from './charts/UndesirableEvents';
+import { Link } from 'react-router-dom';
+import { Add } from '@mui/icons-material';
+import { useAuthorizationSystem } from '../../../_shared/context/AuthorizationSystemProvider';
 
 const FirstItem = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -33,6 +36,13 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Dashboard(){
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageFinance = authorizationSystem.requestAuthorization({
+    type: 'manageFinance',
+  }).authorized;
+  const canManageFacility = authorizationSystem.requestAuthorization({
+    type: 'manageFacility',
+  }).authorized;
   const {
     loading: loadingDashboard,
     data: dashboardData,
@@ -61,9 +71,73 @@ export default function Dashboard(){
           </Grid> */}
           {/* Chart */}
           <Grid item xs={12} md={8} lg={8}>
-            <FirstItem>
+          <Stack
+                direction="row"
+                justifyContent="center"
+                flexWrap="wrap"
+                spacing={3} // Espacement global
+                rowGap={3}  // Espacement vertical entre les lignes
+                columnGap={3} // Espacement horizontal entre les colonnes
+              >
+              <Link
+                to="/online/qualites/evenements-indesirables/ajouter"
+                className="no_style"
+              >
+                <Button variant="outlined" endIcon={<Add />}>
+                  Ajouter un événement indésirable
+                </Button>
+              </Link>
+              <Link
+                to="/online/travaux/actions/ajouter"
+                className="no_style"
+              >
+                <Button variant="outlined" endIcon={<Add />}>
+                  Ajouter une action
+                </Button>
+              </Link>
+              {!canManageFinance && <Link
+                  to="/online/achats/depenses-engagements/ajouter?type=REQUEST"
+                  className="no_style"
+                >
+                  <Button variant="outlined" endIcon={<Add />}
+                  sx={{ mx: 3 }}>
+                    Demander une dépense
+                  </Button>
+                </Link>}
+                {
+                canManageFinance && <Link to="/online/achats/depenses-engagements/ajouter" className="no_style">
+                  <Button variant="outlined" endIcon={<Add />}>
+                    Ajouter une dépense
+                  </Button>
+                </Link>}
+                <Link
+                    to="/online/planning/absences-employes/ajouter?type=LEAVE"
+                    className="no_style"
+                  >
+                    <Button variant="outlined" endIcon={<Add />}
+                    sx={{ mx: 3 }}>
+                      Demander un congé
+                    </Button>
+                  </Link>
+                {!canManageFacility && <Link
+                  to="/online/travaux/interventions/ajouter?type=REQUEST"
+                  className="no_style"
+                >
+                  <Button variant="outlined" endIcon={<Add />}
+                  sx={{ mx: 3 }}>
+                    Demander une intervention
+                  </Button>
+                </Link>}
+                {
+                canManageFacility && <Link to="/online/travaux/interventions/ajouter" className="no_style">
+                  <Button variant="outlined" endIcon={<Add />}>
+                    Ajouter une intervention
+                  </Button>
+                </Link>}
+            </Stack>
+            {/* <FirstItem>
               <AppChart data={dashboardData?.dashboard?.undesirableEventsWeek} />
-            </FirstItem>
+            </FirstItem> */}
           </Grid>
           {<Grid item xs={12} md={4} lg={4}>
             <Item>

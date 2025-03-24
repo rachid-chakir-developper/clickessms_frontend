@@ -755,10 +755,12 @@ export const JOB_CANDIDATE_APPLICATION_STATUS = {
 
 export const JOB_CANDIDATE_INFORMATION_SHEET_STATUS = {
   PENDING: "PENDING",
+  SENT: "SENT",
   REJECTED: "REJECTED",
   ACCEPTED: "ACCEPTED",
   ALL: [
     { value: "PENDING", label: "En attente" },
+    { value: "SENT", label: "Envoyé"},
     { value: "REJECTED", label: "Rejeté"},
     { value: "ACCEPTED", label: "Accepté"},
   ],

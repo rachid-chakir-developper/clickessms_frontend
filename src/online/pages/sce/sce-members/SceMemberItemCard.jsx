@@ -127,23 +127,6 @@ export default function SceMemberItemCard({
                 </MenuItem>
               </Tooltip>
             )}
-            {onUpdateSceMemberState && (
-              <Tooltip
-                title={!sceMember?.employee?.isActive ? 'Activer' : 'Désactiver'}
-              >
-                <MenuItem
-                  aria-label={!sceMember?.employee?.isActive ? 'play' : 'pause'}
-                  onClick={() => {onUpdateSceMemberState(sceMember?.id); handleCloseMenu()}}
-                >
-                  {!sceMember?.employee?.isActive ? (
-                    <PlayArrowRounded />
-                  ) : (
-                    <PauseRounded />
-                  )}
-                  {!sceMember?.employee?.isActive ? 'Activer' : 'Désactiver'}
-                </MenuItem>
-              </Tooltip>
-            )}
             <Tooltip title="Modifier">
               <Link
                 to={`/online/cse/membres/modifier/${sceMember?.id}`}

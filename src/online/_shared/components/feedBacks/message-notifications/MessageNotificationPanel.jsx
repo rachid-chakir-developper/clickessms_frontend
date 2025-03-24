@@ -38,7 +38,7 @@ export default function MessageNotificationPanel() {
       variables: { page, limit: 6 },
       onCompleted: (data) => {
         // console.log(data);
-        const messageNotifications =  data?.messageNotifications?.nodes?.filter((messageNotification)=> !messageNotification?.isRead)
+        const messageNotifications =  data?.messageNotifications?.nodes?.filter((messageNotification)=> !messageNotification?.isRead &&  messageNotification.isActive)
         if(messageNotifications?.length > 0){
           onOpenMessageNotificationModal(messageNotifications)
         }

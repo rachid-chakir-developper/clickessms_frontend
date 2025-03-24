@@ -453,10 +453,7 @@ export default function TableListMessageNotifications({
                       </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <Chip
-                        label={row?.isActive ? 'Activé' : 'Désactivé'}
-                        variant="outlined"
-                      />
+                      {row?.isActive ? <AppLabel color="success">Actif</AppLabel> : <AppLabel color="error">Inctif</AppLabel>}
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton

@@ -6,10 +6,15 @@ export const COMPANY_MEDIA_INFOS = gql`
   fragment CompanyMediaBasicInfosFragment on CompanyMediaType {
     id
     collectiveAgreement
+    collectiveAgreementUrl
     companyAgreement
+    companyAgreementUrl
     laborLaw
+    laborLawUrl
     associationsFoundationsCode
+    associationsFoundationsCodeUrl
     safcCode
+    safcCodeUrl
     sceShopUrl
     blogUrl
   }

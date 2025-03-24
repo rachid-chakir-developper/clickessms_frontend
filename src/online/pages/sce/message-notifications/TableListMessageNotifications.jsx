@@ -404,7 +404,7 @@ export default function TableListMessageNotifications({
                       id={labelId}
                       scope="row"
                       padding="none"
-                      onClick={()=> navigate(`/online/cse/message-notifications/details/${row?.id}`)}
+                      onClick={()=> navigate(`/online/cse/notifications-messages/details/${row?.id}`)}
                     >
                       <Avatar
                         alt={row?.title}
@@ -418,15 +418,15 @@ export default function TableListMessageNotifications({
                       />
                     </StyledTableCell>
                     <StyledTableCell align="left"
-                      onClick={()=> navigate(`/online/cse/message-notifications/details/${row?.id}`)}>
+                      onClick={()=> navigate(`/online/cse/notifications-messages/details/${row?.id}`)}>
                       {row?.title}
                     </StyledTableCell>
                     <StyledTableCell align="left"
-                      onClick={()=> navigate(`/online/cse/message-notifications/details/${row?.id}`)}>
+                      onClick={()=> navigate(`/online/cse/notifications-messages/details/${row?.id}`)}>
                       {row?.message}
                     </StyledTableCell>
                     <StyledTableCell align="left"
-                      onClick={()=> navigate(`/online/cse/message-notifications/details/${row?.id}`)}>
+                      onClick={()=> navigate(`/online/cse/notifications-messages/details/${row?.id}`)}>
                       {getMessageNotificationTypeLabel(row?.messageNotificationType)}
                     </StyledTableCell>
                     <StyledTableCell align="left">
@@ -453,10 +453,7 @@ export default function TableListMessageNotifications({
                       </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <Chip
-                        label={row?.isActive ? 'Activé' : 'Désactivé'}
-                        variant="outlined"
-                      />
+                      {row?.isActive ? <AppLabel color="success">Actif</AppLabel> : <AppLabel color="error">Inctif</AppLabel>}
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <IconButton
@@ -476,7 +473,7 @@ export default function TableListMessageNotifications({
                         }}
                       >
                         <Link
-                          to={`/online/cse/message-notifications/details/${row?.id}`}
+                          to={`/online/cse/notifications-messages/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -485,7 +482,7 @@ export default function TableListMessageNotifications({
                           </MenuItem>
                         </Link>
                         <Link
-                          to={`/online/cse/message-notifications/modifier/${row?.id}`}
+                          to={`/online/cse/notifications-messages/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>

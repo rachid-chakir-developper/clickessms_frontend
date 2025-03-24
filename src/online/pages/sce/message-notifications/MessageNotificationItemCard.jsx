@@ -48,7 +48,7 @@ export default function MessageNotificationItemCard({
   };
   const onGoToDetails = () => {
     navigate(
-      `/online/cse/message-notifications/details/${messageNotification?.id}`,
+      `/online/cse/notifications-messages/details/${messageNotification?.id}`,
     );
   };
   return (
@@ -139,7 +139,7 @@ export default function MessageNotificationItemCard({
           )}
           <Tooltip title="Modifier">
             <Link
-              to={`/online/cse/message-notifications/modifier/${messageNotification?.id}`}
+              to={`/online/cse/notifications-messages/modifier/${messageNotification?.id}`}
               className="no_style"
             >
               <MenuItem onClick={handleCloseMenu}>
@@ -163,7 +163,7 @@ export default function MessageNotificationItemCard({
           )}
           <Tooltip title="Détails">
             <Link
-              to={`/online/cse/message-notifications/details/${messageNotification?.id}`}
+              to={`/online/cse/notifications-messages/details/${messageNotification?.id}`}
               className="no_style"
             >
               <MenuItem onClick={handleCloseMenu}>

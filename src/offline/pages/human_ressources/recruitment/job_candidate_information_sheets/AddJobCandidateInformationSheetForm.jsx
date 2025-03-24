@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import { Stack, Box, Typography, Button, Divider, Step, StepLabel, StepContent, Stepper } from '@mui/material';
+import { Stack, Box, Typography, Button, Divider, Step, StepLabel, StepContent, Stepper, Alert } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -16,12 +16,14 @@ import { GET_JOB_CANDIDATE_INFORMATION_SHEET } from '../../../../../_shared/grap
 import {
   POST_JOB_CANDIDATE_INFORMATION_SHEET,
   PUT_JOB_CANDIDATE_INFORMATION_SHEET,
+  PUT_JOB_CANDIDATE_INFORMATION_SHEET_FIELDS,
 } from '../../../../../_shared/graphql/mutations/JobCandidateInformationSheetMutations';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import { GET_JOB_POSITIONS } from '../../../../../_shared/graphql/queries/JobPositionQueries';
 import TheDesktopDatePicker from '../../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { GET_DATAS_JOB_CANDIDATE_INFORMATION_SHEET } from '../../../../../_shared/graphql/queries/DataQueries';
-import { NOTIFICATION_PERIOD_UNITS } from '../../../../../_shared/tools/constants';
+import { JOB_CANDIDATE_INFORMATION_SHEET_STATUS, NOTIFICATION_PERIOD_UNITS } from '../../../../../_shared/tools/constants';
+import { Close } from '@mui/icons-material';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -56,6 +58,9 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
       jobCandidateInformationSheetCopy.jobPosition = jobCandidateInformationSheetCopy.jobPosition
         ? jobCandidateInformationSheetCopy.jobPosition.id
         : null;
+      jobCandidateInformationSheetCopy.jobCandidate = jobCandidateInformationSheetCopy.jobCandidate
+        ? jobCandidateInformationSheetCopy.jobCandidate.id
+        : null;
       
       let items = [];
       jobCandidateInformationSheetCopy.documentRecords.forEach((item) => {
@@ -65,15 +70,11 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
       jobCandidateInformationSheetCopy.documentRecords = items;
       if (jobCandidateInformationSheetCopy?.id && jobCandidateInformationSheetCopy?.id != '') {
         onUpdateJobCandidateInformationSheet({
-          id: jobCandidateInformationSheetCopy.id,
+          accessToken: accessToken,
           jobCandidateInformationSheetData: jobCandidateInformationSheetCopy,
         });
       } else
-        createJobCandidateInformationSheet({
-          variables: {
-            jobCandidateInformationSheetData: jobCandidateInformationSheetCopy,
-          },
-        });
+        return
     },
   });
   
@@ -88,42 +89,6 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
       getJobPositions({ variables: { jobPositionFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
     }
 
-  const [createJobCandidateInformationSheet, { loading: loadingPost }] = useMutation(POST_JOB_CANDIDATE_INFORMATION_SHEET, {
-    onCompleted: (data) => {
-      console.log(data);
-      setNotifyAlert({
-        isOpen: true,
-        message: 'Ajouté avec succès',
-        type: 'success',
-      });
-      let { __typename, ...jobCandidateInformationSheetCopy } = data.createJobCandidateInformationSheet.jobCandidateInformationSheet;
-      //   formik.setValues(jobCandidateInformationSheetCopy);
-      formik.setFieldValue('id', jobCandidateInformationSheetCopy.id);
-      handleNext();
-    },
-    update(cache, { data: { createJobCandidateInformationSheet } }) {
-      const newJobCandidateInformationSheet = createJobCandidateInformationSheet.jobCandidateInformationSheet;
-
-      cache.modify({
-        fields: {
-          jobCandidateInformationSheets(existingJobCandidateInformationSheets = { totalCount: 0, nodes: [] }) {
-            return {
-              totalCount: existingJobCandidateInformationSheets.totalCount + 1,
-              nodes: [newJobCandidateInformationSheet, ...existingJobCandidateInformationSheets.nodes],
-            };
-          },
-        },
-      });
-    },
-    onError: (err) => {
-      console.log(err);
-      setNotifyAlert({
-        isOpen: true,
-        message: 'Non ajouté ! Veuillez réessayer.',
-        type: 'error',
-      });
-    },
-  });
   const [updateJobCandidateInformationSheet, { loading: loadingPut }] = useMutation(PUT_JOB_CANDIDATE_INFORMATION_SHEET, {
     onCompleted: (data) => {
       console.log(data);
@@ -181,40 +146,44 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
   };
 
 
-  const {
+  const [getDataData, {
     loading: loadingDatas,
     data: dataData,
     error: datsError,
     fetchMore: fetchMoreDatas,
-  } = useQuery(GET_DATAS_JOB_CANDIDATE_INFORMATION_SHEET, { fetchPolicy: 'network-only' });
+  }] = useLazyQuery(GET_DATAS_JOB_CANDIDATE_INFORMATION_SHEET, { fetchPolicy: 'network-only' });
 
 
   const addDocumentRecord = (jobCandidateDocumentType) => {
-    const exists = formik.values.documentRecords.some(
-      (record) => record.jobCandidateDocumentType === jobCandidateDocumentType?.id
+    const { documentRecords } = formik.values;
+    // Vérifie si le type de document existe déjà
+    const exists = documentRecords.some(
+      (record) => Number(record.jobCandidateDocumentType) === Number(jobCandidateDocumentType.id)
     );
   
-    if (!exists) {
-      formik.setValues({
-        ...formik.values,
-        documentRecords: [
-          ...formik.values.documentRecords,
-          { 
-            document: undefined, 
-            name: '', 
-            jobCandidateDocumentType: jobCandidateDocumentType.id, 
-            startingDate: null, 
-            endingDate: null, 
-            description: '', 
-            comment: '',
-            isNotificationEnabled: false,
-            notificationPeriodUnit: NOTIFICATION_PERIOD_UNITS.MONTH, 
-            notificationPeriodValue: 1
-          },
-        ],
-      });
-    }
+    if (exists) return; // Ne rien faire si déjà présent
+  
+    // Ajoute le nouveau document
+    formik.setValues({
+      ...formik.values,
+      documentRecords: [
+        ...documentRecords,
+        {
+          document: undefined,
+          name: '',
+          jobCandidateDocumentType: jobCandidateDocumentType.id,
+          startingDate: null,
+          endingDate: null,
+          description: '',
+          comment: '',
+          isNotificationEnabled: false,
+          notificationPeriodUnit: NOTIFICATION_PERIOD_UNITS.MONTH,
+          notificationPeriodValue: 1,
+        },
+      ],
+    });
   };
+  
   
   // Boucle sur les types de documents et ajoute-les si non existants
   dataData?.jobCandidateDocumentTypes?.forEach((data) => {
@@ -248,9 +217,45 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
       });
       jobCandidateInformationSheetCopy.documentRecords = items;
       formik.setValues(jobCandidateInformationSheetCopy);
+      getDataData()
     },
     onError: (err) => console.log(err),
   });
+
+  const [updateJobCandidateInformationSheetFields, { loading: loadingPost }] = useMutation(PUT_JOB_CANDIDATE_INFORMATION_SHEET_FIELDS, {
+        onCompleted: (data) => {
+          console.log(data);
+          if (data.updateJobCandidateInformationSheetFields.success) {
+            setTheStatus('SENT')
+            setTimeout(() => {
+              window.close();
+            }, 1000); // 1 seconde
+          }
+        },
+        update(cache, { data: { updateJobCandidateInformationSheetFields } }) {
+          const updatedJobCandidateInformationSheet = updateJobCandidateInformationSheetFields.jobCandidateInformationSheet;
+    
+          cache.modify({
+            fields: {
+              jobCandidateInformationSheets(
+                existingJobCandidateInformationSheets = { totalCount: 0, nodes: [] },
+                { readField },
+              ) {
+                const updatedJobCandidateInformationSheets = existingJobCandidateInformationSheets.nodes.map((jobCandidateInformationSheet) =>
+                  readField('id', jobCandidateInformationSheet) === updatedJobCandidateInformationSheet.id
+                    ? updatedJobCandidateInformationSheet
+                    : jobCandidateInformationSheet,
+                );
+    
+                return {
+                  totalCount: existingJobCandidateInformationSheets.totalCount,
+                  nodes: updatedJobCandidateInformationSheets,
+                };
+              },
+            },
+          });
+        },
+      });
 
   React.useEffect(() => {
     if (accessToken) {
@@ -266,10 +271,10 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
     const [activeStep, setActiveStep] = React.useState(
       searchParams.get('step') ? Number(searchParams.get('step')) : 0,
     );
-  
+    const [theStatus, setTheStatus] = React.useState('PENDING')
     const handleNext = () => {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
-      if(activeStep >= 1) navigate('/online/ressources-humaines/recrutement/fiches-renseignement/liste');
+      if(activeStep >= 1){setTheStatus('DONE'); setActiveStep(0)}
       else if (formik.values.id)
         setSearchParams({ step: activeStep + 1, id: formik.values.id });
       else setSearchParams({ step: activeStep + 1 });
@@ -291,6 +296,40 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
         setSearchParams({ step, id: formik.values.id });
       }
     };
+    if (theStatus === "SENT") {
+      return (
+        <Stack spacing={2}>
+          <Alert severity="success">
+            Merci d'avoir rempli la fiche de renseignement. Nous reviendrons vers vous pour la validation.
+          </Alert>
+          <Typography variant="h6">Terminé</Typography>
+        </Stack>
+      );
+    }
+    if (theStatus==='DONE') {
+      return (
+        <Stack>
+          <Typography variant="h6">Terminé</Typography>
+          <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
+            <Button variant="contained" color="primary"
+              onClick={()=> {updateJobCandidateInformationSheetFields({ 
+                                                                  variables: {
+                                                                      accessToken: accessToken,
+                                                                      jobCandidateInformationSheetData: {
+                                                                        status: JOB_CANDIDATE_INFORMATION_SHEET_STATUS.SENT
+                                                                      }
+                                                                  }
+                                                                  })
+                                                                }}>
+              Confirmer mes documents
+            </Button>
+            <Button variant="outlined" color="secondary" onClick={() => setTheStatus('PENDING')}>
+              Revenir
+            </Button>
+          </Box>
+        </Stack>
+      );
+    }
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
@@ -322,7 +361,7 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
                         label="Prénom"
                         value={formik.values.firstName}
                         onChange={(e) => formik.setFieldValue('firstName', e.target.value)}
-                        disabled={loadingPost || loadingPut}
+                        disabled={loadingPut}
                       />
                     </Item>
                   </Grid>
@@ -333,7 +372,7 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
                         label="Nom"
                         value={formik.values.lastName}
                         onChange={(e) => formik.setFieldValue('lastName', e.target.value)}
-                        disabled={loadingPost || loadingPut}
+                        disabled={loadingPut}
                       />
                     </Item>
                   </Grid>
@@ -344,7 +383,7 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
                         label="Métier"
                         value={formik.values.jobTitle}
                         onChange={(e) => formik.setFieldValue('jobTitle', e.target.value)}
-                        disabled={loadingPost || loadingPut}
+                        disabled={loadingPut}
                       />
                     </Item>
                   </Grid>
@@ -357,7 +396,7 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
                         onChange={(e) =>
                           formik.setFieldValue('email', e.target.value)
                         }
-                        disabled={loadingPost || loadingPut}
+                        disabled={loadingPut}
                       />
                     </Item>
                   </Grid>
@@ -370,7 +409,7 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
                         onChange={(e) =>
                           formik.setFieldValue('phone', e.target.value)
                         }
-                        disabled={loadingPost || loadingPut}
+                        disabled={loadingPut}
                       />
                     </Item>
                   </Grid>
@@ -388,7 +427,7 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
                         onChange={(e) =>
                           formik.setFieldValue('description', e.target.value)
                         }
-                        disabled={loadingPost || loadingPut}
+                        disabled={loadingPut}
                       />
                     </Item>
                   </Grid>
@@ -422,11 +461,11 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
                             <Item>
                               <TheFileField variant="outlined"
                                 label={
-                                  dataData?.jobCandidateDocumentTypes?.find(type => type.id === item.jobCandidateDocumentType)?.name || "Document"
+                                  dataData?.jobCandidateDocumentTypes?.find(type => Number(type.id) === Number(item.jobCandidateDocumentType))?.name || "Document"
                                 }
                                 fileValue={item.document}
                                 onChange={(file) => formik.setFieldValue(`documentRecords.${index}.document`, file)}
-                                disabled={loadingPost || loadingPut}
+                                disabled={loadingPut}
                                 />
                             </Item>
                           </Grid>
@@ -439,7 +478,7 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
                                 onChange={(date) =>
                                   formik.setFieldValue(`documentRecords.${index}.startingDate`, date)
                                 }
-                                disabled={loadingPost || loadingPut}
+                                disabled={loadingPut}
                               />
                             </Item>
                           </Grid>
@@ -452,7 +491,7 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
                                 onChange={(date) =>
                                   formik.setFieldValue(`documentRecords.${index}.endingDate`, date)
                                 }
-                                disabled={loadingPost || loadingPut}
+                                disabled={loadingPut}
                               />
                             </Item>
                           </Grid>
@@ -467,7 +506,7 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
                                 onChange={(e) =>
                                   formik.setFieldValue(`documentRecords.${index}.comment`, e.target.value)
                                 }
-                                disabled={loadingPost || loadingPut}
+                                disabled={loadingPut}
                               />
                             </Item>
                           </Grid>
@@ -485,18 +524,10 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
           >
             <Grid item xs={12} sm={12} md={12} >
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
-                <Link
-                  to="/online/ressources-humaines/recrutement/fiches-renseignement/liste"
-                  className="no_style"
-                >
-                  <Button variant="outlined" sx={{ marginRight: '10px' }}>
-                    Terminer
-                  </Button>
-                </Link>
                 <Button
                   type="submit"
                   variant="contained"
-                  disabled={!formik.isValid || loadingPost || loadingPut}
+                  disabled={!formik.isValid || loadingPut}
                 >
                   Valider
                 </Button>

@@ -220,7 +220,7 @@ const [getEmployees, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       let { __typename, ...taskCopy1 } = data.task;
-      let { folder, ...taskCopy } = taskCopy1;
+      let { folder, employee, ...taskCopy } = taskCopy1;
       taskCopy.startingDateTime = taskCopy.startingDateTime ? dayjs(taskCopy.startingDateTime) : null;
       taskCopy.endingDateTime = taskCopy.endingDateTime ? dayjs(taskCopy.endingDateTime) : null;
       taskCopy.establishments = taskCopy.establishments

@@ -14,6 +14,7 @@ export const USER_BASIC_INFOS = gql`
     photo
     coverImage
     email
+    isMustChangePassword
     username
     currentLatitude
     currentLongitude

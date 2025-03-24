@@ -8,8 +8,8 @@ import {
 } from '../fragments/JobCandidateInformationSheetFragment';
 
 export const GET_JOB_CANDIDATE_INFORMATION_SHEET = gql`
-  query GetJobCandidateInformationSheet($id: ID!) {
-    jobCandidateInformationSheet(id: $id) {
+  query GetJobCandidateInformationSheet($id: ID, $accessToken: String) {
+    jobCandidateInformationSheet(id: $id, accessToken: $accessToken) {
       ...JobCandidateInformationSheetDetailsFragment
     }
   }
@@ -39,8 +39,8 @@ export const GET_JOB_CANDIDATE_INFORMATION_SHEETS = gql`
 `;
 
 export const JOB_CANDIDATE_INFORMATION_SHEET_RECAP = gql`
-  query GetJobCandidateInformationSheet($id: ID!) {
-    jobCandidateInformationSheet(id: $id) {
+  query GetJobCandidateInformationSheet($id: ID, $accessToken: String) {
+    jobCandidateInformationSheet(id: $id, accessToken: $accessToken) {
       ...JobCandidateInformationSheetRecapDetailsFragment
     }
   }
