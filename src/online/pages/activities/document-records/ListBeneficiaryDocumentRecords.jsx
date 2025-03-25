@@ -23,7 +23,7 @@ export default function ListBeneficiaryDocumentRecords() {
       fetchMore: fetchMoreBeneficiaryDocumentRecords,
     },
   ] = useLazyQuery(GET_BENEFICIARY_DOCUMENT_RECORDS, {
-    variables: { beneficiaryDocumentRecordFilter, page: paginator.page, limit: paginator.limit },
+    variables: { beneficiaryFilter: beneficiaryDocumentRecordFilter, page: paginator.page, limit: paginator.limit },
   });
 
   React.useEffect(() => {

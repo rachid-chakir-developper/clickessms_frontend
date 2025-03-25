@@ -39,17 +39,6 @@ export const BENEFICIARY_MINI_INFOS = gql`
 `;
 
 
-export const BENEFICIARY_DOCUMENT_BASIC_INFOS = gql`
-  fragment BeneficiaryDocumentBasicInfosFragment on BeneficiaryType {
-    ...BeneficiaryMiniInfosFragment
-    documentRecords{
-      ... DocumentRecordBasicDetailsFragment
-      expirationStatus
-    }
-  }
-  ${BENEFICIARY_MINI_INFOS}
-  ${DOCUMENT_RECORD_BASIC_DETAILS}
-`;
 
 export const BENEFICIARY_STATUS_ENTRY_DETAILS = gql`
   fragment BeneficiaryStatusEntryFragment on BeneficiaryStatusEntryType {
@@ -91,6 +80,23 @@ export const BENEFICIARY_ENTRY_DETAILS = gql`
   }
   ${ESTABLISHMENT_MINI_INFOS}
   ${EMPLOYEE_MINI_INFOS}
+`;
+
+
+export const BENEFICIARY_DOCUMENT_BASIC_INFOS = gql`
+  fragment BeneficiaryDocumentBasicInfosFragment on BeneficiaryType {
+    ...BeneficiaryMiniInfosFragment
+    beneficiaryEntries{
+      ...BeneficiaryEntryFragment
+    }
+    documentRecords{
+      ... DocumentRecordBasicDetailsFragment
+      expirationStatus
+    }
+  }
+  ${BENEFICIARY_MINI_INFOS}
+  ${BENEFICIARY_ENTRY_DETAILS}
+  ${DOCUMENT_RECORD_BASIC_DETAILS}
 `;
 
 export const BENEFICIARY_BASIC_INFOS = gql`

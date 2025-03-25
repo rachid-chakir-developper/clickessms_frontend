@@ -267,6 +267,7 @@ export const GET_DASHBOARD_ACTIVITY_SYNTHESIS = gql`
             totalRejected
             totalCanceled
             totalAvailablePlaces
+            totalDashboardComment
           }
         }
       }

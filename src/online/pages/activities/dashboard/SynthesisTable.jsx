@@ -123,6 +123,7 @@ const SynthesisTable = ({activitySynthesis}) => {
                             <React.Fragment key={indexA}>
                                 {[
                                     "totalAvailablePlaces",
+                                    "totalDashboardComment",
                                     "totalReceived",
                                     "totalApproved",
                                     "totalRejected",

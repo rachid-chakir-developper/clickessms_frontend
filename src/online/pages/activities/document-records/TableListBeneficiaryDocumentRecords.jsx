@@ -293,6 +293,7 @@ export default function TableListBeneficiaryDocumentRecords({
         disablePadding: false,
         disableClickDetail: true,
         sortDisabled: true,
+        isDefault: true,
         label: 'Structure(s)',
         render: ({beneficiaryEntries}) => beneficiaryEntries && beneficiaryEntries?.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
         {beneficiaryEntries[beneficiaryEntries?.length - 1]?.establishments?.map((establishment, index) => {

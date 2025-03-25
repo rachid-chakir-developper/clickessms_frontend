@@ -18,7 +18,7 @@ import TheDesktopDatePicker from '../../../../_shared/components/form-fields/The
 import { CheckBox, CheckBoxOutlineBlank, Close, Search } from '@mui/icons-material';
 import { useLazyQuery, useQuery } from '@apollo/client';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
-import { GET_BENEFICIARIES } from '../../../../_shared/graphql/queries/BeneficiaryQueries';
+import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -33,11 +33,11 @@ const BeneficiaryDocumentRecordFilter = ({ onFilterChange }) => {
     startingDateTime: null,
     endingDateTime: null,
     keyword: '',
-    beneficiaries: null,
+    establishments: null,
   });
 
 
-  const [selectedBeneficiaries, setFilterSelectedBeneficiaries] = useState([])
+  const [selectedEstablishments, setFilterSelectedEstablishments] = useState([])
 
   const handleFilterSubmit = () => {
     // Pass the filter values to the parent component for handling the filtering logic
@@ -48,22 +48,22 @@ const BeneficiaryDocumentRecordFilter = ({ onFilterChange }) => {
     // Pass the filter values to the parent component for handling the filtering logic
     const filterValuesInit = { 
                             startingDateTime: null, endingDateTime: null, keyword: '', 
-                            beneficiaries: null
+                            establishments: null
                           }
-    setFilterSelectedBeneficiaries([])
+    setFilterSelectedEstablishments([])
     setFilterValues(filterValuesInit)
     onFilterChange(filterValuesInit);
   };
 
-  const [getBeneficiaries, {
-      loading: loadingBeneficiaries,
-      data: beneficiariesData,
-      error: beneficiariesError,
-      fetchMore: fetchMoreBeneficiaries,
-    }] = useLazyQuery(GET_BENEFICIARIES, { variables: { beneficiaryFilter : null, page: 1, limit: 10 } });
+  const [getEstablishments, {
+      loading: loadingEstablishments,
+      data: establishmentsData,
+      error: establishmentsError,
+      fetchMore: fetchMoreEstablishments,
+    }] = useLazyQuery(GET_ESTABLISHMENTS, { variables: { beneficiaryFilter : null, page: 1, limit: 10 } });
   
-    const onGetBeneficiaries = (keyword)=>{
-      getBeneficiaries({ variables: { beneficiaryFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+    const onGetEstablishments = (keyword)=>{
+      getEstablishments({ variables: { beneficiaryFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
     }
 
   
@@ -127,17 +127,17 @@ const BeneficiaryDocumentRecordFilter = ({ onFilterChange }) => {
         <Grid item xs={12} sm={6} md={4}>
             <Item>
                 <TheAutocomplete
-                  options={beneficiariesData?.beneficiaries?.nodes}
+                  options={establishmentsData?.establishments?.nodes}
                   onInput={(e) => {
-                    onGetBeneficiaries(e.target.value)
+                    onGetEstablishments(e.target.value)
                   }}
-                  label="Personnes accompagnées"
+                  label="Structures"
                   limitTags={3}
-                  value={selectedBeneficiaries}
+                  value={selectedEstablishments}
                   onChange={(transmissionEvent, newValue) => {
-                      setFilterSelectedBeneficiaries(newValue)
-                      setFilterValues({ ...filterValues, beneficiaries: newValue.map((v) => v.id) })
-                      onFilterChange({ ...filterValues, beneficiaries: newValue.map((v) => v.id) })
+                      setFilterSelectedEstablishments(newValue)
+                      setFilterValues({ ...filterValues, establishments: newValue.map((v) => v.id) })
+                      onFilterChange({ ...filterValues, establishments: newValue.map((v) => v.id) })
                   }}
                 />
             </Item>
