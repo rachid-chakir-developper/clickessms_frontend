@@ -237,8 +237,10 @@ export const GET_DASHBOARD_ACTIVITY_SYNTHESIS = gql`
             year
             month
             countReceived
+            gapReceived
             countApproved
             countRejected
+            gapRejected
             countCanceled
             countOccupiedPlaces
             countAvailablePlaces
@@ -263,8 +265,10 @@ export const GET_DASHBOARD_ACTIVITY_SYNTHESIS = gql`
           }
           activityTotalSynthesisMonth{
             totalReceived
+            totalGapReceived
             totalApproved
             totalRejected
+            totalGapRejected
             totalCanceled
             totalAvailablePlaces
             totalDashboardComment

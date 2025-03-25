@@ -44,7 +44,7 @@ const SynthesisTable = ({activitySynthesis}) => {
                 <TableRow>
                     <StyledTableCell align="center">Année : {activitySynthesis?.year}</StyledTableCell>
                         {activitySynthesis?.activitySynthesisEstablishments?.map((activitySynthesisEstablishment, index)=> 
-                            <StyledTableCell key={index} align="center" colSpan={6}>
+                            <StyledTableCell key={index} align="center" colSpan={9}>
                                 <EstablishmentChip establishment={activitySynthesisEstablishment?.establishment} /> 
                             </StyledTableCell>
                         )}
@@ -58,8 +58,10 @@ const SynthesisTable = ({activitySynthesis}) => {
                                     "Dispo",
                                     "Réel",
                                     "Reçu",
+                                    "Ecart",
                                     "AF",
                                     "AD",
+                                    "Ecart",
                                     "AN",
                                     ].map((header, index) => (
                                         <TableCell key={index} align="center">
@@ -88,8 +90,10 @@ const SynthesisTable = ({activitySynthesis}) => {
                                             "countAvailablePlaces",
                                             "dashboardComment",
                                             "countReceived",
+                                            "gapReceived",
                                             "countApproved",
                                             "countRejected",
+                                            "gapRejected",
                                             "countCanceled",
                                             ].map((item, index) => (
                                                 <TableCell key={index} align="center">
@@ -125,8 +129,10 @@ const SynthesisTable = ({activitySynthesis}) => {
                                     "totalAvailablePlaces",
                                     "totalDashboardComment",
                                     "totalReceived",
+                                    "totalGapReceived",
                                     "totalApproved",
                                     "totalRejected",
+                                    "totalGapRejected",
                                     "totalCanceled",
                                     ].map((item, index) => (
                                         <TableCell key={index} align="center">
