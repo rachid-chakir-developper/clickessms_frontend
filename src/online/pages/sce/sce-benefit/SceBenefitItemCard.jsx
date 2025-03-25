@@ -72,8 +72,8 @@ export default function SceBenefitItemCard({
           onClick={onGoToDetails}
         >
           
-          <Stack direction="row" spacing={2} alignItems="center">
-            <Stack direction="column" spacing={0.2} alignItems="center">
+          <Stack direction="row" spacing={2} alignItems="center" width={'100%'}>
+            <Stack direction="column" spacing={0.2} alignItems="center" width={'100%'}>
               <Typography
                 color="text.primary"
                 fontWeight="medium"

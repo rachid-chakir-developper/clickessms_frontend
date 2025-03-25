@@ -50,7 +50,7 @@ export default function SceBenefitDetails() {
     <>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
         <Link
-          to="/online/cse/prestations-sociales/liste"
+          to="/online/cse/avantages/liste"
           className="no_style"
         >
           <Button variant="outlined" startIcon={<ArrowBack />}>
@@ -58,7 +58,7 @@ export default function SceBenefitDetails() {
           </Button>
         </Link>
         <Link
-          to={`/online/cse/prestations-sociales/modifier/${sceBenefitData?.sceBenefit?.id}`}
+          to={`/online/cse/avantages/modifier/${sceBenefitData?.sceBenefit?.id}`}
           className="no_style"
         >
           <Button variant="outlined" endIcon={<Edit />}>

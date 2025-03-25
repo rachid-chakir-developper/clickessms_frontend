@@ -18,9 +18,6 @@ import {
   PUT_SCE_BENEFIT,
 } from '../../../../_shared/graphql/mutations/SceBenefitMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
-import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
-import { MSG_NOTIF_TYPES } from '../../../../_shared/tools/constants';
 import TextEditorField from '../../../../_shared/components/form-fields/TextEditorField';
 
 const Item = styled(Stack)(({ theme }) => ({
@@ -150,7 +147,7 @@ export default function AddSceBenefitForm({ idSceBenefit, title }) {
   const [getSceBenefit, { loading: loadingSceBenefit }] = useLazyQuery(GET_SCE_BENEFIT, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, isRead, primaryColor, ...sceBenefitCopy } = data.sceBenefit;
+      let { __typename, isRead, folder, primaryColor, ...sceBenefitCopy } = data.sceBenefit;
       formik.setValues(sceBenefitCopy);
     },
     onError: (err) => console.log(err),

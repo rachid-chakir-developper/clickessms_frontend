@@ -408,6 +408,11 @@ export const modules: Module[] = [
         id: 'recruitment',
         name: 'Recrutement',
         icon: <WorkIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageHumanRessources',
+          }).authorized;
+        },
         pages: [
           {
             id: 'job_position',

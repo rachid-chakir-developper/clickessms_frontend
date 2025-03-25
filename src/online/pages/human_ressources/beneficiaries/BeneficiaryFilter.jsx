@@ -8,7 +8,11 @@ import {
   Autocomplete,
   IconButton,
   Typography,
-  InputAdornment
+  InputAdornment,
+  RadioGroup,
+  FormControl,
+  FormControlLabel,
+  Radio
 } from '@mui/material';
 import styled from '@emotion/styled';
 import dayjs from 'dayjs';
@@ -29,11 +33,20 @@ const Item = styled(Stack)(({ theme }) => ({
   }));
 
 const BeneficiaryFilter = ({ onFilterChange }) => {
+  const LIST_TYPES_ITEMS = {
+    ALL : 'ALL',
+    OUT : 'OUT',
+    ALL_: [
+      {value: 'ALL', label: 'Tous'},
+      {value: 'OUT', label: 'Archive'},
+    ]
+  }
   const [filterValues, setFilterValues] = useState({
     startingDateTime: null,
     endingDateTime: null,
     keyword: '',
     establishments: null,
+    listType: 'ALL'
   });
 
 
@@ -136,6 +149,30 @@ const BeneficiaryFilter = ({ onFilterChange }) => {
                         }}
                       />
             </Item>
+        </Grid>
+        <Grid item xs={12} sm={12} md={12}>
+          <Item>
+            <FormControl>
+              <RadioGroup
+                row
+                aria-labelledby="demo-row-radio-buttons-group-label"
+                name="row-radio-buttons-group"
+                value={filterValues.listType}
+                onChange={(e) =>{
+                    setFilterValues({ ...filterValues, listType: e.target.value });
+                    onFilterChange({ ...filterValues, listType: e.target.value });
+                  }
+                }
+              >
+                {LIST_TYPES_ITEMS?.ALL_?.map((item, index) => {
+                  return (
+                      !item.hidden && <FormControlLabel key={index} value={item.value} control={<Radio />} label={item.label} />
+                    
+                  );
+                })}
+              </RadioGroup>
+            </FormControl>
+          </Item>
         </Grid>
     </Grid>
   );
