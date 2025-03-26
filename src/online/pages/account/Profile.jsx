@@ -94,6 +94,10 @@ const ProfileDetailsPage = ({ user }) => {
     onCompleted: (data) => {
       console.log(data);
       if (data.passwordChange.success) {
+        if (data.passwordChange.token && data.passwordChange.refreshToken) {
+            localStorage.setItem('token', JSON.stringify(data.passwordChange.token));
+            localStorage.setItem('refreshToken', JSON.stringify(data.passwordChange.refreshToken));
+        }
         setNotifyAlert({
           isOpen: true,
           message: 'Changé avec succès',

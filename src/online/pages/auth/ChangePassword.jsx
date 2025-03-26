@@ -64,6 +64,10 @@ const ChangePassword = () => {
     ] = useMutation(PUT_MY_FIRST_PASSWORD, {
         onCompleted: (data) => {
         if (data.firstPasswordChange.success) {
+            if (data.firstPasswordChange.token && data.firstPasswordChange.refreshToken) {
+                localStorage.setItem('token', JSON.stringify(data.firstPasswordChange.token));
+                localStorage.setItem('refreshToken', JSON.stringify(data.firstPasswordChange.refreshToken));
+            }
             setNotifyAlert({
             isOpen: true,
             message: "Mot de passe changé avec succès",

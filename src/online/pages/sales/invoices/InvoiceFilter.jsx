@@ -20,7 +20,7 @@ import dayjs from 'dayjs';
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import { CheckBox, CheckBoxOutlineBlank, Close, Search } from '@mui/icons-material';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import { INVOICE_STATUS } from '../../../../_shared/tools/constants';
@@ -65,14 +65,16 @@ const InvoiceFilter = ({ onFilterChange }) => {
     onFilterChange(filterValuesInit);
   };
 
-  const {
-    loading: loadingEstablishments,
-    data: establishmentsData,
-    error: establishmentsError,
-    fetchMore: fetchMoreEstablishments,
-  } = useQuery(GET_ESTABLISHMENTS, {
-    fetchPolicy: 'network-only',
-  });
+  const [getEstablishments, {
+          loading: loadingEstablishments,
+          data: establishmentsData,
+          error: establishmentsError,
+          fetchMore: fetchMoreEstablishments,
+        }] = useLazyQuery(GET_ESTABLISHMENTS, { variables: { beneficiaryFilter : null, page: 1, limit: 10 } });
+      
+        const onGetEstablishments = (keyword)=>{
+          getEstablishments({ variables: { beneficiaryFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+        }
 
   
   return (
@@ -136,6 +138,9 @@ const InvoiceFilter = ({ onFilterChange }) => {
             <Item>
                 <TheAutocomplete
                         options={establishmentsData?.establishments?.nodes}
+                        onInput={(e) => {
+                          onGetEstablishments(e.target.value)
+                        }}
                         label="Structures"
                         limitTags={3}
                         value={selectedEstablishments}
