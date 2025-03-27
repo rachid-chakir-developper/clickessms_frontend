@@ -32,6 +32,7 @@ import TicketStatusLabelMenu from './TicketStatusLabelMenu';
 import TaskActionStatusLabelMenu from '../actions/TaskActionStatusLabelMenu';
 import TicketTabs from './tickets-tabs/TicketTabs';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -65,14 +66,14 @@ export default function TicketDetails({ticketId}) {
     <>
       <Stack>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
-          <Link
+          {/* <Link
             to="/online/qualites/plan-action/tickets/liste"
             className="no_style"
           >
             <Button variant="outlined" startIcon={<ArrowBack />}>
               Retour à la liste
             </Button>
-          </Link>
+          </Link> */}
           <Box>
             {canManageQuality && 
               <Link
@@ -226,12 +227,9 @@ export default function TicketDetails({ticketId}) {
                               </Typography>
                               <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mt: 1 }}>
                                 {action.employees.map((employee, i) => (
-                                  <Chip 
+                                  <EmployeeChip
                                     key={i} 
-                                    avatar={<Avatar>{employee.firstName?.charAt(0)}{employee.lastName?.charAt(0)}</Avatar>} 
-                                    label={`${employee.firstName} ${employee.lastName}`} 
-                                    variant="outlined" 
-                                    size="small"
+                                    employee={employee}
                                   />
                                 ))}
                               </Stack>
@@ -332,12 +330,8 @@ function TicketMiniInfos({ ticket }) {
                     <Person sx={{ mr: 1, color: 'text.secondary' }} />
                     <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center' }}>
                       <b>Employé responsable:</b> 
-                      <Chip
-                        avatar={<Avatar>{ticket.employee.firstName?.charAt(0)}{ticket.employee.lastName?.charAt(0)}</Avatar>}
-                        label={`${ticket.employee.firstName} ${ticket.employee.lastName}`}
-                        variant="outlined"
-                        size="small"
-                        sx={{ marginLeft: 1 }}
+                      <EmployeeChip
+                        employee={ticket?.employee}
                       />
                     </Typography>
                   </Box>
