@@ -16,7 +16,7 @@ import { ApolloLink } from '@apollo/client/core';
 
 const { hostname } = window.location;
 
-const envProd = false;
+const envProd = true;
 export const END_POINT = envProd
 ? 'https://api.roberp.fr'
 : `http://${hostname}:8000`;
@@ -52,20 +52,19 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward  })
           case 'expired_token':
           // Retry queries/mutations after attempting to refetch a valid JWT
             // Modify the operation context with a new token
-            
-        return refreshToken(client).then((newToken) => {
-          if (!newToken) {
-            console.error("Token expiré et rafraîchissement échoué.");
-            return;
-          }
-          operation.setContext(({ headers = {} }) => ({
-            headers: {
-              ...headers,
-              authorization: `JWT ${newToken}`,
-            },
-          }));
-          return forward(operation);
-        });
+          return refreshToken(client).then((newToken) => {
+            if (!newToken) {
+              console.error("Token expiré et rafraîchissement échoué.");
+              return;
+            }
+            operation.setContext(({ headers = {} }) => ({
+              headers: {
+                ...headers,
+                authorization: `JWT ${newToken}`,
+              },
+            }));
+            return forward(operation);
+          });
         }
       }
     }

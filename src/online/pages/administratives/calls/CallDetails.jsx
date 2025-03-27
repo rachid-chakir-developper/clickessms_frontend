@@ -19,6 +19,8 @@ import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
 import { ArrowBack, Edit, Business, PersonOutline, Phone, Event, Description, Note, Group, People, Info } from '@mui/icons-material';
 import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -193,7 +195,7 @@ function CallOtherInfos({ call }) {
           <Paper variant="outlined" sx={{ padding: 1, mb: 2 }}>
             <Typography gutterBottom variant="body1" component="div">
               {call?.caller?.callerType === 'PhoneNumber' 
-                ? call?.caller?.phoneNumber 
+                ? call?.caller?.phoneNumber?.phone
                 : call?.caller?.callerType === 'Employee' 
                   ? `${call?.caller?.employee?.firstName} ${call?.caller?.employee?.lastName}`
                   : call?.caller?.callerType === 'Beneficiary'
@@ -218,17 +220,11 @@ function CallOtherInfos({ call }) {
           <Typography gutterBottom variant="subtitle1" component="div" sx={{ display: 'flex', alignItems: 'center' }}>
             <Business sx={{ mr: 1, fontSize: 'small' }} />Structures concernées
           </Typography>
-          <Grid container spacing={1} sx={{ marginBottom: 2 }}>
-            {call?.establishments?.map((est, index) => (
-              <Grid item key={index}>
-                <Paper variant="outlined" sx={{ padding: 1 }}>
-                  <Typography variant="body2">
-                    {est?.establishment?.name}
-                  </Typography>
-                </Paper>
-              </Grid>
+          <Stack direction="row" flexWrap='wrap' spacing={1}>
+            {call?.establishments?.map((establishment, index) => (
+              <EstablishmentChip establishment={establishment?.establishment} key={index}/>
             ))}
-          </Grid>
+          </Stack>
           <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
         </>
       )}
@@ -238,17 +234,11 @@ function CallOtherInfos({ call }) {
           <Typography gutterBottom variant="subtitle1" component="div" sx={{ display: 'flex', alignItems: 'center' }}>
             <PersonOutline sx={{ mr: 1, fontSize: 'small' }} />Employés concernés
           </Typography>
-          <Grid container spacing={1} sx={{ marginBottom: 2 }}>
-            {call?.employees?.map((emp, index) => (
-              <Grid item key={index}>
-                <Paper variant="outlined" sx={{ padding: 1 }}>
-                  <Typography variant="body2">
-                    {`${emp?.employee?.firstName} ${emp?.employee?.lastName}`}
-                  </Typography>
-                </Paper>
-              </Grid>
+          <Stack direction="row" flexWrap='wrap' spacing={1}>
+            {call?.employees?.map((employee, index) => (
+              <EmployeeChip employee={employee?.employee} key={index}/>
             ))}
-          </Grid>
+          </Stack>
           <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
         </>
       )}
