@@ -42,9 +42,10 @@ function DialogGenerateInvoice({ open, onClose, onConfirm }) {
   const navigate = useNavigate();
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const validationSchema = yup.object({
-    establishment: yup
-      .mixed() // Utilisé pour valider un champ de type null ou autre valeur.
-      .required('Le champ structure est obligatoire.'),
+    establishments: yup
+     .array()
+     .min(1, 'Veuillez sélectionner au moins une structure.') // S'assure qu'au moins un élément est présent.
+     .required('Le champ structure est obligatoire.'),
     financier: yup
       .mixed() // Utilisé pour valider un champ de type null ou autre valeur.
       .required('Le champ financeur est obligatoire.'),
@@ -58,7 +59,7 @@ function DialogGenerateInvoice({ open, onClose, onConfirm }) {
 
   const formik = useFormik({
     initialValues: {
-      establishment: null,
+      establishments: [],
       financier: null,
       year: dayjs(new Date()),
       month: dayjs(new Date()),
@@ -68,7 +69,7 @@ function DialogGenerateInvoice({ open, onClose, onConfirm }) {
       let valuesCopy = {...values};
       valuesCopy.year = valuesCopy.year ? new Date(valuesCopy.year).getFullYear() : null
       valuesCopy.month = valuesCopy.month ? new Date(valuesCopy.month).getMonth()+1 : null
-      valuesCopy.establishment = valuesCopy.establishment ? valuesCopy.establishment.id : null;
+      valuesCopy.establishments = valuesCopy.establishments.map((i) => i?.id);
       valuesCopy.financier = valuesCopy.financier ? valuesCopy.financier.id : null;
       handleOk(valuesCopy);
     },
@@ -254,17 +255,16 @@ function DialogGenerateInvoice({ open, onClose, onConfirm }) {
                   onFocus={(e) => {
                     onGetEstablishments(e.target.value)
                   }}
-                  id="establishment"
-                  label="Structure"
-                  placeholder="Structure"
-                  multiple={false}
-                  value={formik.values.establishment}
+                  id="establishments"
+                  label="Structures"
+                  placeholder="Structures"
+                  value={formik.values.establishments}
                   onChange={(e, newValue) =>
-                    formik.setFieldValue('establishment', newValue)
+                    formik.setFieldValue('establishments', newValue)
                   }
                   onBlur={formik.handleBlur}
-                  error={formik.touched.establishment && Boolean(formik.errors.establishment)}
-                  helperText={formik.touched.establishment && formik.errors.establishment}
+                  error={formik.touched.establishments && Boolean(formik.errors.establishments)}
+                  helperText={formik.touched.establishments && formik.errors.establishments}
                   disabled={loadingPost}
                 />
               </Item>

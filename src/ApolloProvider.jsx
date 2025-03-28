@@ -16,7 +16,7 @@ import { ApolloLink } from '@apollo/client/core';
 
 const { hostname } = window.location;
 
-const envProd = true;
+const envProd = false;
 export const END_POINT = envProd
 ? 'https://api.roberp.fr'
 : `http://${hostname}:8000`;
@@ -57,12 +57,20 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward  })
               console.error("Token expiré et rafraîchissement échoué.");
               return;
             }
-            operation.setContext(({ headers = {} }) => ({
+            // operation.setContext(({ headers = {} }) => ({
+            //   headers: {
+            //     ...headers,
+            //     authorization: `JWT ${newToken}`,
+            //   },
+            // }));
+            // Modify the operation context with a new token
+            const oldHeaders = operation.getContext().headers;
+            operation.setContext({
               headers: {
-                ...headers,
+                ...oldHeaders,
                 authorization: `JWT ${newToken}`,
               },
-            }));
+            });
             return forward(operation);
           });
         }
