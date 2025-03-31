@@ -17,7 +17,7 @@ import {
 
 import { GET_UNDESIRABLE_EVENTS, UNDESIRABLE_EVENT_RECAP } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import { getFormatDateTime } from '../../../../_shared/tools/functions';
+import { getFormatDateTime, getUndesirableEventSeverityLabel, getUndesirableEventTypeLabel } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
 import { 
   Done, 
@@ -41,6 +41,9 @@ import { useAuthorizationSystem } from '../../../../_shared/context/Authorizatio
 import UndesirableEventStatusLabelMenu from './UndesirableEventStatusLabelMenu';
 import CircularProgressWithLabel from '../../../../_shared/components/feedbacks/CircularProgressWithLabel';
 import FileCard from '../../../_shared/components/library/FileCard';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -233,7 +236,7 @@ function UndesirableEventMiniInfos({ undesirableEvent }) {
                 <Box sx={{ display: 'flex', alignItems: 'center', mt: 1, mb: 1 }}>
                   <Person sx={{ mr: 1, color: 'text.secondary' }} />
                   <Typography variant="body2" color="text.secondary">
-                    <b>Déclarant principal :</b> {undesirableEvent?.employee?.firstName} {undesirableEvent?.employee?.lastName}
+                    <b>Déclarant principal :</b> <EmployeeChip employee={undesirableEvent?.employee} /> 
                   </Typography>
                 </Box>
               )}
@@ -276,11 +279,7 @@ function UndesirableEventOtherInfos({ undesirableEvent }) {
         {undesirableEvent?.establishments && undesirableEvent.establishments.length > 0 ? (
           undesirableEvent.establishments.map((establishment, index) => (
             <Grid item key={index}>
-              <Chip 
-                label={establishment.name} 
-                variant="outlined" 
-                size="small"
-              />
+              <EstablishmentChip establishment={establishment?.establishment} />
             </Grid>
           ))
         ) : (
@@ -326,9 +325,9 @@ function UndesirableEventOtherInfos({ undesirableEvent }) {
         {undesirableEvent?.beneficiaries && undesirableEvent.beneficiaries.length > 0 ? (
           undesirableEvent.beneficiaries.map((beneficiary, index) => (
             <Grid item xs={12} sm={12} md={12} key={index}>
-              <Item>
-                <BeneficiaryItemCard beneficiary={beneficiary?.beneficiary} />
-              </Item>
+              
+                <BeneficiaryChip beneficiary={beneficiary?.beneficiary} />
+             
             </Grid>
           ))
         ) : (
@@ -348,12 +347,9 @@ function UndesirableEventOtherInfos({ undesirableEvent }) {
       {undesirableEvent?.employees && undesirableEvent.employees.length > 0 ? (
         <Stack direction="row" spacing={1} flexWrap="wrap">
           {undesirableEvent.employees.map((employee, index) => (
-            <Chip
+            <EmployeeChip
               key={index}
-              avatar={<Avatar>{employee.firstName?.[0] || ''}{employee.lastName?.[0] || ''}</Avatar>}
-              label={`${employee.firstName} ${employee.lastName}`}
-              variant="outlined"
-              sx={{ mb: 1 }}
+              employee={employee?.employee}
             />
           ))}
         </Stack>
@@ -419,7 +415,7 @@ function UndesirableEventOtherInfos({ undesirableEvent }) {
       <Box>
         <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
           <Warning sx={{ mr: 1, fontSize: 'small' }} />
-          <b>Type d'événement: </b>{undesirableEvent?.undesirableEventType}
+          <b>Type d'événement: </b>{getUndesirableEventTypeLabel(undesirableEvent?.undesirableEventType)}
         </Typography>
         
         {undesirableEvent?.normalTypes && undesirableEvent.normalTypes.length > 0 && (
@@ -451,7 +447,7 @@ function UndesirableEventOtherInfos({ undesirableEvent }) {
         
         <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
           <Flag sx={{ mr: 1, fontSize: 'small' }} />
-          <b>Sévérité: </b>{undesirableEvent?.severity}
+          <b>Sévérité: </b>{getUndesirableEventSeverityLabel(undesirableEvent?.severity)}
         </Typography>
         
         <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>

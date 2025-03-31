@@ -64,7 +64,7 @@ const SearchPanel = () => {
         </SearchIconWrapper>
         <StyledInputBase
           onChange={handleOpenSearchDialog}
-          placeholder="Search…"
+          placeholder="Rechercher"
           inputProps={{ 'aria-label': 'search' }}
         />
       </Search>

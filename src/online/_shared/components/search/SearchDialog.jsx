@@ -45,6 +45,7 @@ const SearchDialog = ({ open, onClose }) => {
             results={searchResultsData?.search?.results}
             loading={loadingSearchResults}
             keyword={searchFilter?.keyword}
+            onClose={handleClose}
           />
         )}
       </DialogContent>

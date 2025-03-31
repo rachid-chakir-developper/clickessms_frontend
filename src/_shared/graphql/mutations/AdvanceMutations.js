@@ -2,13 +2,11 @@ import { gql } from '@apollo/client';
 import { ADVANCE_BASIC_INFOS } from '../fragments/AdvanceFragment';
 
 export const CREATE_ADVANCE = gql`
-  mutation CreateAdvance($amount: Decimal!, $month: Date!, $reason: String, $employee_id: ID!) {
-    createAdvance(amount: $amount, month: $month, reason: $reason, employee_id: $employee_id) {
+  mutation CreateAdvance($advanceData: AdvanceInput!) {
+    createAdvance(advanceData: $advanceData) {
       advance {
         ...AdvanceBasicInfosFragment
       }
-      success
-      message
     }
   }
   ${ADVANCE_BASIC_INFOS}
@@ -20,8 +18,6 @@ export const UPDATE_ADVANCE = gql`
       advance {
         ...AdvanceBasicInfosFragment
       }
-      success
-      message
     }
   }
   ${ADVANCE_BASIC_INFOS}

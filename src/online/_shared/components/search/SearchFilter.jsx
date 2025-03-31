@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Grid, Stack } from '@mui/material';
 import styled from '@emotion/styled';
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
@@ -12,11 +12,19 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 const SearchFilter = ({ onFilterChange }) => {
+  const searchInputRef = useRef(null);
   const [filterValues, setFilterValues] = useState({
     startingDateTime: null,
     endingDateTime: null,
     keyword: '',
   });
+
+  // Focus sur le champ de recherche au montage du composant
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, []);
 
   const handleFilterSubmit = () => {
     // Pass the filter values to the parent component for handling the filtering logic
@@ -51,6 +59,8 @@ const SearchFilter = ({ onFilterChange }) => {
             onChange={(e) =>
               setFilterValues({ ...filterValues, keyword: e.target.value })
             }
+            inputRef={searchInputRef}
+            autoFocus
           />
         </Item>
       </Grid>

@@ -26,11 +26,25 @@ export const GET_ADVANCES = gql`
       limit: $limit
       page: $page
     ) {
-      totalCount
       nodes {
-        ...AdvanceBasicInfosFragment
+        id
+        number
+        amount
+        month
+        status
+        reason
+        createdAt
+        employee {
+          id
+          firstName
+          lastName
+        }
+      }
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
       }
     }
   }
-  ${ADVANCE_BASIC_INFOS}
-`; 
+`;
