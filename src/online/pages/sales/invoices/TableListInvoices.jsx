@@ -144,15 +144,25 @@ const headCells = [
                         />
     },
     {
-        id: 'establishment',
-        property: 'establishment',
-        exportField: ['establishment__number', 'establishment__name'],
+        id: 'invoiceEstablishments',
+        property: 'invoice_establishments__establishment__name',
+        exportField: ['invoice_establishments__establishment__name'],
         numeric: false,
         disablePadding: false,
         isDefault: true,
         disableClickDetail: true,
-        label: 'Structure',
-        render: ({establishment})=> <EstablishmentChip establishment={establishment} />
+        sortDisabled: true,
+        label: 'Structure(s)',
+        render: ({invoiceEstablishments}) => invoiceEstablishments && invoiceEstablishments.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+        {invoiceEstablishments?.map((invoiceEstablishment, index) => {
+          return (
+            <EstablishmentChip
+              key={index}
+              establishment={invoiceEstablishment.establishment}
+            />
+          );
+        })}
+      </Stack>
     },
     {
         id: 'financier',

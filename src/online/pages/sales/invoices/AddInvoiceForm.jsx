@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import { Stack, Box, Typography, Button, Stepper, Step, StepLabel, StepContent, RadioGroup, FormControlLabel, Radio, FormLabel, FormControl, IconButton, InputLabel, Select, MenuItem, InputAdornment, Tooltip } from '@mui/material';
+import { Stack, Box, Typography, Button, Stepper, Step, StepLabel, StepContent, RadioGroup, FormControlLabel, Radio, FormLabel, FormControl, IconButton, InputLabel, Select, MenuItem, InputAdornment, Tooltip, Divider } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -53,40 +53,36 @@ export default function AddInvoiceForm({ idInvoice, title }) {
       : dayjs(new Date()).add(1, 'month').day() === 0 // Si c'est dimanche
       ? dayjs(new Date()).add(1, 'month').add(1, 'day') // Ajouter 1 jour pour obtenir lundi
       : dayjs(new Date()).add(1, 'month'),
-      establishment: null,
-      establishmentName: '',
-      establishmentTvaNumber: '',
-      establishmentInfos: '',
-      establishmentCapacity: 0,
-      establishmentUnitPrice: 0,
       financier: null,
-      clientName: '',
-      clientTvaNumber: '',
-      clientInfos: '',
+      financierName: '',
+      financierTvaNumber: '',
+      financierInfos: '',
       paymentMethod: PAYMENT_METHOD.BANK_TRANSFER,
       description: '',
-      invoiceItems: [],
       totalHt: 0,
       tva: 0,
       discount: 0,
       totalTtc: 0,
+      invoiceEstablishments:[]
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       let invoiceCopy = {...values};
       invoiceCopy.year = invoiceCopy.year ? new Date(invoiceCopy.year).getFullYear() : null
       invoiceCopy.month = invoiceCopy.month ? new Date(invoiceCopy.month).getMonth()+1 : null
-      invoiceCopy.establishment = invoiceCopy.establishment ? invoiceCopy.establishment.id : null;
       invoiceCopy.financier = invoiceCopy.financier ? invoiceCopy.financier.id : null;
-      if (!invoiceCopy?.invoiceItems) invoiceCopy['invoiceItems'] = [];
-      let items = [];
-      invoiceCopy.invoiceItems.forEach((item) => {
-        let { __typename, ...itemCopy } = item;
-        itemCopy.beneficiary = itemCopy.beneficiary ? itemCopy.beneficiary.id : null;
-        itemCopy.establishment = itemCopy.establishment ? itemCopy.establishment.id : null;
-        items.push(itemCopy);
-      });
-      invoiceCopy.invoiceItems = items;
+
+      invoiceCopy.invoiceEstablishments ??= [];
+
+      invoiceCopy.invoiceEstablishments = invoiceCopy.invoiceEstablishments.map(({ __typename, establishment, invoiceItems = [], ...itemCopy }) => ({
+        ...itemCopy,
+        establishment: establishment?.id || null,
+        invoiceItems: invoiceItems.map(({ __typename, beneficiary, ...itemICopy }) => ({
+          ...itemICopy,
+          beneficiary: beneficiary?.id || null,
+        })),
+      }));
+      console.log(invoiceCopy)
       if (invoiceCopy?.id && invoiceCopy?.id != '') {
         onUpdateInvoice({
           id: invoiceCopy.id,
@@ -100,42 +96,83 @@ export default function AddInvoiceForm({ idInvoice, title }) {
         });
     },
   });
-  const addInvoiceEntry = () => {
+
+  const addInvoiceEstablishment = () => {
     formik.setValues({
       ...formik.values,
-      invoiceItems: [
-        ...formik.values.invoiceItems,
+      invoiceEstablishments: [
+        ...formik.values.invoiceEstablishments,
         { 
+          establishment: null,
           establishmentName: '',
-          preferredName: '',
-          firstName: '',
-          lastName: '',
-          birthDate: null,
-          entryDate: null,
-          releaseDate: null,
-          description: '',
-          measurementUnit: MEASUREMENT_ACTIVITY_UNITS.DAY,
-          unitPrice: 0,
-          quantity: 1,
+          establishmentTvaNumber: '',
+          establishmentInfos: '',
+          establishmentCapacity: 0,
+          establishmentUnitPrice: 0,
+          paymentMethod: PAYMENT_METHOD.BANK_TRANSFER,
+          comment: '',
+          invoiceItems: [],
+          totalHt: 0,
           tva: 0,
           discount: 0,
-          amountHt: 0,
-          amountTtc: 0,
-          beneficiary: null,
-          establishment: null,
+          totalTtc: 0,
         },
       ],
     });
   };
 
-  const removeInvoiceEntry = (index) => {
-    const updatedInvoiceEntries = [...formik.values.invoiceItems];
-    updatedInvoiceEntries.splice(index, 1);
+  const removeInvoiceEstablishment = (index) => {
+    const updatedInvoiceEstablishments = [...formik.values.invoiceEstablishments];
+    updatedInvoiceEstablishments.splice(index, 1);
 
     formik.setValues({
       ...formik.values,
-      invoiceItems: updatedInvoiceEntries,
+      invoiceEstablishments: updatedInvoiceEstablishments,
     });
+  };
+
+  const addInvoiceEntry = (establishmentIndex) => {
+    const updatedInvoiceEstablishments = [...formik.values.invoiceEstablishments];
+  
+    updatedInvoiceEstablishments[establishmentIndex].invoiceItems.push({
+      firstName: '',
+      lastName: '',
+      birthDate: null,
+      entryDate: null,
+      releaseDate: null,
+      description: '',
+      measurementUnit: MEASUREMENT_ACTIVITY_UNITS.DAY,
+      unitPrice: 0,
+      quantity: 1,
+      tva: 0,
+      discount: 0,
+      amountHt: 0,
+      amountTtc: 0,
+      beneficiary: null,
+    });
+  
+    formik.setValues({
+      ...formik.values,
+      invoiceEstablishments: updatedInvoiceEstablishments,
+    });
+  };
+  
+
+  const removeInvoiceEntry = (establishmentIndex, entryIndex) => {
+    const updatedInvoiceEstablishments = [...formik.values.invoiceEstablishments];
+  
+    // Vérifie que l'index est valide avant de supprimer
+    if (
+      updatedInvoiceEstablishments[establishmentIndex] &&
+      updatedInvoiceEstablishments[establishmentIndex].invoiceItems[entryIndex]
+    ) {
+      updatedInvoiceEstablishments[establishmentIndex].invoiceItems.splice(entryIndex, 1);
+  
+      formik.setValues({
+        ...formik.values,
+        invoiceEstablishments: updatedInvoiceEstablishments,
+      });
+    }
   };
 
 
@@ -251,16 +288,19 @@ export default function AddInvoiceForm({ idInvoice, title }) {
         invoiceCopy.emissionDate = invoiceCopy.emissionDate ? dayjs(invoiceCopy.emissionDate) : null;
         invoiceCopy.dueDate = invoiceCopy.dueDate ? dayjs(invoiceCopy.dueDate) : null;
         
-        if (!invoiceCopy?.invoiceItems) invoiceCopy['invoiceItems'] = [];
-        let items = [];
-        invoiceCopy.invoiceItems.forEach((item) => {
-          let { __typename, ...itemCopy } = item;
-          itemCopy.birthDate = itemCopy.birthDate ? dayjs(itemCopy.birthDate) : null;
-          itemCopy.entryDate = itemCopy.entryDate ? dayjs(itemCopy.entryDate) : null;
-          itemCopy.releaseDate = itemCopy.releaseDate ? dayjs(itemCopy.releaseDate) : null;
-          items.push(itemCopy);
-        });
-        invoiceCopy.invoiceItems = items;
+        invoiceCopy.invoiceEstablishments ??= [];
+
+        invoiceCopy.invoiceEstablishments = invoiceCopy.invoiceEstablishments.map(({ __typename, establishment, invoiceItems = [], ...itemCopy }) => ({
+          ...itemCopy,
+          establishment: establishment,
+          invoiceItems: invoiceItems.map(({ __typename, beneficiary, birthDate, entryDate, releaseDate, ...itemICopy }) => ({
+            ...itemICopy,
+            beneficiary: beneficiary || null,
+            birthDate: birthDate ? dayjs(birthDate) : null,
+            entryDate: entryDate ? dayjs(entryDate) : null,
+            releaseDate: releaseDate ? dayjs(releaseDate) : null,
+          })),
+        }));
         formik.setValues(invoiceCopy);
         if(invoiceCopy.status !== INVOICE_STATUS.DRAFT) setIsNotEditable(true)
       },
@@ -314,7 +354,7 @@ export default function AddInvoiceForm({ idInvoice, title }) {
             spacing={{ xs: 1, md: 1 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid item xs={12} sm={6} md={2}>
+            <Grid item xs={12} sm={6} md={3}>
               <Item>
                 <TheDesktopDatePicker
                   id="year"
@@ -336,8 +376,6 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                   disabled={loadingPost || loadingPut || isNotEditable}
                 />
               </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={2}>
               <Item>
                 <TheDesktopDatePicker
                   id="month"
@@ -360,7 +398,7 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={2}>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <TheDesktopDatePicker
                   label="Date d'émission"
@@ -369,8 +407,6 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                   disabled={loadingPost || loadingPut || isNotEditable}
                 />
               </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={2}>
               <Item>
                 <TheDesktopDatePicker
                   label="Date d'échéance"
@@ -380,44 +416,7 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={2}>
-              <Item>
-                <TheAutocomplete
-                  options={establishmentsData?.establishments?.nodes}
-                  onInput={(e) => {
-                    onGetEstablishments(e.target.value)
-                  }}
-                  onFocus={(e) => {
-                    onGetEstablishments(e.target.value)
-                  }}
-                  id="establishment"
-                  placeholder="Structure"
-                  multiple={false}
-                  value={formik.values.establishment}
-                  onChange={(e, newValue) => {
-                    formik.setFieldValue('establishment', newValue)
-                    formik.setFieldValue('establishmentName', newValue?.name)
-                    const infos = [
-                      newValue?.address || '', // Adresse principale
-                      newValue?.additionalAddress || '', // Complément d'adresse
-                      `${newValue?.zipCode ? newValue?.zipCode+',' : ''} ${newValue?.city || ''}`, // Code postal, Ville
-                      newValue?.phone || '', // Téléphone fixe
-                      newValue?.mobile || '', // Mobile
-                      newValue?.email || '' // Email
-                    ]
-                      .filter(info => info.trim() !== '') // Supprimer les lignes vides
-                      .join('\n'); // Joindre les lignes avec un retour à la ligne
-                  
-                    formik.setFieldValue('establishmentInfos', infos);
-                  }}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.establishment && Boolean(formik.errors.establishment)}
-                  helperText={formik.touched.establishment && formik.errors.establishment}
-                  disabled={loadingPost || loadingPut || isNotEditable}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={2}>
+            <Grid item xs={12} sm={6} md={5}>
               <Item>
                 <TheAutocomplete
                   options={financiersData?.financiers?.nodes}
@@ -434,7 +433,7 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                   value={formik.values.financier}
                   onChange={(e, newValue) => {
                     formik.setFieldValue('financier', newValue)
-                    formik.setFieldValue('clientName', newValue?.name)
+                    formik.setFieldValue('financierName', newValue?.name)
                     const infos = [
                       newValue?.address || '', // Adresse principale
                       newValue?.additionalAddress || '', // Complément d'adresse
@@ -446,7 +445,7 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                       .filter(info => info.trim() !== '') // Supprimer les lignes vides
                       .join('\n'); // Joindre les lignes avec un retour à la ligne
                   
-                    formik.setFieldValue('clientInfos', infos);
+                    formik.setFieldValue('financierInfos', infos);
                   }}
                   onBlur={formik.handleBlur}
                   error={formik.touched.financier && Boolean(formik.errors.financier)}
@@ -454,86 +453,159 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                   disabled={loadingPost || loadingPut || isNotEditable}
                 />
               </Item>
-            </Grid>
-            <Grid item xs={12} sm={12} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Adresse de la strcuture"
-                  multiline
-                  rows={5}
-                  value={formik.values.establishmentInfos}
-                  onChange={(e) =>
-                    formik.setFieldValue('establishmentInfos', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut || isNotEditable}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={12} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Capacité"
-                  value={formik.values.establishmentCapacity}
-                  onChange={(e) =>
-                    formik.setFieldValue('establishmentCapacity', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut || isNotEditable}
-                />
-              </Item>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Prix de journée"
-                  type="number"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="start">€</InputAdornment>
-                    ),
-                  }}
-                  value={formik.values.establishmentUnitPrice}
-                  onChange={(e) =>
-                    formik.setFieldValue('establishmentUnitPrice', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut || isNotEditable}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={12} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
                   label="Adresse du financeur"
                   multiline
                   rows={5}
-                  value={formik.values.clientInfos}
+                  value={formik.values.financierInfos}
                   onChange={(e) =>
-                    formik.setFieldValue('clientInfos', e.target.value)
+                    formik.setFieldValue('financierInfos', e.target.value)
                   }
                   disabled={loadingPost || loadingPut || isNotEditable}
                 />
               </Item>
             </Grid>
           </Grid>
+          <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid item xs={12} sm={12} md={12} >
-              <InvoiceSpanningTable 
-                invoice={formik.values}
-                items={formik.values?.invoiceItems || []}
-                addItem={addInvoiceEntry}
-                removeItem={removeInvoiceEntry}
-                onChange={({type, index, field, value})=>{
-                  formik.setFieldValue(`invoiceItems.${index}.${field}`, value)
-                }}
-                disabled={loadingPost || loadingPut || isNotEditable}
-                isNotEditable={isNotEditable}
-                />
-            </Grid>
+            {formik.values?.invoiceEstablishments?.map((item, index) => 
+                <Grid Grid item xs={12} sm={12} md={12}>
+                  <Box sx={{position: 'relative'}}>
+                    <Grid
+                      container
+                      spacing={{ xs: 2, md: 3 }}
+                      columns={{ xs: 4, sm: 8, md: 12 }}
+                      sx={{backgroundColor: index%2 ? '' : '#f1f1f1', marginY:2, border: '1px solid #ccc'}}
+                    >
+                      <Grid item xs={12} sm={6} md={3}>
+                        <Item>
+                          <TheAutocomplete
+                            options={establishmentsData?.establishments?.nodes}
+                            onInput={(e) => {
+                              onGetEstablishments(e.target.value)
+                            }}
+                            onFocus={(e) => {
+                              onGetEstablishments(e.target.value)
+                            }}
+                            id="establishment"
+                            placeholder="Structure"
+                            multiple={false}
+                            value={item.establishment}
+                            onChange={(e, newValue) => {
+                              formik.setFieldValue(`invoiceEstablishments.${index}.establishment`, newValue)
+                              formik.setFieldValue(`invoiceEstablishments.${index}.establishmentName`, newValue?.name)
+                              const infos = [
+                                newValue?.address || '', // Adresse principale
+                                newValue?.additionalAddress || '', // Complément d'adresse
+                                `${newValue?.zipCode ? newValue?.zipCode+',' : ''} ${newValue?.city || ''}`, // Code postal, Ville
+                                newValue?.phone || '', // Téléphone fixe
+                                newValue?.mobile || '', // Mobile
+                                newValue?.email || '' // Email
+                              ]
+                                .filter(info => info.trim() !== '') // Supprimer les lignes vides
+                                .join('\n'); // Joindre les lignes avec un retour à la ligne
+                              formik.setFieldValue(`invoiceEstablishments.${index}.establishmentInfos`, infos)
+                            }}
+                            disabled={loadingPost || loadingPut || isNotEditable}
+                          />
+                        </Item>
+                      </Grid>
+                      <Grid item xs={12} sm={6} md={4}>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Capacité"
+                            value={item.establishmentCapacity}
+                            onChange={(date) =>
+                              formik.setFieldValue(`invoiceEstablishments.${index}.establishmentCapacity`, e.target.value)
+                            }
+                            disabled={loadingPost || loadingPut || isNotEditable}
+                          />
+                        </Item>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Prix de journée"
+                            type="number"
+                            InputProps={{
+                              endAdornment: (
+                                <InputAdornment position="start">€</InputAdornment>
+                              ),
+                            }}
+                            value={item.establishmentUnitPrice}
+                            onChange={(date) =>
+                              formik.setFieldValue(`invoiceEstablishments.${index}.establishmentUnitPrice`, e.target.value)
+                            }
+                            disabled={loadingPost || loadingPut || isNotEditable}
+                          />
+                        </Item>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={5}>
+                        <Item>
+                          <TheTextField
+                            variant="outlined"
+                            label="Adresse de la strcuture"
+                            multiline
+                            rows={5}
+                            value={item.establishmentInfos}
+                            onChange={(date) =>
+                              formik.setFieldValue(`invoiceEstablishments.${index}.establishmentInfos`, e.target.value)
+                            }
+                            disabled={loadingPost || loadingPut || isNotEditable}
+                          />
+                        </Item>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={12} >
+                        <InvoiceSpanningTable 
+                          key={index}
+                          invoice={formik.values}
+                          items={item?.invoiceItems || []}
+                          addItem={()=>addInvoiceEntry(index)}
+                          removeItem={(entryIndex)=>removeInvoiceEntry(index, entryIndex)}
+                          onChange={({ type, index: entryIndex, field, value }) => {
+                            formik.setFieldValue(
+                              `invoiceEstablishments.${index}.invoiceItems.${entryIndex}.${field}`,
+                              value
+                            );
+                          }}
+                          disabled={loadingPost || loadingPut || isNotEditable}
+                          isNotEditable={isNotEditable}
+                          />
+                      </Grid>
+                    </Grid>
+                      {!isNotEditable && <Tooltip title="Retirer ce bloc" >
+                                          <IconButton sx={{position: 'absolute', top: -3, left: -24}}
+                                              onClick={() => removeInvoiceEstablishment(index)}
+                                              edge="end"
+                                              color="error"
+                                              disabled={loadingPost || loadingPut || isNotEditable}
+                                              >
+                                              <Close />
+                                          </IconButton>
+                                      </Tooltip>}
+                  </Box>
+                </Grid>
+            )}
+            {!isNotEditable && <Grid item xs={12} sm={12} md={12} sx={{borderStyle: 'dashed', borderWidth: 2, borderColor: '#f1f1f1', backgroundColor: '#fcfcfc'}}>
+                  <Box onClick={addInvoiceEstablishment}>
+                      <Button
+                          variant="outlined"
+                          size="small"
+                          color="secondary"
+                          disabled={loadingPost || loadingPut || isNotEditable}
+                          sx={{textTransform: 'initial', fontStyle: 'italic'}}
+                      >
+                          Ajouter une structure
+                      </Button>
+                  </Box>
+                  <Box align="right" onClick={addInvoiceEstablishment} sx={{color: '#c1c1c1', fontStyle: 'italic', fontSize: 14}}>Cliquez pour ajouter une structure</Box>
+              </Grid>}
           </Grid>
           <Grid
             container sx={{marginTop: 5}}
