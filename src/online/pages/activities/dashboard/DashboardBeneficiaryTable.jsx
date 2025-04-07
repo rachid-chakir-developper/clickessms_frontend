@@ -89,18 +89,18 @@ const DashboardBeneficiaryTable = ({ activityBeneficiaryEstablishments=[] }) => 
 
     return (
         <Box sx={{ flexGrow: 1, marginTop: 2 }}>
-            <TabContext value={selectedEstablishment}>
+            <TabContext value={`${selectedEstablishment}`}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example" 
                         variant="scrollable"
                         scrollButtons="auto">
                         {activityBeneficiaryEstablishments.map((establishment, index) => (
-                            <Tab label={establishment.establishment?.name || `Établissement ${index + 1}`} key={index} value={index} />
+                            <Tab label={establishment.establishment?.name || `Établissement ${index + 1}`} key={index} value={`${index}`} />
                         ))}
                     </TabList>
                 </Box>
                 {activityBeneficiaryEstablishments.map((activityBeneficiaryEstablishment, index) => (
-                    <TabPanel key={index} value={index}>
+                    <TabPanel key={index} value={`${index}`} >
                         <DashboardBeneficiaryTableItem activityBeneficiaryEstablishment={activityBeneficiaryEstablishment} />
                     </TabPanel>
                 ))}

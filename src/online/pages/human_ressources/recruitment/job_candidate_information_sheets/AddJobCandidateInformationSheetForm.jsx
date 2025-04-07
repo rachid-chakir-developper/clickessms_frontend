@@ -50,6 +50,7 @@ export default function AddJobCandidateInformationSheetForm({ idJobCandidateInfo
       jobTitle: '',
       isActive: true,
       jobPosition: null,
+      jobCandidate: null,
       description: '',
       observation: '',
       documentRecords: [],
@@ -59,6 +60,9 @@ export default function AddJobCandidateInformationSheetForm({ idJobCandidateInfo
       let jobCandidateInformationSheetCopy = {...values};
       jobCandidateInformationSheetCopy.jobPosition = jobCandidateInformationSheetCopy.jobPosition
         ? jobCandidateInformationSheetCopy.jobPosition.id
+        : null;
+      jobCandidateInformationSheetCopy.jobCandidate = jobCandidateInformationSheetCopy.jobCandidate
+        ? jobCandidateInformationSheetCopy.jobCandidate.id
         : null;
       
       let items = [];
@@ -185,45 +189,49 @@ export default function AddJobCandidateInformationSheetForm({ idJobCandidateInfo
   };
 
 
-  const {
-    loading: loadingDatas,
-    data: dataData,
-    error: datsError,
-    fetchMore: fetchMoreDatas,
-  } = useQuery(GET_DATAS_JOB_CANDIDATE_INFORMATION_SHEET, { fetchPolicy: 'network-only' });
-
-
-  const addDocumentRecord = (jobCandidateDocumentType) => {
-    const exists = formik.values.documentRecords.some(
-      (record) => record.jobCandidateDocumentType === jobCandidateDocumentType?.id
-    );
-  
-    if (!exists) {
-      formik.setValues({
-        ...formik.values,
-        documentRecords: [
-          ...formik.values.documentRecords,
-          { 
-            document: undefined, 
-            name: '', 
-            jobCandidateDocumentType: jobCandidateDocumentType.id, 
-            startingDate: null, 
-            endingDate: null, 
-            description: '', 
-            comment: '',
-            isNotificationEnabled: false,
-            notificationPeriodUnit: NOTIFICATION_PERIOD_UNITS.MONTH, 
-            notificationPeriodValue: 1
-          },
-        ],
-      });
-    }
-  };
-  
-  // Boucle sur les types de documents et ajoute-les si non existants
-  dataData?.jobCandidateDocumentTypes?.forEach((data) => {
-    addDocumentRecord(data);
-  });
+ const [getDataData, {
+     loading: loadingDatas,
+     data: dataData,
+     error: datsError,
+     fetchMore: fetchMoreDatas,
+   }] = useLazyQuery(GET_DATAS_JOB_CANDIDATE_INFORMATION_SHEET, { fetchPolicy: 'network-only' });
+ 
+ 
+   const addDocumentRecord = (jobCandidateDocumentType) => {
+     const { documentRecords } = formik.values;
+     // Vérifie si le type de document existe déjà
+     const exists = documentRecords.some(
+       (record) => Number(record.jobCandidateDocumentType) === Number(jobCandidateDocumentType.id)
+     );
+   
+     if (exists) return; // Ne rien faire si déjà présent
+   
+     // Ajoute le nouveau document
+     formik.setValues({
+       ...formik.values,
+       documentRecords: [
+         ...documentRecords,
+         {
+           document: undefined,
+           name: '',
+           jobCandidateDocumentType: jobCandidateDocumentType.id,
+           startingDate: null,
+           endingDate: null,
+           description: '',
+           comment: '',
+           isNotificationEnabled: false,
+           notificationPeriodUnit: NOTIFICATION_PERIOD_UNITS.MONTH,
+           notificationPeriodValue: 1,
+         },
+       ],
+     });
+   };
+   
+   
+   // Boucle sur les types de documents et ajoute-les si non existants
+   dataData?.jobCandidateDocumentTypes?.forEach((data) => {
+     addDocumentRecord(data);
+   });
   
 
   const removeDocumentRecord = (index) => {
@@ -252,6 +260,7 @@ export default function AddJobCandidateInformationSheetForm({ idJobCandidateInfo
       });
       jobCandidateInformationSheetCopy.documentRecords = items;
       formik.setValues(jobCandidateInformationSheetCopy);
+      getDataData()
     },
     onError: (err) => console.log(err),
   });
@@ -426,15 +435,15 @@ export default function AddJobCandidateInformationSheetForm({ idJobCandidateInfo
                             <Item>
                               <TheFileField variant="outlined"
                                 label={
-                                  dataData?.jobCandidateDocumentTypes?.find(type => type.id === item.jobCandidateDocumentType)?.name || "Document"
+                                  dataData?.jobCandidateDocumentTypes?.find(type => Number(type.id) === Number(item.jobCandidateDocumentType))?.name || "Document"
                                 }
                                 fileValue={item.document}
                                 onChange={(file) => formik.setFieldValue(`documentRecords.${index}.document`, file)}
-                                disabled={loadingPost || loadingPut}
+                                disabled={loadingPut}
                                 />
                             </Item>
                           </Grid>
-                          <Grid item xs={12} sm={6} md={2.5} >
+                          <Grid item xs={12} sm={6} md={3} >
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -446,8 +455,6 @@ export default function AddJobCandidateInformationSheetForm({ idJobCandidateInfo
                                 disabled={loadingPost || loadingPut}
                               />
                             </Item>
-                          </Grid>
-                          <Grid item xs={12} sm={6} md={2.5} >
                             <Item>
                               <TheDesktopDatePicker
                                 variant="outlined"
@@ -460,13 +467,13 @@ export default function AddJobCandidateInformationSheetForm({ idJobCandidateInfo
                               />
                             </Item>
                           </Grid>
-                          <Grid item xs={12} sm={6} md={4} >
+                          <Grid item xs={12} sm={6} md={6} >
                             <Item sx={{position: 'relative'}}>
                               <TheTextField
                                 variant="outlined"
                                 label="Commentaire"
                                 multiline
-                                rows={3}
+                                rows={5}
                                 value={item.comment}
                                 onChange={(e) =>
                                   formik.setFieldValue(`documentRecords.${index}.comment`, e.target.value)

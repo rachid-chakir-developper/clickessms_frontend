@@ -20,6 +20,7 @@ import { getContractTypeLabel, getFormatDate, getFormatDateTime } from '../../..
 import { Edit, ArrowBack, Description, Note, Work, BusinessCenter, Event } from '@mui/icons-material';
 import EmployeeChip from '../../employees/EmployeeChip';
 import JobPositionTabs from './job_position-tabs/JobPositionTabs';
+import JobPositionStatusLabelMenu from './JobPositionStatusLabelMenu';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -202,6 +203,11 @@ function JobPositionMiniInfos({ jobPosition }) {
               <Typography variant="body2" color="text.secondary">
                 <b>Dernière modification:</b> {getFormatDateTime(jobPosition?.updatedAt)}
               </Typography>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="body2" color="textSecondary">
+                <b>Status :</b>
+              </Typography>
+              <JobPositionStatusLabelMenu jobPosition={jobPosition} />
             </Grid>
           </Grid>
         </Grid>

@@ -35,6 +35,20 @@ export const PUT_JOB_POSITION = gql`
   ${JOB_POSITION_BASIC_INFOS}
 `;
 
+export const PUT_JOB_POSITION_FIELDS = gql`
+  mutation UpdateJobPositionFields($id: ID!, $jobPositionData: JobPositionFieldInput!) {
+    updateJobPositionFields(id: $id, jobPositionData: $jobPositionData) {
+      done
+      success
+      message
+      jobPosition {
+        ...JobPositionBasicInfosFragment
+      }
+    }
+  }
+  ${JOB_POSITION_BASIC_INFOS}
+`;
+
 export const DELETE_JOB_POSITION = gql`
   mutation DeleteJobPosition($id: ID!) {
     deleteJobPosition(id: $id) {

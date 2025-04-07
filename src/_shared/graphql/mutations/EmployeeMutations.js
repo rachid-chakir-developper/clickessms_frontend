@@ -59,6 +59,19 @@ export const PUT_EMPLOYEE_STATE = gql`
   ${EMPLOYEE_BASIC_INFOS}
 `;
 
+export const GENERATE_EMPLOYEE = gql`
+  mutation GenerateEmployee($generateEmployeeData: GenerateEmployeeInput!) {
+    generateEmployee(generateEmployeeData: $generateEmployeeData) {
+      success
+      message
+      employee{
+        ...EmployeeBasicInfosFragment
+      }
+    }
+  }
+  ${EMPLOYEE_BASIC_INFOS}
+`;
+
 export const DELETE_EMPLOYEE = gql`
   mutation DeleteEmployee($id: ID!) {
     deleteEmployee(id: $id) {

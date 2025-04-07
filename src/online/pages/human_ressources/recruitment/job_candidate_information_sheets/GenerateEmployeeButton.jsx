@@ -12,7 +12,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import dayjs from 'dayjs';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { Add, Event, ReceiptLong, Refresh } from '@mui/icons-material';
+import { Add, Event, AccountBox, ReceiptLong, Refresh } from '@mui/icons-material';
 import {  POST_EMPLOYEE } from '../../../../../_shared/graphql/mutations/EmployeeMutations';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
 import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
@@ -43,26 +43,28 @@ function DialogGenerateEmployee({ open, onClose, onConfirm, jobCandidateInformat
     const navigate = useNavigate();
     const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
     const validationSchema = yup.object({
-        topics: yup
-          .string("Entrez l'objet de l'entretien")
-          .required("L'ordre du jour est obligatoire"),
-        jobPosition: yup
-        .string()
-        .required('Le champ fiche est obligatoire.'),
-        jobCandidate: yup
-        .string()
-        .required('Le champ candidat est obligatoire.'),
-    });
+        firstName: yup.string()
+          .required('Le prénom est requis'),
+        lastName: yup.string()
+          .required('Le nom est requis'),
+        email: yup.string()
+          .email("L'email n'est pas valide")
+          .required("L'email est requis"),
+        jobCandidateEmail: yup.string()
+          .email("L'email du candidat n'est pas valide")
+          .required("L'email du candidat est requis"),
+        mobile: yup.string()
+          .matches(/^[0-9\s()+-]*$/, 'Le numéro de télémobile est invalide')
+          .nullable(), // facultatif
+      });
 
     const formik = useFormik({
         initialValues: {
-            topics: '',
-            employeeMode: 'CANDIDATE_INTERVIEW',
-            jobPosition: jobPosition?.id,
-            jobCandidate: jobCandidate?.id,
-            startingDateTime: null,
-            endingDateTime: null,
-            description: '',
+            firstName: '',
+            lastName: '',
+            email: '',
+            jobCandidateEmail: '',
+            mobile: '',
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -72,7 +74,7 @@ function DialogGenerateEmployee({ open, onClose, onConfirm, jobCandidateInformat
         },
     });
 
-      const [createEmployee, { loading: loadingPost }] = useMutation(POST_EMPLOYEE, {
+    const [createEmployee, { loading: loadingPost }] = useMutation(POST_EMPLOYEE, {
         onCompleted: (data) => {
             console.log(data);
             setNotifyAlert({
@@ -85,39 +87,29 @@ function DialogGenerateEmployee({ open, onClose, onConfirm, jobCandidateInformat
             navigate(`/online/ressources-humaines/recrutement/entretiens/modifier/${employeeCopy?.id}`)
         },
         update(cache, { data: { createEmployee } }) {
-          const newEmployee = createEmployee.employee;
-    
-          cache.modify({
+            const newEmployee = createEmployee.employee;
+
+            cache.modify({
             fields: {
-              employees(existingEmployees = { totalCount: 0, nodes: [] }) {
+                employees(existingEmployees = { totalCount: 0, nodes: [] }) {
                 return {
-                  totalCount: existingEmployees.totalCount + 1,
-                  nodes: [newEmployee, ...existingEmployees.nodes],
+                    totalCount: existingEmployees.totalCount + 1,
+                    nodes: [newEmployee, ...existingEmployees.nodes],
                 };
-              },
+                },
             },
-          });
+            });
         },
         onError: (err) => {
-          console.log(err);
-          setNotifyAlert({
+            console.log(err);
+            setNotifyAlert({
             isOpen: true,
             message: 'Non ajouté ! Veuillez réessayer.',
             type: 'error',
-          });
+            });
         },
-      });
+    });
     
-const [getEmployees, {
-    loading: loadingEmployees,
-    data: employeesData,
-    error: employeesError,
-    fetchMore: fetchMoreEmployees,
-  }] = useLazyQuery(GET_EMPLOYEES, { variables: { employeeFilter : null, page: 1, limit: 10 } });
-  
-  const onGetEmployees = (keyword)=>{
-    getEmployees({ variables: { employeeFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
-  }
     const handleOk = (values) => {
         setConfirmDialog({
         isOpen: true,
@@ -135,132 +127,131 @@ const [getEmployees, {
     React.useEffect(() => {
         if (open) {
             formik.setValues({
-                topics: '',
-                employeeMode: 'CANDIDATE_INTERVIEW',
-                jobPosition: jobPosition?.id,
-                jobCandidate: jobCandidate?.id,
-                startingDateTime: null,
-                endingDateTime: null,
-                description: '',
+                firstName: jobCandidate?.firstName,
+                lastName: jobCandidate?.lastName,
+                email: '',
+                jobCandidateEmail: jobCandidate?.email,
+                mobile: jobCandidate?.phone,
             })
         }
     }, [open]);
 
 
     return (
-        <BootstrapDialog onClose={onClose} aria-labelledby="customized-dialog-title" open={open}>
-        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-            Programmer un entretien avec <em>[{`${jobCandidate?.firstName} ${jobCandidate?.lastName}`}]</em>
-        </DialogTitle>
-        <IconButton
-            aria-label="close"
-            onClick={onClose}
-            sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-            }}
-        >
-            <CloseIcon />
-        </IconButton>
-        <form onSubmit={formik.handleSubmit}>
-            <DialogContent dividers>
-            <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
-                <Grid item xs={12} sm={12} md={12}>
-                    <Item>
-                        <TheTextField
-                            variant="outlined"
-                            label="Ordre du jour"
-                            id="topics"
-                            multiline
-                            minRows={6}
-                            value={formik.values.topics}
-                            required
-                            onChange={(e) =>
-                                formik.setFieldValue('topics', e.target.value)
-                            }
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.topics && Boolean(formik.errors.topics)}
-                            helperText={formik.touched.topics && formik.errors.topics}
-                            disabled={loadingPost}
-                        />
-                    </Item>
-                </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                    <Item>
-                        <TheDateTimePicker
-                            label="Date et heure de début"
-                            value={formik.values.startingDateTime}
-                            onChange={(date) =>
-                                formik.setFieldValue('startingDateTime', date)
-                            }
-                            disabled={loadingPost}
-                        />
-                    </Item>
-                </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                    <Item>
-                        <TheDateTimePicker
-                            label="Date de et heure fin"
-                            value={formik.values.endingDateTime}
-                            onChange={(date) =>
-                                formik.setFieldValue('endingDateTime', date)
-                            }
-                            disabled={loadingPost}
-                        />
-                    </Item>
-                </Grid>
-                <Grid item xs={12} sm={12} md={12} >
-                    <Item>
-                        <TheAutocomplete
-                            options={employeesData?.employees?.nodes}
-                            onInput={(e) => {
-                                onGetEmployees(e.target.value)
-                            }}
-                            onFocus={(e) => {
-                                onGetEmployees(e.target.value)
-                            }}
-                            label="Recruteur(s)"
-                            placeholder="Ajouter un recruteur"
-                            limitTags={3}
-                            value={formik.values.participants}
-                            onChange={(e, newValue) =>
-                                formik.setFieldValue('participants', newValue)
-                            }
-                            disabled={loadingPost}
-                        />
-                    </Item>
-                </Grid>
-                <Grid item xs={12} sm={12} md={12}>
-                    <Item>
-                        <TheTextField
-                            variant="outlined"
-                            label="Détail"
-                            multiline
-                            rows={8}
-                            value={formik.values.description}
-                            onChange={(e) =>
-                            formik.setFieldValue('description', e.target.value)
-                            }
-                            disabled={loadingPost}
-                        />
-                    </Item>
-                </Grid>
-            </Grid>
-            </DialogContent>
-            <DialogActions>
-            <Button type="submit" variant="contained" disabled={!formik.isValid}>
-                Valider
-            </Button>
-            </DialogActions>
-        </form>
+        <BootstrapDialog onClose={onClose} aria-labelledby="customized-dialog-title" open={open} fullWidth maxWidth="md">
+            <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                Créer la fiche employé pour <em>[{`${jobCandidate?.firstName} ${jobCandidate?.lastName}`}]</em>
+            </DialogTitle>
+            <IconButton
+                aria-label="close"
+                onClick={onClose}
+                sx={{
+                position: 'absolute',
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
+                }}
+            >
+                <CloseIcon />
+            </IconButton>
+            <form onSubmit={formik.handleSubmit}>
+                <DialogContent dividers>
+                    <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Item>
+                                <TheTextField
+                                    id="firstName"
+                                    variant="outlined"
+                                    label="Prénom"
+                                    value={formik.values.firstName}
+                                    onChange={(e) => formik.setFieldValue('firstName', e.target.value)}
+                                    onBlur={formik.handleBlur}
+                                    error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                                    helperText={formik.touched.firstName && formik.errors.firstName}
+                                    disabled={loadingPost}
+                                />
+                            </Item>
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Item>
+                                <TheTextField
+                                    id="lastName"
+                                    variant="outlined"
+                                    label="Nom"
+                                    value={formik.values.lastName}
+                                    onChange={(e) => formik.setFieldValue('lastName', e.target.value)}
+                                    onBlur={formik.handleBlur}
+                                    error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+                                    helperText={formik.touched.lastName && formik.errors.lastName}
+                                    disabled={loadingPost}
+                                />
+                            </Item>
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12} >
+                            <Item>
+                            <TheTextField
+                                id="email"
+                                variant="outlined"
+                                label="E-mail principale de la connexion"
+                                value={formik.values.email}
+                                onChange={(e) =>
+                                    formik.setFieldValue('email', e.target.value)
+                                }
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.email && Boolean(formik.errors.email)}
+                                helperText={formik.touched.email ? formik.errors.email : "E-mail de connexion de l'utilisateur"}
+                                disabled={loadingPost}
+                            />
+                            </Item>
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6} >
+                            <Item>
+                            <TheTextField
+                                id="jobCandidateEmail"
+                                variant="outlined"
+                                label="E-mail secondaire"
+                                value={formik.values.jobCandidateEmail}
+                                onChange={(e) =>
+                                    formik.setFieldValue('jobCandidateEmail', e.target.value)
+                                }
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.jobCandidateEmail && Boolean(formik.errors.jobCandidateEmail)}
+                                helperText={formik.touched.jobCandidateEmail ? formik.errors.jobCandidateEmail : "E-mail qui va recevoir les instructions de première connexion"}
+                                disabled={loadingPost}
+                            />
+                            </Item>
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6} >
+                            <Item>
+                            <TheTextField
+                                id="mobile"
+                                variant="outlined"
+                                label="Tél"
+                                value={formik.values.mobile}
+                                onChange={(e) =>
+                                    formik.setFieldValue('mobile', e.target.value)
+                                }
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.mobile && Boolean(formik.errors.mobile)}
+                                helperText={formik.touched.mobile && formik.errors.mobile}
+                                disabled={loadingPost}
+                            />
+                            </Item>
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button type="submit" variant="contained" disabled={!formik.isValid}>
+                        Valider
+                    </Button>
+                </DialogActions>
+            </form>
         </BootstrapDialog>
     );
 }
 
 
-export default function GenerateEmployeeButton({ jobCandidateInformationSheet , buttonType="button", size="medium", label="Programmer un entretien" }) {
+export default function GenerateEmployeeButton({ jobCandidateInformationSheet , buttonType="button", size="medium", label="Générer la fiche employé" }) {
     
     const [isDialogGenerateEmployeeOpen, setDialogGenerateEmployeeOpen] = React.useState(false);
 
@@ -275,20 +266,20 @@ export default function GenerateEmployeeButton({ jobCandidateInformationSheet , 
     return (
         <>  
                 {buttonType==="button" && 
-                    <Button size={size} variant="outlined" onClick={DialogGenerateEmployeeOpen} endIcon={<Event />}>
+                    <Button size={size} variant="outlined" onClick={DialogGenerateEmployeeOpen} endIcon={<AccountBox />}>
                     {label}
                 </Button>
                 }
                 {buttonType==="buttonIcon" && <Tooltip title={label}>
                     <IconButton size={size} onClick={DialogGenerateEmployeeOpen}>
-                        <Event size={size} />
+                        <AccountBox size={size} />
                     </IconButton>
                 </Tooltip>
                 }
                 {buttonType==="menuItem" &&
                     <Tooltip title={label}>
                         <MenuItem onClick={DialogGenerateEmployeeOpen}>
-                            <Event sx={{ mr: 2 }} />
+                            <AccountBox sx={{ mr: 2 }} />
                             {label}
                         </MenuItem>
                     </Tooltip>

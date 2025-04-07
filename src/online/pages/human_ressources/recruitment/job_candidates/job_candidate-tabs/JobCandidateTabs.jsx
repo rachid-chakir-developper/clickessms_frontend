@@ -75,7 +75,7 @@ LinkTab.propTypes = {
   selected: PropTypes.bool,
 };
 
-export default function JobCandidateTabs({JobCandidate}) {
+export default function JobCandidateTabs({jobCandidate}) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -101,7 +101,7 @@ export default function JobCandidateTabs({JobCandidate}) {
             </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          <JobCandidateInformationSheets JobCandidate={JobCandidate} />
+          <JobCandidateInformationSheets jobCandidate={jobCandidate} />
         </CustomTabPanel>
     </Box>
   );

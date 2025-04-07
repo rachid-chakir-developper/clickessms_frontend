@@ -194,18 +194,18 @@ const SynthesisEstablishmentsTable = ({ activitySynthesis }) => {
 
     return (
         <Box sx={{ flexGrow: 1, marginTop: 2 }}>
-            <TabContext value={selectedEstablishment}>
+            <TabContext value={`${selectedEstablishment}`}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example" 
                         variant="scrollable"
                         scrollButtons="auto">
                         {activitySynthesisEstablishments.map((establishment, index) => (
-                            <Tab label={establishment.establishment?.name || `Établissement ${index + 1}`} key={index} value={index} />
+                            <Tab label={establishment.establishment?.name || `Établissement ${index + 1}`} key={index} value={`${index}`} />
                         ))}
                     </TabList>
                 </Box>
                 {activitySynthesisEstablishments.map((activitySynthesisEstablishment, index) => (
-                    <TabPanel key={index} value={index}>
+                    <TabPanel key={index} value={`${index}`} >
                         <SynthesisEstablishmentsTableItem activitySynthesisEstablishment={activitySynthesisEstablishment} />
                     </TabPanel>
                 ))}

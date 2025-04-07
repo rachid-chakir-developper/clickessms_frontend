@@ -35,6 +35,7 @@ import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksPro
 import { INVOICE_STATUS } from '../../../../_shared/tools/constants';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import FinancierChip from '../../partnerships/financiers/FinancierChip';
+import GeneratePdfButton from '../../../_shared/components/printing/GeneratePdfButton';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -336,8 +337,6 @@ function EnhancedTableToolbar(props) {
   const [selectedColumns, setSelectedColumns] = React.useState(
     headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
   );
-  console.log(selectedRows)
-
   return (
     <Toolbar
       sx={{
@@ -584,15 +583,7 @@ export default function TableListInvoices({
                           horizontal: 'right',
                         }}
                       >
-                        <MenuItem
-                          onClick={() => {
-                            onOpenModalToPrint(row)
-                            handleCloseMenu();
-                          }}
-                        >
-                          <Print sx={{ mr: 2 }} />
-                          Imprimer
-                        </MenuItem>
+                        <GeneratePdfButton documentType="invoice" id={row.id} />
                         <Link
                           to={`/online/ventes/factures/modifier/${row?.id}`}
                           className="no_style"

@@ -33,6 +33,7 @@ import TableExportButton from '../../../../_shared/components/data_tools/export/
 import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
 import TableFilterButton from '../../../../_shared/components/table/TableFilterButton';
 import { formatCurrencyAmount, getContractTypeLabel, getFormatDate, truncateText } from '../../../../../_shared/tools/functions';
+import JobPositionStatusLabelMenu from './JobPositionStatusLabelMenu';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -169,13 +170,15 @@ const headCells = [
         render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
     },
     {
-        id: 'isActive',
-        property: 'is_active',
-        exportField: 'is_active',
+        id: 'status',
+        property: 'status',
+        exportField: 'status',
         numeric: false,
-        disablePadding: true,
-        label: 'État',
-        render: ({isActive})=> isActive ? <AppLabel color="success">Actif</AppLabel> : <AppLabel color="warning">Inactif</AppLabel>
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        label: 'Status',
+        render: (data)=> <JobPositionStatusLabelMenu jobPosition={data} />
     },
     {
         id: 'action',

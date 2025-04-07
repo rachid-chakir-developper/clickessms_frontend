@@ -475,7 +475,7 @@ export default function AddInvoiceForm({ idInvoice, title }) {
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
             {formik.values?.invoiceEstablishments?.map((item, index) => 
-                <Grid Grid item xs={12} sm={12} md={12}>
+                <Grid Grid item xs={12} sm={12} md={12} key={index}>
                   <Box sx={{position: 'relative'}}>
                     <Grid
                       container

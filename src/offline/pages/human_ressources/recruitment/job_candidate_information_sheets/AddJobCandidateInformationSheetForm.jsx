@@ -77,17 +77,7 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
         return
     },
   });
-  
-  const [getJobPositions, {
-      loading: loadingJobPositions,
-      data: jobPositionsData,
-      error: jobPositionsError,
-      fetchMore: fetchMoreJobPositions,
-    }] = useLazyQuery(GET_JOB_POSITIONS, { variables: { jobPositionFilter : null, page: 1, limit: 10 } });
-    
-    const onGetJobPositions = (keyword)=>{
-      getJobPositions({ variables: { jobPositionFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
-    }
+
 
   const [updateJobCandidateInformationSheet, { loading: loadingPut }] = useMutation(PUT_JOB_CANDIDATE_INFORMATION_SHEET, {
     onCompleted: (data) => {
