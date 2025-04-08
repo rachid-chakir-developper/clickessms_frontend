@@ -16,7 +16,7 @@ import { ArrowBack } from '@mui/icons-material';
 import { EMPLOYEE_CONTRACT_RECAP } from '../../../../../_shared/graphql/queries/EmployeeContractQueries';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDateTime, getFormatDate } from '../../../../../_shared/tools/functions';
-import EmployeeItemCard from '../../../human_ressources/employees/EmployeeItemCard';
+import EmployeeChip from '../../../human_ressources/employees/EmployeeChip';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -78,7 +78,7 @@ export default function EmployeeContractDetails() {
           <Grid item xs={12} sx={{ marginTop: 3, marginBottom: 3 }}>
             <Divider />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Description
@@ -88,7 +88,7 @@ export default function EmployeeContractDetails() {
               </Typography>
             </Paper>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <Paper sx={{ padding: 2 }} variant="outlined">
               <Typography gutterBottom variant="subtitle3" component="h3">
                 Observation
@@ -155,17 +155,6 @@ function EmployeeContractMiniInfos({ employeeContract }) {
                 <b>Salaire :</b> {employeeContract?.salary || 0} €
               </Typography>
               <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Typography variant="body2" gutterBottom>
-                <b>Jours de congés payés initiaux :</b> {employeeContract?.initialPaidLeaveDays || 0}
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                <b>Jours de RTT initiaux :</b> {employeeContract?.initialRwtDays || 0}
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                <b>Jours temporaires initiaux :</b> {employeeContract?.initialTemporaryDays || 0}
-              </Typography>
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-              <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
               <Typography variant="body2" color="text.secondary">
                 <b>Date début: </b>{' '}
                 {`${getFormatDate(employeeContract?.startingDate)}`} <br />
@@ -193,17 +182,19 @@ function EmployeeContractOtherInfos({ employeeContract }) {
       }}
     >
       <Typography gutterBottom variant="subtitle3" component="h3">
-        Les employés
+        L'employé
       </Typography>
-      <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-        {employeeContract?.employees?.map((employee, index) => (
-          <Grid item xs={12} sm={12} md={12} key={index}>
-            <Item>
-              <EmployeeItemCard employee={employee?.employee} />
-            </Item>
-          </Grid>
-        ))}
-      </Grid>
+      <EmployeeChip employee={employeeContract?.employee} />
+      <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+      <Typography variant="body2" gutterBottom>
+        <b>Jours de congés payés initiaux :</b> {employeeContract?.initialPaidLeaveDays || 0}
+      </Typography>
+      <Typography variant="body2" gutterBottom>
+        <b>Jours de RTT initiaux :</b> {employeeContract?.initialRwtDays || 0}
+      </Typography>
+      <Typography variant="body2" gutterBottom>
+        <b>Jours temporaires initiaux :</b> {employeeContract?.initialTemporaryDays || 0}
+      </Typography>
     </Paper>
   );
 }

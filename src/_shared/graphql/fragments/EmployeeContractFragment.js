@@ -95,6 +95,11 @@ export const EMPLOYEE_CONTRACT_BASIC_INFOS = gql`
     customFieldValues{
       ...CustomFieldValueDetailsFragment
     }
+    folder {
+      id
+      number
+      name
+    }
   }
   ${EMPLOYEE_CONTRACT_MINI_INFOS}
   ${CUSTOM_FIELD_VALUE_DETAILS}

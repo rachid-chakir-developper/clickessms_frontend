@@ -41,7 +41,7 @@ const Item = styled(Stack)(({ theme }) => ({
 
 export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
+  const { setNotifyAlert, setConfirmDialog, setPrintingModal } = useFeedBacks();
   const navigate = useNavigate();
   const [triggerSave, setTriggerSave] = React.useState(false);
   const validationSchema = yup.object({});
@@ -243,6 +243,18 @@ const [getEmployees, {
     onError: (err) => console.log(err),
   });
 
+  const onOpenModalToPrint = (EmployeeContract) => {
+    setPrintingModal({
+        isOpen: true,
+        type: 'EmployeeContract',
+        data: EmployeeContract,
+        onClose: () => { 
+          setPrintingModal({isOpen: false})
+          navigate('/online/ressources-humaines/contrats/liste');
+          }
+      })
+  }
+
   React.useEffect(() => {
     if (idEmployeeContract) {
       getEmployeeContract({ variables: { id: idEmployeeContract } });
@@ -282,7 +294,7 @@ const [getEmployees, {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if(activeStep >= 2) navigate('/online/ressources-humaines/contrats/liste');
+    if(activeStep >= 2) onOpenModalToPrint(formik.values)
     else if (formik.values.id)
       setSearchParams({ step: activeStep + 1, id: formik.values.id });
     else setSearchParams({ step: activeStep + 1 });

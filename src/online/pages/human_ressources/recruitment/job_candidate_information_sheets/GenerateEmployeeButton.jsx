@@ -267,7 +267,11 @@ export default function GenerateEmployeeButton({ onGenerated, jobCandidateInform
     const [openDialog, setOpenDialog] = React.useState(false);
     const handleCloseDialog = () => {
         setOpenDialog(false);
-        if(emailUserInfos?.employee) navigate(`/online/ressources-humaines/employes/details/${emailUserInfos?.employee}`)
+        if(emailUserInfos?.employee) {
+            if(emailUserInfos?.employee?.currentContract) 
+                navigate(`/online/ressources-humaines/contrats/modifier/${emailUserInfos?.employee?.currentContract?.id}`)
+            else navigate(`/online/ressources-humaines/employes/details/${emailUserInfos?.employee}`)
+        }
     };
     return (
         <>  
@@ -297,7 +301,7 @@ export default function GenerateEmployeeButton({ onGenerated, jobCandidateInform
                     if(employee && employee?.id) {
                         setEmailUserInfos(prev => ({
                             ...(prev || {}),
-                            employee: employee.id
+                            employee: employee
                         }));
                         setOpenDialog(true)
                     };
@@ -307,7 +311,7 @@ export default function GenerateEmployeeButton({ onGenerated, jobCandidateInform
                 jobCandidateInformationSheet={jobCandidateInformationSheet}
             />
             {/* Modal envoyer l'email */}
-            <DialogSendMail open={openDialog} onClose={handleCloseDialog} emailUserInfos={emailUserInfos}
+            <DialogSendMail open={openDialog} onClose={handleCloseDialog} emailUserInfos={{employee: emailUserInfos?.employee?.id}}
                 onSend={(values) => console.log("Email envoyé avec :", values)} />
         </>
     );
