@@ -6,7 +6,7 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { SEND_THE_EMAIL } from "../../../../_shared/graphql/mutations/SentEmailMutations";
 import { useFeedBacks } from "../../../../_shared/context/feedbacks/FeedBacksProvider";
 
-const DialogSendMail = ({ open, onClose, onSend, jobCandidateApplication }) => {
+const DialogSendMail = ({ open, onClose, onSend, jobCandidateApplication=null, emailUserInfos=null }) => {
     const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
     const [formValues, setFormValues] = useState({
         recipient: "",
@@ -47,7 +47,12 @@ const DialogSendMail = ({ open, onClose, onSend, jobCandidateApplication }) => {
 
     useEffect(()=>{
         if(open){
-            getDefaultSentEmail({ variables: { defaultSentEmailFilter : {jobCandidateApplication: jobCandidateApplication?.id} }, fetchPolicy: 'network-only'});
+            getDefaultSentEmail({ variables: {
+                defaultSentEmailFilter : {
+                    jobCandidateApplication: jobCandidateApplication?.id,
+                    emailUserInfos: emailUserInfos
+                }
+            }, fetchPolicy: 'network-only'});
         }
     }, [open])
     return (

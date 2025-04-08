@@ -18,7 +18,7 @@ import {
   getFormatDateTime,
   formatCurrencyAmount,
 } from '../../../../_shared/tools/functions';
-import EstablishmentItemCard from '../../companies/establishments/EstablishmentItemCard';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import { Edit, ArrowBack, Description } from '@mui/icons-material';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -140,30 +140,30 @@ function SceBenefitMiniInfos({ sceBenefit }) {
 
 function SceBenefitOtherInfos({ sceBenefit }) {
   return (
-    <Paper
-      variant="outlined"
-      sx={{
-        p: 2,
-        margin: 'auto',
-        flexGrow: 1,
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-      }}
-    >
+    <>
       {sceBenefit?.establishment && (
-        <>
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 2,
+            margin: 'auto',
+            flexGrow: 1,
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+          }}
+        >
           <Typography variant="h6" gutterBottom>
             Structure
           </Typography>
           <Paper sx={{ padding: 2 }} variant="outlined">
             <Item>
-              <EstablishmentItemCard
+              <EstablishmentChip
                 establishment={sceBenefit?.establishment}
               />
             </Item>
           </Paper>
-        </>
+          </Paper>
       )}
-    </Paper>
+    </>
   );
 }

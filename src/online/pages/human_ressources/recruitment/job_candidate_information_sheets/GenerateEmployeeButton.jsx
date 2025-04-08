@@ -13,13 +13,14 @@ import * as yup from 'yup';
 import dayjs from 'dayjs';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Add, Event, AccountBox, ReceiptLong, Refresh } from '@mui/icons-material';
-import {  POST_EMPLOYEE } from '../../../../../_shared/graphql/mutations/EmployeeMutations';
+import {  GENERATE_EMPLOYEE } from '../../../../../_shared/graphql/mutations/EmployeeMutations';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
 import TheAutocomplete from '../../../../../_shared/components/form-fields/TheAutocomplete';
 import { useNavigate } from 'react-router-dom';
 import TheTextField from '../../../../../_shared/components/form-fields/TheTextField';
 import { GET_EMPLOYEES } from '../../../../../_shared/graphql/queries/EmployeeQueries';
 import TheDateTimePicker from '../../../../../_shared/components/form-fields/TheDateTimePicker';
+import DialogSendMail from '../../../../_shared/components/the_mailer/DialogSendMail';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -40,7 +41,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 function DialogGenerateEmployee({ open, onClose, onConfirm, jobCandidateInformationSheet }) {
     const {jobCandidate, jobPosition } = jobCandidateInformationSheet
-    const navigate = useNavigate();
     const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
     const validationSchema = yup.object({
         firstName: yup.string()
@@ -69,12 +69,11 @@ function DialogGenerateEmployee({ open, onClose, onConfirm, jobCandidateInformat
         validationSchema: validationSchema,
         onSubmit: (values) => {
         let valuesCopy = {...values};
-        valuesCopy.participants = valuesCopy.participants.map((i) => i?.id);
         handleOk(valuesCopy);
         },
     });
 
-    const [createEmployee, { loading: loadingPost }] = useMutation(POST_EMPLOYEE, {
+    const [generateEmployee, { loading: loadingPost }] = useMutation(GENERATE_EMPLOYEE, {
         onCompleted: (data) => {
             console.log(data);
             setNotifyAlert({
@@ -82,12 +81,12 @@ function DialogGenerateEmployee({ open, onClose, onConfirm, jobCandidateInformat
                 message: 'Ajouté avec succès',
                 type: 'success',
             });
-            let { __typename, ...employeeCopy } = data.createEmployee.employee;
+            let { __typename, ...employeeCopy } = data.generateEmployee.employee;
             //   formik.setValues(employeeCopy);
-            navigate(`/online/ressources-humaines/recrutement/entretiens/modifier/${employeeCopy?.id}`)
+            onClose(employeeCopy)
         },
-        update(cache, { data: { createEmployee } }) {
-            const newEmployee = createEmployee.employee;
+        update(cache, { data: { generateEmployee } }) {
+            const newEmployee = generateEmployee.employee;
 
             cache.modify({
             fields: {
@@ -114,11 +113,11 @@ function DialogGenerateEmployee({ open, onClose, onConfirm, jobCandidateInformat
         setConfirmDialog({
         isOpen: true,
         title: 'ATTENTION',
-        subTitle: 'Voulez-vous vraiment créer cet entretien ?',
+        subTitle: 'Voulez-vous vraiment générer le compte de cet employé ?',
         onConfirm: () => {
             setConfirmDialog({ isOpen: false });
-            createEmployee({
-                variables: { employeeData: values},
+            generateEmployee({
+                variables: { generateEmployeeData: values},
             });
         },
         });
@@ -132,6 +131,7 @@ function DialogGenerateEmployee({ open, onClose, onConfirm, jobCandidateInformat
                 email: '',
                 jobCandidateEmail: jobCandidate?.email,
                 mobile: jobCandidate?.phone,
+                jobCandidateInformationSheet: jobCandidateInformationSheet?.id
             })
         }
     }, [open]);
@@ -251,8 +251,8 @@ function DialogGenerateEmployee({ open, onClose, onConfirm, jobCandidateInformat
 }
 
 
-export default function GenerateEmployeeButton({ jobCandidateInformationSheet , buttonType="button", size="medium", label="Générer la fiche employé" }) {
-    
+export default function GenerateEmployeeButton({ onGenerated, jobCandidateInformationSheet , buttonType="button", size="medium", label="Générer la fiche employé" }) {
+    const navigate = useNavigate();
     const [isDialogGenerateEmployeeOpen, setDialogGenerateEmployeeOpen] = React.useState(false);
 
     const DialogGenerateEmployeeOpen = () => {
@@ -263,33 +263,52 @@ export default function GenerateEmployeeButton({ jobCandidateInformationSheet , 
         console.log('value data:', value);
         setDialogGenerateEmployeeOpen(false); // Fermer le dialogue après la confirmation
     };
+    const [emailUserInfos, setEmailUserInfos] = React.useState();
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+        if(emailUserInfos?.employee) navigate(`/online/ressources-humaines/employes/details/${emailUserInfos?.employee}`)
+    };
     return (
         <>  
-                {buttonType==="button" && 
-                    <Button size={size} variant="outlined" onClick={DialogGenerateEmployeeOpen} endIcon={<AccountBox />}>
+            {buttonType==="button" && 
+                <Button size={size} variant="outlined" onClick={DialogGenerateEmployeeOpen} endIcon={<AccountBox />}>
                     {label}
                 </Button>
-                }
-                {buttonType==="buttonIcon" && <Tooltip title={label}>
+            }
+            {buttonType==="buttonIcon" && <Tooltip title={label}>
                     <IconButton size={size} onClick={DialogGenerateEmployeeOpen}>
                         <AccountBox size={size} />
                     </IconButton>
                 </Tooltip>
-                }
-                {buttonType==="menuItem" &&
-                    <Tooltip title={label}>
-                        <MenuItem onClick={DialogGenerateEmployeeOpen}>
-                            <AccountBox sx={{ mr: 2 }} />
-                            {label}
-                        </MenuItem>
-                    </Tooltip>
-                }
+            }
+            {buttonType==="menuItem" &&
+                <Tooltip title={label}>
+                    <MenuItem onClick={DialogGenerateEmployeeOpen}>
+                        <AccountBox sx={{ mr: 2 }} />
+                        {label}
+                    </MenuItem>
+                </Tooltip>
+            }
             <DialogGenerateEmployee
                 open={isDialogGenerateEmployeeOpen}
-                onClose={() => setDialogGenerateEmployeeOpen(false)}
+                onClose={(employee) => {
+                    setDialogGenerateEmployeeOpen(false)
+                    if(employee && employee?.id) {
+                        setEmailUserInfos(prev => ({
+                            ...(prev || {}),
+                            employee: employee.id
+                        }));
+                        setOpenDialog(true)
+                    };
+                    if(onGenerated && employee && employee?.id) onGenerated(employee)
+                }}
                 onConfirm={handleDialogGenerateEmployeeConfirm}
                 jobCandidateInformationSheet={jobCandidateInformationSheet}
             />
+            {/* Modal envoyer l'email */}
+            <DialogSendMail open={openDialog} onClose={handleCloseDialog} emailUserInfos={emailUserInfos}
+                onSend={(values) => console.log("Email envoyé avec :", values)} />
         </>
     );
 }

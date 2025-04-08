@@ -20,3 +20,7 @@ code {
   min-height: 200px;  /* Equivalent to rows */
   overflow-y: auto;   /* Enable scroll when content overflows */
 }
+
+.ql-editor p, .ql-editor ol, .ql-editor ul, .ql-editor pre, .ql-editor blockquote, .ql-editor h1, .ql-editor h2, .ql-editor h3, .ql-editor h4, .ql-editor h5, .ql-editor h6 {
+  padding: 8px 10px;
+}

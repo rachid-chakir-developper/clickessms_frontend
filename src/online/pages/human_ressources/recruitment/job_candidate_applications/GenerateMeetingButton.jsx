@@ -276,9 +276,9 @@ export default function GenerateMeetingButton({ onGenerated, jobCandidateApplica
         setDialogGenerateMeetingOpen(false); // Fermer le dialogue après la confirmation
     };
     const [openDialog, setOpenDialog] = React.useState(false);
-      const handleCloseDialog = () => {
+    const handleCloseDialog = () => {
         setOpenDialog(false);
-      };
+    };
     
     return (
         <>  
