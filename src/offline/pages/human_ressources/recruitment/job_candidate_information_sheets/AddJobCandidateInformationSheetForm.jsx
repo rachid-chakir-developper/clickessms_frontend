@@ -207,7 +207,7 @@ export default function AddJobCandidateInformationSheetForm({ accessToken, title
       });
       jobCandidateInformationSheetCopy.documentRecords = items;
       formik.setValues(jobCandidateInformationSheetCopy);
-      getDataData()
+      getDataData({variables: {idCompany: employee?.company?.id, typeData: "JobCandidateDocumentType"}})
     },
     onError: (err) => console.log(err),
   });

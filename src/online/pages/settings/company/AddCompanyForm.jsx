@@ -99,7 +99,7 @@ export default function AddCompanyForm({ idCompany = null, title = '' }) {
   const [getCompany, { loading: loadingCompany }] = useLazyQuery(GET_MY_COMPANY, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, companyMedia, ...companyCopy } = data.company;
+      let { __typename, companyMedia, hiddenModules, companyHiddenModules, ...companyCopy } = data.company;
       formik.setValues(companyCopy);
     },
     onError: (err) => console.log(err),

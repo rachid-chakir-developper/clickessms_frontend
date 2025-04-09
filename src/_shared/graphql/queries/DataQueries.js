@@ -226,8 +226,8 @@ export const GET_DATAS_JOB = gql`
 `;
 
 export const GET_DATAS_JOB_CANDIDATE_INFORMATION_SHEET = gql`
-  query {
-    jobCandidateDocumentTypes: datas(typeData: "JobCandidateDocumentType") {
+  query($idCompany: ID) {
+    jobCandidateDocumentTypes: datas(typeData: "JobCandidateDocumentType", idCompany: $idCompany) {
       ...DataBasicInfosFragment
     }
   }

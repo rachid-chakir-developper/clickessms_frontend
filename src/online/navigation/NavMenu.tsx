@@ -40,6 +40,7 @@ export default function NavMenu() {
 function PageNavEntry(props: PageViewModel) {
   return (
     <NavEntry
+      id={props.id}
       icon={props.icon}
       name={props.name}
       path={props.path}
@@ -60,6 +61,7 @@ interface SubmoduleNavEntryProps extends SubmoduleViewModel {
 function SubmoduleNavEntry(props: SubmoduleNavEntryProps) {
   return (
     <NavEntry
+      id={props.id}
       icon={props.icon}
       target={props.target}
       name={props.name}
@@ -105,6 +107,7 @@ interface ModuleNavEntryProps extends ModuleViewModel {
 function ModuleNavEntry(props: ModuleNavEntryProps) {
   return (
     <NavEntry
+      id={props.id}
       icon={props.icon}
       name={props.name}
       target={props.target}
@@ -270,6 +273,7 @@ function NavMenuHeader({
     <List>
       <SearchEntry searchTerm={searchTerm} onSearch={onSearch} />
       <NavEntry
+        id="dashboard"
         path="/online/dashboard"
         key="dashboard"
         name="Tableau de bord"
@@ -323,6 +327,7 @@ function NavMenuFooter() {
     <List>
       <NavEntry
         path="/online/utilisateurs"
+        id="users"
         key="users"
         name="Utilisateurs"
         icon={<PersonIcon />}
@@ -333,6 +338,7 @@ function NavMenuFooter() {
       />
       <NavEntry
         path="/online/parametres"
+        id="settings"
         key="settings"
         name="Paramètres"
         icon={<SettingsIcon />}
@@ -343,6 +349,7 @@ function NavMenuFooter() {
       />
       <NavEntry
         path="/online/associations"
+        id="companies"
         key="companies"
         name="Associations"
         icon={<BusinessIcon />}
@@ -353,11 +360,13 @@ function NavMenuFooter() {
       />
       <NavEntry
         path="/online/roberp"
+        id="roberp"
         key="roberp"
         name="Support"
         icon={<SupportAgentIcon />}
       />
       <NavEntry
+        id="logout"
         key="logout"
         name="Se déconnecter"
         icon={<PowerSettingsNewIcon />}

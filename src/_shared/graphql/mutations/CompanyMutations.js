@@ -72,7 +72,7 @@ export const PUT_COMPANY_MEDIA = gql`
 
 
 export const PUT_COMPANY_FIELDS = gql`
-  mutation updateCompanyFields($id: ID!, $companyFields: CompanyFieldInput!) {
+  mutation updateCompanyFields($id: ID, $companyFields: CompanyFieldInput!) {
     updateCompanyFields(id: $id, companyFields: $companyFields){
       done
       success

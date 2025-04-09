@@ -29,7 +29,7 @@ const modulesToManage = [
   {
     title: 'Ressources humaines',
     datas: [
-      { name: "Genre", description: '', type: 'HumanGender' },
+      // { name: "Genre", description: '', type: 'HumanGender' },
       { name: "Statut professionnel", description: '', type: 'ProfessionalStatus' },
       { name: "Plateforme de travail", description: '', type: 'jobPlatform' },
       { name: 'Type de document des candidats', description: '', type: 'JobCandidateDocumentType' },

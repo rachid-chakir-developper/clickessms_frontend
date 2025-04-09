@@ -27,6 +27,7 @@ export const COMPANY_BASIC_INFOS = gql`
     email
     logo
     coverImage
+    companyHiddenModules
     companyMedia{
       ...CompanyMediaBasicInfosFragment
     }

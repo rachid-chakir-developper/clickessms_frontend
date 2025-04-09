@@ -26,6 +26,9 @@ export const JOB_CANDIDATE_INFORMATION_SHEET_BASIC_INFOS = gql`
     comment
     employee{
       ...EmployeeMiniInfosFragment
+      company{
+        id
+      }
     }
     jobPosition {
       ...JobPositionMiniInfosFragment

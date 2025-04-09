@@ -16,6 +16,7 @@ import {
 import { useSession } from '../../_shared/context/SessionProvider';
 
 export interface NavEntryProps {
+  id: string;
   icon: React.ReactNode;
   name: string;
   /** If a path is provided, the entry is wrapped in a link */
@@ -76,6 +77,7 @@ export interface NavEntryProps {
 export default function NavEntry(props: NavEntryProps) {
   const authorizationSystem = useAuthorizationSystem();
   const session = useSession();
+  const {user}= session
 
   const [animateExpand, setAnimateExpand] = useState(props.animateExpand);
 
@@ -133,7 +135,7 @@ export default function NavEntry(props: NavEntryProps) {
     props.children
   );
   
-  const item = !hidden && (
+  const item = (!hidden && !user.company?.companyHiddenModules?.includes(props.id)) && (
     <ListItem disablePadding sx={{ display: 'block' }}>
       {maybeLink}
       {children}

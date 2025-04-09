@@ -175,7 +175,7 @@ export default function AddCompanyForm({ idCompany, title }) {
   const [getCompany, { loading: loadingCompany }] = useLazyQuery(GET_COMPANY, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, companyMedia, ...companyCopy } = data.company;
+      let { __typename, companyMedia, hiddenModules, companyHiddenModules, ...companyCopy } = data.company;
       if (companyCopy.companyAdmin) {
           const { __typename, ...companyAdminCopy } = companyCopy.companyAdmin;
           companyCopy.companyAdmin = companyAdminCopy;
