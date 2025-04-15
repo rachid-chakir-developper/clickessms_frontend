@@ -248,8 +248,8 @@ export default function Dashboard() {
             </Grid>
           </Grid>
           
-          {(loadingDashboardActivityTrackingEstablishments || loadingDashboardActivitySynthesis || loadingDashboardActivityMonth) && <ProgressService type="dashboard" />}
-          {(!loadingDashboardActivityTrackingEstablishments && !loadingDashboardActivitySynthesis & !loadingDashboardActivityMonth)  && (<Box ref={componentRef}>
+          {(loadingDashboardActivityTrackingEstablishments || loadingDashboardActivityBeneficiaryEstablishments || loadingDashboardActivitySynthesis || loadingDashboardActivityMonth) && <ProgressService type="dashboard" />}
+          {(!loadingDashboardActivityTrackingEstablishments && !loadingDashboardActivityBeneficiaryEstablishments && !loadingDashboardActivitySynthesis & !loadingDashboardActivityMonth)  && (<Box ref={componentRef}>
           {view==='graph' && <DashboardGraph activityTrackingEstablishments={dashboardActivityTrackingEstablishmentsData?.dashboardActivity?.activityTrackingEstablishments}/>}
           {view==='table' && <DashboardTable activityTrackingEstablishments={dashboardActivityTrackingEstablishmentsData?.dashboardActivity?.activityTrackingEstablishments}/>}
           {view==='beneficiaryTable' && <DashboardBeneficiaryTable activityBeneficiaryEstablishments={dashboardActivityBeneficiaryEstablishmentsData?.dashboardActivity?.activityBeneficiaryEstablishments}/>}

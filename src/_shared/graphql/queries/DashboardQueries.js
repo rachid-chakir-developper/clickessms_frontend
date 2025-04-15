@@ -341,6 +341,7 @@ export const GET_DASHBOARD_ACTIVITY_BENEFICIARY_ESTABLISHMENTS = gql`
             isFutureMonth
             daysCount
           }
+          daysCount
         }
       }
     }

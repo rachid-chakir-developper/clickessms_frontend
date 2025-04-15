@@ -79,12 +79,16 @@ export default function SignInSide() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
+      username: data.get('email'),
       email: data.get('email'),
       password: data.get('password'),
     });
+    const value = data.get('email').trim();
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
     loginUser({
       variables: {
-        email: data.get('email').trim(),
+        username: isEmail ? undefined : value,
+        email: isEmail ? value : undefined,
         password: data.get('password'),
       },
     });
@@ -136,7 +140,7 @@ export default function SignInSide() {
               required
               fullWidth
               id="email"
-              label="Adresse email"
+              label="Adresse email ou Pseudo"
               name="email"
               autoComplete="email"
               autoFocus
@@ -188,7 +192,7 @@ export default function SignInSide() {
             >
               Se connecter
             </Button>
-            <Grid container>
+            {/* <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
                   Mot de passe oublié ?
@@ -199,7 +203,7 @@ export default function SignInSide() {
                   {"S'inscrire"}
                 </Link>
               </Grid>
-            </Grid>
+            </Grid> */}
           </Box>
         </Box>
       </Grid>

@@ -3,8 +3,8 @@ import { USER_DETAILS } from '../fragments/UserFragment';
 import { COMPANY_BASIC_INFOS } from '../fragments/CompanyFragment';
 
 export const LOGIN_USER = gql`
-  mutation tokenAuth($email: String!, $password: String!) {
-    tokenAuth(email: $email, password: $password) {
+  mutation tokenAuth($username: String, $email: String, $password: String!) {
+    tokenAuth(username: $username, email: $email, password: $password) {
       success
       errors
       unarchiving

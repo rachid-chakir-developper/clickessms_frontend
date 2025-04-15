@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import { Stack, Box, Typography, Button, Stepper, Step, StepLabel, StepContent, RadioGroup, FormControlLabel, Radio, FormLabel, FormControl, IconButton, InputLabel, Select, MenuItem, InputAdornment, Tooltip, Divider } from '@mui/material';
+import { Stack, Box, Typography, Button, Stepper, Step, StepLabel, StepContent, RadioGroup, FormControlLabel, Radio, FormLabel, FormControl, IconButton, InputLabel, Select, MenuItem, InputAdornment, Tooltip, Divider, Table, TableBody, TableRow, TableCell } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -34,6 +34,10 @@ const Item = styled(Stack)(({ theme }) => ({
   textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
+
+function round2(val) {
+  return Math.round((val + Number.EPSILON) * 100) / 100;
+}
 
 export default function AddInvoiceForm({ idInvoice, title }) {
   const [isNotEditable, setIsNotEditable] = React.useState(false)
@@ -130,6 +134,27 @@ export default function AddInvoiceForm({ idInvoice, title }) {
       invoiceEstablishments: updatedInvoiceEstablishments,
     });
   };
+
+  React.useEffect(() => {
+    const totalTtc = round2(
+      formik.values.invoiceEstablishments.reduce(
+        (acc, item) => acc + (Number(item.totalTtc) || 0),
+        0
+      )
+    );
+  
+    const totalHt = round2(
+      formik.values.invoiceEstablishments.reduce(
+        (acc, item) => acc + (Number(item.totalHt) || 0),
+        0
+      )
+    );
+  
+    formik.setFieldValue('totalTtc', totalTtc);
+    formik.setFieldValue('totalHt', totalHt);
+  }, [formik.values.invoiceEstablishments]);
+  
+  
 
   const addInvoiceEntry = (establishmentIndex) => {
     const updatedInvoiceEstablishments = [...formik.values.invoiceEstablishments];
@@ -568,10 +593,14 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                           items={item?.invoiceItems || []}
                           addItem={()=>addInvoiceEntry(index)}
                           removeItem={(entryIndex)=>removeInvoiceEntry(index, entryIndex)}
-                          onChange={({ type, index: entryIndex, field, value }) => {
+                          onChange={({ type, index: entryIndex, field, value, totalTtc }) => {
                             formik.setFieldValue(
                               `invoiceEstablishments.${index}.invoiceItems.${entryIndex}.${field}`,
                               value
+                            );
+                            formik.setFieldValue(
+                              `invoiceEstablishments.${index}.totalTtc`,
+                              totalTtc
                             );
                           }}
                           disabled={loadingPost || loadingPut || isNotEditable}
@@ -607,6 +636,39 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                   <Box align="right" onClick={addInvoiceEstablishment} sx={{color: '#c1c1c1', fontStyle: 'italic', fontSize: 14}}>Cliquez pour ajouter une structure</Box>
               </Grid>}
           </Grid>
+          <Table sx={{marginY: 6}}>
+            <TableBody>
+              <TableRow>
+                <TableCell colSpan={2} sx={{ width: 'calc( 100% - 200px )', border: 'none' }} />
+                <TableCell
+                  sx={{
+                    color: theme => theme.palette.common.white,
+                    fontSize: 22,
+                    fontWeight: 700,
+                    backgroundColor: theme => theme.palette.grey[600],
+                    fontStyle: 'italic',
+                    textAlign: 'left', // important pour aligner le texte
+                    width: 200
+                  }}
+                >
+                  Total.TTC
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: theme => theme.palette.common.white,
+                    fontWeight: 700,
+                    backgroundColor: theme => theme.palette.grey[600],
+                    textAlign: 'right',
+                    width: 200
+                  }}
+                >
+                  <Typography component="div" variant="span" sx={{ fontSize: 25, fontWeight: 700, fontStyle: 'italic' }}>
+                    {`${round2(formik.values.totalTtc).toFixed(2)}`}&nbsp;€
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
           <Grid
             container sx={{marginTop: 5}}
           >

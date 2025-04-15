@@ -3,7 +3,6 @@ import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { Alert, Button, Stack } from '@mui/material';
-import UserItemCard from './UserItemCard';
 import { useFeedBacks } from '../../../_shared/context/feedbacks/FeedBacksProvider';
 import {
   DELETE_USER,
@@ -15,10 +14,10 @@ import { Add, List } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import DialogAddGroup from './groups/DialogAddGroup';
 import DialogListGroups from './groups/DialogListGroups';
-import ProgressService from '../../../_shared/services/feedbacks/ProgressService';
 import UserFilter from './UserFilter';
 import PaginationControlled from '../../../_shared/components/helpers/PaginationControlled';
 import TableListUsers from './TableListUsers';
+import GenerateUserButton from './GenerateUserButton';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -177,26 +176,7 @@ export default function ListUsers() {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
-            {/* <Button
-              variant="contained"
-              disableElevation
-              color="inherit"
-              sx={{ mr: 2 }}
-              endIcon={<List />}
-              onClick={() => handleClickList()}
-            >
-              Liste des groupes
-            </Button>
-            <Button
-              variant="contained"
-              disableElevation
-              color="inherit"
-              sx={{ mr: 2 }}
-              endIcon={<Add />}
-              onClick={() => handleClickAdd()}
-            >
-              Ajouter un groupe
-            </Button> */}
+            <GenerateUserButton sx={{mr: 2}} />
             <Link to="/online/utilisateurs/ajouter" className="no_style">
               <Button variant="contained" endIcon={<Add />}>
                 Ajouter un utilisateur

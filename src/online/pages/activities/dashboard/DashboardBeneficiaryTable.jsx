@@ -31,6 +31,9 @@ const DashboardBeneficiaryTableItem = ({ activityBeneficiaryEstablishment }) => 
                   {month}
                 </TableCell>
               ))}
+              <TableCell align="right" sx={{ fontWeight: "bold", backgroundColor: "#003366", color: "#fff" }}>
+                Total
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -67,6 +70,7 @@ const DashboardBeneficiaryTableItem = ({ activityBeneficiaryEstablishment }) => 
                       </TableCell>
                     )}
                   )}
+                  <TableCell align="right">{activityBeneficiary?.daysCount}</TableCell>
                 </TableRow>
               )}
             )}

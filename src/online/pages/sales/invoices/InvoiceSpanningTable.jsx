@@ -50,10 +50,8 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 function ccyFormat(num) {
-    if (typeof num === 'number' && !isNaN(num)) {
-        return `${num.toFixed(2)}`;
-    }
-    return '0.00'; // ou une autre valeur par défaut que vous souhaitez retourner
+    const n = Number(num);
+    return !isNaN(n) ? n.toFixed(2) : '0.00';
 }
 function amountHt(item){
     const amountHtOriginal = item.unitPrice * item.quantity
@@ -83,11 +81,12 @@ export default function InvoiceSpanningTable(
         addItem,
         removeItem,
         disabled,
-        isNotEditable
+        isNotEditable,
     }) {
 
     const handleFieldChange = (index, field, value) => {
-        onChange({type: 'item', index, field, value});
+        let totalTtc = ccyFormat(getTotalTtc(items,  []))
+        onChange({type: 'item', index, field, value, totalTtc});
     };
 
     const [getBeneficiaries, {
@@ -229,54 +228,6 @@ export default function InvoiceSpanningTable(
                                 />
                             </Item>
                         </StyledTableCell>
-                        {/* <StyledTableCell align="center">
-                            <Item>
-                                <TheTextField
-                                    variant="outlined"
-                                    size="small"
-                                    type="number"
-                                    // value={item.discount}
-                                    // onChange={(e) => handleFieldChange(index, 'discount', e.target.value)}
-                                    disabled={disabled}
-                                />
-                            </Item>
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                            <Item>
-                                <TheTextField
-                                    variant="outlined"
-                                    size="small"
-                                    type="number"
-                                    // value={item.discount}
-                                    // onChange={(e) => handleFieldChange(index, 'discount', e.target.value)}
-                                    disabled={disabled}
-                                />
-                            </Item>
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                            <Item>
-                                <TheTextField
-                                    variant="outlined"
-                                    size="small"
-                                    type="number"
-                                    // value={item.discount}
-                                    // onChange={(e) => handleFieldChange(index, 'discount', e.target.value)}
-                                    disabled={disabled}
-                                />
-                            </Item>
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                            <Item>
-                                <TheTextField
-                                    variant="outlined"
-                                    size="small"
-                                    type="number"
-                                    // value={item.discount}
-                                    // onChange={(e) => handleFieldChange(index, 'discount', e.target.value)}
-                                    disabled={disabled}
-                                />
-                            </Item>
-                        </StyledTableCell> */}
                         <StyledTableCell align="center">
                             <Item>
                                 <TheTextField
@@ -330,14 +281,14 @@ export default function InvoiceSpanningTable(
                                             sx={{ color: theme => theme.palette.common.white, fontWeight: 700, fontStyle: 'italic' }}
                                             colSpan={2}
                                         >
-                                            Total.TTC
+                                            Sous total.TTC
                                         </StyledTableCell>
                                         <StyledTableCell
                                             sx={{ color: theme => theme.palette.common.white, fontWeight: 700 }}
                                             colSpan={2}
                                             align="right"
                                         >
-                                            <Typography component="div" variant="span" sx={{ fontSize: 22, fontWeight: 700, fontStyle: 'italic' }}>
+                                            <Typography component="div" variant="span" sx={{ fontSize: 18, fontWeight: 700, fontStyle: 'italic' }}>
                                             {`${ccyFormat(getTotalTtc(items,  []))}`}&nbsp;€
                                             </Typography>
                                         </StyledTableCell>

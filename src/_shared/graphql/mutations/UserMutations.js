@@ -110,6 +110,22 @@ export const PUT_MY_PASSWORD = gql`
   }
 `;
 
+export const GENERATE_USER = gql`
+  mutation GenerateUser($generateUserData: GenerateUserInput) {
+    generateUser(generateUserData: $generateUserData) {
+      success
+      message
+      count
+      generatedCount
+      excelFileBase64
+      users{
+        ...UserBasicInfosFragment
+      }
+    }
+  }
+  ${USER_BASIC_INFOS}
+`;
+
 export const DELETE_USER = gql`
   mutation DeleteUser($id: ID!) {
     deleteUser(id: $id) {
