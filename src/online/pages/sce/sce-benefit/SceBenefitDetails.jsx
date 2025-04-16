@@ -20,6 +20,7 @@ import {
 } from '../../../../_shared/tools/functions';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import { Edit, ArrowBack, Description } from '@mui/icons-material';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -30,6 +31,12 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function SceBenefitDetails() {
+  
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageSceModules = authorizationSystem.requestAuthorization({
+    type: 'manageSceModules',
+  }).authorized;
+  
   let { idSceBenefit } = useParams();
   const [
     getSceBenefit,
@@ -57,14 +64,14 @@ export default function SceBenefitDetails() {
             Retour à la liste
           </Button>
         </Link>
-        <Link
+        {canManageSceModules && <Link
           to={`/online/cse/avantages/modifier/${sceBenefitData?.sceBenefit?.id}`}
           className="no_style"
         >
           <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
-        </Link>
+        </Link>}
       </Box>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>

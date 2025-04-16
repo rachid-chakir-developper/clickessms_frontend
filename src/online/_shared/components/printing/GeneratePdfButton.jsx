@@ -62,24 +62,24 @@ const GeneratePdfButton = ({ documentType, id, data, apparence="menuItem" }) => 
         <>
         
             {apparence === 'menuItem' && (
-            <MenuItem onClick={handleClick} disabled={loading}>
-                {loading ? (
-                <CircularProgress size={24} sx={{ marginRight: 2 }} />
-                ) : (
-                <Print fontSize="small" sx={{ mr: 2 }} />
-                )}
-                Imprimer
-            </MenuItem>
+                <MenuItem onClick={handleClick} disabled={loading}>
+                    {loading ? (
+                    <CircularProgress size={24} sx={{ marginRight: 2 }} />
+                    ) : (
+                    <Print fontSize="small" sx={{ mr: 2 }} />
+                    )}
+                    Imprimer
+                </MenuItem>
             )}
 
             {apparence === 'iconButton' && (<Tooltip title="Imprimer">
-            <IconButton onClick={handleClick} disabled={loading}>
-                {loading ? (
-                <CircularProgress size={24} sx={{ color: 'white' }} />
-                ) : (
-                <Print />
-                )}
-            </IconButton>
+                <IconButton onClick={handleClick} disabled={loading}>
+                    {loading ? (
+                    <CircularProgress size={24} sx={{ color: 'white' }} />
+                    ) : (
+                    <Print />
+                    )}
+                </IconButton>
             </Tooltip>
             )}
         </>

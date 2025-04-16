@@ -14,9 +14,11 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useMutation } from "@apollo/client";
-import { PUT_MY_FIRST_PASSWORD } from "../../../_shared/graphql/mutations/AuthMutations";
+import { LOGOUT_USER, PUT_MY_FIRST_PASSWORD } from "../../../_shared/graphql/mutations/AuthMutations";
 import TheTextField from "../../../_shared/components/form-fields/TheTextField";
 import { useFeedBacks } from "../../../_shared/context/feedbacks/FeedBacksProvider";
+import { useSessionDispatch } from "../../../_shared/context/SessionProvider";
+import { useNavigate } from "react-router-dom";
 
 
 const Item = styled(Stack)(({ theme }) => ({
@@ -31,8 +33,46 @@ const ChangePassword = () => {
      const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
     const [showPassword, setShowPassword] = useState(false);
 
+    const navigate = useNavigate();
+    const dispatch = useSessionDispatch();
+
     const handleClickShowPassword = () => setShowPassword((prev) => !prev);
     const handleMouseDownPassword = (event) => event.preventDefault();
+      const [logoutUser, { loading: loadingLogout }] = useMutation(LOGOUT_USER, {
+        onCompleted: (datas) => {
+          if (datas.logoutUser.done) {
+            // empty
+          } else {
+            setNotifyAlert({
+              isOpen: true,
+              message: `${datas.logoutUser.message}.`,
+              type: 'error',
+            });
+          }
+          dispatch({ type: 'LOGOUT' });
+          navigate('/');
+        },
+        onError: (err) => {
+          console.log(err);
+          setNotifyAlert({
+            isOpen: true,
+            message: "Une erreur s'est produite",
+            type: 'error',
+          });
+        },
+      });
+    
+      const onLogoutUser = () => {
+        setConfirmDialog({
+          isOpen: true,
+          title: 'ATTENTION',
+          subTitle: 'Voulez vous vraiment vous annuler ?',
+          onConfirm: () => {
+            setConfirmDialog({ isOpen: false });
+            logoutUser();
+          },
+        });
+      };
 
     const validationSchema = yup.object({
         oldPassword: yup.string().required("Le mot de passe est obligatoire"),
@@ -257,11 +297,19 @@ const ChangePassword = () => {
                     )}
                     <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                         <Button
-                        type="submit"
-                        variant="contained"
-                        disabled={!formik.isValid || loadingPut}
-                        >
-                        Valider
+                            sx={{mr: 1}}
+                            variant="outlined"
+                            onClick={onLogoutUser}
+                            disabled={!formik.isValid || loadingPut}
+                            >
+                            Annuler
+                        </Button>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            disabled={!formik.isValid || loadingPut}
+                            >
+                            Valider
                         </Button>
                     </Item>
                     </Grid>
