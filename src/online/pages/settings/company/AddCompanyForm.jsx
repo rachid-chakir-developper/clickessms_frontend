@@ -35,6 +35,7 @@ export default function AddCompanyForm({ idCompany = null, title = '' }) {
       coverImage: undefined,
       number: '',
       name: '',
+      siret:'',
       city: '',
       zipCode: '',
       address: '',
@@ -140,6 +141,17 @@ export default function AddCompanyForm({ idCompany = null, title = '' }) {
                   onBlur={formik.handleBlur}
                   error={formik.touched.name && Boolean(formik.errors.name)}
                   helperText={formik.touched.name && formik.errors.name}
+                  disabled={loadingPut}
+                />
+              </Item>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="N° siret"
+                  value={formik.values.siret}
+                  onChange={(e) =>
+                    formik.setFieldValue('siret', e.target.value)
+                  }
                   disabled={loadingPut}
                 />
               </Item>

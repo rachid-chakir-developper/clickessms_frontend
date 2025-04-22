@@ -126,12 +126,6 @@ const headCells = [
     label: 'Durée',
   },
   {
-    id: 'reasons',
-    numeric: false,
-    disablePadding: false,
-    label: 'Motifs',
-  },
-  {
     id: 'employee',
     numeric: false,
     disablePadding: false,
@@ -454,23 +448,6 @@ export default function TableListEmployeeAbsences({
                     <StyledTableCell align="left">{`${getFormatDate(row?.endingDateTime)}`}</StyledTableCell>
                     <StyledTableCell align="left">
                       {row?.duration} jour{row?.duration > 1 ? 's' : ''}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                        <Stack direction="row" flexWrap='wrap' spacing={1}>
-                            {row?.reasons?.map((absenceReason, index) => {
-                            return (
-                                <Chip
-                                    key={index}
-                                    label={absenceReason?.name}
-                                    variant="outlined"
-                                />
-                            );
-                            })}
-                            {row?.otherReasons && row?.otherReasons !== '' && <Chip
-                                label={row?.otherReasons}
-                                variant="filled"
-                            />}
-                        </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left"> 
                       <Stack direction="row" flexWrap='wrap' spacing={1}>

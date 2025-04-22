@@ -449,23 +449,10 @@ export default function AddBeneficiaryExpenseForm({ idBeneficiaryExpense, title 
                   variant="outlined"
                   label="Description"
                   multiline
-                  rows={4}
+                  rows={10}
                   value={formik.values.description}
                   onChange={(e) =>
                     formik.setFieldValue('description', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Observation"
-                  multiline
-                  rows={4}
-                  value={formik.values.observation}
-                  onChange={(e) =>
-                    formik.setFieldValue('observation', e.target.value)
                   }
                   disabled={loadingPost || loadingPut}
                 />

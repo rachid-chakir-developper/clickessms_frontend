@@ -45,6 +45,13 @@ export const EMPLOYEE_BASIC_INFOS = gql`
     currentContract{
       ...EmployeeContractMiniInfosFragment
     }
+    establishments{
+      name
+      mobile
+      fix
+      email
+      logo
+    }
     folder {
       id
       number

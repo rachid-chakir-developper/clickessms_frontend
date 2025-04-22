@@ -19,8 +19,9 @@ export const EMPLOYEE_ABSENCE_BASIC_INFOS = gql`
   fragment EmployeeAbsenceBasicInfosFragment on EmployeeAbsenceType {
     id
     number
-    title
+    label
     document
+    entryType
     leaveType
     startingDateTime
     endingDateTime

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import { Stack, Box, Typography, Button, Divider, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Stack, Box, Typography, Button, Divider, FormControl, InputLabel, Select, MenuItem, RadioGroup, FormControlLabel, Radio, FormLabel, Alert } from '@mui/material';
 import dayjs from 'dayjs';
 
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -21,7 +21,7 @@ import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueri
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import SelectCheckmarks from '../../../../_shared/components/form-fields/SelectCheckmarks';
 import { GET_DATAS_EMPLOYEE_ABSENCE } from '../../../../_shared/graphql/queries/DataQueries';
-import { LEAVE_TYPE_CHOICES } from '../../../../_shared/tools/constants';
+import { ETRY_ABSENCE_TYPES, LEAVE_TYPE_CHOICES } from '../../../../_shared/tools/constants';
 import { useSession } from '../../../../_shared/context/SessionProvider';
 import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
@@ -52,8 +52,9 @@ export default function AddEmployeeAbsenceForm({
   const formik = useFormik({
     initialValues: {
       number: '',
-      title: '',
+      label: '',
       document: undefined,
+      entryType: ETRY_ABSENCE_TYPES.ABSENCE,
       leaveType: LEAVE_TYPE_CHOICES.ABSENCE,
       startingDateTime: dayjs(new Date()),
       endingDateTime: dayjs(new Date()),
@@ -231,6 +232,7 @@ const [getEmployees, {
             ? employeeAbsenceCopy.employees.map((i) => i?.employee)
             : [];
         formik.setValues(employeeAbsenceCopy);
+        employeeAbsenceCopy.leaveType!==LEAVE_TYPE_CHOICES.ABSENCE ? setTheTitle("Modifier le congé") : setTheTitle("Modifier l'absence")
       },
       onError: (err) => console.log(err),
     });
@@ -239,9 +241,10 @@ const [getEmployees, {
       getEmployeeAbsence({ variables: { id: idEmployeeAbsence } });
     }
   }, [idEmployeeAbsence]);
-
+  
   React.useEffect(() => {
-    if ((searchParams.get('type') && searchParams.get('type') !== LEAVE_TYPE_CHOICES.ABSENCE && !idEmployeeAbsence) || (!canManageHumanRessources && !idEmployeeAbsence)) {
+    if ((searchParams.get('type') && searchParams.get('type') !== ETRY_ABSENCE_TYPES.ABSENCE && !idEmployeeAbsence) || (!canManageHumanRessources && !idEmployeeAbsence)) {
+      formik.setFieldValue('entryType', ETRY_ABSENCE_TYPES.LEAVE)
       formik.setFieldValue('leaveType', LEAVE_TYPE_CHOICES.PAID)
       setIsLeaveType(true)
     }
@@ -250,10 +253,19 @@ const [getEmployees, {
     }
   }, []);
 
+  const [theTitle, setTheTitle] = React.useState(title);
+  React.useEffect(() => {
+    if (idEmployeeAbsence) {
+      isLeaveType ? setTheTitle("Modifier le congé") : setTheTitle("Modifier l'absence") 
+    }else{
+      isLeaveType ? setTheTitle("Demander un congé") : setTheTitle("Ajouter une absence")
+    }
+  }, [isLeaveType]);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
-        {title} {formik.values.number}
+        {theTitle} {formik.values.number}
       </Typography>
       {loadingEmployeeAbsence && <ProgressService type="form" />}
       {!loadingEmployeeAbsence && (
@@ -263,25 +275,12 @@ const [getEmployees, {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid item xs={12} sm={6} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Libellé"
-                  value={formik.values.title}
-                  onChange={(e) =>
-                    formik.setFieldValue('title', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            {!isLeaveType && <Grid item xs={12} sm={6} md={8} >
+            {!isLeaveType && <><Grid item xs={12} sm={6} md={6} >
               <Item>
                 <TheAutocomplete
-                  disabled={isLeaveType}
+                  disabled={isLeaveType || loadingPost || loadingPut}
                   options={employeesData?.employees?.nodes}
-onInput={(e) => {
+                  onInput={(e) => {
                           onGetEmployees(e.target.value)
                         }}
 
@@ -294,31 +293,32 @@ onInput={(e) => {
                   }
                 />
               </Item>
-            </Grid>}
-            <Grid item xs={12} sm={6} md={4}>
+            </Grid>
+            <Grid item xs={12} sm={6} md={2}>
               <Item>
-                <TheDesktopDatePicker
-                  label="Date de début"
-                  value={formik.values.startingDateTime}
-                  onChange={(date) =>
-                    formik.setFieldValue('startingDateTime', date)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
+                <FormControl>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-controlled-radio-buttons-group"
+                    name="controlled-radio-buttons-group"
+                    value={formik.values.entryType}
+                    onChange={(e) =>{
+                        formik.setFieldValue('entryType', e.target.value)
+                      }
+                    }
+                    disabled={isLeaveType || loadingPost || loadingPut}
+                  >
+                    {ETRY_ABSENCE_TYPES?.ALL?.map((type, index) => {
+                      return (
+                        <FormControlLabel key={index} value={type.value} control={<Radio />} label={type.label} />
+                      );
+                    })}
+                  </RadioGroup>
+                </FormControl>
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Item>
-                <TheDesktopDatePicker
-                  label="Date de fin"
-                  value={formik.values.endingDateTime}
-                  onChange={(date) =>
-                    formik.setFieldValue('endingDateTime', date)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
+            </>
+            }
             <Grid item xs={12} sm={4} md={4}>
               <Item>
                 <FormControl fullWidth>
@@ -330,7 +330,7 @@ onInput={(e) => {
                     }
                     disabled={loadingPost || loadingPut}
                   >
-                    {LEAVE_TYPE_CHOICES?.ALL?.map((type, index) => {
+                    {LEAVE_TYPE_CHOICES?.ALL[formik.values.entryType]?.map((type, index) => {
                       return (
                         <MenuItem key={index} value={type.value}>
                           {type.label}
@@ -341,53 +341,46 @@ onInput={(e) => {
                 </FormControl>
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={4} >
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
-                <SelectCheckmarks
-                  options={dataData?.absenceReasons}
-                  label="Motifs"
-                  placeholder="Ajouter un motif"
-                  limitTags={3}
-                  value={formik.values.reasons}
-                  onChange={(e, newValue) =>
-                    formik.setFieldValue('reasons', newValue)
+                <TheDesktopDatePicker
+                  label="Date de début"
+                  value={formik.values.startingDateTime}
+                  onChange={(date) =>
+                    formik.setFieldValue('startingDateTime', date)
                   }
+                  disabled={loadingPost || loadingPut}
                 />
               </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4} >
               <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Autres motifs"
-                  value={formik.values.otherReasons}
-                  onChange={(e) =>
-                    formik.setFieldValue('otherReasons', e.target.value)
+                <TheDesktopDatePicker
+                  label="Date de fin"
+                  value={formik.values.endingDateTime}
+                  onChange={(date) =>
+                    formik.setFieldValue('endingDateTime', date)
                   }
-                  helperText="Si vous ne trouvez pas le motif dans la liste dessus."
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
             </Grid>
             <Grid item xs={12} sm={6} md={4} >
               <Item>
-                <TheFileField variant="outlined" label="Justificatif"
+                <TheFileField 
+                  variant="outlined"
+                  label="Justificatif (facultatif)"
                   fileValue={formik.values.document}
                   onChange={(file) => formik.setFieldValue('document', file)}
                   disabled={loadingPost || loadingPut}
                   />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={12} md={12}>
-              <Divider variant="middle" />
-            </Grid>
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
                   label="Message"
                   multiline
-                  rows={4}
+                  rows={5}
                   value={formik.values.message}
                   onChange={(e) =>
                     formik.setFieldValue('message', e.target.value)
@@ -395,6 +388,13 @@ onInput={(e) => {
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+              <Alert severity="info">Afin de garantir une bonne organisation et d’assurer la continuité du service,
+                nous vous rappelons qu’il est préférable de transmettre toute demande de congé avant le délai accordé. <br />
+                <b>Toute demande transmise hors délai pourra être refusée</b>, même si elle concerne un solde de congés acquis.<br />
+                Nous vous remercions de votre compréhension et vous invitons à anticiper au maximum vos demandes.
+                </Alert>
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>

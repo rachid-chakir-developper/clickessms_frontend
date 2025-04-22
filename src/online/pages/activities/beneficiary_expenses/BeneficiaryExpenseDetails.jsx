@@ -155,20 +155,6 @@ const BeneficiaryExpenseDetailsPage = ({ beneficiaryExpense }) => {
           </Paper>
         </Paper>
       </Grid>
-
-      {/* Observation */}
-      <Grid item xs={12}>
-        <Paper sx={{ padding: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Observation
-          </Typography>
-          <Paper sx={{ padding: 2 }} variant="outlined">
-            <Typography variant="body1">
-              {observation || "Aucune observation pour l'instant"}
-            </Typography>
-          </Paper>
-        </Paper>
-      </Grid>
     </Grid>
   );
 };

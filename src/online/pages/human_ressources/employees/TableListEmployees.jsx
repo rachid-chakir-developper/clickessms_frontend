@@ -31,6 +31,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDate } from '../../../../_shared/tools/functions';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -472,22 +473,14 @@ export default function TableListEmployees({
                     <StyledTableCell align="left">
                       {currentContract && <Stack direction="row" flexWrap='wrap' spacing={1}>
                         {currentContract?.establishments?.map((establishment, index) => {
+                          return (<EstablishmentChip key={index} establishment={establishment?.establishment}/>
+                          );
+                        })}
+                      </Stack>}
+                      {!currentContract && <Stack direction="row" flexWrap='wrap' spacing={1}>
+                        {row?.establishments?.map((establishment, index) => {
                           return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={establishment?.establishment?.name}
-                                  src={
-                                    establishment?.establishment?.logo
-                                      ? establishment?.establishment?.logo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={establishment?.establishment?.name}
-                              variant="outlined"
-                            />
+                            <EstablishmentChip key={index} establishment={establishment}/>
                           );
                         })}
                       </Stack>}

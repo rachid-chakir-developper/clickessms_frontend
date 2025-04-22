@@ -12,7 +12,7 @@ import {
 import dayjs from 'dayjs';
 
 import { Link, useNavigate } from 'react-router-dom';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { ArrowBack } from '@mui/icons-material';
@@ -27,6 +27,8 @@ import {
   PUT_EMPLOYEE,
 } from '../../../../_shared/graphql/mutations/EmployeeMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
+import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -55,6 +57,7 @@ export default function AddEmployeeForm({ idEmployee, title }) {
       firstName: '',
       lastName: '',
       preferredName: '',
+      establishments: [],
       birthDate: null,
       birthPlace: '',
       nationality: '',
@@ -85,6 +88,7 @@ export default function AddEmployeeForm({ idEmployee, title }) {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       let { photo, coverImage, signature, ...employeeCopy } = values;
+      employeeCopy.establishments = employeeCopy.establishments.map((i) => i?.id);
       if (idEmployee && idEmployee != '') {
         onUpdateEmployee({
           id: employeeCopy.id,
@@ -197,6 +201,15 @@ export default function AddEmployeeForm({ idEmployee, title }) {
       },
     });
   };
+
+    const {
+      loading: loadingEstablishments,
+      data: establishmentsData,
+      error: establishmentsError,
+      fetchMore: fetchMoreEstablishments,
+    } = useQuery(GET_ESTABLISHMENTS, {
+      fetchPolicy: 'network-only',
+    });
   const [getEmployee, { loading: loadingEmployee }] = useLazyQuery(
     GET_EMPLOYEE,
     {
@@ -311,6 +324,18 @@ export default function AddEmployeeForm({ idEmployee, title }) {
                   value={formik.values.preferredName}
                   onChange={(e) =>
                     formik.setFieldValue('preferredName', e.target.value)
+                  }
+                />
+              </Item>
+              <Item>
+                <TheAutocomplete
+                  options={establishmentsData?.establishments?.nodes}
+                  label="Structures concernées"
+                  placeholder="Ajouter une structure"
+                  limitTags={3}
+                  value={formik.values.establishments}
+                  onChange={(e, newValue) =>
+                    formik.setFieldValue('establishments', newValue)
                   }
                 />
               </Item>

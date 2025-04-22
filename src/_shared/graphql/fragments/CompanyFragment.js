@@ -24,6 +24,9 @@ export const COMPANY_BASIC_INFOS = gql`
   fragment CompanyBasicInfosFragment on CompanyType {
     id
     name
+    siret
+    finess
+    apeCode
     email
     logo
     coverImage
@@ -51,6 +54,10 @@ export const MY_COMPANY_DETAILS = gql`
     fax
     webSite
     otherContacts
+    bankCode
+    branchCode
+    accountNumber
+    ribKey
     iban
     bic
     bankName
@@ -83,6 +90,10 @@ export const COMPANY_DETAILS = gql`
     fax
     webSite
     otherContacts
+    bankCode
+    branchCode
+    accountNumber
+    ribKey
     iban
     bic
     bankName

@@ -982,6 +982,8 @@ export const modules: Module[] = [
         },
         target: '_blank',
         icon: <ImportContactsIcon />,
+        disabled: true,
+        hidden: true,
       },
       {
         id: 'labor-law',

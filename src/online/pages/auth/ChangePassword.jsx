@@ -227,7 +227,7 @@ const ChangePassword = () => {
                     <Item>
                         <TheTextField
                         variant="outlined"
-                        label="Confirmer otre nouveau mot de passe"
+                        label="Confirmer votre nouveau mot de passe"
                         id="newPassword2"
                         value={formik.values.position}
                         required

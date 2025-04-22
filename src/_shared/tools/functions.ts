@@ -15,7 +15,7 @@ import {
   STEP_TYPES,
   TECH_INSPECTION_STATES,
   VEHICLE_STATES,
-  ABSENCE_TYPES,
+  ETRY_ABSENCE_TYPES,
   ABSENCE_STATUS_CHOICES,
   LEAVE_TYPE_CHOICES,
   CALL_TYPES,
@@ -176,14 +176,15 @@ export const getTechnicalInspectionLabel = (state) => {
 export const getRepairStateLabel = (state) => {
   return REPAIR_STATES.ALL.find((t) => t.value == state)?.label;
 };
-export const getAbsenceTypeLabel = (type) => {
-  return ABSENCE_TYPES.ALL.find((t) => t.value == type)?.label;
+export const getEntryAbsenceTypeLabel = (type) => {
+  return ETRY_ABSENCE_TYPES.ALL.find((t) => t.value == type)?.label;
 };
 export const getAbsenceStatusLabel = (status) => {
   return ABSENCE_STATUS_CHOICES.ALL.find((t) => t.value == status)?.label;
 };
 export const getLeaveTypeLabel = (type) => {
-  return LEAVE_TYPE_CHOICES.ALL.find((t) => t.value == type)?.label;
+  const allTypes = [...LEAVE_TYPE_CHOICES.ALL.LEAVE, ...LEAVE_TYPE_CHOICES.ALL.ABSENCE];
+  return allTypes.find((t) => t.value === type)?.label;
 };
 export const getCallTypeLabel = (type) => {
   return CALL_TYPES.ALL.find((t) => t.value == type)?.label;

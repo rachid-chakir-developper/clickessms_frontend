@@ -7,8 +7,8 @@ import { Box, Grid, Paper, Typography, Divider, Chip, Button, Stack } from '@mui
 import { EMPLOYEE_ABSENCE_RECAP } from '../../../../_shared/graphql/queries/EmployeeAbsenceQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDateTime, getFormatDate, getLeaveTypeLabel } from '../../../../_shared/tools/functions';
-import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard';
-import { Edit, ArrowBack, Description, Note, Event, Group, Category, Folder } from '@mui/icons-material';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import { Edit, ArrowBack, Description, Note, Event, Group, Category, Folder, Person } from '@mui/icons-material';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -145,7 +145,7 @@ function EmployeeAbsenceMiniInfos({ employeeAbsence }) {
                   Référence : <b>{employeeAbsence?.number}</b>
                 </Typography>
                 <Typography gutterBottom variant="subtitle1" component="div">
-                  {employeeAbsence?.title}
+                  {employeeAbsence?.label}
                 </Typography>
                 <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
                 <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
@@ -233,28 +233,31 @@ function EmployeeAbsenceOtherInfos({ employeeAbsence }) {
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
-      <Typography gutterBottom variant="subtitle3" component="h3" sx={{ display: 'flex', alignItems: 'center' }}>
-        <Group sx={{ marginRight: 1 }} /> Les Employés
-      </Typography>
-      <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-        {employeeAbsence?.employees?.map((employee, index) => (
-          <Grid item xs={12} sm={12} md={12} key={index}>
-            <Item>
-              <EmployeeItemCard employee={employee?.employee} />
-            </Item>
-          </Grid>
-        ))}
+        <Typography gutterBottom variant="subtitle3" component="h3" sx={{ display: 'flex', alignItems: 'center' }}>
+          <Group sx={{ mr: 1 }} /> Employés concernés
+        </Typography>
+        {employeeAbsence?.employees && employeeAbsence.employees.length > 0 ? (
+                <Stack direction="row" spacing={1} flexWrap="wrap">
+                  {employeeAbsence.employees.map((employee, index) => (
+                    <EmployeeChip
+                      key={index}
+                      employee={employee?.employee}
+                    />
+                  ))}
+                </Stack>
+              ) : (
+                <Typography variant="body2" color="text.secondary">
+                  Aucun employé concerné
+                </Typography>
+              )}
         {employeeAbsence?.employee && (
-          <Grid item xs={12} sm={12} md={12} sx={{ mt: 2 }}>
-            <Paper sx={{ padding: 2 }} variant="outlined">
-              <Typography variant="subtitle3" gutterBottom>
-                Déclaré par:
-              </Typography>
-              <EmployeeItemCard employee={employeeAbsence?.employee} />
-            </Paper>
-          </Grid>
+          <Box sx={{ display: 'flex', alignItems: 'center', mt: 1, mb: 1 }}>
+            <Person sx={{ mr: 1, color: 'text.secondary' }} />
+            <Typography variant="body2" color="text.secondary">
+              <b>Déclaré par:</b> <EmployeeChip employee={employeeAbsence?.employee} /> 
+            </Typography>
+          </Box>
         )}
-      </Grid>
     </Paper>
   );
 }
