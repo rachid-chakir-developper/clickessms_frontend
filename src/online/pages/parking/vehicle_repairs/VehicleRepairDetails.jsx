@@ -8,7 +8,7 @@ import { VEHICLE_REPAIR_RECAP } from '../../../../_shared/graphql/queries/Vehicl
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDateTime, getRepairStateLabel } from '../../../../_shared/tools/functions';
 import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard';
-import { Check, Edit } from '@mui/icons-material';
+import { Check, Edit, ArrowBack } from '@mui/icons-material';
 import VehicleItemCard from '../vehicles/VehicleItemCard';
 import PartnerItemCard from '../../partnerships/partners/PartnerItemCard';
 
@@ -39,15 +39,25 @@ export default function VehicleRepairDetails() {
   if (loadingVehicleRepair) return <ProgressService type="form" />;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
         <Link
-          to={`/online/parc-automobile/reparations/modifier/${vehicleRepairData?.vehicleRepair?.id}`}
+          to="/online/parc-automobile/reparations/liste"
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
-            Modifier
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
           </Button>
         </Link>
+        <Box>
+          <Link
+            to={`/online/parc-automobile/reparations/modifier/${vehicleRepairData?.vehicleRepair?.id}`}
+            className="no_style"
+          >
+            <Button variant="outlined" endIcon={<Edit />} size="small">
+              Modifier
+            </Button>
+          </Link>
+        </Box>
       </Box>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>

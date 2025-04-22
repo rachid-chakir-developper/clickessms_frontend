@@ -18,6 +18,7 @@ import {
   List,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Edit, Star, StarBorder, ArrowBack } from '@mui/icons-material';
 
 import { GET_TASK_RECAP } from '../../../../_shared/graphql/queries/TaskQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
@@ -35,7 +36,6 @@ import TaskWorkersList from '../../../_shared/components/utils/TaskWorkersList';
 import TaskVehiclesList from '../../../_shared/components/utils/TaskVehiclesList';
 import TaskMaterialsList from '../../../_shared/components/utils/TaskMaterialsList';
 import SignatureCard from '../../../_shared/components/feedBacks/SignatureCard';
-import { Edit, Star, StarBorder } from '@mui/icons-material';
 import TaskStatusLabelMenu from './TaskStatusLabelMenu';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import TaskTabs from './tasks-tabs/TaskTabs';
@@ -62,17 +62,15 @@ export default function TaskDetails() {
   if (loadingTask) return <ProgressService type="form" />;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1}}>
-        <Box sx={{marginX: 2}}>
-          <Link
-            to={`/online/travaux/interventions/liste`}
-            className="no_style"
-          >
-            <Button variant="text" startIcon={<List />}  size="small">
-              Retour à la Liste
-            </Button>
-          </Link>
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1}}>
+        <Link
+          to={`/online/travaux/interventions/liste`}
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         <Link
           to={`/online/travaux/interventions/modifier/${taskData?.task.id}`}
           className="no_style"

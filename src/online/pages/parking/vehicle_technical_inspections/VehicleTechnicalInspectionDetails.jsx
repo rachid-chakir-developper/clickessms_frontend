@@ -8,7 +8,7 @@ import { VEHICLE_TECH_INSPECTION_RECAP } from '../../../../_shared/graphql/queri
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDate, getFormatDateTime, getTechnicalInspectionLabel } from '../../../../_shared/tools/functions';
 import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard';
-import { Check, Edit } from '@mui/icons-material';
+import { Check, Edit, ArrowBack } from '@mui/icons-material';
 import VehicleItemCard from '../vehicles/VehicleItemCard';
 import PartnerItemCard from '../../partnerships/partners/PartnerItemCard';
 import { INSPECTION_FAILURE_TYPES } from '../../../../_shared/tools/constants';
@@ -40,15 +40,25 @@ export default function VehicleTechnicalInspectionDetails() {
   if (loadingVehicleTechnicalInspection) return <ProgressService type="form" />;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
         <Link
-          to={`/online/parc-automobile/controles-techniques/modifier/${vehicleTechnicalInspectionData?.vehicleTechnicalInspection?.id}`}
+          to="/online/parc-automobile/controles-techniques/liste"
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
-            Modifier
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
           </Button>
         </Link>
+        <Box>
+          <Link
+            to={`/online/parc-automobile/controles-techniques/modifier/${vehicleTechnicalInspectionData?.vehicleTechnicalInspection?.id}`}
+            className="no_style"
+          >
+            <Button variant="outlined" endIcon={<Edit />} size="small">
+              Modifier
+            </Button>
+          </Link>
+        </Box>
       </Box>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>

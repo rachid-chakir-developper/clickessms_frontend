@@ -7,7 +7,7 @@ import { Box, Grid, Paper, Typography, Divider, Chip, Stack, Button, ListItem, L
 import { MEETING_RECAP } from '../../../../../_shared/graphql/queries/MeetingQueries';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDate, getFormatDateTime } from '../../../../../_shared/tools/functions';
-import { Check, CheckBoxOutlineBlank, Done, Edit, Note } from '@mui/icons-material';
+import { Check, CheckBoxOutlineBlank, Done, Edit, Note, ArrowBack } from '@mui/icons-material';
 import EstablishmentChip from '../../../companies/establishments/EstablishmentChip';
 import EmployeeChip from '../../../human_ressources/employees/EmployeeChip';
 import BeneficiaryChip from '../../../human_ressources/beneficiaries/BeneficiaryChip';
@@ -38,15 +38,25 @@ export default function MeetingDetails() {
   return (
     <>
       <Stack>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
           <Link
-            to={`/online/ressources-humaines/recrutement/entretiens/modifier/${meetingData?.meeting?.id}`}
+            to="/online/ressources-humaines/recrutement/entretiens/liste"
             className="no_style"
           >
-            <Button variant="outlined" endIcon={<Edit />}>
-              Modifier
+            <Button variant="outlined" startIcon={<ArrowBack />}>
+              Retour à la liste
             </Button>
           </Link>
+          <Box>
+            <Link
+              to={`/online/ressources-humaines/recrutement/entretiens/modifier/${meetingData?.meeting?.id}`}
+              className="no_style"
+            >
+              <Button variant="outlined" endIcon={<Edit />}>
+                Modifier
+              </Button>
+            </Link>
+          </Box>
         </Box>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>

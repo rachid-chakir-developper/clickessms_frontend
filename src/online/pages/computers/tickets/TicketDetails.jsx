@@ -8,7 +8,7 @@ import { TICKET_RECAP } from '../../../../_shared/graphql/queries/TicketQueries'
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDate, getFormatDateTime, getPriorityLabel } from '../../../../_shared/tools/functions';
 import EstablishmentItemCard from '../../companies/establishments/EstablishmentItemCard';
-import { AssignmentInd, Check, Edit } from '@mui/icons-material';
+import { AssignmentInd, Check, Edit, ArrowBack } from '@mui/icons-material';
 import TicketStatusLabelMenu from './TicketStatusLabelMenu';
 import TicketTabs from './tickets-tabs/TicketTabs';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
@@ -21,7 +21,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function TicketDetails({ticketId}) {
+export default function TicketDetails({ ticketId }) {
   const authorizationSystem = useAuthorizationSystem();
   const canManageQuality = authorizationSystem.requestAuthorization({
     type: 'manageQuality',
@@ -35,7 +35,7 @@ export default function TicketDetails({ticketId}) {
     if (idTicket) {
       getTicket({ variables: { id: idTicket } });
     }
-    else if(ticketId){
+    else if (ticketId) {
       getTicket({ variables: { id: ticketId } });
     }
   }, [idTicket, ticketId]);
@@ -44,16 +44,28 @@ export default function TicketDetails({ticketId}) {
   return (
     <>
       <Stack>
-        {canManageQuality && <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
           <Link
-            to={`/online/informatique/tickets/modifier/${ticketData?.ticket?.id}`}
+            to="/online/informatique/tickets/liste"
             className="no_style"
           >
-            <Button variant="outlined" endIcon={<Edit />}>
-              Modifier
+            <Button variant="outlined" startIcon={<ArrowBack />}>
+              Retour à la liste
             </Button>
           </Link>
-        </Box>}
+          <Box>
+            {canManageQuality &&
+              <Link
+                to={`/online/informatique/tickets/modifier/${ticketData?.ticket?.id}`}
+                className="no_style"
+              >
+                <Button variant="outlined" endIcon={<Edit />}>
+                  Modifier
+                </Button>
+              </Link>
+            }
+          </Box>
+        </Box>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={6}>
             <TicketMiniInfos ticket={ticketData?.ticket} />
@@ -73,7 +85,7 @@ export default function TicketDetails({ticketId}) {
           </Grid>
           <Grid item xs={12} sm={12}>
             <Paper sx={{ padding: 2 }}>
-              <TicketTabs ticket={ticketData?.ticket}/>
+              <TicketTabs ticket={ticketData?.ticket} />
             </Paper>
           </Grid>
         </Grid>
@@ -145,34 +157,34 @@ function TicketMiniInfos({ ticket }) {
 
 function TicketOtherInfos({ ticket }) {
   return (<>
-      {ticket?.establishments.length > 0 && (
-        <Paper
-          variant="outlined"
-          sx={{
-            p: 2,
-            margin: 'auto',
-            flexGrow: 1,
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'dark' ? '#1A2027' : '#ffffff',
-          }}
-        >
-          <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
-            <Typography variant="h6" gutterBottom>
-              Les structures concernées
-            </Typography>
-              <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
-                {ticket?.establishments?.map((establishment, index) => (
-                  <Grid item xs={12} sm={12} md={12} key={index} sx={{marginY: 1}}>
-                    <Item>
-                      <EstablishmentItemCard establishment={establishment} />
-                    </Item>
-                  </Grid>
-                ))}
+    {ticket?.establishments.length > 0 && (
+      <Paper
+        variant="outlined"
+        sx={{
+          p: 2,
+          margin: 'auto',
+          flexGrow: 1,
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'dark' ? '#1A2027' : '#ffffff',
+        }}
+      >
+        <Paper sx={{ padding: 1, marginY: 1 }} variant="outlined">
+          <Typography variant="h6" gutterBottom>
+            Les structures concernées
+          </Typography>
+          <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
+            {ticket?.establishments?.map((establishment, index) => (
+              <Grid item xs={12} sm={12} md={12} key={index} sx={{ marginY: 1 }}>
+                <Item>
+                  <EstablishmentItemCard establishment={establishment} />
+                </Item>
               </Grid>
-          </Paper>
+            ))}
+          </Grid>
         </Paper>
-      )}
-      </>
+      </Paper>
+    )}
+  </>
   );
 }
 

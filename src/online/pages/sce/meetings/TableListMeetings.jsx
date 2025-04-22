@@ -32,7 +32,7 @@ import {
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
@@ -248,6 +248,7 @@ export default function TableListMeetings({
   onDeleteMeeting,
   onUpdateMeetingState,
 }) {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -384,6 +385,7 @@ export default function TableListMeetings({
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
+                    onClick={() => navigate(`/online/cse/reunions/details/${row.id}`)}
                   >
                     <StyledTableCell padding="checkbox">
                       <Checkbox

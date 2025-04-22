@@ -3,12 +3,12 @@ import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Box, Grid, Paper, Typography, Divider, Chip, Button, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Stack } from '@mui/material';
+import { Edit, ArrowBack } from '@mui/icons-material';
 
 import { VEHICLE_INSPECTION_RECAP } from '../../../../_shared/graphql/queries/VehicleInspectionQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDate, getFormatDateTime } from '../../../../_shared/tools/functions';
 import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard';
-import { Edit } from '@mui/icons-material';
 import VehicleItemCard from '../vehicles/VehicleItemCard';
 import PartnerItemCard from '../../partnerships/partners/PartnerItemCard';
 import TitlebarImageList from '../../../_shared/components/media/TitlebarImageList';
@@ -41,15 +41,25 @@ export default function VehicleInspectionDetails() {
   if (loadingVehicleInspection) return <ProgressService type="form" />;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
         <Link
-          to={`/online/parc-automobile/controles-vehicules/modifier/${vehicleInspectionData?.vehicleInspection?.id}`}
+          to="/online/parc-automobile/controles-vehicules/liste"
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
-            Modifier
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
           </Button>
         </Link>
+        <Box>
+          <Link
+            to={`/online/parc-automobile/controles-vehicules/modifier/${vehicleInspectionData?.vehicleInspection?.id}`}
+            className="no_style"
+          >
+            <Button variant="outlined" endIcon={<Edit />} size="small">
+              Modifier
+            </Button>
+          </Link>
+        </Box>
       </Box>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -86,7 +96,7 @@ export default function VehicleInspectionDetails() {
             <Grid item xs={12} sm={6} md={3}>
               <Item>
                 <FormControl>
-                  <FormLabel id="demo-row-radio-buttons-group-label" sx={{textAlign: 'left'}}>Certificat d’assurance présent</FormLabel>
+                  <FormLabel id="demo-row-radio-buttons-group-label" sx={{textAlign: 'left'}}>Certificat d'assurance présent</FormLabel>
                   <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
@@ -103,7 +113,7 @@ export default function VehicleInspectionDetails() {
             <Grid item xs={12} sm={6} md={3}>
               <Item>
                 <FormControl>
-                  <FormLabel id="demo-row-radio-buttons-group-label" sx={{textAlign: 'left'}}>Attestation d’assurance présente</FormLabel>
+                  <FormLabel id="demo-row-radio-buttons-group-label" sx={{textAlign: 'left'}}>Attestation d'assurance présente</FormLabel>
                   <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
@@ -146,7 +156,7 @@ export default function VehicleInspectionDetails() {
               <Item>
                 <TheSwitch
                   variant="outlined"
-                  label="Niveau d’huile"
+                  label="Niveau d'huile"
                   checked={vehicleInspectionData?.vehicleInspection?.isOilLevelChecked}
                   value={vehicleInspectionData?.vehicleInspection?.isOilLevelChecked}
                 />

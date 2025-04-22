@@ -6,7 +6,7 @@ import { Grid, Typography, Avatar } from '@mui/material';
 import { GET_RECAP_VEHICLE } from '../../../../_shared/graphql/queries/VehicleQueries';
 import { getCritAirVignetteLabel, getFormatDateTime, getVehicleStateLabel } from '../../../../_shared/tools/functions';
 import styled from '@emotion/styled';
-import { DriveEta, Edit } from '@mui/icons-material';
+import { DriveEta, Edit, ArrowBack } from '@mui/icons-material';
 import VehicleTabs from './vehicles-tabs/VehicleTabs';
 
 const Item = styled(Stack)(({ theme }) => ({
@@ -31,15 +31,25 @@ export default function VehicleDetails() {
 
   return (
     <Stack>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
         <Link
-          to={`/online/parc-automobile/vehicules/modifier/${vehicleData?.vehicle?.id}`}
+          to="/online/parc-automobile/vehicules/liste"
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
-            Modifier
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
           </Button>
         </Link>
+        <Box>
+          <Link
+            to={`/online/parc-automobile/vehicules/modifier/${vehicleData?.vehicle?.id}`}
+            className="no_style"
+          >
+            <Button variant="outlined" endIcon={<Edit />} size="small">
+              Modifier
+            </Button>
+          </Link>
+        </Box>
       </Box>
       {vehicleData?.vehicle && (
         <VehicleDetailsPage
@@ -142,7 +152,7 @@ const VehicleDetailsPage = ({ vehicle }) => {
                 État : <b>{getVehicleStateLabel(vehicle?.state)}</b>
               </Typography>}
               {vehicle?.critAirVignette && <Typography variant="body2">
-                Vignette Crit’Air : <b>{getCritAirVignetteLabel(vehicle?.critAirVignette)}</b>
+                Vignette Crit'Air : <b>{getCritAirVignetteLabel(vehicle?.critAirVignette)}</b>
               </Typography>}
             </Box>
           </Box>
