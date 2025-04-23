@@ -10,9 +10,8 @@ import DashboardTable from './DashboardTable';
 import SynthesisTable from './SynthesisTable';
 import ActivityTable from './ActivityTable';
 import SynthesisEstablishmentsTable from './SynthesisEstablishmentsTable';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import DashboardBeneficiaryTable from './DashboardBeneficiaryTable';
+import GeneratePdfButton from '../../../_shared/components/printing/GeneratePdfButton';
 
 export default function Dashboard() {
   const componentRef = React.useRef();
@@ -73,7 +72,7 @@ export default function Dashboard() {
       case 'synthesisEstablishment':
         getDashboardActivitySynthesis()
         break;
-      case 'activity':
+      case 'activity_month':
         getDashboardActivityMonth()
         break;
     
@@ -82,67 +81,6 @@ export default function Dashboard() {
     }
   }, [dashboardActivityFilter, view]);
 
-  const handleExportToPdf = async () => {
-    try {
-      const input = componentRef.current;
-      if (!input) {
-          throw new Error("Component reference is not available.");
-      }
-
-      // Créer un conteneur temporaire pour l'en-tête et le pied de page
-      const tempContainer = document.createElement('div');
-      tempContainer.style.position = 'absolute';
-      tempContainer.style.left = '-9999px';
-      document.body.appendChild(tempContainer);
-
-      // Créer l'en-tête et le pied de page
-      const headerHtml = `
-          <div style="text-align: center; font-size: 12px; border-bottom: 1px solid #000; padding: 10px;">
-              Titre de l'En-tête
-          </div>
-      `;
-      const footerHtml = `
-          <div style="text-align: center; font-size: 12px; border-top: 1px solid #000; padding: 10px;">
-              Footer Content
-          </div>
-      `;
-
-      // tempContainer.innerHTML = input.outerHTML + footerHtml;
-      tempContainer.innerHTML = input.outerHTML;
-
-      // Convertir le conteneur en image via html2canvas
-      const canvas = await html2canvas(tempContainer, { scale: 2 });
-      const imgData = canvas.toDataURL('image/png');
-
-      // Créer un PDF à partir de l'image
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = pdf.internal.pageSize.getWidth(); // Largeur A4 en mm
-      const pageHeight = pdf.internal.pageSize.getHeight(); // Hauteur A4 en mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let position = 0;
-      let pageCount = Math.ceil(imgHeight / pageHeight);
-
-      // Ajouter l'image par page
-      for (let i = 0; i < pageCount; i++) {
-          if (i > 0) {
-              pdf.addPage(); // Ajouter une nouvelle page après la première
-          }
-          pdf.addImage(imgData, 'PNG', 0, -position, imgWidth, imgHeight);
-          position += pageHeight; // Avancer pour la prochaine page
-      }
-
-      // Sauvegarder le PDF
-      pdf.save(`${view}-export.pdf`);
-
-      // Nettoyer le conteneur temporaire
-      document.body.removeChild(tempContainer);
-      setIsExporting(false)
-    } catch (error) {
-      setIsExporting(false)
-      console.error("An error occurred while exporting the PDF:", error);
-      // Vous pouvez également afficher un message d'erreur à l'utilisateur ici
-    }
-  }
   const exportTableToExcel = () => {
     setIsExporting(true)
     // Accéder au tableau via la référence
@@ -190,19 +128,15 @@ export default function Dashboard() {
     <>
           <Grid container spacing={0}>
             <Grid item xs={12}>
-              <DashboardFilter onFilterChange={handleFilterChange} isDisplayMonth={view==="activity"}/>
+              <DashboardFilter onFilterChange={handleFilterChange} isDisplayMonth={view==="activity_month"}/>
             </Grid>
             {view!=='graph' && !isExporting && <Box>
-              <Tooltip title="Exporter en PDF">
-                <IconButton variant="contained" onClick={handleExportToPdf} >
-                  <PictureAsPdf />
-                </IconButton>
-              </Tooltip>
               <Tooltip title="Exporter en Excel">
                 <IconButton variant="contained" onClick={exportTableToExcel} >
                   <FileDownload />
                 </IconButton>
               </Tooltip>
+              <GeneratePdfButton apparence="iconButtonExport" documentType={view} />
             </Box>}
             <Grid item xs={12}>
               <Stack justifyContent="flex-end">
@@ -239,7 +173,7 @@ export default function Dashboard() {
                     </ToggleButton>
                   </Tooltip>
                   <Tooltip title="L'activité" >
-                    <ToggleButton value="activity" aria-label="list">
+                    <ToggleButton value="activity_month" aria-label="list">
                       <ViewList />
                     </ToggleButton>
                   </Tooltip>
@@ -255,7 +189,7 @@ export default function Dashboard() {
           {view==='beneficiaryTable' && <DashboardBeneficiaryTable activityBeneficiaryEstablishments={dashboardActivityBeneficiaryEstablishmentsData?.dashboardActivity?.activityBeneficiaryEstablishments}/>}
           {view==='synthesis' && <SynthesisTable activitySynthesis={dashboardActivitySynthesisData?.dashboardActivity?.activitySynthesis}/>}
           {view==='synthesisEstablishment' && <SynthesisEstablishmentsTable activitySynthesis={dashboardActivitySynthesisData?.dashboardActivity?.activitySynthesis}/>}
-          {view==='activity' && <ActivityTable activityMonth={dashboardActivityMonthData?.dashboardActivity?.activityMonth}/>}
+          {view==='activity_month' && <ActivityTable activityMonth={dashboardActivityMonthData?.dashboardActivity?.activityMonth}/>}
         </Box>
       )}
     </>

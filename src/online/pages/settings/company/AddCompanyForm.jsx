@@ -27,7 +27,7 @@ export default function AddCompanyForm({ idCompany = null, title = '' }) {
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({
-    name: yup.string('Entrez votre nom').required('Le nom est obligatoire'),
+    name: yup.string('Entrez la raison sociale').required('La raison sociale est obligatoire'),
   });
   const formik = useFormik({
     initialValues: {
@@ -36,6 +36,9 @@ export default function AddCompanyForm({ idCompany = null, title = '' }) {
       number: '',
       name: '',
       siret:'',
+      finess:'',
+      apeCode:'',
+      approvalNumber:'',
       city: '',
       zipCode: '',
       address: '',
@@ -46,6 +49,10 @@ export default function AddCompanyForm({ idCompany = null, title = '' }) {
       email: '',
       webSite: '',
       otherContacts: '',
+      bankCode: '',
+      branchCode: '',
+      accountNumber: '',
+      ribKey: '',
       iban: '',
       bic: '',
       bankName: '',
@@ -121,19 +128,11 @@ export default function AddCompanyForm({ idCompany = null, title = '' }) {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            {/* <Grid item xs={2} sm={4} md={4}>
-                            <Item>
-                                <TheTextField variant="outlined" label="Référence"
-                                    value={formik.values.number}
-                                    disabled
-                                />
-                            </Item>
-                        </Grid> */}
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Nom"
+                  label="Raison sociale"
                   id="name"
                   value={formik.values.name}
                   required
@@ -156,7 +155,31 @@ export default function AddCompanyForm({ idCompany = null, title = '' }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={6} md={4}>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Code APE"
+                  value={formik.values.apeCode}
+                  onChange={(e) =>
+                    formik.setFieldValue('apeCode', e.target.value)
+                  }
+                  disabled={loadingPut}
+                />
+              </Item>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Agrément N°"
+                  value={formik.values.approvalNumber}
+                  onChange={(e) =>
+                    formik.setFieldValue('approvalNumber', e.target.value)
+                  }
+                  disabled={loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <ImageFileField
                   variant="outlined"
@@ -169,23 +192,10 @@ export default function AddCompanyForm({ idCompany = null, title = '' }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
-              <Item>
-                <ImageFileField
-                  variant="outlined"
-                  label="Photo de couverture"
-                  imageValue={formik.values.coverImage}
-                  onChange={(imageFile) =>
-                    formik.setFieldValue('coverImage', imageFile)
-                  }
-                  disabled={loadingPut}
-                />
-              </Item>
-            </Grid>
             <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={6} md={4}>
               <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
                 <Grid item xs={12} sm={12} md={12}>
                   <Item>
@@ -246,7 +256,7 @@ export default function AddCompanyForm({ idCompany = null, title = '' }) {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -279,7 +289,7 @@ export default function AddCompanyForm({ idCompany = null, title = '' }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -306,29 +316,81 @@ export default function AddCompanyForm({ idCompany = null, title = '' }) {
             <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={6} md={2.5}>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Code banque"
+                  value={formik.values.bankCode}
+                  onChange={(e) => formik.setFieldValue('bankCode', e.target.value)}
+                  disabled={loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={2.5}>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Code guichet"
+                  value={formik.values.branchCode}
+                  onChange={(e) => formik.setFieldValue('branchCode', e.target.value)}
+                  disabled={loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={5}>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="N° de compte"
+                  value={formik.values.accountNumber}
+                  onChange={(e) => formik.setFieldValue('accountNumber', e.target.value)}
+                  disabled={loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={2}>
+              <Item>
+                <TheTextField
+                  variant="outlined"
+                  label="Clé RIB"
+                  value={formik.values.ribKey}
+                  onChange={(e) => formik.setFieldValue('ribKey', e.target.value)}
+                  disabled={loadingPut}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
                   label="IBAN (RIB)"
                   value={formik.values.iban}
                   onChange={(e) => formik.setFieldValue('iban', e.target.value)}
+                  helperText={`
+                    ${(
+                      (formik.values.bankCode && formik.values.bankCode !='') ||
+                      (formik.values.branchCode && formik.values.branchCode !='') ||
+                      (formik.values.accountNumber && formik.values.accountNumber !='') ||
+                      (formik.values.ribKey && formik.values.ribKey !='')) ? 'RIB: ' : ''}
+                    ${formik.values.bankCode || ''} ${formik.values.branchCode || ''} ${formik.values.accountNumber || ''} ${formik.values.ribKey || ''}
+                    `}
                   disabled={loadingPut}
                 />
               </Item>
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="BIC"
+                  label="BIC / SWIFT"
                   value={formik.values.bic}
                   onChange={(e) => formik.setFieldValue('bic', e.target.value)}
                   disabled={loadingPut}
                 />
               </Item>
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"

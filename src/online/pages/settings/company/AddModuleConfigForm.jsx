@@ -85,14 +85,15 @@ export default function AddModuleConfigForm({ title='' }) {
                     <Typography variant="h6" sx={{ mb: 1 }}>
                         {module.icon}
                             <FormControlLabel
-                            control={
-                                <Checkbox
-                                checked={!selectedModules?.includes(module.id)}
-                                onChange={() => handleCheckboxChange(module.id)}
-                                disabled={loadingPut}
-                                />
-                            }
-                            label={module.name}
+                              control={
+                                  <Checkbox
+                                  checked={!selectedModules?.includes(module.id)}
+                                  onChange={() => handleCheckboxChange(module.id)}
+                                  disabled={loadingPut}
+                                  />
+                              }
+                              label={module.name}
+                              sx={{opacity: module?.disabled ? 0.7 : 1}}
                             />
                     </Typography>
                     <FormGroup sx={{ml: 6}}>
@@ -107,6 +108,7 @@ export default function AddModuleConfigForm({ title='' }) {
                                 />
                             }
                             label={entry.name}
+                            sx={{opacity: entry?.disabled ? 0.7 : 1}}
                             />
                             {entry.pages?.map((page) => (
                             <Box key={page.id} ml={4}>
@@ -119,6 +121,7 @@ export default function AddModuleConfigForm({ title='' }) {
                                     />
                                 }
                                 label={page.name}
+                                sx={{opacity: page?.disabled ? 0.7 : 1}}
                                 />
                             </Box>
                             ))}

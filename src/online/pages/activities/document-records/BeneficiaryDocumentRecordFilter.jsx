@@ -34,6 +34,7 @@ const BeneficiaryDocumentRecordFilter = ({ onFilterChange }) => {
     endingDateTime: null,
     keyword: '',
     establishments: null,
+    listType : 'ALL'
   });
 
 
@@ -48,7 +49,7 @@ const BeneficiaryDocumentRecordFilter = ({ onFilterChange }) => {
     // Pass the filter values to the parent component for handling the filtering logic
     const filterValuesInit = { 
                             startingDateTime: null, endingDateTime: null, keyword: '', 
-                            establishments: null
+                            establishments: null, listType : 'ALL'
                           }
     setFilterSelectedEstablishments([])
     setFilterValues(filterValuesInit)

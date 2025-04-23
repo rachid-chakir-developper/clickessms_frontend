@@ -8,10 +8,12 @@ import TableListBeneficiaryDocumentRecords from './TableListBeneficiaryDocumentR
 
 export default function ListBeneficiaryDocumentRecords() {
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
-  const [beneficiaryDocumentRecordFilter, setBeneficiaryDocumentRecordFilter] = React.useState(null);
+  const [beneficiaryDocumentRecordFilter, setBeneficiaryDocumentRecordFilter] = React.useState({listType : 'ALL'});
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
     setBeneficiaryDocumentRecordFilter(newFilter);
+    setPaginator({ ...paginator, page: 1 });
+    if(!['ALL', 'OUT'].includes(newFilter?.listType)) setBeneficiaryDocumentRecordFilter({...newFilter, listType : 'ALL'});
   };
 
   const [

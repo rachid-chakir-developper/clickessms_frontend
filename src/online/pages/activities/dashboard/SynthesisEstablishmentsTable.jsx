@@ -22,33 +22,6 @@ import InputSendDashboardComment from "./comments/InputDashboardComment";
 
 const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) => {
     const {activitySynthesisMonth=[]} = activitySynthesisEstablishment
-  const dataEffectif = [
-    { nom: "ARANDA Nolan", admission: false },
-    { nom: "BELLOUR Emma", admission: false },
-    { nom: "BERSOT Louna", admission: false },
-    { nom: "FONTEIX Chloé", admission: false },
-    { nom: "FRETEY Louna", admission: false },
-    { nom: "LEDOUX Nolhan", admission: false },
-    { nom: "ROMULUS Ysadjay", admission: false },
-    { nom: "VIGO Léa", admission: false },
-  ];
-
-  const dataDemandes = [
-    {
-      dateDemande: "12/01/2024",
-      nom: "LEDAIN Sullyvan",
-      admission: null,
-      refus: "06/02/2024",
-      motif: "besoin d'accompagnement individuel",
-    },
-    {
-      dateDemande: "17/01/2024",
-      nom: "PALMAR Louane",
-      admission: "12/03/2024",
-      refus: null,
-      motif: "",
-    },
-  ];
 
     return (
         <Box>

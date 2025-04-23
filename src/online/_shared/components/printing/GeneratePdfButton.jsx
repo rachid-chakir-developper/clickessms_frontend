@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { Tooltip, MenuItem, IconButton, CircularProgress, Snackbar, Alert } from '@mui/material';
-import { Print } from '@mui/icons-material';
+import { PictureAsPdf, Print } from '@mui/icons-material';
 import { GENERATE_PDF_MUTATION } from '../../../../_shared/graphql/mutations/PrinterMutations';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
@@ -78,6 +78,17 @@ const GeneratePdfButton = ({ documentType, id, data, apparence="menuItem" }) => 
                     <CircularProgress size={24} sx={{ color: 'white' }} />
                     ) : (
                     <Print />
+                    )}
+                </IconButton>
+            </Tooltip>
+            )}
+
+            {apparence === 'iconButtonExport' && (<Tooltip title="Exporter">
+                <IconButton onClick={handleClick} disabled={loading}>
+                    {loading ? (
+                    <CircularProgress size={24} sx={{ color: 'white' }} />
+                    ) : (
+                    <PictureAsPdf />
                     )}
                 </IconButton>
             </Tooltip>

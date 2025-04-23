@@ -20,6 +20,7 @@ import PaginationControlled from '../../../../_shared/components/helpers/Paginat
 import TableListBeneficiaries from './TableListBeneficiaries';
 import { IMPORT_DATAS } from '../../../../_shared/graphql/mutations/DataMutations';
 import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -30,12 +31,17 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListBeneficiaries() {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageActivity = authorizationSystem.requestAuthorization({
+    type: 'manageActivity',
+  }).authorized;
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
-  const [beneficiaryFilter, setBeneficiaryrFilter] = React.useState(null);
+  const [beneficiaryFilter, setBeneficiaryrFilter] = React.useState({listType : 'ALL'});
   const handleFilterChange = (newFilter) => {
     console.log('newFilter', newFilter);
     setBeneficiaryrFilter(newFilter);
     setPaginator({ ...paginator, page: 1 });
+    if(!['ALL', 'OUT'].includes(newFilter?.listType)) setBeneficiaryrFilter({...newFilter, listType : 'ALL'});
   };
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const [
@@ -199,7 +205,7 @@ export default function ListBeneficiaries() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      {canManageActivity && <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
             to="/online/ressources-humaines/beneficiaires/ajouter"
@@ -210,7 +216,7 @@ export default function ListBeneficiaries() {
             </Button>
           </Link>
         </Box>
-      </Grid>
+      </Grid>}
       <Grid item xs={12}>
         <BeneficiaryFilter onFilterChange={handleFilterChange} />
       </Grid>

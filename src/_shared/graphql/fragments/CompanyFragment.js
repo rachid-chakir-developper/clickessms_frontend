@@ -27,6 +27,7 @@ export const COMPANY_BASIC_INFOS = gql`
     siret
     finess
     apeCode
+    approvalNumber
     email
     logo
     coverImage

@@ -389,13 +389,15 @@ const [getEmployees, {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={12} md={12}>
-              <Alert severity="info">Afin de garantir une bonne organisation et d’assurer la continuité du service,
-                nous vous rappelons qu’il est préférable de transmettre toute demande de congé avant le délai accordé. <br />
-                <b>Toute demande transmise hors délai pourra être refusée</b>, même si elle concerne un solde de congés acquis.<br />
-                Nous vous remercions de votre compréhension et vous invitons à anticiper au maximum vos demandes.
-                </Alert>
-            </Grid>
+            {isLeaveType && <Grid item xs={12} sm={12} md={8}>
+              <Item sx={{textAlign: 'left'}}>
+                <Alert severity="info">Afin de garantir une bonne organisation et d’assurer la continuité du service,
+                  nous vous rappelons qu’il est préférable de transmettre toute demande de congé avant le délai accordé. <br />
+                  <b>Toute demande transmise hors délai pourra être refusée</b>, même si elle concerne un solde de congés acquis.<br />
+                  Nous vous remercions de votre compréhension et vous invitons à anticiper au maximum vos demandes.
+                  </Alert>
+              </Item>
+            </Grid>}
             <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link

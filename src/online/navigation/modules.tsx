@@ -69,7 +69,7 @@ import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import TableBarIcon from '@mui/icons-material/TableBar';
-import ImportContactsIcon from '@mui/icons-material/ImportContacts';
+// import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import WalletIcon from '@mui/icons-material/Wallet';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import ArticleIcon from '@mui/icons-material/Article';
@@ -123,7 +123,7 @@ export const modules: Module[] = [
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageQuality',
-          }).authorized || true;
+          }).authorized;
         },
         pages: [
           {
@@ -132,7 +132,6 @@ export const modules: Module[] = [
             path: '/online/qualities/audits/evaluation-has',
             icon: <ChecklistRtlIcon />,
             disabled: true,
-            hidden: true,
           },
           {
             id: 'gdpr',
@@ -140,7 +139,6 @@ export const modules: Module[] = [
             path: '/online/qualities/audits/rgpd',
             icon: <GppGoodIcon />,
             disabled: true,
-            hidden: true,
           },
           {
             id: 'cpom',
@@ -148,7 +146,6 @@ export const modules: Module[] = [
             path: '/online/qualities/audits/Autodiagnostic-cpom',
             icon: <AddchartIcon />,
             disabled: true,
-            hidden: true,
           },
         ],
       },
@@ -161,7 +158,7 @@ export const modules: Module[] = [
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageQuality',
-          }).authorized || true;
+          }).authorized;
         },
       },
       {
@@ -173,7 +170,7 @@ export const modules: Module[] = [
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageQuality',
-          }).authorized || true;
+          }).authorized;
         },
       },
       {
@@ -185,7 +182,7 @@ export const modules: Module[] = [
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageQuality',
-          }).authorized || true;
+          }).authorized;
         },
       },
       {
@@ -197,7 +194,7 @@ export const modules: Module[] = [
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageQuality',
-          }).authorized || true;
+          }).authorized;
         },
       },
       {
@@ -208,7 +205,7 @@ export const modules: Module[] = [
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageQuality',
-          }).authorized || true;
+          }).authorized;
         },
       },
     ],
@@ -217,6 +214,13 @@ export const modules: Module[] = [
     id: 'activity',
     name: 'Activité',
     icon: <TroubleshootIcon />,
+    hidden(authorizationSystem) {
+      return !authorizationSystem.requestAuthorization({
+        type: 'manageBeneficiaries',
+      }).authorized && !authorizationSystem.requestAuthorization({
+        type: 'manageActivity',
+      }).authorized;
+    },
     entries: [
       {
         id: 'dashboard',
@@ -236,7 +240,7 @@ export const modules: Module[] = [
         icon: <AssignmentIndIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'getEstablishments',
+            type: 'manageBeneficiaries',
           }).authorized;
         },
       },
@@ -258,7 +262,7 @@ export const modules: Module[] = [
         icon: <FolderSharedIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'manageActivity',
+            type: 'manageBeneficiaries',
           }).authorized;
         },
       },
@@ -269,7 +273,7 @@ export const modules: Module[] = [
         icon: <RecentActorsIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'manageActivity',
+            type: 'manageBeneficiaries',
           }).authorized;
         },
       },
@@ -278,18 +282,33 @@ export const modules: Module[] = [
         name: 'Évènements / Transmissions',
         path: '/online/activites/evenements',
         icon: <CommentIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageBeneficiaries',
+          }).authorized;
+        },
       },
       {
         id: 'presence-absence',
         name: 'Présences / Absences',
         path: '/online/activites/absences-beneficiaires',
         icon: <CalendarMonthIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageBeneficiaries',
+          }).authorized;
+        },
       },
       {
         id: 'beneficiary-expenses',
         name: 'Dépenses',
         path: '/online/activites/depenses',
         icon: <ShoppingBasketIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageBeneficiaries',
+          }).authorized;
+        }
       },
       {
         id: 'malette-law-2002-2',
@@ -300,7 +319,7 @@ export const modules: Module[] = [
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageActivity',
-          }).authorized || true;
+          }).authorized;
         },
       },
       {
@@ -312,7 +331,7 @@ export const modules: Module[] = [
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageActivity',
-          }).authorized || true;
+          }).authorized;
         },
       },
       {
@@ -324,7 +343,7 @@ export const modules: Module[] = [
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageActivity',
-          }).authorized || true;
+          }).authorized;
         },
       },
     ],
@@ -342,7 +361,7 @@ export const modules: Module[] = [
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'getEstablishments',
-          }).authorized || true;
+          }).authorized;
         },
       },
       {
@@ -353,7 +372,7 @@ export const modules: Module[] = [
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'getEstablishments',
-          }).authorized || true;
+          }).authorized;
         },
       },
       {
@@ -362,7 +381,6 @@ export const modules: Module[] = [
         path: '/online/ressources-humaines/formations',
         icon: <CoPresentIcon />,
         disabled: true,
-        hidden: true,
       },
       {
         id: 'interviews-reports',
@@ -388,7 +406,6 @@ export const modules: Module[] = [
         path: '/online/ressources-humaines/planning',
         icon: <DateRangeIcon />,
         disabled: true,
-        hidden: true,
       },
       {
         id: 'advances',
@@ -402,7 +419,6 @@ export const modules: Module[] = [
         path: '/online/ressources-humaines/bdes',
         icon: <LockPersonIcon />,
         disabled: true,
-        hidden: true,
       },
       {
         id: 'recruitment',
@@ -573,7 +589,6 @@ export const modules: Module[] = [
         path: '/online/administratif/lup',
         icon: <FormatListNumberedIcon />,
         disabled: true,
-        hidden: true,
       },
       {
         id: 'meeting-room',
@@ -581,7 +596,6 @@ export const modules: Module[] = [
         path: '/online/batiment-immobilier/salles',
         icon: <MeetingRoomIcon />,
         disabled: true,
-        hidden: true,
       },
     ],
   },
@@ -638,7 +652,6 @@ export const modules: Module[] = [
         path: '/online/batiment-immobilier/batiment-immobilier',
         icon: <HomeWorkIcon />,
         disabled: true,
-        hidden: true,
       },
       {
         id: 'purchase-orders',
@@ -652,7 +665,6 @@ export const modules: Module[] = [
         path: '/online/recuperations/objets',
         icon: <KeyIcon />,
         disabled: true,
-        hidden: true,
       },
     ],
   },
@@ -672,7 +684,6 @@ export const modules: Module[] = [
         path: '/online/finance/dashboard',
         icon: <DashboardIcon />,
         disabled: true,
-        hidden: true,
       },
       {
         id: 'billing',
@@ -734,7 +745,6 @@ export const modules: Module[] = [
         path: '/online/sales/diagnostic-financier',
         icon: <QueryStatsIcon />,
         disabled: true,
-        hidden: true,
       },
       {
         id: 'accounting',
@@ -742,7 +752,6 @@ export const modules: Module[] = [
         path: '/online/sales/comptabilité',
         icon: <CalculateIcon />,
         disabled: true,
-        hidden: true,
       },
       {
         id: 'assets',
@@ -750,7 +759,6 @@ export const modules: Module[] = [
         path: '/online/sales/immobilisations',
         icon: <CreditCardOffIcon />,
         disabled: true,
-        hidden: true,
       },
       {
         id: 'revision',
@@ -758,7 +766,6 @@ export const modules: Module[] = [
         path: '/online/sales/révision-comptes',
         icon: <FactCheckIcon />,
         disabled: true,
-        hidden: true,
       },
       {
         id: 'pricing',
@@ -863,7 +870,7 @@ export const modules: Module[] = [
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageFinance',
-          }).authorized || true;
+          }).authorized;
         },
         disabled: true,
       },
@@ -954,7 +961,6 @@ export const modules: Module[] = [
         path: '/online/cse/bdes',
         icon: <RequestQuoteIcon />,
         disabled: true,
-        hidden: true,
       },
     ],
   },
@@ -973,18 +979,17 @@ export const modules: Module[] = [
         target: '_blank',
         icon: <SourceIcon />,
       },
-      {
-        id: 'associations-foundation-code',
-        name: 'Code des associations et fondations',
-        path(session) {
-          const {user}= session
-          return user?.company?.companyMedia?.associationsFoundationsCode ? user?.company?.companyMedia?.associationsFoundationsCode : user?.company?.companyMedia?.associationsFoundationsCodeUrl
-        },
-        target: '_blank',
-        icon: <ImportContactsIcon />,
-        disabled: true,
-        hidden: true,
-      },
+      // {
+      //   id: 'associations-foundation-code',
+      //   name: 'Code des associations et fondations',
+      //   path(session) {
+      //     const {user}= session
+      //     return user?.company?.companyMedia?.associationsFoundationsCode ? user?.company?.companyMedia?.associationsFoundationsCode : user?.company?.companyMedia?.associationsFoundationsCodeUrl
+      //   },
+      //   target: '_blank',
+      //   icon: <ImportContactsIcon />,
+      //   disabled: true,
+      // },
       {
         id: 'labor-law',
         name: 'Droit du travail',
@@ -1038,7 +1043,6 @@ export const modules: Module[] = [
         path: '/online/ressources/le-comptoir-des-essms',
         icon: <NewspaperIcon />,
         disabled: true,
-        hidden: true,
       },
     ],
   },

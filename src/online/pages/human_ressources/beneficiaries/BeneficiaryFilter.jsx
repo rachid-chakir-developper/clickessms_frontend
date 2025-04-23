@@ -61,7 +61,7 @@ const BeneficiaryFilter = ({ onFilterChange }) => {
     // Pass the filter values to the parent component for handling the filtering logic
     const filterValuesInit = { 
                             startingDateTime: null, endingDateTime: null, keyword: '', 
-                            establishments: null
+                            establishments: null, listType: 'ALL'
                           }
     setFilterSelectedEstablishments([])
     setFilterValues(filterValuesInit)

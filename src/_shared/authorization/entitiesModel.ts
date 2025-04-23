@@ -32,6 +32,10 @@ export const entitiesModel = defineEntitiesModel({
     ownedBy: 'company',
     privileges: ['edit', 'view'],
   },
+  beneficiary: {
+    ownedBy: 'company',
+    privileges: ['edit', 'view'],
+  },
   administrative: {
     ownedBy: 'company',
     privileges: ['edit', 'view'],
