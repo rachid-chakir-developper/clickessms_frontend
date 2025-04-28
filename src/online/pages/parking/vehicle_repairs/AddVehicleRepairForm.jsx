@@ -78,7 +78,7 @@ export default function AddVehicleRepairForm({
         items.push(itemCopy);
       });
       vehicleRepairCopy.vigilantPoints = items;
-      if (idVehicleRepair && idVehicleRepair != '') {
+      if (vehicleRepairCopy.id && vehicleRepairCopy.id != '') {
         onUpdateVehicleRepair({
           id: vehicleRepairCopy.id,
           vehicleRepairData: vehicleRepairCopy,

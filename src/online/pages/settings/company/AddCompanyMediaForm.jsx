@@ -202,30 +202,30 @@ export default function AddCompanyMediaForm({ idCompanyMedia = null, title = '' 
                 </Item>
               </Paper>
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
-            <Paper variant="outlined">
-              <Item>
-                <TheFileField
-                  variant="outlined"
-                  label="Code des associations et fondations"
-                  fileValue={formik.values.associationsFoundationsCode}
-                  onChange={(file) =>
-                    formik.setFieldValue('associationsFoundationsCode', file)
-                  }
-                  disabled={loadingPut}
-                />
-              </Item>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Lien Code des associations et fondations"
-                  value={formik.values.associationsFoundationsCodeUrl}
-                  onChange={(e) => formik.setFieldValue('associationsFoundationsCodeUrl', e.target.value)}
-                  disabled={loadingPut}
-                />
-              </Item>
+            {/* <Grid item xs={2} sm={4} md={4}>
+              <Paper variant="outlined">
+                <Item>
+                  <TheFileField
+                    variant="outlined"
+                    label="Code des associations et fondations"
+                    fileValue={formik.values.associationsFoundationsCode}
+                    onChange={(file) =>
+                      formik.setFieldValue('associationsFoundationsCode', file)
+                    }
+                    disabled={loadingPut}
+                  />
+                </Item>
+                <Item>
+                  <TheTextField
+                    variant="outlined"
+                    label="Lien Code des associations et fondations"
+                    value={formik.values.associationsFoundationsCodeUrl}
+                    onChange={(e) => formik.setFieldValue('associationsFoundationsCodeUrl', e.target.value)}
+                    disabled={loadingPut}
+                  />
+                </Item>
               </Paper>
-            </Grid>
+            </Grid> */}
             <Grid item xs={2} sm={4} md={4}>
             <Paper variant="outlined">
               <Item>

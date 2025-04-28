@@ -14,6 +14,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { PUT_COMPANY_FIELDS } from '../../../../_shared/graphql/mutations/CompanyMutations';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { Dashboard } from '@mui/icons-material';
 
 export default function AddModuleConfigForm({ title='' }) {
     const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
@@ -80,6 +81,21 @@ export default function AddModuleConfigForm({ title='' }) {
             </Typography>
             {loadingCompany && <ProgressService type="form" />}
             {!loadingCompany && (<>
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="h6" sx={{ mb: 1 }}>
+                          <Dashboard />
+                              <FormControlLabel
+                                control={
+                                    <Checkbox
+                                    checked={!selectedModules?.includes('dashboard')}
+                                    onChange={() => handleCheckboxChange('dashboard')}
+                                    disabled={loadingPut}
+                                    />
+                                }
+                                label="Tableau de bord"
+                              />
+                      </Typography>
+                </Box>
                 {modules.map((module) => (
                     <Box key={module.id} sx={{ mb: 3 }}>
                     <Typography variant="h6" sx={{ mb: 1 }}>

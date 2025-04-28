@@ -112,7 +112,7 @@ export default function AddBeneficiaryAdmissionForm({ idBeneficiaryAdmission, ti
       beneficiaryAdmissionCopy.financier = beneficiaryAdmissionCopy.financier ?  beneficiaryAdmissionCopy.financier?.id : null;
       files = files?.map((f)=>({id: f?.id, file: f.file || f.path,  caption: f?.caption}))
 
-      if (idBeneficiaryAdmission && idBeneficiaryAdmission != '') {
+      if (beneficiaryAdmissionCopy.id && beneficiaryAdmissionCopy.id != '') {
         onUpdateBeneficiaryAdmission({
           id: beneficiaryAdmissionCopy.id,
           beneficiaryAdmissionData: beneficiaryAdmissionCopy,

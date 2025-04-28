@@ -344,7 +344,7 @@ export default function TableListBeneficiaries({
         sortDisabled: true,
         label: 'Status',
         render: ({beneficiaryStatusEntries}) => beneficiaryStatusEntries && beneficiaryStatusEntries?.length > 0 && 
-        <AppLabel>{beneficiaryStatusEntries[beneficiaryStatusEntries?.length - 1]?.beneficiaryStatus?.name}</AppLabel>
+        beneficiaryStatusEntries[beneficiaryStatusEntries?.length - 1]?.beneficiaryStatus && <AppLabel>{beneficiaryStatusEntries[beneficiaryStatusEntries?.length - 1]?.beneficiaryStatus?.name}</AppLabel>
     },
     {
         id: 'establishments',

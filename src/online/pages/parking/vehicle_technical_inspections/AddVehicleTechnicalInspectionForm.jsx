@@ -63,7 +63,7 @@ export default function AddVehicleTechnicalInspectionForm({
         items.push(itemCopy);
       });
       vehicleTechnicalInspectionCopy.failures = items;
-      if (idVehicleTechnicalInspection && idVehicleTechnicalInspection != '') {
+      if (vehicleTechnicalInspectionCopy.id && vehicleTechnicalInspectionCopy.id != '') {
         onUpdateVehicleTechnicalInspection({
           id: vehicleTechnicalInspectionCopy.id,
           vehicleTechnicalInspectionData: vehicleTechnicalInspectionCopy,

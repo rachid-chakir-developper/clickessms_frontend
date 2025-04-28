@@ -86,7 +86,7 @@ export default function AddEmployeeContractForm({ idEmployeeContract, title }) {
         items.push(itemCopy);
       });
       employeeContractCopy.replacedEmployees = items;
-      if (idEmployeeContract && idEmployeeContract != '') {
+      if (employeeContractCopy.id && employeeContractCopy.id != '') {
         onUpdateEmployeeContract({
           id: employeeContractCopy.id,
           employeeContractData: employeeContractCopy,
