@@ -9,6 +9,7 @@ import ProgressService from '../../../../_shared/services/feedbacks/ProgressServ
 import { getFormatDateTime, getFormatDate, getLeaveTypeLabel } from '../../../../_shared/tools/functions';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 import { Edit, ArrowBack, Description, Note, Event, Group, Category, Folder, Person } from '@mui/icons-material';
+import EmployeeAbsenceStatusLabelMenu from './EmployeeAbsenceStatusLabelMenu';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -258,6 +259,11 @@ function EmployeeAbsenceOtherInfos({ employeeAbsence }) {
             </Typography>
           </Box>
         )}
+        <Stack direction="row" spacing={1} alignItems="center" sx={{ my: 4 }}>
+          <Typography variant="body2" color="text.secondary">
+            <b>Status:</b> <EmployeeAbsenceStatusLabelMenu employeeAbsence={employeeAbsence} />
+          </Typography>
+        </Stack>
     </Paper>
   );
 }

@@ -258,7 +258,7 @@ const [getEmployees, {
     if (idEmployeeAbsence) {
       isLeaveType ? setTheTitle("Modifier le congé") : setTheTitle("Modifier l'absence") 
     }else{
-      isLeaveType ? setTheTitle("Demander un congé") : setTheTitle("Ajouter une absence")
+      isLeaveType ? setTheTitle("Demander un congé") : setTheTitle("Déclarer une absence")
     }
   }, [isLeaveType]);
 
@@ -367,12 +367,17 @@ const [getEmployees, {
               <Item>
                 <TheFileField 
                   variant="outlined"
-                  label="Justificatif (facultatif)"
+                  label="Justificatif"
+                  placeholder="Peut-être remis ultérieurement"
                   fileValue={formik.values.document}
                   onChange={(file) => formik.setFieldValue('document', file)}
                   disabled={loadingPost || loadingPut}
                   />
               </Item>
+              {formik.values.leaveType===LEAVE_TYPE_CHOICES.SICK_LEAVE && 
+                <Alert severity="info">
+                  Merci de joindre votre justificatif d'arrêt maladie. Celui-ci doit être transmis dans un délai maximum de 48 heures.
+                </Alert>}
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <Item>

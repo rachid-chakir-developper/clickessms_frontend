@@ -526,7 +526,7 @@ const [getEmployees, {
                     <Item>
                       <TheTextField
                         variant="outlined"
-                        label="Jours de congé temporaire initiaux (CT)"
+                        label="Jours de congé trimestriel initiaux (CT)"
                         type="number"
                         InputProps={{
                             endAdornment: <InputAdornment position="start">Jours</InputAdornment>,

@@ -75,6 +75,11 @@ export function AuthorizationSystemProvider({ children }) {
         return user.company.id;
       },
     },
+    beneficiary: {
+      company() {
+        return user.company.id;
+      },
+    },
     administrative: {
       company() {
         return user.company.id;

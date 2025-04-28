@@ -10,7 +10,7 @@ export default function AddEmployeeAbsence() {
       title={
         idEmployeeAbsence && idEmployeeAbsence > 0
           ? `Modifier l'absence`
-          : `Ajouter une absence`
+          : `Déclarer une absence`
       }
     />
   );

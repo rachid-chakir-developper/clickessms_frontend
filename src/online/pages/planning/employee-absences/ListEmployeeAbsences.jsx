@@ -149,7 +149,7 @@ export default function ListEmployeeAbsences() {
             className="no_style"
           >
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter une absence
+              Déclarer une absence
             </Button>
           </Link>}
         </Box>

@@ -2,7 +2,6 @@
 
 import { gql } from '@apollo/client';
 import { EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
-import { EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
 
 
 export const EMPLOYEE_ABSENCE_ITEM_DETAILS = gql`
@@ -37,7 +36,7 @@ export const EMPLOYEE_ABSENCE_BASIC_INFOS = gql`
       ...EmployeeAbsenceItemTypeFragment
     }
     employee {
-      ...EmployeeBasicInfosFragment
+      ...EmployeeMiniInfosFragment
     }
     folder {
       id
@@ -46,7 +45,7 @@ export const EMPLOYEE_ABSENCE_BASIC_INFOS = gql`
     }
   }
   ${EMPLOYEE_ABSENCE_ITEM_DETAILS}
-  ${EMPLOYEE_BASIC_INFOS}
+  ${EMPLOYEE_MINI_INFOS}
 `;
 export const EMPLOYEE_ABSENCE_DETAILS = gql`
   fragment EmployeeAbsenceDetailsFragment on EmployeeAbsenceType {

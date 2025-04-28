@@ -67,10 +67,10 @@ const STATUS = [
 
   // MenuOptions with icons for each status
   const ABSENCE_STATUS = [
-      { value: 'PENDING', label: 'En Attente', icon: <Pending />, color: 'default'},
-      { value: "APPROVED", label: "Approuvé", icon: <Done />, color: 'success'},
-      { value: "REJECTED", label: "Rejeté", icon: <Cancel />, color: 'warning'},
-    ];
+    { value: 'PENDING', label: 'En Attente', icon: <Pending />, color: 'default'},
+    { value: "APPROVED", label: "Approuvé", icon: <Done />, color: 'success'},
+    { value: "REJECTED", label: "Rejeté", icon: <Cancel />, color: 'warning'},
+  ];
   
     // MenuOptions with icons for each status
   const TASK_STATUS = [

@@ -10,7 +10,7 @@ export default function AddBeneficiaryAbsence() {
       title={
         idBeneficiaryAbsence && idBeneficiaryAbsence > 0
           ? `Modifier l'absence`
-          : `Ajouter une absence`
+          : `Déclarer une absence`
       }
     />
   );

@@ -35,8 +35,9 @@ export default function TheFileField(props) {
     <Card sx={{ display: "flex", alignItems: "center", padding: 2, position: 'relative' }} variant="outlined">
       <Box sx={{ flexGrow: 1 }}>
         <CardContent sx={{ padding: "8px 16px" }}>
-          <Typography variant="subtitle1" color="text.secondary">
-            {props?.label}
+          <Typography variant="subtitle1" color="text.secondary" sx={{lineHeight: 1}}>
+          {props?.label}<br />
+          <small><i>{props?.placeholder}</i></small>
           </Typography>
           {uploadedFile.file || uploadedFile.path ? (
             <Box sx={{ display: "flex", alignItems: "center", gap: 2, marginTop: 1 }}>

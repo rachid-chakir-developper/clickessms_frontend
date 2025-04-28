@@ -40,6 +40,7 @@ import PurchaseOrderStatusLabelMenu from './PurchaseOrderStatusLabelMenu';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 import { PURCHASE_ORDER_STATUS_CHOICES } from '../../../../_shared/tools/constants';
 import PrintButton from '../../../_shared/components/printing/PrintButton';
+import GeneratePdfButton from '../../../_shared/components/printing/GeneratePdfButton';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -521,8 +522,8 @@ export default function TableListPurchaseOrders({
                           </MenuItem>
                         </Link>
                         {row?.status===PURCHASE_ORDER_STATUS_CHOICES.APPROVED && 
-                          <PrintButton options={{type: 'PurchaseOrder', data:row}}
-                          title = 'Imprimer le bon de commande.' apparence="menuItem" />}
+                          <GeneratePdfButton documentType="purchase_order" id={row.id} title="Imprimer le bon de commande."/>
+                          }
                         <MenuItem
                           onClick={() => {
                             onDeletePurchaseOrder(row?.id);

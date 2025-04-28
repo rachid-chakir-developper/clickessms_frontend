@@ -5,7 +5,7 @@ import { PictureAsPdf, Print } from '@mui/icons-material';
 import { GENERATE_PDF_MUTATION } from '../../../../_shared/graphql/mutations/PrinterMutations';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
-const GeneratePdfButton = ({ documentType, id, data, apparence="menuItem" }) => {
+const GeneratePdfButton = ({ documentType, id, data, apparence="menuItem", title="Imprimer" }) => {
     const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
     const [generatePdf, { loading, error }] = useMutation(GENERATE_PDF_MUTATION);
 
@@ -18,11 +18,9 @@ const GeneratePdfButton = ({ documentType, id, data, apparence="menuItem" }) => 
             const { pdfFile } = responseData.generatePdf;
 
             if (pdfFile) {
-                // Convertir la chaîne base64 en un tableau de bytes
-                const byteCharacters = atob(pdfFile); // Décode le base64
+                const byteCharacters = atob(pdfFile);
                 const byteArrays = [];
-
-                // Convertir en tableau d'octets
+            
                 for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
                     const slice = byteCharacters.slice(offset, offset + 1024);
                     const byteNumbers = new Array(slice.length);
@@ -31,23 +29,33 @@ const GeneratePdfButton = ({ documentType, id, data, apparence="menuItem" }) => 
                     }
                     byteArrays.push(new Uint8Array(byteNumbers));
                 }
-
-                // Créer un Blob à partir des bytes
+            
                 const file = new Blob(byteArrays, { type: 'application/pdf' });
-
-                // Créer un lien pour télécharger le fichier
+            
+                const fileURL = URL.createObjectURL(file);
+            
+                // Ouvrir dans un nouvel onglet
+                window.open(fileURL, '_blank');
+            
+                // Télécharger automatiquement
                 const link = document.createElement('a');
-                link.href = URL.createObjectURL(file);
+                link.href = fileURL;
                 link.download = `${documentType}_${id}.pdf`;
                 link.click();
-
-                // Afficher un message de succès
+            
+                // Nettoyer l'URL après un délai
+                setTimeout(() => {
+                    URL.revokeObjectURL(fileURL);
+                }, 100);
+            
+                // Message de succès
                 setNotifyAlert({
                     isOpen: true,
                     message: 'PDF exporté avec succès',
                     type: 'success',
                 });
             }
+            
         } catch (err) {
             console.error('Error generating PDF:', err);
             setNotifyAlert({
@@ -72,7 +80,7 @@ const GeneratePdfButton = ({ documentType, id, data, apparence="menuItem" }) => 
                 </MenuItem>
             )}
 
-            {apparence === 'iconButton' && (<Tooltip title="Imprimer">
+            {apparence === 'iconButton' && (<Tooltip title={title}>
                 <IconButton onClick={handleClick} disabled={loading}>
                     {loading ? (
                     <CircularProgress size={24} sx={{ color: 'white' }} />
@@ -83,7 +91,7 @@ const GeneratePdfButton = ({ documentType, id, data, apparence="menuItem" }) => 
             </Tooltip>
             )}
 
-            {apparence === 'iconButtonExport' && (<Tooltip title="Exporter">
+            {apparence === 'iconButtonExport' && (<Tooltip title={title}>
                 <IconButton onClick={handleClick} disabled={loading}>
                     {loading ? (
                     <CircularProgress size={24} sx={{ color: 'white' }} />

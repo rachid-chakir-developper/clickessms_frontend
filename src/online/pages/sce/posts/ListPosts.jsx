@@ -178,7 +178,7 @@ export default function ListPosts() {
         <PostFilter onFilterChange={handleFilterChange} />
       </Grid>
       <Grid item xs={12}>
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1, paddingY: 4 }}>
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}

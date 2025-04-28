@@ -149,7 +149,7 @@ export default function ListBeneficiaryAbsences() {
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link to="/online/activites/absences-beneficiaires/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
-              Ajouter une absence
+              Déclarer une absence
             </Button>
           </Link>
         </Box>

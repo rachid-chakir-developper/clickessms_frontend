@@ -332,7 +332,7 @@ export default function TableListEmployeeAbsences({
     if (!event.target.closest('button') && 
         !event.target.closest('input[type="checkbox"]') &&
         !event.target.closest('.MuiIconButton-root')) {
-      navigate(`/online/planning/absences-employes/details/${id}`);
+      // navigate(`/online/planning/absences-employes/details/${id}`);
     }
   };
 

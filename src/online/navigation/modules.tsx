@@ -223,7 +223,7 @@ export const modules: Module[] = [
     },
     entries: [
       {
-        id: 'dashboard',
+        id: 'activites-dashboard',
         name: 'Tableau de bord',
         path: '/online/activites/dashboard',
         icon: <DashboardIcon />,

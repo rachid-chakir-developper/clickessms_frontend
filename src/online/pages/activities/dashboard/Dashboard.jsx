@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Grid, IconButton, Stack, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import { useLazyQuery, useQuery } from '@apollo/client';
-import { FileDownload, PictureAsPdf, ViewList, ViewQuilt } from '@mui/icons-material';
+import { Assessment, BarChart, EventNote, FileDownload, Group, PictureAsPdf, Summarize, TableChart, ViewList, ViewQuilt } from '@mui/icons-material';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import DashboardFilter from './DashboardFilter';
 import { GET_DASHBOARD_ACTIVITY_BENEFICIARY_ESTABLISHMENTS, GET_DASHBOARD_ACTIVITY_MONTH, GET_DASHBOARD_ACTIVITY_SYNTHESIS, GET_DASHBOARD_ACTIVITY_TRACKING_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/DashboardQueries';
@@ -149,32 +149,32 @@ export default function Dashboard() {
                 > 
                   <Tooltip title="Les graphes" >
                     <ToggleButton value="graph" aria-label="quilt">
-                      <ViewQuilt />
+                      <BarChart  />
                     </ToggleButton>
                   </Tooltip>
-                  <Tooltip title="Les tableaux" >
+                  <Tooltip title="Reporting " >
                     <ToggleButton value="table" aria-label="list">
-                      <ViewList />
+                      <TableChart />
                     </ToggleButton>
                   </Tooltip>
-                  <Tooltip title="Les personnes accompagnées" >
+                  <Tooltip title="Recap " >
                     <ToggleButton value="beneficiaryTable" aria-label="list">
-                      <ViewList />
+                      <Group />
                     </ToggleButton>
                   </Tooltip>
-                  <Tooltip title="La synthese" >
+                  <Tooltip title="Suivi des demandes d'admission en journées" >
                     <ToggleButton value="synthesis" aria-label="list">
-                      <ViewList />
+                      <Summarize />
                     </ToggleButton>
                   </Tooltip>
-                  <Tooltip title="La synthese des structures" >
+                  <Tooltip title="Suivi des demandes d'admission par mois et par groupe" >
                     <ToggleButton value="synthesisEstablishment" aria-label="list">
-                      <ViewList />
+                      <EventNote />
                     </ToggleButton>
                   </Tooltip>
-                  <Tooltip title="L'activité" >
+                  <Tooltip title="Tableau des effectifs" >
                     <ToggleButton value="activity_month" aria-label="list">
-                      <ViewList />
+                      <Assessment />
                     </ToggleButton>
                   </Tooltip>
                 </ToggleButtonGroup>
