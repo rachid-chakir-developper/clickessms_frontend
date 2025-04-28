@@ -95,7 +95,7 @@ export default function Dashboard(){
                   Ajouter une action
                 </Button>
               </Link>
-              {!canManageFinance && <Link
+              {/* {!canManageFinance && <Link
                   to="/online/achats/depenses-engagements/ajouter?type=REQUEST"
                   className="no_style"
                 >
@@ -109,7 +109,7 @@ export default function Dashboard(){
                   <Button variant="outlined" endIcon={<Add />}>
                     Ajouter une dépense
                   </Button>
-                </Link>}
+                </Link>} */}
                 <Link
                     to="/online/planning/absences-employes/ajouter?type=LEAVE"
                     className="no_style"

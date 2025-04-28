@@ -307,14 +307,14 @@ export default function TableListEmployeeContracts({
         isDefault: true,
         sortDisabled: true,
         label: 'Jours du congé restants',
-        render: ({leaveDayInfos})=> <Box>
-                                          CP: {leaveDayInfos?.restPaidLeaveDays} jour{leaveDayInfos?.restPaidLeaveDays > 1 ? 's' : ''}
+        render: ({leaveDayInfos})=> <Box><small><em>Bientôt disponible</em></small>
+                                          {/* CP: {leaveDayInfos?.restPaidLeaveDays} jour{leaveDayInfos?.restPaidLeaveDays > 1 ? 's' : ''}
                                       <br/>CP Acquis Par mois: {leaveDayInfos?.acquiredPaidLeaveDaysByMonth}
                                       <br/>CP Acquis: {leaveDayInfos?.acquiredPaidLeaveDays}
                                       <br/>CP en cours d'acquisition: {leaveDayInfos?.beingAcquiredPaidLeaveDays}
                                       <br/>CP reportés: {leaveDayInfos?.totalReportedPaidLeaveDays}
                                       <br/>RTT: {leaveDayInfos?.restRwtLeaveDays} jour{leaveDayInfos?.restRwtLeaveDays > 1 ? 's' : ''}
-                                      <br/>CT: {leaveDayInfos?.restTemporaryLeaveDays} jour{leaveDayInfos?.restTemporaryLeaveDays > 1 ? 's' : ''}
+                                      <br/>CT: {leaveDayInfos?.restTemporaryLeaveDays} jour{leaveDayInfos?.restTemporaryLeaveDays > 1 ? 's' : ''} */}
                                     </Box>
     },
     {

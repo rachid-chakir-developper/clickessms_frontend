@@ -373,7 +373,6 @@ export default function TableListUsers({
 
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
-                const {leaveDayInfos} = row
                 return (
                   <StyledTableRow
                     hover

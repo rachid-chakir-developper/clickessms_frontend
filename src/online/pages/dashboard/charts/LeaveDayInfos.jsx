@@ -16,7 +16,10 @@ const LeaveDayInfos = ({ leaveDayInfos }) => {
   const reportedPaidLeaveDaysPerYear = typeof leaveDayInfos?.reportedPaidLeaveDaysPerYear === 'string'
     ? JSON.parse(leaveDayInfos?.reportedPaidLeaveDaysPerYear)
     : leaveDayInfos?.reportedPaidLeaveDaysPerYear || {};
-
+  return (<Box sx={{ p: 3 }}>
+      <Typography variant="h5" sx={{ mb: 2 }}>Compteurs Congés (jours)</Typography>
+        <Alert severity="info">Bientôt disponible.</Alert>
+      </Box>);
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h5" sx={{ mb: 2 }}>Compteurs Congés (jours)</Typography>
