@@ -12,6 +12,7 @@ import ActivityTable from './ActivityTable';
 import SynthesisEstablishmentsTable from './SynthesisEstablishmentsTable';
 import DashboardBeneficiaryTable from './DashboardBeneficiaryTable';
 import GeneratePdfButton from '../../../_shared/components/printing/GeneratePdfButton';
+import ExportExcelButton from '../../../_shared/components/data_tools/export/ExportExcelButton';
 
 export default function Dashboard() {
   const componentRef = React.useRef();
@@ -130,13 +131,14 @@ export default function Dashboard() {
             <Grid item xs={12}>
               <DashboardFilter onFilterChange={handleFilterChange} isDisplayMonth={view==="activity_month"}/>
             </Grid>
-            {view!=='graph' && !isExporting && <Box>
-              <Tooltip title="Exporter en Excel">
+            {view!=='graph'  && !isExporting && <Box>
+              {view!=='activity_month' && <Tooltip title="Exporter en Excel">
                 <IconButton variant="contained" onClick={exportTableToExcel} >
                   <FileDownload />
                 </IconButton>
-              </Tooltip>
+              </Tooltip>}
               <GeneratePdfButton apparence="iconButtonExport" documentType={view} />
+              {view==='activity_month' && <ExportExcelButton apparence="iconButtonExport" dashboardActivityFilter={dashboardActivityFilter} documentType={view} />}
             </Box>}
             <Grid item xs={12}>
               <Stack justifyContent="flex-end">
