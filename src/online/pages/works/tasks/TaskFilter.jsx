@@ -47,7 +47,7 @@ const TaskFilter = ({ onFilterChange }) => {
     MY_TASK_REQUESTS : 'MY_TASK_REQUESTS',
     ALL : 'ALL',
     ALL_: [
-      {value: 'ALL', label: 'Tous', hidden: !canManageFacility},
+      {value: 'ALL', label: 'Tous', hidden: false},
       {value: 'MY_TASKS', label: 'Mes interventions', hidden: false},
       {value: 'MY_TASK_REQUESTS', label: 'Mes demandes', hidden: canManageFacility},
     ]
@@ -59,7 +59,7 @@ const TaskFilter = ({ onFilterChange }) => {
     keyword: '',
     establishments: null,
     statuses: null,
-    listType: canManageFacility ? 'ALL' : 'MY_TASKS'
+    listType: 'ALL'
   });
 
   const [selectedStatuses, setFilterSelectedStatuses] = useState([])
@@ -74,7 +74,7 @@ const TaskFilter = ({ onFilterChange }) => {
     // Pass the filter values to the parent component for handling the filtering logic
     const filterValuesInit = { 
                             startingDateTime: null, endingDateTime: null, keyword: '', 
-                            establishments: null, statuses: null
+                            establishments: null, statuses: null, listType: 'ALL'
                           }
     setFilterSelectedStatuses([])
     setFilterSelectedEstablishments([])

@@ -40,6 +40,8 @@ import TaskStatusLabelMenu from './TaskStatusLabelMenu';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import TaskTabs from './tasks-tabs/TaskTabs';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import { useSession } from '../../../../_shared/context/SessionProvider';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -50,6 +52,11 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function TaskDetails() {
+  const { user } = useSession();
+    const authorizationSystem = useAuthorizationSystem();
+    const canManageFacility = authorizationSystem.requestAuthorization({
+      type: 'manageFacility',
+    }).authorized;
   let { idTask } = useParams();
   const [getTask, { loading: loadingTask, data: taskData, error: taskError }] =
     useLazyQuery(GET_TASK_RECAP);
@@ -73,14 +80,14 @@ export default function TaskDetails() {
             </Button>
           </Link>
         </Box>
-        <Link
+        {(canManageFacility || (user?.employee?.id==taskData?.task?.employee?.id)) && <Link
           to={`/online/travaux/interventions/modifier/${taskData?.task.id}`}
           className="no_style"
         >
           <Button variant="outlined" endIcon={<Edit />} size="small">
             Modifier
           </Button>
-        </Link>
+        </Link>}
       </Box>
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>

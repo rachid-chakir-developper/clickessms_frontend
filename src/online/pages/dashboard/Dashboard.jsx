@@ -110,7 +110,7 @@ export default function Dashboard(){
                     Ajouter une dépense
                   </Button>
                 </Link>} */}
-                <Link
+                {/* <Link
                     to="/online/planning/absences-employes/ajouter?type=LEAVE"
                     className="no_style"
                   >
@@ -126,7 +126,7 @@ export default function Dashboard(){
                       <Button variant="outlined" endIcon={<Add />}>
                         Déclarer une absence
                       </Button>
-                    </Link>
+                  </Link> */}
                 {!canManageFacility && <Link
                   to="/online/travaux/interventions/ajouter?type=REQUEST"
                   className="no_style"

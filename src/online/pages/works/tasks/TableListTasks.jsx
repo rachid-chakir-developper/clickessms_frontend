@@ -38,6 +38,8 @@ import TableFilterButton from '../../../_shared/components/table/TableFilterButt
 import { getFormatDateTime, getPriorityLabel } from '../../../../_shared/tools/functions';
 import TaskStatusLabelMenu from './TaskStatusLabelMenu';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
+import { useSession } from '../../../../_shared/context/SessionProvider';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -335,6 +337,11 @@ export default function TableListTasks({
   onFilterChange,
   paginator,
 }) {
+  const { user } = useSession();
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageFacility = authorizationSystem.requestAuthorization({
+    type: 'manageFacility',
+  }).authorized;
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -527,7 +534,7 @@ export default function TableListTasks({
                             Détails
                           </MenuItem>
                         </Link>
-                        <MenuItem
+                        {(canManageFacility || (user?.employee?.id==row?.employee?.id)) && <><MenuItem
                           onClick={() => {
                             onOpenDialogListLibrary(row?.folder);
                             handleCloseMenu();
@@ -554,7 +561,7 @@ export default function TableListTasks({
                         >
                           <Delete sx={{ mr: 2 }} />
                           Supprimer
-                        </MenuItem>
+                        </MenuItem></>}
                       </Popover>
                     </StyledTableCell>
                   </StyledTableRow>
