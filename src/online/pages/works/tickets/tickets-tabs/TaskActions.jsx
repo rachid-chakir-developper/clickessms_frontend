@@ -5,6 +5,7 @@ import { getFormatDate } from '../../../../../_shared/tools/functions';
 import { AssignmentInd } from '@mui/icons-material';
 import TaskActionStatusLabelMenu from '../../actions/TaskActionStatusLabelMenu';
 import { useAuthorizationSystem } from '../../../../../_shared/context/AuthorizationSystemProvider';
+import EmployeeChip from '../../../human_ressources/employees/EmployeeChip';
 
 export default function TicketActions({ taskActions }) {
   const authorizationSystem = useAuthorizationSystem();
@@ -53,21 +54,7 @@ export default function TicketActions({ taskActions }) {
                           </Typography>
                           <Stack direction="row" flexWrap='wrap' spacing={1}>
                             {ticketAction?.employees?.map((employee, index) => (
-                              <Chip
-                                key={index}
-                                avatar={
-                                  <Avatar
-                                    alt={`${employee?.firstName} ${employee?.lastName}`}
-                                    src={
-                                      employee?.photo
-                                        ? employee?.photo
-                                        : '/default-placeholder.jpg'
-                                    }
-                                  />
-                                }
-                                label={`${employee?.firstName} ${employee?.lastName}`}
-                                variant="outlined"
-                              />
+                              <EmployeeChip key={index} employee={employee} />
                             ))}
                           </Stack>
                         </>

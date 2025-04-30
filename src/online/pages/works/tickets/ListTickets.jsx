@@ -26,6 +26,10 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListTickets() {
+  const authorizationSystem = useAuthorizationSystem();
+    const canManageQuality = authorizationSystem.requestAuthorization({
+      type: 'manageQuality',
+    }).authorized;
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [ticketFilter, setTicketFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
@@ -190,7 +194,7 @@ export default function ListTickets() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      {canManageQuality && <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
             to="/online/qualites/plan-action/tickets/ajouter"
@@ -201,7 +205,7 @@ export default function ListTickets() {
             </Button>
           </Link>
         </Box>
-      </Grid>
+      </Grid>}
       <Grid item xs={12}>
         <TicketFilter onFilterChange={handleFilterChange} />
       </Grid>

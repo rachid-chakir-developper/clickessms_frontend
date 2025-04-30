@@ -142,16 +142,14 @@ export default function ListEmployeeAbsences() {
               Demander un congé
             </Button>
           </Link>
-          {authorizationSystem.requestAuthorization({
-            type: 'manageHumanRessources',
-          }).authorized && <Link
+          <Link
             to="/online/planning/absences-employes/ajouter"
             className="no_style"
           >
             <Button variant="contained" endIcon={<Add />}>
               Déclarer une absence
             </Button>
-          </Link>}
+          </Link>
         </Box>
       </Grid>
       <Grid item xs={12}>

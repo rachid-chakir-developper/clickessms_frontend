@@ -110,11 +110,6 @@ export const modules: Module[] = [
         name: "Plan d'action",
         path: '/online/qualites/plan-action',
         icon: <MapIcon />,
-        hidden(authorizationSystem) {
-          return !authorizationSystem.requestAuthorization({
-            type: 'manageQuality',
-          }).authorized;
-        }
       },
       {
         id: 'audits',

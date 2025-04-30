@@ -45,7 +45,7 @@ export default function AddEmployeeAbsenceForm({
   }).authorized;
   const { user } = useSession();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [isLeaveType, setIsLeaveType] = React.useState(!canManageHumanRessources);
+  const [isLeaveType, setIsLeaveType] = React.useState(false);
   const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const navigate = useNavigate();
   const validationSchema = yup.object({});
@@ -243,12 +243,13 @@ const [getEmployees, {
   }, [idEmployeeAbsence]);
   
   React.useEffect(() => {
-    if ((searchParams.get('type') && searchParams.get('type') !== ETRY_ABSENCE_TYPES.ABSENCE && !idEmployeeAbsence) || (!canManageHumanRessources && !idEmployeeAbsence)) {
+    if ((searchParams.get('type') && searchParams.get('type') !== ETRY_ABSENCE_TYPES.ABSENCE &&
+          !idEmployeeAbsence)) {
       formik.setFieldValue('entryType', ETRY_ABSENCE_TYPES.LEAVE)
       formik.setFieldValue('leaveType', LEAVE_TYPE_CHOICES.PAID)
       setIsLeaveType(true)
     }
-    else if(!canManageHumanRessources){
+    else if(searchParams.get('type') && searchParams.get('type') !== ETRY_ABSENCE_TYPES.ABSENCE && !canManageHumanRessources){
       setIsLeaveType(true)
     }
   }, []);
@@ -275,7 +276,7 @@ const [getEmployees, {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            {!isLeaveType && <><Grid item xs={12} sm={6} md={6} >
+            {(!isLeaveType && canManageHumanRessources) && <><Grid item xs={12} sm={6} md={6} >
               <Item>
                 <TheAutocomplete
                   disabled={isLeaveType || loadingPost || loadingPut}
@@ -379,7 +380,7 @@ const [getEmployees, {
                   Merci de joindre votre justificatif d'arrêt maladie. Celui-ci doit être transmis dans un délai maximum de 48 heures.
                 </Alert>}
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={(!isLeaveType && !canManageHumanRessources) ? 8 : 4}>
               <Item>
                 <TheTextField
                   variant="outlined"

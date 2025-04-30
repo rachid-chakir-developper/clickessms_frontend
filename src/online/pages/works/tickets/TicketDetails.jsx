@@ -212,7 +212,7 @@ export default function TicketDetails({ticketId}) {
                           <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center' }}>
                             <strong>Statut:</strong> 
                             <Box sx={{ ml: 1 }}>
-                              <TaskActionStatusLabelMenu taskAction={action} />
+                              <TaskActionStatusLabelMenu taskAction={action} disabled={!canManageQuality}/>
                             </Box>
                           </Typography>
                         </Box>

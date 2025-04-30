@@ -42,6 +42,7 @@ import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupW
 import CircularProgressWithLabel from '../../../../_shared/components/feedbacks/CircularProgressWithLabel';
 import TicketStatusLabelMenu from './TicketStatusLabelMenu';
 import TaskActionStatusLabelMenu from '../actions/TaskActionStatusLabelMenu';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -355,6 +356,10 @@ export default function TableListTickets({
   onFilterChange,
   paginator,
 }) {
+  const authorizationSystem = useAuthorizationSystem();
+    const canManageQuality = authorizationSystem.requestAuthorization({
+      type: 'manageQuality',
+    }).authorized;
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -581,7 +586,7 @@ export default function TableListTickets({
                               Détails
                             </MenuItem>
                           </Link>
-                          <MenuItem
+                          {canManageQuality && <><MenuItem
                             onClick={() => {
                               onOpenDialogListLibrary(row?.folder);
                               handleCloseMenu();
@@ -608,7 +613,7 @@ export default function TableListTickets({
                           >
                             <Delete sx={{ mr: 2 }} />
                             Supprimer
-                          </MenuItem>
+                          </MenuItem></>}
                         </Popover>
                       </StyledTableCell>
                     </StyledTableRow>
@@ -636,6 +641,10 @@ export default function TableListTickets({
 
 
 function CollapsibleRow({rows, open}) {
+  const authorizationSystem = useAuthorizationSystem();
+    const canManageQuality = authorizationSystem.requestAuthorization({
+      type: 'manageQuality',
+    }).authorized;
   return (
     <StyledTableRow>
       <StyledTableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
@@ -666,7 +675,7 @@ function CollapsibleRow({rows, open}) {
                       </Stack>
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <TaskActionStatusLabelMenu taskAction={row} />
+                      <TaskActionStatusLabelMenu taskAction={row} disabled={!canManageQuality}/>
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}

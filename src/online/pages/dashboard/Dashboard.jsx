@@ -119,6 +119,14 @@ export default function Dashboard(){
                       Demander un congé
                     </Button>
                   </Link>
+                  <Link
+                      to="/online/planning/absences-employes/ajouter"
+                      className="no_style"
+                    >
+                      <Button variant="outlined" endIcon={<Add />}>
+                        Déclarer une absence
+                      </Button>
+                    </Link>
                 {!canManageFacility && <Link
                   to="/online/travaux/interventions/ajouter?type=REQUEST"
                   className="no_style"
