@@ -363,13 +363,17 @@ const [getEmployees, {
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
+              {formik.values.leaveType===LEAVE_TYPE_CHOICES.CHILDCARE_LEAVE && 
+                <Alert severity="info">
+                  La durée maximale autorisée pour le motif 'Garde d’Enfant Malade' est de 3 jours.
+                </Alert>}
             </Grid>
             <Grid item xs={12} sm={6} md={4} >
               <Item>
                 <TheFileField 
                   variant="outlined"
                   label="Justificatif"
-                  placeholder="Peut-être remis ultérieurement"
+                  placeholder={isLeaveType ? "(Facultatif)" : "Peut-être remis ultérieurement"}
                   fileValue={formik.values.document}
                   onChange={(file) => formik.setFieldValue('document', file)}
                   disabled={loadingPost || loadingPut}
@@ -399,7 +403,7 @@ const [getEmployees, {
               <Item sx={{textAlign: 'left'}}>
                 <Alert severity="info">Afin de garantir une bonne organisation et d’assurer la continuité du service,
                   nous vous rappelons qu’il est préférable de transmettre toute demande de congé avant le délai accordé. <br />
-                  <b>Toute demande transmise hors délai pourra être refusée</b>, même si elle concerne un solde de congés acquis.<br />
+                  <b>Toute demande transmise hors délai pourra être refusée</b>.<br />
                   Nous vous remercions de votre compréhension et vous invitons à anticiper au maximum vos demandes.
                   </Alert>
               </Item>

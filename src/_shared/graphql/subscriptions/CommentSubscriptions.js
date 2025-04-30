@@ -9,6 +9,8 @@ export const ON_COMMENT_ADDED = gql`
     $taskId: ID
     $taskActionId: ID
     $expenseId: ID
+    $beneficiaryAdmissionId: ID
+    $employeeAbsenceId: ID
   ){
     onCommentAdded(
       taskStepId: $taskStepId
@@ -16,6 +18,8 @@ export const ON_COMMENT_ADDED = gql`
       taskId: $taskId
       taskActionId: $taskActionId
       expenseId: $expenseId
+      beneficiaryAdmissionId: $beneficiaryAdmissionId
+      employeeAbsenceId: $employeeAbsenceId
       ){
       comment{
         ...CommentDetailsFragment
@@ -32,6 +36,8 @@ export const ON_COMMENT_UPDATED = gql`
     $taskId: ID
     $taskActionId: ID
     $expenseId: ID
+    $beneficiaryAdmissionId: ID
+    $employeeAbsenceId: ID
   ) {
     onCommentUpdated(
       taskStepId: $taskStepId
@@ -39,6 +45,8 @@ export const ON_COMMENT_UPDATED = gql`
       taskId: $taskId
       taskActionId: $taskActionId
       expenseId: $expenseId
+      beneficiaryAdmissionId: $beneficiaryAdmissionId
+      employeeAbsenceId: $employeeAbsenceId
       ) {
       comment{
         ...CommentBasicInfosFragment
@@ -55,6 +63,8 @@ export const ON_COMMENT_DELETED = gql`
     $taskId: ID
     $taskActionId: ID
     $expenseId: ID
+    $beneficiaryAdmissionId: ID
+    $employeeAbsenceId: ID
     ){
     onCommentDeleted(
       taskStepId: $taskStepId
@@ -62,6 +72,8 @@ export const ON_COMMENT_DELETED = gql`
       taskId: $taskId
       taskActionId: $taskActionId
       expenseId: $expenseId
+      beneficiaryAdmissionId: $beneficiaryAdmissionId
+      employeeAbsenceId: $employeeAbsenceId
       ) {
       comment{
         ...CommentBasicInfosFragment

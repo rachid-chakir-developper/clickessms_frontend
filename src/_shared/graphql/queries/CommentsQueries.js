@@ -162,4 +162,27 @@ export const GET_BENEFICIARY_ADMISSION_COMMENTS = gql`
   ${COMMENT_BASIC_INFOS}
 `;
 
+export const GET_EMPLOYEE_ABSENCE_COMMENTS = gql`
+  query GetEmployeeAbsenceComments(
+    $employeeAbsenceId: ID
+    $offset: Int
+    $limit: Int
+    $page: Int
+  ) {
+    employeeAbsenceComments(
+      employeeAbsenceId: $employeeAbsenceId
+      offset: $offset
+      limit: $limit
+      page: $page
+    ) {
+      totalCount
+      nodes {
+        ...CommentBasicInfosFragment
+      }
+    }
+  }
+  ${COMMENT_BASIC_INFOS}
+`;
+
+
 // Add more comment-related queries here

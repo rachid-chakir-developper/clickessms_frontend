@@ -10,6 +10,7 @@ import { getFormatDateTime, getFormatDate, getLeaveTypeLabel } from '../../../..
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 import { Edit, ArrowBack, Description, Note, Event, Group, Category, Folder, Person } from '@mui/icons-material';
 import EmployeeAbsenceStatusLabelMenu from './EmployeeAbsenceStatusLabelMenu';
+import EmployeeAbsenceTabs from './employee_absences-tabs/EmployeeAbsenceTabs';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -111,6 +112,12 @@ export default function EmployeeAbsenceDetails() {
               </Paper>
             </Grid>
           )}
+          {/* Comments and Tabs Section */}
+          <Grid item xs={12}>
+            <Paper sx={{ padding: 3 }}>
+              <EmployeeAbsenceTabs employeeAbsence={employeeAbsenceData?.employeeAbsence} />
+            </Paper>
+          </Grid>
         </Grid>
       </Box>
     </>
