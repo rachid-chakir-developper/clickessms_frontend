@@ -18,6 +18,7 @@ import ProgressService from '../../../../_shared/services/feedbacks/ProgressServ
 import VehicleFilter from './VehicleFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
 import TableListVehicles from './TableListVehicles';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -28,6 +29,10 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListVehicles() {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageParking = authorizationSystem.requestAuthorization({
+    type: 'manageParking',
+  }).authorized;
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [vehicleFilter, setVehicleFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
@@ -161,7 +166,7 @@ export default function ListVehicles() {
   };
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      {canManageParking && <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link to="/online/parc-automobile/vehicules/ajouter" className="no_style">
             <Button variant="contained" endIcon={<Add />}>
@@ -169,7 +174,7 @@ export default function ListVehicles() {
             </Button>
           </Link>
         </Box>
-      </Grid>
+      </Grid>}
       <Grid item xs={12}>
         <VehicleFilter onFilterChange={handleFilterChange} />
       </Grid>

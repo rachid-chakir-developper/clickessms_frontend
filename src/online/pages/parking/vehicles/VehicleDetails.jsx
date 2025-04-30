@@ -6,8 +6,9 @@ import { Grid, Typography, Avatar } from '@mui/material';
 import { GET_RECAP_VEHICLE } from '../../../../_shared/graphql/queries/VehicleQueries';
 import { getCritAirVignetteLabel, getFormatDateTime, getVehicleStateLabel } from '../../../../_shared/tools/functions';
 import styled from '@emotion/styled';
-import { DriveEta, Edit } from '@mui/icons-material';
+import { ArrowBack, DriveEta, Edit } from '@mui/icons-material';
 import VehicleTabs from './vehicles-tabs/VehicleTabs';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -18,6 +19,10 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function VehicleDetails() {
+  const authorizationSystem = useAuthorizationSystem();
+    const canManageParking = authorizationSystem.requestAuthorization({
+      type: 'manageParking',
+    }).authorized;
   let { idVehicle } = useParams();
   const [
     getVehicle,
@@ -31,15 +36,23 @@ export default function VehicleDetails() {
 
   return (
     <Stack>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1}}>
         <Link
+          to="/online/parc-automobile/vehicules/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
+        {canManageParking && <Link
           to={`/online/parc-automobile/vehicules/modifier/${vehicleData?.vehicle?.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
-        </Link>
+        </Link>}
       </Box>
       {vehicleData?.vehicle && (
         <VehicleDetailsPage
@@ -50,6 +63,10 @@ export default function VehicleDetails() {
   );
 }
 const VehicleDetailsPage = ({ vehicle }) => {
+  const authorizationSystem = useAuthorizationSystem();
+    const canManageParking = authorizationSystem.requestAuthorization({
+      type: 'manageParking',
+    }).authorized;
   const {
     id,
     number,
@@ -190,11 +207,11 @@ const VehicleDetailsPage = ({ vehicle }) => {
           </Paper>
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={12}>
+      {canManageParking && <Grid item xs={12} sm={12}>
         <Paper sx={{ padding: 2 }}>
           <VehicleTabs vehicle={vehicle}/>
         </Paper>
-      </Grid>
+      </Grid>}
     </Grid>
   );
 };

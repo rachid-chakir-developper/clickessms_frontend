@@ -43,6 +43,7 @@ import { POST_UNDESIRABLE_EVENT_TICKET } from '../../../../_shared/graphql/mutat
 import { GET_UNDESIRABLE_EVENTS } from '../../../../_shared/graphql/queries/UndesirableEventQueries';
 import { useMutation } from '@apollo/client';
 import { EI_STATUS } from '../../../../_shared/tools/constants';
+import { useSession } from '../../../../_shared/context/SessionProvider';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -502,6 +503,7 @@ export default function TableListUndesirableEvents({
   onFilterChange,
   paginator,
 }) {
+  const { user } = useSession();
   const authorizationSystem = useAuthorizationSystem();
   const canManageQuality = authorizationSystem.requestAuthorization({
     type: 'manageQuality',
@@ -735,7 +737,7 @@ export default function TableListUndesirableEvents({
                             Détails
                           </MenuItem>
                         </Link>
-                        <MenuItem
+                        {(canManageQuality || (user?.id==row?.creator?.id) || (user?.employee?.id==row?.employee?.id)) && <MenuItem
                           onClick={() => {
                             onOpenDialogListLibrary(row?.folder);
                             handleCloseMenu();
@@ -743,7 +745,7 @@ export default function TableListUndesirableEvents({
                         >
                           <Folder sx={{ mr: 2 }} />
                           Bibliothèque
-                        </MenuItem>
+                        </MenuItem>}
                         {canManageQuality && <MenuItem
                           onClick={() => {
                             onCreateUndesirableEventTicket(row?.id);
@@ -753,7 +755,7 @@ export default function TableListUndesirableEvents({
                           <Done sx={{ mr: 2 }} />
                           Analyser
                         </MenuItem>}
-                        <Link
+                        {(canManageQuality || (user?.id==row?.creator?.id) || (user?.employee?.id==row?.employee?.id)) && <><Link
                           to={`/online/qualites/evenements-indesirables/modifier/${row?.id}`}
                           className="no_style"
                         >
@@ -771,7 +773,7 @@ export default function TableListUndesirableEvents({
                         >
                           <Delete sx={{ mr: 2 }} />
                           Supprimer
-                        </MenuItem>
+                        </MenuItem></>}
                       </Popover>
                     </StyledTableCell>
                   </StyledTableRow>

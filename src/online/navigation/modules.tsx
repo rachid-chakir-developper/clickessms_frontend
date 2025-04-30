@@ -609,11 +609,6 @@ export const modules: Module[] = [
         id: 'car-fleet',
         name: 'Parc automobile',
         icon: <AirportShuttleIcon />,
-        hidden(authorizationSystem) {
-          return !authorizationSystem.requestAuthorization({
-            type: 'manageParking',
-          }).authorized;
-        },
         pages: [
           {
             id: 'vehicles',
@@ -626,18 +621,33 @@ export const modules: Module[] = [
             name: 'Contrôles véhicules',
             path: '/online/parc-automobile/controles-vehicules',
             icon: <CarCrashIcon />,
+            hidden(authorizationSystem) {
+              return !authorizationSystem.requestAuthorization({
+                type: 'manageParking',
+              }).authorized;
+            }
           },
           {
             id: 'technical-checks',
             name: 'Contrôles techniques',
             path: '/online/parc-automobile/controles-techniques',
             icon: <GarageIcon />,
+            hidden(authorizationSystem) {
+              return !authorizationSystem.requestAuthorization({
+                type: 'manageParking',
+              }).authorized;
+            }
           },
           {
             id: 'repairs',
             name: 'Suivi des réparations',
             path: '/online/parc-automobile/reparations',
             icon: <CarRepairIcon />,
+            hidden(authorizationSystem) {
+              return !authorizationSystem.requestAuthorization({
+                type: 'manageParking',
+              }).authorized;
+            }
           },
         ],
       },

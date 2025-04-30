@@ -5,6 +5,7 @@ import{ BENEFICIARY_MINI_INFOS } from './BeneficiaryFragment';
 import{ EMPLOYEE_BASIC_INFOS } from './EmployeeFragment';
 import{ ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
 import { TICKET_MINI_INFOS } from './TicketFragment';
+import { USER_BASIC_INFOS } from './UserFragment';
 
 export const UNDESIRABLE_EVENT_ESTABLISHMENT_DETAILS = gql`
   fragment UndesirableEventEstablishmentTypeFragment on UndesirableEventEstablishmentType{
@@ -67,6 +68,9 @@ export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
     establishments{
       ...UndesirableEventEstablishmentTypeFragment
     }
+    creator{
+      ...UserBasicInfosFragment
+    }
     employee{
       ...EmployeeBasicInfosFragment
     }
@@ -114,6 +118,7 @@ export const UNDESIRABLE_EVENT_BASIC_INFOS = gql`
   }
   ${UNDESIRABLE_EVENT_MINI_INFOS}
   ${UNDESIRABLE_EVENT_ESTABLISHMENT_DETAILS}
+  ${USER_BASIC_INFOS}
   ${EMPLOYEE_BASIC_INFOS}
   ${TICKET_MINI_INFOS}
   ${UNDESIRABLE_EVENT_EMPLOYEE_DETAILS}

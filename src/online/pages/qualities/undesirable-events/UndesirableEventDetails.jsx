@@ -44,6 +44,7 @@ import FileCard from '../../../_shared/components/library/FileCard';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import BeneficiaryChip from '../../human_ressources/beneficiaries/BeneficiaryChip';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import { useSession } from '../../../../_shared/context/SessionProvider';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -54,6 +55,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function UndesirableEventDetails() {
+  const { user } = useSession();
   const authorizationSystem = useAuthorizationSystem();
   const canManageQuality = authorizationSystem.requestAuthorization({
     type: 'manageQuality',
@@ -132,14 +134,14 @@ export default function UndesirableEventDetails() {
           }}>
             Analyser
           </Button>}
-          <Link
+          {(canManageQuality || (user?.id==undesirableEventData?.undesirableEvent?.creator?.id) || (user?.employee?.id==undesirableEventData?.undesirableEvent?.employee?.id)) && <Link
             to={`/online/qualites/evenements-indesirables/modifier/${undesirableEventData?.undesirableEvent?.id}`}
             className="no_style"
           >
             <Button variant="outlined" endIcon={<Edit />} size="small">
               Modifier
             </Button>
-          </Link>
+          </Link>}
         </Box>
       </Box>
       <Box sx={{ width: '100%' }}>

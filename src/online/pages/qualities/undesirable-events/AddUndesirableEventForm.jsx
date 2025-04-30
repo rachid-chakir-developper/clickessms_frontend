@@ -281,7 +281,7 @@ export default function AddUndesirableEventForm({ idUndesirableEvent, title }) {
     useLazyQuery(GET_UNDESIRABLE_EVENT, {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
-        let { __typename, folder, completionPercentage, ticket,  ...undesirableEventCopy } = data.undesirableEvent;
+        let { __typename, folder, creator, completionPercentage, ticket,  ...undesirableEventCopy } = data.undesirableEvent;
         undesirableEventCopy.frequency = undesirableEventCopy.frequency
           ? Number(undesirableEventCopy.frequency.id)
           : null;

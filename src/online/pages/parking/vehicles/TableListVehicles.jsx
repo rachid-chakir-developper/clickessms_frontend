@@ -37,6 +37,7 @@ import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 import { getCritAirVignetteLabel, getOwnershipTypeLabel, getVehicleStateLabel } from '../../../../_shared/tools/functions';
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -361,6 +362,10 @@ export default function TableListVehicles({
   onFilterChange,
   paginator,
 }) {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageParking = authorizationSystem.requestAuthorization({
+    type: 'manageParking',
+  }).authorized;
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -553,7 +558,7 @@ export default function TableListVehicles({
                             Détails
                           </MenuItem>
                         </Link>
-                        <MenuItem
+                        {canManageParking && <><MenuItem
                           onClick={() => {
                             onOpenDialogListLibrary(row?.folder);
                             handleCloseMenu();
@@ -580,7 +585,7 @@ export default function TableListVehicles({
                         >
                           <Delete sx={{ mr: 2 }} />
                           Supprimer
-                        </MenuItem>
+                        </MenuItem></>}
                       </Popover>
                     </StyledTableCell>
                   </StyledTableRow>
