@@ -153,7 +153,7 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, onFilterChange, headCells } = props;
+  const { numSelected, onFilterChange, headCells, totalCount } = props;
   const [selectedColumns, setSelectedColumns] = React.useState(
     headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
   );
@@ -190,7 +190,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les personnes accompagnées
+          Les personnes accompagnées {totalCount && <>({totalCount})</>}
         </Typography>
       )}
       <TableExportButton 
@@ -219,6 +219,7 @@ function EnhancedTableToolbar(props) {
 export default function TableListBeneficiaries({
   loading,
   rows,
+  totalCount,
   onDeleteBeneficiary,
   onFilterChange,
   paginator,
@@ -236,15 +237,6 @@ export default function TableListBeneficiaries({
       render: ({photo, firstName})=> <Avatar alt={`${firstName}`} variant="rounded" src={ photo ? photo : '/default-placeholder.jpg'}
                                   sx={{ width: 50, height: 50, bgcolor: '#e1e1e1' }}
                                 />
-    },
-    {
-      id: 'gender',
-      property: 'gender',
-      exportField: 'gender',
-      numeric: false,
-      disablePadding: true,
-      label: 'Genre',
-      render: ({gender}) => <>{getGenderLabel(gender)}</>
     },
     {
       id: 'gender',
@@ -555,7 +547,7 @@ export default function TableListBeneficiaries({
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }} >
-        <EnhancedTableToolbar headCells={headCells} numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
+        <EnhancedTableToolbar totalCount={totalCount} headCells={headCells} numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -584,7 +576,7 @@ export default function TableListBeneficiaries({
                 <StyledTableRow>
                   <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                      Aucune personne accompagnée trouvé.
+                      Aucune personne accompagnée trouvée.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>

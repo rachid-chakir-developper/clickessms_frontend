@@ -14,13 +14,8 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
-import {
-  getFormatDate,
-  getLeaveTypeLabel,
-} from '../../../../_shared/tools/functions';
 import {
   Article,
   Delete,
@@ -29,13 +24,19 @@ import {
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
+import { Alert, Chip, MenuItem, Popover, Stack} from '@mui/material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
-import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import { LEAVE_TYPE_CHOICES } from '../../../../_shared/tools/constants';
+import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
+import { getFormatDate,  getLeaveTypeLabel,  truncateText } from '../../../../_shared/tools/functions';
+import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
+import { ENTRY_ABSENCE_TYPES } from '../../../../_shared/tools/constants';
 import EmployeeAbsenceStatusLabelMenu from './EmployeeAbsenceStatusLabelMenu';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -95,54 +96,108 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  {
-    id: 'employees',
-    numeric: false,
-    disablePadding: false,
-    label: 'Employés',
-  },
-  {
-    id: 'leaveType',
-    numeric: false,
-    disablePadding: false,
-    label: 'Type',
-  },
-  {
-    id: 'startingDateTime',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date début',
-  },
-  {
-    id: 'endingDateTime',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date fin',
-  },
-  {
-    id: 'duration',
-    numeric: false,
-    disablePadding: false,
-    label: 'Durée',
-  },
-  {
-    id: 'employee',
-    numeric: false,
-    disablePadding: false,
-    label: 'Déclaré par',
-  },
-  {
-      id: 'status',
+    {
+      id: 'label',
+      property: 'label',
+      exportField: 'label',
       numeric: false,
-      disablePadding: false,
-      label: 'Status',
-  },
-  {
-    id: 'action',
-    numeric: true,
-    disablePadding: false,
-    label: 'Actions',
-  },
+      disablePadding: true,
+      label: 'Libellé',
+    },
+    {
+        id: 'employees',
+        property: 'employees__employee__first_name',
+        exportField: ['employees__employee__first_name', 'employees__employee__last_name'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Employés',
+        render: ({employees}) => employees && employees.length > 0 && <ChipGroupWithPopover people={employees.map(b=>b.employee)} />
+    },
+    {
+        id: 'leaveType',
+        property: 'leave_type',
+        exportField: 'leave_type',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Type',
+        render: ({entryType, leaveType, document}) => <>
+                              <AppLabel color={entryType === ENTRY_ABSENCE_TYPES.ABSENCE ? "info" : "primary"}>{getLeaveTypeLabel(leaveType)}</AppLabel>
+                              {entryType === ENTRY_ABSENCE_TYPES.ABSENCE && <AppLabel sx={{marginLeft: 1, fontSize: 10}} color={document ? "secondary" : "warning"}>{document ? 'Avec un justificatif' : 'Sans justificatif'}</AppLabel>}
+                            </>
+    },
+    {
+        id: 'startingDateTime',
+        property: 'starting_date_time',
+        exportField: 'starting_date_time',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: "Date de début",
+        render: ({startingDateTime})=> getFormatDate(startingDateTime)
+    },
+    {
+        id: 'endingDateTime',
+        property: 'ending_date_time',
+        exportField: 'ending_date_time',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: "Date de fin",
+        render: ({endingDateTime})=> getFormatDate(endingDateTime)
+    },
+    {
+        id: 'duration',
+        property: 'duration',
+        exportField: 'duration',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Durée',
+        render: ({duration})=> <>{duration} jour{duration > 1 ? 's' : ''}</>
+    },
+    {
+        id: 'employee',
+        property: 'employee__first_name',
+        exportField: ['employee__first_name', 'employee__last_name'],
+        numeric: false,
+        disablePadding: false,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Déclaré par',
+        render: ({employee}) => employee && <EmployeeChip employee={employee} />
+    },
+    {
+        id: 'message',
+        property: 'message',
+        exportField: 'message',
+        numeric: false,
+        disablePadding: false,
+        label: 'Message',
+        render: ({message})=> <Tooltip title={message}>{truncateText(message, 160)}</Tooltip>
+    }
+    ,
+    {
+        id: 'status',
+        property: 'status',
+        exportField: 'status',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        label: 'Status',
+        render: (data)=> <EmployeeAbsenceStatusLabelMenu employeeAbsence={data} />
+    },
+    {
+        id: 'action',
+        numeric: true,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Actions',
+    },
 ];
 
 function EnhancedTableHead(props) {
@@ -153,9 +208,10 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    selectedColumns = []
   } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property, sortDisabled=false) => (event) => {
+    if(!sortDisabled) onRequestSort(event, property);
   };
 
   return (
@@ -172,7 +228,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </StyledTableCell>
-        {headCells.map((headCell) => (
+        {selectedColumns.map((headCell) => (
           <StyledTableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -180,9 +236,10 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+              hideSortIcon={headCell.sortDisabled}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.property, headCell?.sortDisabled)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -199,7 +256,10 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onFilterChange } = props;
+  const [selectedColumns, setSelectedColumns] = React.useState(
+    headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
+  );
 
   return (
     <Toolbar
@@ -236,7 +296,11 @@ function EnhancedTableToolbar(props) {
           Les absences
         </Typography>
       )}
-
+      <TableExportButton 
+        entity={'EmployeeAbsence'}
+        fileName={'Absences-employes'}
+        fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
+        titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>
@@ -244,11 +308,12 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <TableFilterButton headCells={headCells} 
+          onFilterChange={(currentColumns)=>{
+            setSelectedColumns(currentColumns);
+            onFilterChange(headCells?.filter(c=> currentColumns?.includes(c.id)))
+          }
+        }/>
       )}
     </Toolbar>
   );
@@ -257,31 +322,34 @@ function EnhancedTableToolbar(props) {
 export default function TableListEmployeeAbsences({
   loading,
   rows,
-  onDeleteEmployeeAbsence
+  onDeleteEmployeeAbsence,
+  onFilterChange,
+  paginator,
 }) {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const navigate = useNavigate();
+  const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
-  const { setDialogListLibrary } = useFeedBacks();
-  const onOpenDialogListLibrary = (folderParent) => {
-    setDialogListLibrary({
-      isOpen: true,
-      folderParent,
-      onClose: () => {
-        setDialogListLibrary({ isOpen: false });
-      },
-    });
-  };
+   const { setDialogListLibrary } = useFeedBacks();
+    const onOpenDialogListLibrary = (folderParent) => {
+      setDialogListLibrary({
+        isOpen: true,
+        folderParent,
+        onClose: () => {
+          setDialogListLibrary({ isOpen: false });
+        },
+      });
+    };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    onFilterChange({orderBy: `${isAsc ? '-' : ''}${property}`})
   };
 
   const handleSelectAllClick = (event) => {
@@ -327,26 +395,20 @@ export default function TableListEmployeeAbsences({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
-
-  const handleRowClick = (event, id) => {
-    if (!event.target.closest('button') && 
-        !event.target.closest('input[type="checkbox"]') &&
-        !event.target.closest('.MuiIconButton-root')) {
-      // navigate(`/online/planning/absences-employes/details/${id}`);
-    }
-  };
-
+  const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+      <Paper sx={{ width: '100%', mb: 2 }} >
+        <EnhancedTableToolbar numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
+            border="0"
             size="medium"
           >
             <EnhancedTableHead
+              selectedColumns={selectedColumns}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -357,16 +419,16 @@ export default function TableListEmployeeAbsences({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="10">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="10">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
-                        Aucune absence trouvé.
+                      Aucune absence trouvée.
                     </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -405,7 +467,6 @@ export default function TableListEmployeeAbsences({
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
-                    onClick={(event) => handleRowClick(event, row.id)}
                   >
                     <StyledTableCell padding="checkbox">
                       <Checkbox
@@ -417,59 +478,20 @@ export default function TableListEmployeeAbsences({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.employees?.map((beneficiarie, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={`${beneficiarie?.employee?.firstName} ${beneficiarie?.employee?.lastName}`}
-                                  src={
-                                    beneficiarie?.employee?.photo
-                                      ? beneficiarie?.employee?.photo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={`${beneficiarie?.employee?.firstName} ${beneficiarie?.employee?.lastName}`}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <AppLabel color={row?.leaveType === LEAVE_TYPE_CHOICES.ABSENCE ? "info" : "primary"}>{getLeaveTypeLabel(row?.leaveType)}</AppLabel>
-                      {row?.leaveType === LEAVE_TYPE_CHOICES.ABSENCE && <AppLabel sx={{marginLeft: 1, fontSize: 10}} color={row?.document ? "secondary" : "warning"}>{row?.document ? 'Avec un justificatif' : 'Sans justificatif'}</AppLabel>}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.endingDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      {row?.duration} jour{row?.duration > 1 ? 's' : ''}
-                    </StyledTableCell>
-                    <StyledTableCell align="left"> 
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
-                              src={
-                                row?.employee?.photo
-                                  ? row?.employee?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.employee?.firstName} ${row?.employee?.lastName}`}
-                          variant="outlined"
-                        />
-                        </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <EmployeeAbsenceStatusLabelMenu employeeAbsence={row} />
-                    </StyledTableCell>
+                    {
+                      selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
+                        return <StyledTableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding={column?.disablePadding ? "none" : "normal"}
+                          key={index}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/planning/absences-employes/details/${row?.id}`)}}
+                        >
+                        {column?.render ? column?.render(row) : row[column?.id]}
+                        </StyledTableCell>
+                      })
+                    }
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -535,7 +557,7 @@ export default function TableListEmployeeAbsences({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={6} />
+                  <StyledTableCell colSpan={selectedColumns.length + 1} />
                 </StyledTableRow>
               )}
             </TableBody>

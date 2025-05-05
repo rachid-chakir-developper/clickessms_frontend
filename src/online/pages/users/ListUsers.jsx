@@ -191,7 +191,9 @@ export default function ListUsers() {
           <TableListUsers
             loading={loadingUsers}
             rows={usersData?.users?.nodes || []}
+            totalCount={usersData?.users?.totalCount}
             onDeleteUser={onDeleteUser}
+            onFilterChange={(newFilter) => handleFilterChange({ ...userFilter, ...newFilter })}
             paginator={paginator}
           />
         </Grid>

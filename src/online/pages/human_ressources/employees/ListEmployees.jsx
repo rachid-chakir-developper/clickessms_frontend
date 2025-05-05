@@ -274,36 +274,6 @@ export default function ListEmployees() {
       <Grid item xs={12}>
         <EmployeeFilter onFilterChange={handleFilterChange} />
       </Grid>
-      {/* <Grid item xs={12}>
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-          >
-            {loadingEmployees && (
-              <Grid key={'pgrs'} item xs={12} sm={6} md={4}>
-                <ProgressService type="mediaCard" />
-              </Grid>
-            )}
-            {employeesData?.employees?.nodes?.length < 1 &&
-              !loadingEmployees && (
-                <Alert severity="warning">Aucun employé trouvé.</Alert>
-              )}
-            {employeesData?.employees?.nodes?.map((employee, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <Item>
-                  <EmployeeItemCard
-                    employee={employee}
-                    onDeleteEmployee={onDeleteEmployee}
-                    onUpdateEmployeeState={onUpdateEmployeeState}
-                  />
-                </Item>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      </Grid> */}
       
       <Grid item xs={12}>
         <TableListEmployees
@@ -311,8 +281,11 @@ export default function ListEmployees() {
           rows={employeesData?.employees?.nodes || []}
           totalCount={employeesData?.employees?.totalCount}
           onDeleteEmployee={onDeleteEmployee}
+          onFilterChange={(newFilter) => handleFilterChange({ ...employeeFilter, ...newFilter })}
+          paginator={paginator}
         />
       </Grid>
+      
       <Grid item xs={12}>
         <PaginationControlled
           totalItems={employeesData?.employees?.totalCount} // Nombre total d'éléments

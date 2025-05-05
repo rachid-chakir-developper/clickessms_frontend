@@ -21,7 +21,7 @@ import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueri
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 import SelectCheckmarks from '../../../../_shared/components/form-fields/SelectCheckmarks';
 import { GET_DATAS_EMPLOYEE_ABSENCE } from '../../../../_shared/graphql/queries/DataQueries';
-import { ETRY_ABSENCE_TYPES, LEAVE_TYPE_CHOICES } from '../../../../_shared/tools/constants';
+import { ENTRY_ABSENCE_TYPES, LEAVE_TYPE_CHOICES } from '../../../../_shared/tools/constants';
 import { useSession } from '../../../../_shared/context/SessionProvider';
 import TheFileField from '../../../../_shared/components/form-fields/TheFileField';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
@@ -54,7 +54,7 @@ export default function AddEmployeeAbsenceForm({
       number: '',
       label: '',
       document: undefined,
-      entryType: ETRY_ABSENCE_TYPES.ABSENCE,
+      entryType: ENTRY_ABSENCE_TYPES.ABSENCE,
       leaveType: LEAVE_TYPE_CHOICES.ABSENCE,
       startingDateTime: dayjs(new Date()),
       endingDateTime: dayjs(new Date()),
@@ -243,13 +243,13 @@ const [getEmployees, {
   }, [idEmployeeAbsence]);
   
   React.useEffect(() => {
-    if ((searchParams.get('type') && searchParams.get('type') !== ETRY_ABSENCE_TYPES.ABSENCE &&
+    if ((searchParams.get('type') && searchParams.get('type') !== ENTRY_ABSENCE_TYPES.ABSENCE &&
           !idEmployeeAbsence)) {
-      formik.setFieldValue('entryType', ETRY_ABSENCE_TYPES.LEAVE)
+      formik.setFieldValue('entryType', ENTRY_ABSENCE_TYPES.LEAVE)
       formik.setFieldValue('leaveType', LEAVE_TYPE_CHOICES.PAID)
       setIsLeaveType(true)
     }
-    else if(searchParams.get('type') && searchParams.get('type') !== ETRY_ABSENCE_TYPES.ABSENCE && !canManageHumanRessources){
+    else if(searchParams.get('type') && searchParams.get('type') !== ENTRY_ABSENCE_TYPES.ABSENCE && !canManageHumanRessources){
       setIsLeaveType(true)
     }
   }, []);
@@ -309,7 +309,7 @@ const [getEmployees, {
                     }
                     disabled={isLeaveType || loadingPost || loadingPut}
                   >
-                    {ETRY_ABSENCE_TYPES?.ALL?.map((type, index) => {
+                    {ENTRY_ABSENCE_TYPES?.ALL?.map((type, index) => {
                       return (
                         <FormControlLabel key={index} value={type.value} control={<Radio />} label={type.label} />
                       );

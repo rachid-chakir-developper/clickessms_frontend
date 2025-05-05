@@ -224,6 +224,7 @@ export default function ListBeneficiaries() {
           <TableListBeneficiaries
             loading={loadingBeneficiaries}
             rows={beneficiariesData?.beneficiaries?.nodes || []}
+            totalCount={beneficiariesData?.beneficiaries?.totalCount}
             onDeleteBeneficiary={onDeleteBeneficiary}
             onFilterChange={(newFilter) => handleFilterChange({ ...beneficiaryFilter, ...newFilter })}
             paginator={paginator}

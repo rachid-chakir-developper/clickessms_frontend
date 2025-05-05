@@ -155,42 +155,13 @@ export default function ListEmployeeAbsences() {
       <Grid item xs={12}>
         <EmployeeAbsenceFilter onFilterChange={handleFilterChange} />
       </Grid>
-      {/* <Grid item xs={12}>
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-          >
-            {loadingEmployeeAbsences && (
-              <Grid key={'pgrs'} item xs={2} sm={4} md={3}>
-                <ProgressService type="mediaCard" />
-              </Grid>
-            )}
-            {employeeAbsencesData?.employeeAbsences?.nodes?.length < 1 &&
-              !loadingEmployeeAbsences && (
-                <Alert severity="warning">Aucune absence trouvé.</Alert>
-              )}
-            {employeeAbsencesData?.employeeAbsences?.nodes?.map(
-              (employeeAbsence, index) => (
-                <Grid item xs={2} sm={4} md={3} key={index}>
-                  <Item>
-                    <EmployeeAbsenceItemCard
-                      employeeAbsence={employeeAbsence}
-                      onDeleteEmployeeAbsence={onDeleteEmployeeAbsence}
-                    />
-                  </Item>
-                </Grid>
-              ),
-            )}
-          </Grid>
-        </Box>
-      </Grid> */}
       <Grid item xs={12}>
         <TableListEmployeeAbsences
           loading={loadingEmployeeAbsences}
           rows={employeeAbsencesData?.employeeAbsences?.nodes || []}
           onDeleteEmployeeAbsence={onDeleteEmployeeAbsence}
+          onFilterChange={(newFilter) => handleFilterChange({ ...employeeAbsenceFilter, ...newFilter })}
+          paginator={paginator}
         />
       </Grid>
       <Grid item xs={12}>

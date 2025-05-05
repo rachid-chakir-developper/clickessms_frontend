@@ -25,6 +25,7 @@ export const EMPLOYEE_ABSENCE_BASIC_INFOS = gql`
     startingDateTime
     endingDateTime
     duration
+    message
     status
     reasons{
       id
@@ -51,7 +52,6 @@ export const EMPLOYEE_ABSENCE_DETAILS = gql`
   fragment EmployeeAbsenceDetailsFragment on EmployeeAbsenceType {
     ...EmployeeAbsenceBasicInfosFragment
     comment
-    message
     observation
   }
   ${EMPLOYEE_ABSENCE_BASIC_INFOS}
@@ -61,7 +61,6 @@ export const EMPLOYEE_ABSENCE_RECAP_DETAILS = gql`
   fragment EmployeeAbsenceRecapDetailsFragment on EmployeeAbsenceType {
     ...EmployeeAbsenceBasicInfosFragment
     comment
-    message
     observation
   }
   ${EMPLOYEE_ABSENCE_BASIC_INFOS}

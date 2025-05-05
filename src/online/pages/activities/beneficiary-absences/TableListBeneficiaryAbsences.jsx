@@ -345,6 +345,17 @@ export default function TableListBeneficiaryAbsences({
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
+  const { setDialogListLibrary } = useFeedBacks();
+  const onOpenDialogListLibrary = (folderParent) => {
+    setDialogListLibrary({
+      isOpen: true,
+      folderParent,
+      onClose: () => {
+        setDialogListLibrary({ isOpen: false });
+      },
+    });
+  };
+  
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');

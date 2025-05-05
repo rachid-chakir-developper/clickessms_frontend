@@ -14,7 +14,6 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
@@ -22,16 +21,23 @@ import {
   Delete,
   Done,
   Edit,
+  Euro,
   Folder,
   MoreVert,
+  Print,
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
-import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import { getFormatDate } from '../../../../_shared/tools/functions';
+import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
+import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
+import { getFormatDate, getFormatDateTime, getGenderLabel } from '../../../../_shared/tools/functions';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
+import { GET_CUSTOM_FIELDS } from '../../../../_shared/graphql/queries/CustomFieldQueries';
+import { useQuery } from '@apollo/client';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -90,74 +96,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-    {
-      id: 'photo',
-      numeric: false,
-      disablePadding: true,
-      label: 'Photo',
-    },
-    {
-      id: 'registrationNumber',
-      numeric: false,
-      disablePadding: false,
-      label: 'Matricule',
-    },
-    {
-      id: 'firstName',
-      numeric: false,
-      disablePadding: false,
-      label: 'Prénom',
-    },
-    {
-        id: 'lastName',
-        numeric: false,
-        disablePadding: false,
-        label: 'Nom de naissance',
-    },
-    {
-        id: 'preferredName',
-        numeric: false,
-        disablePadding: false,
-        label: 'Nom d’usage',
-    },
-    {
-        id: 'position',
-        numeric: false,
-        disablePadding: false,
-        label: 'Poste',
-    },
-    {
-      id: 'contractType',
-      numeric: false,
-      disablePadding: false,
-      label: 'Type de contrat',
-    },
-    {
-        id: 'establishments',
-        numeric: false,
-        disablePadding: false,
-        label: 'Structures',
-    },
-    {
-      id: 'startingDate',
-      numeric: false,
-      disablePadding: false,
-      label: 'Date de début',
-    },
-    {
-      id: 'endingDate',
-      numeric: false,
-      disablePadding: false,
-      label: 'Date de fin',
-    },
-    {
-        id: 'action',
-        numeric: true,
-        disablePadding: false,
-        label: 'Actions',
-    },
-];
 
 function EnhancedTableHead(props) {
   const {
@@ -167,9 +105,10 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    selectedColumns = []
   } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property, sortDisabled=false) => (event) => {
+    if(!sortDisabled) onRequestSort(event, property);
   };
 
   return (
@@ -186,7 +125,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </StyledTableCell>
-        {headCells.map((headCell) => (
+        {selectedColumns.map((headCell) => (
           <StyledTableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -194,9 +133,10 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+              hideSortIcon={headCell.sortDisabled}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.property, headCell?.sortDisabled)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -213,7 +153,10 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, totalCount } = props;
+  const { numSelected, onFilterChange, headCells, totalCount } = props;
+  const [selectedColumns, setSelectedColumns] = React.useState(
+    headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
+  );
 
   return (
     <Toolbar
@@ -250,7 +193,11 @@ function EnhancedTableToolbar(props) {
           Les employés {totalCount && <>({totalCount})</>}
         </Typography>
       )}
-
+      <TableExportButton 
+        entity={'Employee'}
+        fileName={'employes'}
+        fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
+        titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>
@@ -258,11 +205,12 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <TableFilterButton headCells={headCells} 
+          onFilterChange={(currentColumns)=>{
+            setSelectedColumns(currentColumns);
+            onFilterChange(headCells?.filter(c=> currentColumns?.includes(c.id)))
+          }
+        }/>
       )}
     </Toolbar>
   );
@@ -271,33 +219,234 @@ function EnhancedTableToolbar(props) {
 export default function TableListEmployees({
   loading,
   rows,
-  totalCount = null,
+  totalCount,
   onDeleteEmployee,
-  onUpdateEmployeeState,
+  onFilterChange,
+  paginator,
 }) {
+  
+  const [headCells, setHeadCells] = React.useState([
+    {
+      id: 'photo',
+      property: 'photo',
+      exportField: 'photo',
+      numeric: false,
+      disablePadding: false,
+      isDefault: true,
+      label: 'Photo',
+      render: ({photo, firstName})=> <Avatar alt={`${firstName}`} variant="rounded" src={ photo ? photo : '/default-placeholder.jpg'}
+                                  sx={{ width: 50, height: 50, bgcolor: '#e1e1e1' }}
+                                />
+    },
+    {
+        id: 'registrationNumber',
+        property: 'registration_number',
+        exportField: 'registration_number',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Matricule',
+    },
+    {
+      id: 'gender',
+      property: 'gender',
+      exportField: 'gender',
+      numeric: false,
+      disablePadding: true,
+      label: 'Genre',
+      render: ({gender}) => <>{getGenderLabel(gender)}</>
+    },
+    {
+        id: 'firstName',
+        property: 'first_name',
+        exportField: 'first_name',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Prénom',
+    },
+    {
+        id: 'lastName',
+        property: 'last_name',
+        exportField: 'last_name',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Nom de naissance',
+    },
+    {
+        id: 'preferredName',
+        property: 'preferred_name',
+        exportField: 'preferred_name',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Nom d’usage',
+    },
+    {
+        id: 'position',
+        property: 'current_contract__position',
+        exportField: 'current_contract__position',
+        numeric: false,
+        disablePadding: true,
+        label: 'Poste',
+        render: ({currentContract}) => <>{currentContract?.position}</>
+    },
+    {
+        id: 'contractType',
+        property: 'current_contract__contract_type',
+        exportField: 'current_contract__contract_type',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Type de contrat',
+        render: ({currentContract}) => <Stack direction="row" flexWrap='wrap' spacing={1}>
+                                {currentContract?.contractType && <Chip
+                                  label={currentContract?.contractType}
+                                  variant="outlined"
+                                />}
+                                </Stack>
+    },
+    {
+        id: 'establishments',
+        property: 'current_contract__establishments__name',
+        exportField: ['current_contract__establishments__name'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Structure(s)',
+        render: ({currentContract, establishments}) => <>
+                            {currentContract && <Stack direction="row" flexWrap='wrap' spacing={1}>
+                              {currentContract?.establishments?.map((establishment, index) => {
+                                return (<EstablishmentChip key={index} establishment={establishment?.establishment}/>
+                                );
+                              })}
+                            </Stack>}
+                            {!currentContract && <Stack direction="row" flexWrap='wrap' spacing={1}>
+                              {establishments?.map((establishment, index) => {
+                                return (
+                                  <EstablishmentChip key={index} establishment={establishment}/>
+                                );
+                              })}
+                            </Stack>}
+                          </>
+    },
+    {
+        id: 'startingDate',
+        property: 'current_contract__starting_date',
+        exportField: 'current_contract__starting_date',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Date de début',
+        render: ({currentContract}) => <>{getFormatDate(currentContract?.startingDate)}</>
+    },
+    {
+        id: 'endingDate',
+        property: 'current_contract__ending_date',
+        exportField: 'current_contract__ending_date',
+        numeric: false,
+        disablePadding: true,
+        isDefault: true,
+        label: 'Date de fin',
+        render: ({currentContract}) => <>{getFormatDate(currentContract?.endingDate)}</>
+    },
+    {
+        id: 'action',
+        numeric: true,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Actions',
+    },
+  ]);
+  // Récupérer les champs personnalisés avec useQuery
+  const {
+    loading: loadingCustomFields,
+    data: customFieldsData,
+    error: customFieldsError,
+  } = useQuery(GET_CUSTOM_FIELDS, { variables: { customFieldFilter: { formModels: ['Employee'] } } });
+
+  // Mettre à jour les headCells lorsque les champs personnalisés sont récupérés
+  React.useEffect(() => {
+    if (customFieldsData) {
+      setHeadCells(prevHeadCells => {
+        // Sélectionner les éléments à conserver
+        const actionCell = prevHeadCells.find(cell => cell.id === 'action');
+        const otherCells = prevHeadCells.slice(0, prevHeadCells.length - 1); // Tous les éléments sauf les deux derniers
+
+        // Créer les cellules de champs personnalisés
+        const customFieldCells = customFieldsData?.customFields?.nodes?.map(field => ({
+          id: field.id,
+          property: field.property,
+          exportField: field.exportField,
+          numeric: false,
+          disablePadding: false,
+          isDefault: false,
+          label: field.label,
+          render: ({ customFieldValues }) => {
+            const customFieldValue = customFieldValues.find((value) => value?.customField?.key === field?.key);
+            const value = customFieldValue ? customFieldValue?.value : "";
+            const { fieldType, options } = field;
+            switch (fieldType) {
+              case 'TEXT':
+                return value
+              case 'TEXTAREA':
+                return value
+              case 'NUMBER':
+                return value
+              case 'DATE':
+                return getFormatDate(value)
+              case 'DATETIME':
+                return getFormatDateTime(value)
+              case 'BOOLEAN':
+                return value ? <AppLabel color="success">Oui</AppLabel> : <AppLabel color="error">Non</AppLabel>
+              case 'SELECT':
+                return options.map((option, idx) => (
+                  value === option.value && <span key={idx}>{option.label}</span>
+                ))
+              case 'SELECT_MULTIPLE':
+                return options.filter(option => value.includes(option.value)) // Filtrer les options sélectionnées
+                        .map((option, idx) => (
+                  <span key={idx}>{option.label}{idx < options.filter(option => value.includes(option.value)).length - 1 ? ', ' : ''}</span>
+                  ))
+              default:
+                  return null;
+              }
+          },
+        }));
+
+        // Retourner l'array avec les champs personnalisés entre les deux derniers éléments et 'action' à la fin
+        return [...otherCells, ...customFieldCells, actionCell];
+      });
+    }
+  }, [customFieldsData]);
+
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(20);
+  const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
-  const { setDialogListLibrary } = useFeedBacks();
+  const  { setDialogListLibrary, setPrintingModal } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
-    setDialogListLibrary({
-      isOpen: true,
-      folderParent,
-      onClose: () => {
-        setDialogListLibrary({ isOpen: false });
-      },
-    });
-  };
+      setDialogListLibrary({
+        isOpen: true,
+        folderParent,
+        onClose: () => { 
+            setDialogListLibrary({isOpen: false})
+          }
+      })
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    onFilterChange({orderBy: `${isAsc ? '-' : ''}${property}`})
   };
 
   const handleSelectAllClick = (event) => {
@@ -343,17 +492,21 @@ export default function TableListEmployees({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
+  const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
+
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} totalCount={totalCount} />
+      <Paper sx={{ width: '100%', mb: 2 }} >
+        <EnhancedTableToolbar totalCount={totalCount} headCells={headCells} numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
+            border="0"
             size="medium"
           >
             <EnhancedTableHead
+              selectedColumns={selectedColumns}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -364,14 +517,14 @@ export default function TableListEmployees({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="12">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="12">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
                       Aucun employé trouvé.
                     </Alert>
@@ -379,7 +532,6 @@ export default function TableListEmployees({
                 </StyledTableRow>
               )}
               {visibleRows?.map((row, index) => {
-                const { currentContract } = row;
                 if (!anchorElList[index]) {
                   anchorElList[index] = null;
                 }
@@ -424,69 +576,20 @@ export default function TableListEmployees({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                      onClick={()=> navigate(`/online/ressources-humaines/employes/details/${row?.id}`)}
-                    >
-                      <Avatar
-                        alt={`${row?.firstName} ${row?.lastName}`}
-                        variant="rounded"
-                        src={
-                          row?.photo
-                            ? row?.photo
-                            : '/default-placeholder.jpg'
-                        }
-                        sx={{ width: 50, height: 50, bgcolor: '#e1e1e1' }}
-                      />
-                    </StyledTableCell>
-                    <StyledTableCell align="left"
-                      onClick={()=> navigate(`/online/ressources-humaines/employes/details/${row?.id}`)}>
-                      {row?.registrationNumber}
-                    </StyledTableCell>
-                    <StyledTableCell align="left"
-                      onClick={()=> navigate(`/online/ressources-humaines/employes/details/${row?.id}`)}>
-                      {row?.firstName}
-                    </StyledTableCell>
-                    <StyledTableCell align="left"
-                      onClick={()=> navigate(`/online/ressources-humaines/employes/details/${row?.id}`)}>
-                      {row?.lastName}
-                    </StyledTableCell>
-                    <StyledTableCell align="left"
-                      onClick={()=> navigate(`/online/ressources-humaines/beneficiaires/details/${row?.id}`)}>
-                      {row?.preferredName}
-                    </StyledTableCell>
-                    <StyledTableCell align="left"
-                      onClick={()=> navigate(`/online/ressources-humaines/employes/details/${row?.id}`)}>
-                      {currentContract?.position}
-                    </StyledTableCell>
-                    <StyledTableCell align="left"> 
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {currentContract?.contractType && <Chip
-                          label={currentContract?.contractType}
-                          variant="outlined"
-                        />}
-                        </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      {currentContract && <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {currentContract?.establishments?.map((establishment, index) => {
-                          return (<EstablishmentChip key={index} establishment={establishment?.establishment}/>
-                          );
-                        })}
-                      </Stack>}
-                      {!currentContract && <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.establishments?.map((establishment, index) => {
-                          return (
-                            <EstablishmentChip key={index} establishment={establishment}/>
-                          );
-                        })}
-                      </Stack>}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(currentContract?.startingDate)}`}</StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(currentContract?.endingDate)}`}</StyledTableCell>
+                    {
+                      selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
+                        return <StyledTableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding={column?.disablePadding ? "none" : "normal"}
+                          key={index}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/ressources-humaines/employes/details/${row?.id}`)}}
+                        >
+                        {column?.render ? column?.render(row) : row[column?.id]}
+                        </StyledTableCell>
+                      })
+                    }
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -552,7 +655,7 @@ export default function TableListEmployees({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={6} />
+                  <StyledTableCell colSpan={selectedColumns.length + 1} />
                 </StyledTableRow>
               )}
             </TableBody>

@@ -288,7 +288,7 @@ export const REPAIR_STATES = {
   ],
 };
 
-export const ETRY_ABSENCE_TYPES = {
+export const ENTRY_ABSENCE_TYPES = {
   ABSENCE: "ABSENCE",
   LEAVE: "LEAVE",
   ALL: [

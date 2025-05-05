@@ -14,10 +14,8 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
-import { getFormatDate } from '../../../_shared/tools/functions';
 import {
   Article,
   Delete,
@@ -26,12 +24,18 @@ import {
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { useFeedBacks } from '../../../_shared/context/feedbacks/FeedBacksProvider';
+import { Alert, Avatar, Chip, MenuItem, Popover, Stack} from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 import ProgressService from '../../../_shared/services/feedbacks/ProgressService';
-import UserRolesLabelMenu from './UserRolesLabelMenu';
+import TableExportButton from '../../_shared/components/data_tools/export/TableExportButton';
 import EmployeeChip from '../human_ressources/employees/EmployeeChip';
+import TableFilterButton from '../../_shared/components/table/TableFilterButton';
+import { useFeedBacks } from '../../../_shared/context/feedbacks/FeedBacksProvider';
+import UserRolesLabelMenu from './UserRolesLabelMenu';
+import PartnerChip from '../partnerships/partners/PartnerChip';
+import FinancierChip from '../partnerships/financiers/FinancierChip';
+import SupplierChip from '../purchases/suppliers/SupplierChip';
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -92,41 +96,80 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'firstName',
-    numeric: false,
-    disablePadding: true,
-    label: 'Prénom',
-  },
-  {
-    id: 'lastName',
+    id: 'photo',
+    property: 'photo',
+    exportField: 'photo',
     numeric: false,
     disablePadding: false,
-    label: 'Nom',
+    label: 'Photo',
+    render: ({photo, firstName})=> <Avatar alt={`${firstName}`} variant="rounded" src={ photo ? photo : '/default-placeholder.jpg'}
+                                sx={{ width: 50, height: 50, bgcolor: '#e1e1e1' }}
+                              />
   },
   {
-    id: 'email',
-    numeric: false,
-    disablePadding: false,
-    label: 'Email',
+      id: 'firstName',
+      property: 'first_name',
+      exportField: 'first_name',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Prénom',
   },
   {
-    id: 'relation',
-    numeric: false,
-    disablePadding: false,
-    label: 'Assigné à',
+      id: 'lastName',
+      property: 'last_name',
+      exportField: 'last_name',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Nom',
   },
   {
-    id: 'roles',
-    numeric: false,
-    disablePadding: false,
-    label: 'Roles',
+      id: 'email',
+      property: 'email',
+      exportField: 'email',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Email',
   },
-  {
-    id: 'action',
-    numeric: true,
-    disablePadding: false,
-    label: 'Actions',
-  },
+    {
+        id: 'employee',
+        property: 'employee__first_name',
+        exportField: ['employee__first_name', 'employee__last_name'],
+        numeric: false,
+        disablePadding: false,
+        disableClickDetail: true,
+        sortDisabled: true,
+        isDefault: true,
+        label: 'Assigné à',
+        render: ({employee, partner, financier, supplier}) => 
+                              <Stack direction="row" flexWrap='wrap' spacing={1}>
+                                {employee && <EmployeeChip employee={employee}/>}
+                                {partner && <PartnerChip partner={partner}/>}
+                                {financier && <FinancierChip financier={financier}/>}
+                                {supplier && <SupplierChip supplier={supplier}/>}
+                              </Stack>
+    },
+    ,
+    {
+        id: 'roles',
+        property: 'roles',
+        exportField: 'roles',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        label: 'Roles',
+        render: (data)=> <UserRolesLabelMenu user={data} />
+    },
+    {
+        id: 'action',
+        numeric: true,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Actions',
+    },
 ];
 
 function EnhancedTableHead(props) {
@@ -137,9 +180,10 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    selectedColumns = []
   } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property, sortDisabled=false) => (event) => {
+    if(!sortDisabled) onRequestSort(event, property);
   };
 
   return (
@@ -156,7 +200,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </StyledTableCell>
-        {headCells.map((headCell) => (
+        {selectedColumns.map((headCell) => (
           <StyledTableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -164,9 +208,10 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+              hideSortIcon={headCell.sortDisabled}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.property, headCell?.sortDisabled)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -183,7 +228,10 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onFilterChange, totalCount } = props;
+  const [selectedColumns, setSelectedColumns] = React.useState(
+    headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
+  );
 
   return (
     <Toolbar
@@ -217,10 +265,14 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les utilisateurs
+          Les utilisateurs {totalCount && <>({totalCount})</>}
         </Typography>
       )}
-
+      <TableExportButton 
+        entity={'User'}
+        fileName={'utilisateurs'}
+        fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
+        titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>
@@ -228,11 +280,12 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <TableFilterButton headCells={headCells} 
+          onFilterChange={(currentColumns)=>{
+            setSelectedColumns(currentColumns);
+            onFilterChange(headCells?.filter(c=> currentColumns?.includes(c.id)))
+          }
+        }/>
       )}
     </Toolbar>
   );
@@ -241,10 +294,12 @@ function EnhancedTableToolbar(props) {
 export default function TableListUsers({
   loading,
   rows,
+  totalCount,
   onDeleteUser,
-  onUpdateUserState,
+  onFilterChange,
   paginator,
 }) {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -252,25 +307,22 @@ export default function TableListUsers({
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
-  React.useEffect(() => {
-    console.log(loading, rows);
-  }, [loading, rows]);
-
-  const { setDialogListLibrary } = useFeedBacks();
-  const onOpenDialogListLibrary = (folderParent) => {
-    setDialogListLibrary({
-      isOpen: true,
-      folderParent,
-      onClose: () => {
-        setDialogListLibrary({ isOpen: false });
-      },
-    });
-  };
+   const { setDialogListLibrary } = useFeedBacks();
+    const onOpenDialogListLibrary = (folderParent) => {
+      setDialogListLibrary({
+        isOpen: true,
+        folderParent,
+        onClose: () => {
+          setDialogListLibrary({ isOpen: false });
+        },
+      });
+    };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    onFilterChange({orderBy: `${isAsc ? '-' : ''}${property}`})
   };
 
   const handleSelectAllClick = (event) => {
@@ -316,17 +368,20 @@ export default function TableListUsers({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
+  const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+      <Paper sx={{ width: '100%', mb: 2 }} >
+        <EnhancedTableToolbar totalCount={totalCount} numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
+            border="0"
             size="medium"
           >
             <EnhancedTableHead
+              selectedColumns={selectedColumns}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -337,15 +392,17 @@ export default function TableListUsers({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="9">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="9">
-                    <Alert severity="warning">Aucun utilisateur trouvé.</Alert>
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
+                    <Alert severity="warning">
+                      Aucune utilisateur trouvé.
+                    </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
               )}
@@ -373,6 +430,7 @@ export default function TableListUsers({
 
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
+
                 return (
                   <StyledTableRow
                     hover
@@ -393,66 +451,20 @@ export default function TableListUsers({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                      {row.firstName}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{row.lastName}</StyledTableCell>
-                    <StyledTableCell align="left">{row.email}</StyledTableCell>
-                    <StyledTableCell align="left"> 
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.employee && <EmployeeChip employee={row?.employee} />}
-                        {row?.partner && <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.partner.name}`}
-                              src={
-                                row?.partner?.photo
-                                  ? row?.partner?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.partner.name}`}
-                          variant="outlined"
-                        />}
-                        {row?.financier && <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.financier.name}`}
-                              src={
-                                row?.financier?.photo
-                                  ? row?.financier?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.financier.name}`}
-                          variant="outlined"
-                        />}
-                        {row?.supplier && <Chip
-                          avatar={
-                            <Avatar
-                              alt={`${row?.supplier.name}`}
-                              src={
-                                row?.supplier?.photo
-                                  ? row?.supplier?.photo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={`${row?.supplier.name}`}
-                          variant="outlined"
-                        />}
-                        </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <UserRolesLabelMenu user={row} />
-                    </StyledTableCell>
+                    {
+                      selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
+                        return <StyledTableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding={column?.disablePadding ? "none" : "normal"}
+                          key={index}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/utilisateurs/modifier/${row?.id}`)}}
+                        >
+                        {column?.render ? column?.render(row) : row[column?.id]}
+                        </StyledTableCell>
+                      })
+                    }
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -471,7 +483,7 @@ export default function TableListUsers({
                         }}
                       >
                         <Link
-                          to={`/online/utilisateurs/details/${row?.id}`}
+                          to={`/online/utilisateurs/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -518,7 +530,7 @@ export default function TableListUsers({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={6} />
+                  <StyledTableCell colSpan={selectedColumns.length + 1} />
                 </StyledTableRow>
               )}
             </TableBody>
