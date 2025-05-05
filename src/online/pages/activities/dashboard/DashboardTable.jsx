@@ -1,12 +1,18 @@
 import React from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper, Box } from "@mui/material";
 import EstablishmentChip from "../../companies/establishments/EstablishmentChip";
+import ChipBeneficiaryGroupWithPopover from "../../../_shared/components/persons/ChipBeneficiaryGroupWithPopover";
 
 const DashboardTableItem = ({activityTrackingEstablishment}) => {
   const extractValues = (key, suffix = '') => {
     const monthValues =
       activityTrackingEstablishment?.activityTrackingMonth?.map(
-        (item) => `${item[key]}${suffix}`
+        (item) => {
+          if(key==="entriesCount" && Number(item[key]) > 0) return <ChipBeneficiaryGroupWithPopover key={key} people={item?.entryBeneficiaryEntries?.map(i=>i?.beneficiary)} countEntries={`${item[key]}${suffix}`}/>
+          if(key==="exitsCount" && Number(item[key]) > 0) return <ChipBeneficiaryGroupWithPopover key={key} people={item?.releaseBeneficiaryEntries?.map(i=>i?.beneficiary)} countEntries={`${item[key]}${suffix}`} />
+          if(key==="plannedExitsCount" && Number(item[key]) > 0) return <ChipBeneficiaryGroupWithPopover key={key} people={item?.dueBeneficiaryEntries?.map(i=>i?.beneficiary)} countEntries={`${item[key]}${suffix}`} />
+          else return `${item[key]}${suffix}`
+        }
       ) || [];
     const accumulationValue = activityTrackingEstablishment?.activityTrackingAccumulation?.[key];
     return [...monthValues, accumulationValue !== undefined ? `${accumulationValue}${suffix}` : accumulationValue];

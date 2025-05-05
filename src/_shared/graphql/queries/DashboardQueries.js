@@ -182,8 +182,26 @@ export const GET_DASHBOARD_ACTIVITY_TRACKING_ESTABLISHMENTS = gql`
           isCurrentMonth
           isFutureMonth
           entriesCount
+          entryBeneficiaryEntries{
+            beneficiary{
+              ...BeneficiaryMiniInfosFragment
+            }
+            ...BeneficiaryEntryFragment
+          }
           exitsCount
+          releaseBeneficiaryEntries{
+            beneficiary{
+              ...BeneficiaryMiniInfosFragment
+            }
+            ...BeneficiaryEntryFragment
+          }
           plannedExitsCount
+          dueBeneficiaryEntries{
+            beneficiary{
+              ...BeneficiaryMiniInfosFragment
+            }
+            ...BeneficiaryEntryFragment
+          }
           presentsMonthCount
           daysCount
           objectiveDaysCount
@@ -213,6 +231,8 @@ export const GET_DASHBOARD_ACTIVITY_TRACKING_ESTABLISHMENTS = gql`
       }
     }
   }
+  ${BENEFICIARY_MINI_INFOS}
+  ${BENEFICIARY_ENTRY_DETAILS}
 `;
 
 
