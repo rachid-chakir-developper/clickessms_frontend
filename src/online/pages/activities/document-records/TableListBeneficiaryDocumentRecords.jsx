@@ -40,6 +40,7 @@ import { GET_CUSTOM_FIELDS } from '../../../../_shared/graphql/queries/CustomFie
 import { useQuery } from '@apollo/client';
 import { GET_DATAS_BENEFICIARY, GET_DATAS_BENEFICIARY_DCOUMENT } from '../../../../_shared/graphql/queries/DataQueries';
 import DocumentRecordStatusLabel from './DocumentRecordStatusLabel';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -225,6 +226,7 @@ export default function TableListBeneficiaryDocumentRecords({
   paginator,
 }) {
   
+  
   const [headCells, setHeadCells] = React.useState([
     {
       id: 'photo',
@@ -363,6 +365,10 @@ export default function TableListBeneficiaryDocumentRecords({
       });
     }
   }, [dataData]);
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageBeneficiaries = authorizationSystem.requestAuthorization({
+    type: 'manageBeneficiaries',
+  }).authorized;
 
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
@@ -548,15 +554,15 @@ export default function TableListBeneficiaryDocumentRecords({
                             Détails
                           </MenuItem>
                         </Link>
-                        <Link
-                          to={`/online/ressources-humaines/beneficiaires/modifier/${row?.id}`}
+                        {canManageBeneficiaries && <Link
+                          to={`/online/ressources-humaines/beneficiaires/modifier/${row?.id}?step=7&id=${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
                             <Edit sx={{ mr: 2 }} />
                             Modifier
                           </MenuItem>
-                        </Link>
+                        </Link>}
                       </Popover>
                     </StyledTableCell>
                   </StyledTableRow>

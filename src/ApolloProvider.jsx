@@ -16,7 +16,7 @@ import { ApolloLink } from '@apollo/client/core';
 
 const { hostname } = window.location;
 
-const envProd = true;
+const envProd = false;
 export const END_POINT = envProd
 ? 'https://api.roberp.fr'
 : `http://${hostname}:8000`;

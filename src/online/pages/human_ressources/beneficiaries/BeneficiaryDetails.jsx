@@ -14,8 +14,13 @@ import {
 import { Edit, ArrowBack, List as ListIcon } from '@mui/icons-material';
 import BeneficiaryTabs from './beneficiary-tabs/BeneficiaryTabs';
 import CustomFieldValuesDetails from '../../../../_shared/components/form-fields/costum-fields/CustomFieldValuesDetails';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 export default function BeneficiaryDetails() {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageBeneficiaries = authorizationSystem.requestAuthorization({
+    type: 'manageBeneficiaries',
+  }).authorized;
   let { idBeneficiary } = useParams();
   const [
     getBeneficiary,
@@ -38,7 +43,7 @@ export default function BeneficiaryDetails() {
             Retour à la liste
           </Button>
         </Link>
-        <Box>
+        {canManageBeneficiaries && <Box>
           <Link
             to={`/online/ressources-humaines/beneficiaires/modifier/${beneficiaryData?.beneficiary?.id}`}
             className="no_style"
@@ -47,7 +52,7 @@ export default function BeneficiaryDetails() {
               Modifier
             </Button>
           </Link>
-        </Box>
+        </Box>}
       </Box>
       {beneficiaryData?.beneficiary && (
         <BeneficiaryDetailsPage beneficiary={beneficiaryData?.beneficiary} />

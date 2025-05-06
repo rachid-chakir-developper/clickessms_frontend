@@ -65,7 +65,8 @@ export const rolesModel = defineRolesModel(entitiesModel, {
       beneficiary: 'edit',
     },
     SUPPORT_WORKER:{ // Accompagnant (Éducateur)
-      beneficiary: 'edit',
+      activity: 'view',
+      beneficiary: 'view',
     },
     ADMINISTRATIVE_MANAGER: { // Responsable Administratif,
       settings: 'edit',

@@ -32,8 +32,8 @@ const Item = styled(Stack)(({ theme }) => ({
 
 export default function ListBeneficiaries() {
   const authorizationSystem = useAuthorizationSystem();
-  const canManageActivity = authorizationSystem.requestAuthorization({
-    type: 'manageActivity',
+  const canManageBeneficiaries = authorizationSystem.requestAuthorization({
+    type: 'manageBeneficiaries',
   }).authorized;
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 20 });
   const [beneficiaryFilter, setBeneficiaryrFilter] = React.useState({listType : 'ALL'});
@@ -205,7 +205,7 @@ export default function ListBeneficiaries() {
 
   return (
     <Grid container spacing={2}>
-      {canManageActivity && <Grid item xs={12}>
+      {canManageBeneficiaries && <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
             to="/online/ressources-humaines/beneficiaires/ajouter"

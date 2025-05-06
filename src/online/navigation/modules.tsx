@@ -211,9 +211,7 @@ export const modules: Module[] = [
     icon: <TroubleshootIcon />,
     hidden(authorizationSystem) {
       return !authorizationSystem.requestAuthorization({
-        type: 'manageBeneficiaries',
-      }).authorized && !authorizationSystem.requestAuthorization({
-        type: 'manageActivity',
+        type: 'seeActivity',
       }).authorized;
     },
     entries: [
@@ -235,7 +233,7 @@ export const modules: Module[] = [
         icon: <AssignmentIndIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'manageBeneficiaries',
+            type: 'geteneficiaries',
           }).authorized;
         },
       },
@@ -257,7 +255,7 @@ export const modules: Module[] = [
         icon: <FolderSharedIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'manageBeneficiaries',
+            type: 'geteneficiaries',
           }).authorized;
         },
       },
@@ -268,7 +266,7 @@ export const modules: Module[] = [
         icon: <RecentActorsIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'manageBeneficiaries',
+            type: 'geteneficiaries',
           }).authorized;
         },
       },
@@ -279,7 +277,7 @@ export const modules: Module[] = [
         icon: <CommentIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'manageBeneficiaries',
+            type: 'geteneficiaries',
           }).authorized;
         },
       },
@@ -290,7 +288,7 @@ export const modules: Module[] = [
         icon: <CalendarMonthIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'manageBeneficiaries',
+            type: 'geteneficiaries',
           }).authorized;
         },
       },
@@ -301,7 +299,7 @@ export const modules: Module[] = [
         icon: <ShoppingBasketIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'manageBeneficiaries',
+            type: 'geteneficiaries',
           }).authorized;
         }
       },

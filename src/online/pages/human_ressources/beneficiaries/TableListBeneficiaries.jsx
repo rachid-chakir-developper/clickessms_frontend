@@ -38,6 +38,7 @@ import EstablishmentChip from '../../companies/establishments/EstablishmentChip'
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 import { GET_CUSTOM_FIELDS } from '../../../../_shared/graphql/queries/CustomFieldQueries';
 import { useQuery } from '@apollo/client';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -473,6 +474,11 @@ export default function TableListBeneficiaries({
     }
   }, [customFieldsData]);
 
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageBeneficiaries = authorizationSystem.requestAuthorization({
+    type: 'manageBeneficiaries',
+  }).authorized;
+
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -666,7 +672,7 @@ export default function TableListBeneficiaries({
                             Détails
                           </MenuItem>
                         </Link>
-                        <MenuItem
+                        {canManageBeneficiaries && <><MenuItem
                           onClick={() => {
                             onOpenDialogListLibrary(row?.folder);
                             handleCloseMenu();
@@ -693,7 +699,7 @@ export default function TableListBeneficiaries({
                         >
                           <Delete sx={{ mr: 2 }} />
                           Supprimer
-                        </MenuItem>
+                        </MenuItem></>}
                       </Popover>
                     </StyledTableCell>
                   </StyledTableRow>
