@@ -356,7 +356,7 @@ export default function TableListBeneficiaryDocumentRecords({
           label: type.name,
           render: ({ documentRecords }) => {
             const documentRecord = documentRecords.find((documentRecord) => documentRecord?.beneficiaryDocumentType?.id === type?.id);
-            return documentRecord ? <DocumentRecordStatusLabel documentRecord={documentRecord} /> : ""
+            return documentRecord ? <DocumentRecordStatusLabel documentRecord={documentRecord} /> : "-"
           },
         }));
 

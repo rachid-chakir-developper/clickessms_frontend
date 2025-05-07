@@ -84,7 +84,7 @@ const ExportExcelButton = ({ dashboardActivityFilter=null, documentType, id, dat
                 <Tooltip title={title}>
                     <IconButton onClick={handleClick} disabled={loading}>
                         {loading ? (
-                            <CircularProgress size={24} sx={{ color: 'white' }} />
+                            <CircularProgress size={24} />
                         ) : (
                             <GridOn />
                         )}
@@ -96,7 +96,7 @@ const ExportExcelButton = ({ dashboardActivityFilter=null, documentType, id, dat
                 <Tooltip title={title}>
                     <IconButton onClick={handleClick} disabled={loading}>
                         {loading ? (
-                            <CircularProgress size={24} sx={{ color: 'white' }} />
+                            <CircularProgress size={24} />
                         ) : (
                             <Download />
                         )}

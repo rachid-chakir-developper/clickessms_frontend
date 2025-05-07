@@ -152,7 +152,7 @@ export const getExpirationStatusDetails = (status) => {
     case "NOT_YET_EXPIRED":
       return { color: "success", label: "Pas encore expiré" };
     case "NO_EXPIRATION_DATE":
-      return { color: "default", label: "Pas de date d'expiration" };
+      return { color: "success", label: "Valide" };
     default:
       return { color: "default", label: "Inconnu" };
   }

@@ -29,6 +29,7 @@ const DocumentRecordStatusLabel = ({ documentRecord }) => {
             sx={{ display: "inline-block", cursor: "pointer" }}
         >
             <AppLabel aria-describedby={id} color={color}>{label}</AppLabel>
+            {document && document!="" && <AppLabel sx={{ml: 1}} color="default">Manquant</AppLabel>}
             <Popover
                 id={id}
                 open={open}
