@@ -195,7 +195,7 @@ export default function AdvanceDetails() {
                   <IconButton
                     color="primary"
                     component={Link}
-                    to={`/online/rh/acomptes/modifier/${advance.id}`}
+                    to={`/online/ressources-humaines/acomptes/modifier/${advance.id}`}
                     sx={{ mr: 1 }}
                   >
                     <EditIcon />

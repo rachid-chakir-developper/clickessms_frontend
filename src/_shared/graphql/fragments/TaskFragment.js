@@ -9,6 +9,7 @@ import { MATERIAL_BASIC_INFOS } from './MaterialFragment';
 import { COMMENT_BASIC_INFOS } from './CommentFragment';
 import { FOLDER_MINI_INFOS } from './MediaFragment';
 import { ESTABLISHMENT_MINI_INFOS } from './EstablishmentFragment';
+import { SUPPLIER_BASIC_INFOS } from './SupplierFragment';
 
 export const TASK_WORKER_DETAILS = gql`
   fragment TaskWorkerTypeFragment on TaskWorkerType {
@@ -85,12 +86,16 @@ export const TASK_BASIC_INFOS = gql`
     folder {
       ...FolderMiniInfosFragment
     }
+    supplier {
+      ...SupplierBasicInfosFragment
+    }
   }
   ${TASK_MINI_BASIC_INFOS}
   ${FOLDER_MINI_INFOS}
   ${EMPLOYEE_BASIC_INFOS}
   ${TASK_ESTABLISHMENT_DETAILS}
   ${TASK_WORKER_DETAILS}
+  ${SUPPLIER_BASIC_INFOS}
 `;
 
 export const TASK_STEP_BASIC_INFOS = gql`
@@ -115,6 +120,9 @@ export const TASK_STEP_DETAILS = gql`
       }
       createdAt
       updatedAt
+    }
+    supplier {
+      ...SupplierBasicInfosFragment
     }
     videos {
       id
@@ -179,11 +187,15 @@ export const TASK_DETAILS = gql`
     taskChecklist {
       ...TaskChecklistItemFragment
     }
+    supplier {
+      ...SupplierBasicInfosFragment
+    }
   }
   ${TASK_BASIC_INFOS}
   ${TASK_VEHICLE_DETAILS}
   ${TASK_MATERIAL_DETAILS}
   ${TASK_CHECK_LIST_DETAILS}
+  ${SUPPLIER_BASIC_INFOS}
 `;
 
 export const TASK_RECAP = gql`
@@ -212,6 +224,9 @@ export const TASK_RECAP = gql`
     taskChecklist {
       ...TaskChecklistItemFragment
     }
+    supplier {
+      ...SupplierBasicInfosFragment
+    }
     createdAt
     updatedAt
   }
@@ -219,4 +234,5 @@ export const TASK_RECAP = gql`
   ${TASK_VEHICLE_DETAILS}
   ${TASK_MATERIAL_DETAILS}
   ${TASK_CHECK_LIST_DETAILS}
+  ${SUPPLIER_BASIC_INFOS}
 `;

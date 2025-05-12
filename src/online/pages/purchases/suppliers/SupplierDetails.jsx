@@ -6,6 +6,7 @@ import { Grid, Typography, Avatar } from '@mui/material';
 import { GET_SUPPLIER } from '../../../../_shared/graphql/queries/SupplierQueries';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import { Edit, ArrowBack, Business, Person, AccountBalance, LocationOn, Phone, Email, Language, Description, Note, Info, AttachMoney, Verified, VerifiedUser } from '@mui/icons-material';
+import SupplierTabs from './suppliers-tabs/SupplierTabs';
 
 export default function SupplierDetails() {
   let { idSupplier } = useParams();
@@ -156,9 +157,13 @@ const SupplierDetailsPage = ({ supplier }) => {
                     <Phone sx={{ mr: 1, fontSize: 'small' }} />Mobile: {mobile}
                   </Typography>
                 )}
-                {fix && fix !== '' && (
+                {fix && fix !== '' ? (
                   <Typography variant="body2" sx={{ fontStyle: 'italic', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Phone sx={{ mr: 1, fontSize: 'small' }} />Fixe: {fix}
+                  </Typography>
+                ) : (
+                  <Typography variant="body2" sx={{ fontStyle: 'italic', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Phone sx={{ mr: 1, fontSize: 'small' }} />Fixe: pas renseigné
                   </Typography>
                 )}
                 {fax && fax !== '' && (
@@ -259,6 +264,11 @@ const SupplierDetailsPage = ({ supplier }) => {
                 {observation ? observation : "Aucune observation pour l'instant"}
               </Typography>
             </Paper>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={12}>
+          <Paper sx={{ padding: 2 }}>
+            <SupplierTabs supplier={supplier} />
           </Paper>
         </Grid>
       </Grid>

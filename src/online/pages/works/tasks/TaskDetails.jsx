@@ -53,11 +53,20 @@ export default function TaskDetails() {
   let { idTask } = useParams();
   const [getTask, { loading: loadingTask, data: taskData, error: taskError }] =
     useLazyQuery(GET_TASK_RECAP);
+    
+  const [showDebug, setShowDebug] = React.useState(false);
+    
   React.useEffect(() => {
     if (idTask) {
       getTask({ variables: { id: idTask } });
     }
   }, [idTask]);
+
+  React.useEffect(() => {
+    if (taskData) {
+      console.log("TASK DETAILS DATA:", taskData);
+    }
+  }, [taskData]);
 
   if (loadingTask) return <ProgressService type="form" />;
   return (
@@ -71,15 +80,28 @@ export default function TaskDetails() {
             Retour à la liste
           </Button>
         </Link>
-        <Link
-          to={`/online/travaux/interventions/modifier/${taskData?.task.id}`}
-          className="no_style"
-        >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
-            Modifier
+        <Stack direction="row" spacing={2}>
+          <Button variant="outlined" onClick={() => setShowDebug(!showDebug)}>
+            {showDebug ? "Masquer Débug" : "Afficher Débug"}
           </Button>
-        </Link>
+          <Link
+            to={`/online/travaux/interventions/modifier/${taskData?.task.id}`}
+            className="no_style"
+          >
+            <Button variant="outlined" endIcon={<Edit />} size="small">
+              Modifier
+            </Button>
+          </Link>
+        </Stack>
       </Box>
+      
+      {showDebug && (
+        <Paper sx={{ p: 2, mb: 2 }}>
+          <Typography variant="h6">Données Debug</Typography>
+          <pre>{JSON.stringify(taskData?.task, null, 2)}</pre>
+        </Paper>
+      )}
+      
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
@@ -198,6 +220,8 @@ function TaskMiniInfos({ task }) {
 }
 
 function TaskOtherInfos({ task }) {
+  console.log("Task in TaskOtherInfos:", task);
+  console.log("Supplier in TaskOtherInfos:", task?.supplier);
   return (
     <Paper
       variant="outlined"
@@ -223,6 +247,29 @@ function TaskOtherInfos({ task }) {
                   </Typography>
                 </Paper>
               </Box>
+              {task?.supplier ? (
+                <Paper sx={{ padding: 2, marginY:1 }} variant="outlined">
+                  <Typography variant="h6" gutterBottom>
+                    Fournisseur
+                  </Typography>
+                  <Stack direction="row" flexWrap='wrap' spacing={1}>
+                    <Chip
+                      label={task?.supplier?.name}
+                      variant="outlined"
+                      sx={{ margin: 0.5 }}
+                    />
+                  </Stack>
+                </Paper>
+              ) : (
+                <Paper sx={{ padding: 2, marginY:1 }} variant="outlined">
+                  <Typography variant="h6" gutterBottom>
+                    Fournisseur
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Aucun fournisseur associé
+                  </Typography>
+                </Paper>
+              )}
               {task?.employee && (
                 <>
                   <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
@@ -232,7 +279,7 @@ function TaskOtherInfos({ task }) {
                     <EmployeeChip employee={task?.employee} />
                   </Paper>
                 </>
-              )}<></>
+              )}
               {task?.establishments.length > 0 && (
                   <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
                     <Typography variant="h6" gutterBottom>

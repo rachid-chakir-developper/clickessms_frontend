@@ -18,21 +18,25 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
-  getFormatDate,
-  formatCurrencyAmount,
-} from '../../../../../_shared/tools/functions';
-import {
   Article,
   Delete,
   Done,
+  Download,
   Edit,
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
+import { Alert, Avatar, Button, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Stack, TablePagination } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
-import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
+import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
+import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
+import { getFormatDate, truncateText } from '../../../../_shared/tools/functions';
+
+import { useMutation } from '@apollo/client';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -92,36 +96,82 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  {
-    id: 'date',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date',
-  },
-  {
-    id: 'establishment',
-    numeric: false,
-    disablePadding: false,
-    label: 'Structure',
-  },
-  {
-    id: 'bankAccount',
-    numeric: false,
-    disablePadding: true,
-    label: 'Compte bancaire',
-  },
-  {
-    id: 'amount',
-    numeric: false,
-    disablePadding: false,
-    label: 'Solde',
-  },
-  {
-    id: 'action',
-    numeric: true,
-    disablePadding: false,
-    label: 'Actions',
-  },
+    {
+      id: 'document',
+      property: 'document',
+      exportField: 'document',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      disableClickDetail: true,
+      label: 'Document',
+      render: ({name, document})=> document && <Button variant="text" size="small" sx={{textTransform: 'capitalize'}}
+                                                  onClick={() => {
+                                                    window.open(document);
+                                                  }}>
+                                                  {name && name !== '' ? name : 'Voir le document'}
+                                                </Button>
+    },
+    {
+      id: 'name',
+      property: 'name',
+      exportField: 'name',
+      numeric: false,
+      disablePadding: true,
+      isDefault: true,
+      label: 'Libellé',
+    },
+    {
+        id: 'documentType',
+        property: 'document_type',
+        exportField: 'document_type__name',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Type',
+        render: ({documentType})=> documentType && <Chip
+                                                      label={documentType?.name}
+                                                      variant="outlined"
+                                                    />
+    },
+    {
+        id: 'establishments',
+        property: 'establishments__name',
+        exportField: ['establishments__name'],
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Structure(s)',
+        render: ({establishments}) => establishments && establishments.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+        {establishments?.map((establishment, index) => {
+          return (
+            <EstablishmentChip
+              key={index}
+              establishment={establishment}
+            />
+          );
+        })}
+      </Stack>
+    },
+    {
+        id: 'description',
+        property: 'description',
+        exportField: 'description',
+        numeric: false,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Description',
+        render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
+    },
+    {
+        id: 'action',
+        numeric: true,
+        disablePadding: false,
+        isDefault: true,
+        label: 'Actions',
+    },
 ];
 
 function EnhancedTableHead(props) {
@@ -132,9 +182,10 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    selectedColumns = []
   } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property, sortDisabled=false) => (event) => {
+    if(!sortDisabled) onRequestSort(event, property);
   };
 
   return (
@@ -151,7 +202,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </StyledTableCell>
-        {headCells.map((headCell) => (
+        {selectedColumns.map((headCell) => (
           <StyledTableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -159,9 +210,10 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+              hideSortIcon={headCell.sortDisabled}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.property, headCell?.sortDisabled)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -178,7 +230,10 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onFilterChange } = props;
+  const [selectedColumns, setSelectedColumns] = React.useState(
+    headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
+  );
 
   return (
     <Toolbar
@@ -212,10 +267,14 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les soldes
+          Les documents
         </Typography>
       )}
-
+      <TableExportButton 
+        entity={'FrameDocument'}
+        fileName={'Documents-trames'}
+        fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
+        titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>
@@ -223,34 +282,36 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <TableFilterButton headCells={headCells} 
+          onFilterChange={(currentColumns)=>{
+            setSelectedColumns(currentColumns);
+            onFilterChange(headCells?.filter(c=> currentColumns?.includes(c.id)))
+          }
+        }/>
       )}
     </Toolbar>
   );
 }
 
-export default function TableListBalances({
+export default function TableListFrameDocuments({
   loading,
   rows,
-  onDeleteBalance,
-  onUpdateBalanceState,
+  onDeleteFrameDocument,
+  onFilterChange,
+  paginator,
 }) {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageAdministrative = authorizationSystem.requestAuthorization({
+    type: 'manageAdministrative',
+  }).authorized;
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  React.useEffect(() => {
-    console.log(loading, rows);
-  }, [loading, rows]);
-
+  const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
+  const { setNotifyAlert, setConfirmDialog } = useFeedBacks();
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
     setDialogListLibrary({
@@ -266,6 +327,7 @@ export default function TableListBalances({
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    onFilterChange({orderBy: `${isAsc ? '-' : ''}${property}`})
   };
 
   const handleSelectAllClick = (event) => {
@@ -311,17 +373,20 @@ export default function TableListBalances({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
+  const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+      <Paper sx={{ width: '100%', mb: 2 }} >
+        <EnhancedTableToolbar numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
+            border="0"
             size="medium"
           >
             <EnhancedTableHead
+              selectedColumns={selectedColumns}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -332,15 +397,17 @@ export default function TableListBalances({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
-                    <Alert severity="warning">Aucun solde trouvé.</Alert>
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
+                    <Alert severity="warning">
+                      Aucun document trouvé.
+                    </Alert>
                   </StyledTableCell>
                 </StyledTableRow>
               )}
@@ -378,14 +445,6 @@ export default function TableListBalances({
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
-                    onClick={(event) => {
-                      // Ne pas naviguer si on clique sur un bouton ou une checkbox
-                      if (!event.target.closest('button') && 
-                          !event.target.closest('input[type="checkbox"]') &&
-                          !event.target.closest('.MuiIconButton-root')) {
-                        navigate(`/online/finance/tresorerie/soldes/details/${row.id}`);
-                      }
-                    }}
                   >
                     <StyledTableCell padding="checkbox">
                       <Checkbox
@@ -397,51 +456,20 @@ export default function TableListBalances({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.date)}`}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <Chip
-                          avatar={
-                            <Avatar
-                              alt={row?.bankAccount?.establishment?.name}
-                              src={
-                                row?.bankAccount?.establishment?.logo
-                                  ? row?.bankAccount?.establishment?.logo
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={row?.bankAccount?.establishment?.name}
-                          variant="outlined"
-                        />
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <Chip
-                          avatar={
-                            <Avatar
-                              alt={row?.bankAccount?.iban}
-                              src={
-                                row?.bankAccount?.image
-                                  ? row?.bankAccount?.image
-                                  : '/default-placeholder.jpg'
-                              }
-                            />
-                          }
-                          label={row?.bankAccount?.iban}
-                          variant="outlined"
-                        />
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <b>{row ? formatCurrencyAmount(row.amount) : ''}</b>
-                    </StyledTableCell>
+                    {
+                      selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
+                        return <StyledTableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding={column?.disablePadding ? "none" : "normal"}
+                          key={index}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/administratif/documents-trames/details/${row?.id}`)}}
+                        >
+                        {column?.render ? column?.render(row) : row[column?.id]}
+                        </StyledTableCell>
+                      })
+                    }
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -460,7 +488,7 @@ export default function TableListBalances({
                         }}
                       >
                         <Link
-                          to={`/online/finance/tresorerie/soldes/details/${row?.id}`}
+                          to={`/online/administratif/documents-trames/details/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -470,15 +498,15 @@ export default function TableListBalances({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onOpenDialogListLibrary(row?.folder);
+                            window.open(row?.document);
                             handleCloseMenu();
                           }}
                         >
-                          <Folder sx={{ mr: 2 }} />
-                          Bibliothèque
+                          <Download sx={{ mr: 2 }} />
+                          Télécharger
                         </MenuItem>
-                        <Link
-                          to={`/online/finance/tresorerie/soldes/modifier/${row?.id}`}
+                        {canManageAdministrative && <><Link
+                          to={`/online/administratif/documents-trames/modifier/${row?.id}`}
                           className="no_style"
                         >
                           <MenuItem onClick={handleCloseMenu}>
@@ -488,14 +516,14 @@ export default function TableListBalances({
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            onDeleteBalance(row?.id);
+                            onDeleteFrameDocument(row?.id);
                             handleCloseMenu();
                           }}
                           sx={{ color: 'error.main' }}
                         >
                           <Delete sx={{ mr: 2 }} />
                           Supprimer
-                        </MenuItem>
+                        </MenuItem></>}
                       </Popover>
                     </StyledTableCell>
                   </StyledTableRow>
@@ -507,7 +535,7 @@ export default function TableListBalances({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={6} />
+                  <StyledTableCell colSpan={selectedColumns.length + 1} />
                 </StyledTableRow>
               )}
             </TableBody>
