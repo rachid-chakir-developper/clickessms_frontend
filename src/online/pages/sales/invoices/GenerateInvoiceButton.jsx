@@ -162,10 +162,10 @@ function DialogGenerateInvoice({ open, onClose, onConfirm }) {
     data: establishmentsData,
     error: establishmentsError,
     fetchMore: fetchMoreEstablishments,
-  }] = useLazyQuery(GET_ESTABLISHMENTS, { variables: { establishmentFilter : null, page: 1, limit: 10 } });
+  }] = useLazyQuery(GET_ESTABLISHMENTS, { variables: { establishmentFilter : null, page: 1, limit: 30 } });
   
   const onGetEstablishments = (keyword)=>{
-    getEstablishments({ variables: { establishmentFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+    getEstablishments({ variables: { establishmentFilter : keyword === '' ? null : {keyword}, page: 1, limit: 30 } })
   }
 
   const [getFinanciers, {
@@ -173,10 +173,10 @@ function DialogGenerateInvoice({ open, onClose, onConfirm }) {
     data: financiersData,
     error: financiersError,
     fetchMore: fetchMoreFinanciers,
-  }] = useLazyQuery(GET_FINANCIERS, { variables: { financierFilter : null, page: 1, limit: 10 } });
+  }] = useLazyQuery(GET_FINANCIERS, { variables: { financierFilter : null, page: 1, limit: 30 } });
   
   const onGetFinanciers = (keyword)=>{
-    getFinanciers({ variables: { financierFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+    getFinanciers({ variables: { financierFilter : keyword === '' ? null : {keyword}, page: 1, limit: 30 } })
   }
 
   return (

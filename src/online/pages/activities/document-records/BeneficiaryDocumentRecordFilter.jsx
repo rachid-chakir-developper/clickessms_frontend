@@ -61,10 +61,10 @@ const BeneficiaryDocumentRecordFilter = ({ onFilterChange }) => {
       data: establishmentsData,
       error: establishmentsError,
       fetchMore: fetchMoreEstablishments,
-    }] = useLazyQuery(GET_ESTABLISHMENTS, { variables: { beneficiaryFilter : null, page: 1, limit: 10 } });
+    }] = useLazyQuery(GET_ESTABLISHMENTS, { variables: { beneficiaryFilter : null, page: 1, limit: 30 } });
   
     const onGetEstablishments = (keyword)=>{
-      getEstablishments({ variables: { beneficiaryFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+      getEstablishments({ variables: { beneficiaryFilter : keyword === '' ? null : {keyword}, page: 1, limit: 30 } })
     }
 
   

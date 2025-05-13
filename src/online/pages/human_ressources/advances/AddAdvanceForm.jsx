@@ -24,7 +24,6 @@ import { CREATE_ADVANCE, UPDATE_ADVANCE } from '../../../../_shared/graphql/muta
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TheDatePicker from '../../../../_shared/components/form-fields/TheDatePicker';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
-import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -50,10 +49,6 @@ export default function AddAdvanceForm({ idAdvance, title }) {
     month: yup
       .string()
       .required('Le mois est obligatoire'),
-    employee: yup
-      .object()
-      .nullable()
-      .required('L\'employé est obligatoire'),
   });
 
   // Configuration du formulaire
@@ -357,24 +352,6 @@ export default function AddAdvanceForm({ idAdvance, title }) {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid item xs={12} sm={6} md={4}>
-              <Item>
-                <TheAutocomplete
-                  id="employee"
-                  options={employeesData?.employees?.nodes || []}
-                  label="Employé *"
-                  placeholder="Sélectionner un employé"
-                  multiple={false}
-                  value={formik.values.employee}
-                  onChange={(e, newValue) => {
-                    formik.setFieldValue('employee', newValue);
-                    setSelectedEmployee(newValue);
-                  }}
-                  error={formik.touched.employee && Boolean(formik.errors.employee)}
-                  helperText={formik.touched.employee && formik.errors.employee}
-                />
-              </Item>
-            </Grid>
 
             <Grid item xs={12} sm={6} md={4}>
               <Item>

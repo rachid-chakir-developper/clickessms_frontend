@@ -21,7 +21,7 @@ export default function TheDatePicker({
   minDate = null,
   maxDate = null,
   views = ['year', 'month', 'day'],
-  size = 'small',
+  size = 'medium',
   sx = {},
   ...props
 }) {

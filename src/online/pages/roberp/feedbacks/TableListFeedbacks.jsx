@@ -32,7 +32,7 @@ import AppLabel from '../../../../_shared/components/app/label/AppLabel';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import { getFormatDate, getFeedbackModuleLabel } from '../../../../_shared/tools/functions';
+import { getFormatDate, getFeedbackModuleLabel, getFormatDateTime } from '../../../../_shared/tools/functions';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -103,6 +103,12 @@ const headCells = [
       numeric: false,
       disablePadding: false,
       label: 'Objet',
+    },
+    {
+      id: 'date',
+      numeric: false,
+      disablePadding: false,
+      label: 'Date',
     },
     {
         id: 'message',
@@ -416,6 +422,10 @@ export default function TableListFeedbacks({
                     <StyledTableCell align="left"
                       onClick={()=> navigate(`/online/roberp/feedbacks/details/${row?.id}`)}>
                       {row?.title}
+                    </StyledTableCell>
+                    <StyledTableCell align="left"
+                      onClick={()=> navigate(`/online/roberp/feedbacks/details/${row?.id}`)}>
+                      {getFormatDateTime(row?.createdAt)}
                     </StyledTableCell>
                     <StyledTableCell align="left"
                       onClick={()=> navigate(`/online/roberp/feedbacks/details/${row?.id}`)}>

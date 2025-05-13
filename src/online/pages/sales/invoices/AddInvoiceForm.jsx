@@ -346,10 +346,10 @@ export default function AddInvoiceForm({ idInvoice, title }) {
       data: establishmentsData,
       error: establishmentsError,
       fetchMore: fetchMoreEstablishments,
-    }] = useLazyQuery(GET_ESTABLISHMENTS, { variables: { establishmentFilter : null, page: 1, limit: 10 } });
+    }] = useLazyQuery(GET_ESTABLISHMENTS, { variables: { establishmentFilter : null, page: 1, limit: 30 } });
     
     const onGetEstablishments = (keyword)=>{
-      getEstablishments({ variables: { establishmentFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+      getEstablishments({ variables: { establishmentFilter : keyword === '' ? null : {keyword}, page: 1, limit: 30 } })
     }
   
     const [getFinanciers, {

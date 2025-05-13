@@ -150,7 +150,7 @@ export default function AddFeedbackForm({ idFeedback, title }) {
   const [getFeedback, { loading: loadingFeedback }] = useLazyQuery(GET_FEEDBACK, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      let { __typename, ...feedbackCopy } = data.feedback;
+      let { __typename,  createdAt, ...feedbackCopy } = data.feedback;
       formik.setValues(feedbackCopy);
     },
     onError: (err) => console.log(err),

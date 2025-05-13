@@ -31,6 +31,7 @@ export const FEEDBACK_BASIC_INFOS = gql`
     feedbackModule
     message
     isActive
+    createdAt
   }
 `;
 
@@ -44,7 +45,6 @@ export const FEEDBACK_DETAILS = gql`
 export const FEEDBACK_RECAP_DETAILS = gql`
   fragment FeedbackRecapDetailsFragment on FeedbackType {
     ...FeedbackBasicInfosFragment
-    createdAt
     updatedAt
   }
   ${FEEDBACK_BASIC_INFOS}

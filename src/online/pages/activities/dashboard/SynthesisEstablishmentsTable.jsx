@@ -61,20 +61,22 @@ const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) =>
                                 </TableRow>)
                             }
                             )}
-                            {activitySynthesisMonthItem?.countAvailablePlaces > 0 && <TableRow>
+                            <TableRow>
                                 <TableCell style={{ color: "red"}}>
-                                    {activitySynthesisMonthItem?.dashboardComment?.text 
-                                        ? `${activitySynthesisMonthItem.dashboardComment.text} ${
-                                            Number(activitySynthesisMonthItem.countAvailablePlaces) === 1 
-                                                ? "place disponible" 
-                                                : "places disponibles"
-                                        }`
-                                        : `${activitySynthesisMonthItem.countAvailablePlaces} ${
-                                            activitySynthesisMonthItem.countAvailablePlaces === 1 
-                                                ? "place disponible" 
-                                                : "places disponibles"
-                                        }`
-                                    }
+                                    {activitySynthesisMonthItem?.countAvailablePlaces > 0 &&  <>
+                                        {activitySynthesisMonthItem?.dashboardComment?.text 
+                                            ? `${activitySynthesisMonthItem.dashboardComment.text} ${
+                                                Number(activitySynthesisMonthItem.countAvailablePlaces) === 1 
+                                                    ? "place disponible" 
+                                                    : "places disponibles"
+                                            }`
+                                            : `${activitySynthesisMonthItem.countAvailablePlaces} ${
+                                                activitySynthesisMonthItem.countAvailablePlaces === 1 
+                                                    ? "place disponible" 
+                                                    : "places disponibles"
+                                            }`
+                                        }
+                                    </>}
                                     {activitySynthesisMonthItem?.dashboardComments?.map((dashboardComment, index) =>
                                         <InputSendDashboardComment
                                             key={index}
@@ -95,7 +97,7 @@ const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) =>
                                         defaultDashboardComment={null}
                                     />}
                                 </TableCell>
-                            </TableRow>}
+                            </TableRow>
                         </TableBody>
                         </Table>
                     </TableContainer>

@@ -494,7 +494,7 @@ export const modules: Module[] = [
         icon: <AssignmentIndIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'getEstablishments',
+            type: 'manageAdministrative',
           }).authorized;
         },
       },
@@ -505,7 +505,7 @@ export const modules: Module[] = [
         icon: <WalletIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'getEstablishments',
+            type: 'manageAdministrative',
           }).authorized;
         },
       },
@@ -516,7 +516,7 @@ export const modules: Module[] = [
         icon: <Diversity3Icon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'getEstablishments',
+            type: 'manageAdministrative',
           }).authorized;
         },
       },
@@ -527,7 +527,7 @@ export const modules: Module[] = [
         icon: <HandshakeIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'getEstablishments',
+            type: 'manageAdministrative',
           }).authorized;
         },
       },
@@ -538,7 +538,7 @@ export const modules: Module[] = [
         icon: <WarehouseIcon />,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
-            type: 'getEstablishments',
+            type: 'manageAdministrative',
           }).authorized;
         },
       },
