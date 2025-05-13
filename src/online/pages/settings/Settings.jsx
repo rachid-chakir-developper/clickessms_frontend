@@ -6,6 +6,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import MessageNotifications from './message-notifications/MessageNotifications';
 import CustomFields from './custom-forms/CustomFields';
 import { Box } from '@mui/material';
+import ValidationWorkflows from './validation-workflows/ValidationWorkflows';
 
 export default function Settings() {
   return (
@@ -16,6 +17,7 @@ export default function Settings() {
         <Route path={`listes-deroulantes/*`} element={<Datas />} />
         <Route path={`message-notifications/*`} element={<MessageNotifications />} />
         <Route path={`formulaires-personnalises/*`} element={<CustomFields />} />
+        <Route path={`workflows/*`} element={<ValidationWorkflows />} />
         <Route path="/" element={<Navigate to={``} replace />} />
       </Routes>
     </Box>
