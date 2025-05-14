@@ -4,13 +4,9 @@ import { VALIDATION_WORKFLOW_BASIC_INFOS } from '../fragments/ValidationWorkflow
 export const POST_VALIDATION_WORKFLOW = gql`
   mutation CreateValidationWorkflow(
     $validationWorkflowData: ValidationWorkflowInput!
-    $photo: Upload
-    $coverImage: Upload
   ) {
     createValidationWorkflow(
       validationWorkflowData: $validationWorkflowData
-      photo: $photo
-      coverImage: $coverImage
     ) {
       validationWorkflow {
         ...ValidationWorkflowBasicInfosFragment
@@ -24,14 +20,10 @@ export const PUT_VALIDATION_WORKFLOW = gql`
   mutation UpdateValidationWorkflow(
     $id: ID!
     $validationWorkflowData: ValidationWorkflowInput!
-    $photo: Upload
-    $coverImage: Upload
   ) {
     updateValidationWorkflow(
       id: $id
       validationWorkflowData: $validationWorkflowData
-      photo: $photo
-      coverImage: $coverImage
     ) {
       validationWorkflow {
         ...ValidationWorkflowBasicInfosFragment

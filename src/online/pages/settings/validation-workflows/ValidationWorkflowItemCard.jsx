@@ -16,6 +16,7 @@ import {
 } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import { getWorkflowRequestTypeLabel } from '../../../../_shared/tools/functions';
 
 export default function ValidationWorkflowItemCard({
   validationWorkflow,
@@ -43,14 +44,14 @@ export default function ValidationWorkflowItemCard({
     });
   };
   const onGoToDetails = ()=>{
-    navigate(`/online/parametres/workflows/details/${validationWorkflow?.id}`);
+    navigate(`/online/parametres/workflows/modifier/${validationWorkflow?.id}`);
   }
   return (
     <Card
       variant="outlined"
       sx={{ position: 'relative', p: 1}}
     >
-      <Tooltip title={validationWorkflow?.name}>
+      <Tooltip title={getWorkflowRequestTypeLabel(validationWorkflow?.requestType)}>
         <Stack direction="row"
         sx={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 2, cursor:'pointer' }}
         onClick={onGoToDetails}>
@@ -58,18 +59,14 @@ export default function ValidationWorkflowItemCard({
             component="img"
             width="100"
             height="100"
-            alt={validationWorkflow?.name}
-            src={
-              validationWorkflow?.photo
-                ? validationWorkflow?.photo
-                : '/default-placeholder.jpg'
-            }
+            alt={getWorkflowRequestTypeLabel(validationWorkflow?.requestType)}
+            src={'/default-placeholder.jpg'}
             sx={{ borderRadius: 0.6, height: 100, width: 100 }}
           />
           <Stack direction="row" spacing={2} alignItems="center">
             <Stack direction="column" spacing={0.2} alignItems="center">
             <Typography color="text.primary" fontWeight="medium" fontSize={18}>
-              {`${validationWorkflow?.firstName} ${validationWorkflow?.lastName}`}
+              {getWorkflowRequestTypeLabel(validationWorkflow?.requestType)}
             </Typography>
             <Typography
               component="div"
@@ -77,15 +74,7 @@ export default function ValidationWorkflowItemCard({
               color="text.secondary"
               fontWeight="regular"
             >
-              {`${validationWorkflow?.position}`}
-            </Typography>
-            <Typography
-              component="div"
-              variant="caption"
-              color="text.secondary"
-              fontWeight="regular"
-            >
-              {`${validationWorkflow?.email}`}
+              Worflow pour: {getWorkflowRequestTypeLabel(validationWorkflow?.requestType)}
             </Typography>
             </Stack>
           </Stack>
@@ -112,7 +101,7 @@ export default function ValidationWorkflowItemCard({
                 </MenuItem>
               </Tooltip>
             )}
-            {onUpdateValidationWorkflowState && (
+            {/* {onUpdateValidationWorkflowState && (
               <Tooltip
                 title={!validationWorkflow?.isActive ? 'Activer' : 'Désactiver'}
               >
@@ -128,7 +117,7 @@ export default function ValidationWorkflowItemCard({
                   {!validationWorkflow?.isActive ? 'Activer' : 'Désactiver'}
                 </MenuItem>
               </Tooltip>
-            )}
+            )} */}
             <Tooltip title="Modifier">
               <Link
                 to={`/online/parametres/workflows/modifier/${validationWorkflow?.id}`}
@@ -140,19 +129,9 @@ export default function ValidationWorkflowItemCard({
                 </MenuItem>
               </Link>
             </Tooltip>
-            {validationWorkflow?.folder && (
-              <Tooltip title="Pièces jointes">
-                <MenuItem
-                  onClick={() => {onOpenDialogListLibrary(validationWorkflow?.folder); handleCloseMenu()}}
-                >
-                  <Folder fontSize="small" />
-                  Pièces jointes
-                </MenuItem>
-              </Tooltip>
-            )}
             <Tooltip title="Détails">
               <Link
-                to={`/online/parametres/workflows/details/${validationWorkflow?.id}`}
+                to={`/online/parametres/workflows/modifier/${validationWorkflow?.id}`}
                 className="no_style"
               >
                 <MenuItem onClick={handleCloseMenu}>

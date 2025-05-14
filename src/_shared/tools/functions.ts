@@ -41,6 +41,9 @@ import {
   BENEFICIARY_ADMISSION_STATUS_CHOICES,
   RECURRENCE_OPTIONS,
   CAREER_ENTRY_TYPES,
+  WORKFLOW_REQUEST_TYPES,
+  WORKFLOW_VALIDATOR_TYPES,
+  WORKFLOW_FALLBACK_TYPES
 } from './constants';
 
 export const getGenderLabel = (gender) => {
@@ -304,6 +307,18 @@ export const getRecurrenceLabel = (recurrence) => {
 export const getCareerEntryLabel = (careerType) => {
   return CAREER_ENTRY_TYPES.ALL.find((option) => option.value === careerType)?.label || "Type inconnu";
 };
+
+export const getWorkflowRequestTypeLabel = (type) => {
+  return WORKFLOW_REQUEST_TYPES.ALL.find((t) => t.value === type)?.label;
+};
+export const getWorkflowValidatorTypeLabel = (type) => {
+  return WORKFLOW_VALIDATOR_TYPES.ALL.find((t) => t.value === type)?.label;
+};
+export const getWorkflowFallbackTypeLabel = (type) => {
+  return WORKFLOW_FALLBACK_TYPES.ALL.find((t) => t.value === type)?.label;
+};
+
+
 
 
 const intlNumFmt = new Intl.NumberFormat('fr-FR', {

@@ -819,3 +819,37 @@ export const JOB_CANDIDATE_INFORMATION_SHEET_STATUS = {
   ],
 };
 
+export const WORKFLOW_REQUEST_TYPES = {
+  LEAVE: "LEAVE",
+  EXPENSE: "EXPENSE",
+  TASK: "TASK",
+  ALL: [
+    { value: "LEAVE", label: "Demande de congé" },
+    { value: "EXPENSE", label: "Note de frais" },
+    { value: "TASK", label: "Demande d’intervention" },
+  ],
+};
+
+export const WORKFLOW_VALIDATOR_TYPES = {
+  ROLE: "ROLE",
+  POSITION: "POSITION",
+  MANAGER: "MANAGER",
+  ALL: [
+    { value: "ROLE", label: "Rôle" },
+    { value: "POSITION", label: "Poste spécifique" },
+    { value: "MANAGER", label: "Manager du demandeur" },
+  ],
+};
+
+export const WORKFLOW_FALLBACK_TYPES = {
+  REPLACEMENT: "REPLACEMENT",
+  HIERARCHY: "HIERARCHY",
+  ADMIN: "ADMIN",
+  ALL: [
+    { value: "REPLACEMENT", label: "Remplaçant déclaré" },
+    { value: "HIERARCHY", label: "Supérieur hiérarchique" },
+    { value: "ADMIN", label: "Notifier l’administrateur" },
+  ],
+};
+
+

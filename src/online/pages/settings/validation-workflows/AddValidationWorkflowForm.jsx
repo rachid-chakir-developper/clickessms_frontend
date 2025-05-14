@@ -8,6 +8,11 @@ import {
   InputAdornment,
   Button,
   Divider,
+  InputLabel,
+  FormControl,
+  Select,
+  MenuItem,
+  FormHelperText,
 } from '@mui/material';
 import dayjs from 'dayjs';
 
@@ -26,6 +31,9 @@ import {
   PUT_VALIDATION_WORKFLOW,
 } from '../../../../_shared/graphql/mutations/ValidationWorkflowMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import { WORKFLOW_FALLBACK_TYPES, WORKFLOW_REQUEST_TYPES } from '../../../../_shared/tools/constants';
+import { getWorkflowFallbackTypeLabel } from '../../../../_shared/tools/functions';
+import FallbackRuleList from './FallbackRuleList';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -47,12 +55,55 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
     initialValues: {
       requestType: '',
       description: '',
-      isActive: true,
+      validationSteps:[{
+      order: 0,
+      roleConditions:[],
+      serviceConditions:[],
+      validatorType: '',
+      roles:[],
+      conditionExpression: '',
+      positions:[],
+      roles:[],
+      employees:[],
+      validationRules:[{
+        targetEmployees: [],
+        targetRoles: [],
+        targetServices: [],
+        validatorEmployees: [],
+        validatorRoles: [],
+        validatorPositions: [],}
+      ],
+      fallbackRules:[
+        {
+          fallbackType: WORKFLOW_FALLBACK_TYPES.REPLACEMENT,
+          fallbackRoles: [],
+          fallbackEmployees: [],
+          fallbackPositions: [],
+          order: 0
+        },
+        {
+          fallbackType: WORKFLOW_FALLBACK_TYPES.HIERARCHY,
+          fallbackRoles: [],
+          fallbackEmployees: [],
+          fallbackPositions: [],
+          order: 0
+        },
+        {
+          fallbackType: WORKFLOW_FALLBACK_TYPES.ADMIN,
+          fallbackRoles: [],
+          fallbackEmployees: [],
+          fallbackPositions: [],
+          order: 0
+        }
+      ]
+      }
+      ]
+
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let validationWorkflowFormCopy = {...values};
-      if (validationWorkflowFormCopy.id && validationWorkflowFormCopy.id != '') {
+      let validationWorkflowCopy = {...values};
+      if (validationWorkflowCopy.id && validationWorkflowCopy.id != '') {
         onUpdateValidationWorkflow({
           id: validationWorkflowCopy.id,
           validationWorkflowData: validationWorkflowCopy,
@@ -61,8 +112,6 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
         createValidationWorkflow({
           variables: {
             validationWorkflowData: validationWorkflowCopy,
-            photo: photo,
-            coverImage: coverImage,
           },
         });
     },
@@ -165,7 +214,7 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
     {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
-        let { __typename, ...validationWorkflowCopy } = data.validationWorkflow;
+        let { __typename, validationSteps, ...validationWorkflowCopy } = data.validationWorkflow;
         formik.setValues(validationWorkflowCopy);
       },
       onError: (err) => console.log(err),
@@ -191,27 +240,30 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
           >
             <Grid item xs={2} sm={4} md={4}>
               <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Type"
-                  id="requestType"
-                  value={formik.values.requestType}
-                  required
-                  onChange={(e) =>
-                    formik.setFieldValue('requestType', e.target.value)
-                  }
-                  onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.requestType && Boolean(formik.errors.requestType)
-                  }
-                  helperText={
-                    formik.touched.requestType && formik.errors.requestType
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
+                <FormControl fullWidth error={formik.touched.requestType && Boolean(formik.errors.requestType)}>
+                  <InputLabel>Type</InputLabel>
+                  <Select
+                    id="requestType"
+                    name="requestType" 
+                    value={formik.values.requestType}
+                    onChange={(e) => formik.setFieldValue('requestType', e.target.value)}
+                    disabled={loadingPost || loadingPut}
+                    onBlur={formik.handleBlur}
+                  >
+                    {WORKFLOW_REQUEST_TYPES.ALL.map((state, index) => (
+                      <MenuItem key={index} value={state.value}>
+                        {state.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {/* Move helperText here */}
+                  {formik.touched.requestType && formik.errors.requestType && (
+                    <FormHelperText>{formik.errors.requestType}</FormHelperText>
+                  )}
+                </FormControl>
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={6}>
+            <Grid item xs={12} sm={12} md={12}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -226,6 +278,49 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
                 />
               </Item>
             </Grid>
+            {formik.values?.validationSteps?.map((validationStep, indexStep) => 
+              <Grid Grid item xs={12} sm={12} md={12} key={indexStep}>
+                <Box sx={{position: 'relative'}}>
+                  <Grid
+                    container
+                    spacing={{ xs: 2, md: 3 }}
+                    columns={{ xs: 4, sm: 8, md: 12 }}
+                    sx={{backgroundColor: indexStep%2 ? '' : '#f1f1f1', marginY:2, padding: 1, border: '1px solid #ccc'}}
+                  >
+                    <Grid item xs={12} sm={6} md={3}>
+                      <Item>validationStep</Item>
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12}>
+                      {validationStep?.validationRules?.map((validationRule, indexRule) => 
+                        <Grid Grid item xs={12} sm={12} md={12} key={indexRule}>
+                          <Box sx={{position: 'relative'}}>
+                            <Grid
+                              container
+                              spacing={{ xs: 2, md: 3 }}
+                              columns={{ xs: 4, sm: 8, md: 12 }}
+                              sx={{backgroundColor: indexRule%2 ? '' : '#f1f1f1', marginY:2, padding: 1, border: '1px solid #ccc'}}
+                            >
+                              <Grid item xs={12} sm={12} md={12}>
+                                <Item>validationRule</Item>
+                              </Grid>
+                            </Grid>             
+                          </Box>
+                        </Grid>
+                      )}
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12}>
+                      <FallbackRuleList
+                        validationStep={validationStep}
+                        formik={formik}
+                        indexStep={indexStep}
+                        loadingPost={loadingPost}
+                        loadingPut={loadingPut}
+                      />
+                    </Grid>
+                  </Grid>             
+                </Box>
+              </Grid>
+            )}
             <Grid item xs={12} sm={12} md={12}>
               <Item sx={{ justifyContent: 'end', flexDirection: 'row' }}>
                 <Link
