@@ -547,7 +547,7 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                             variant="outlined"
                             label="Capacité"
                             value={item.establishmentCapacity}
-                            onChange={(date) =>
+                            onChange={(e) =>
                               formik.setFieldValue(`invoiceEstablishments.${index}.establishmentCapacity`, e.target.value)
                             }
                             disabled={loadingPost || loadingPut || isNotEditable}
@@ -564,7 +564,7 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                               ),
                             }}
                             value={item.establishmentUnitPrice}
-                            onChange={(date) =>
+                            onChange={(e) =>
                               formik.setFieldValue(`invoiceEstablishments.${index}.establishmentUnitPrice`, e.target.value)
                             }
                             disabled={loadingPost || loadingPut || isNotEditable}
@@ -579,7 +579,7 @@ export default function AddInvoiceForm({ idInvoice, title }) {
                             multiline
                             rows={5}
                             value={item.establishmentInfos}
-                            onChange={(date) =>
+                            onChange={(e) =>
                               formik.setFieldValue(`invoiceEstablishments.${index}.establishmentInfos`, e.target.value)
                             }
                             disabled={loadingPost || loadingPut || isNotEditable}

@@ -1,9 +1,8 @@
 import React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Box, Grid, Typography, Input, FormControl, InputLabel } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import { getWorkflowFallbackTypeLabel } from '../../../../_shared/tools/functions';
 
-// Fonction pour réorganiser les éléments
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
@@ -11,82 +10,68 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-const FallbackRuleList = ({ validationStep, formik, indexStep, loadingPost, loadingPut }) => {
-
+const FallbackRuleList = ({ fallbackRules=[] , formik, indexStep }) => {
   const handleOnDragEnd = (result) => {
     const { source, destination } = result;
+    if (!destination || source.index === destination.index) return;
 
-    // Si l'élément n'a pas bougé, on ne fait rien
-    if (!destination) return;
+    const reordered = reorder(
+      fallbackRules,
+      source.index,
+      destination.index
+    );
 
-    if (source.index !== destination.index) {
-      const newFallbackRules = reorder(
-        validationStep.fallbackRules,
-        source.index,
-        destination.index
-      );
+    // Met à jour l'ordre (optionnel)
+    const updated = reordered.map((item, index) => ({
+      ...item,
+      order: index + 1,
+    }));
 
-      // Mettre à jour la liste dans Formik
-      formik.setFieldValue(
-        `validationSteps[${indexStep}].fallbackRules`,
-        newFallbackRules
-      );
-    }
+    formik.setFieldValue(
+      `validationSteps[${indexStep}].fallbackRules`,
+      updated
+    );
   };
 
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
-      <Droppable droppableId="droppable-fallback-rules">
+      <Droppable droppableId="fallback-rules">
         {(provided) => (
           <Box
             ref={provided.innerRef}
             {...provided.droppableProps}
             sx={{ marginY: 2 }}
           >
-            {validationStep?.fallbackRules?.map((fallbackRule, indexRule) => (
-              <Draggable key={indexRule} draggableId={`draggable-${indexRule}`} index={indexRule}>
-                {(provided) => (
-                  <Grid
-                    container
-                    spacing={2}
-                    columns={12}
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    sx={{
-                      backgroundColor: indexRule % 2 ? '' : '#f1f1f1',
-                      padding: 2,
-                      marginY: 1,
-                      border: '1px solid #ccc',
-                    }}
-                  >
-                    <Grid item xs={12}>
-                      <Typography variant="h6">
-                        Fallback Rule {getWorkflowFallbackTypeLabel(fallbackRule?.fallbackType)}
-                      </Typography>
+            {fallbackRules?.map((fallbackRule, index) => {
+              const id = fallbackRule?.fallbackType ? fallbackRule.fallbackType.toString() : `fallback-${index}`;
+              return (
+                <Draggable key={id} draggableId={id} index={index}>
+                  {(provided, snapshot) => (
+                    <Grid
+                      container
+                      spacing={2}
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      sx={{
+                        backgroundColor: snapshot.isDragging ? '#e0e0e0' : index % 2 === 0 ? '#f9f9f9' : '#fff',
+                        border: '1px solid #ccc',
+                        borderRadius: 1,
+                        padding: 2,
+                        marginBottom: 2,
+                        cursor: 'grab',
+                      }}
+                    >
+                      <Grid item xs={12}>
+                        <Typography variant="h6">
+                          {index + 1}. {getWorkflowFallbackTypeLabel(fallbackRule?.fallbackType)}
+                        </Typography>
+                      </Grid>
                     </Grid>
-
-                    <Grid item xs={12}>
-                      <FormControl fullWidth>
-                        <InputLabel>Order</InputLabel>
-                        <Input
-                          type="number"
-                          value={fallbackRule.order}
-                          onChange={(e) => {
-                            const newOrder = parseInt(e.target.value, 10);
-                            formik.setFieldValue(
-                              `validationSteps[${indexStep}].fallbackRules[${indexRule}].order`,
-                              newOrder
-                            );
-                          }}
-                          disabled={loadingPost || loadingPut}
-                        />
-                      </FormControl>
-                    </Grid>
-                  </Grid>
-                )}
-              </Draggable>
-            ))}
+                  )}
+                </Draggable>
+              );
+            })}
             {provided.placeholder}
           </Box>
         )}

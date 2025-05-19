@@ -33,14 +33,15 @@ export default function AddEmployeeGroupForm({ idEmployeeGroup, title }) {
   const navigate = useNavigate();
   const validationSchema = yup.object({
     name: yup
-      .string("Entrez le nom d'événement")
-      .required("Le nom d'événement est obligatoire"),
+      .string("Entrez le nom du groupe")
+      .required("Le nom du groupe est obligatoire"),
   });
   const formik = useFormik({
     initialValues: {
       image: undefined,
       number: '',
       name: '',
+      managers: [],
       description: '',
       observation: '',
       isActive: true,
@@ -49,6 +50,7 @@ export default function AddEmployeeGroupForm({ idEmployeeGroup, title }) {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       let { image, ...employeeGroupCopy } = values;
+      employeeGroupCopy.managers = employeeGroupCopy.managers.map((i) => i?.id);
       employeeGroupCopy.employees = employeeGroupCopy.employees.map(
         (i) => i?.id,
       );
@@ -186,6 +188,9 @@ const [getEmployees, {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
         let { __typename, ...employeeGroupCopy } = data.employeeGroup;
+        employeeGroupCopy.managers = employeeGroupCopy.managers
+        ? employeeGroupCopy.managers.map((i) => i?.employee)
+        : [];
         employeeGroupCopy.employees = employeeGroupCopy.employees
           ? employeeGroupCopy.employees.map((i) => i?.employee)
           : [];
@@ -212,17 +217,20 @@ const [getEmployees, {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={6} md={4}>
               <Item>
-                <TheTextField
+                <ImageFileField
                   variant="outlined"
-                  label="Référence"
-                  value={formik.values.number}
-                  disabled
+                  label="Image"
+                  imageValue={formik.values.image}
+                  onChange={(imageFile) =>
+                    formik.setFieldValue('image', imageFile)
+                  }
+                  disabled={loadingPost || loadingPut}
                 />
               </Item>
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
+            <Grid item xs={12} sm={6} md={8}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -237,17 +245,19 @@ const [getEmployees, {
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
-            </Grid>
-            <Grid item xs={2} sm={4} md={4}>
               <Item>
-                <ImageFileField
-                  variant="outlined"
-                  label="Image"
-                  imageValue={formik.values.image}
-                  onChange={(imageFile) =>
-                    formik.setFieldValue('image', imageFile)
+                <TheAutocomplete
+                  options={employeesData?.employees?.nodes}
+                  onInput={(e) => {
+                    onGetEmployees(e.target.value)
+                  }}
+                  label="Responsables"
+                  placeholder="Ajouter un employé"
+                  limitTags={3}
+                  value={formik.values.managers}
+                  onChange={(e, newValue) =>
+                    formik.setFieldValue('managers', newValue)
                   }
-                  disabled={loadingPost || loadingPut}
                 />
               </Item>
             </Grid>
@@ -255,10 +265,9 @@ const [getEmployees, {
               <Item>
                 <TheAutocomplete
                   options={employeesData?.employees?.nodes}
-onInput={(e) => {
-                          onGetEmployees(e.target.value)
-                        }}
-
+                  onInput={(e) => {
+                    onGetEmployees(e.target.value)
+                  }}
                   label="Employés"
                   placeholder="Ajouter un employé"
                   limitTags={3}
@@ -272,31 +281,16 @@ onInput={(e) => {
             <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid item xs={12} sm={6} md={6}>
+            <Grid item xs={12} sm={12} md={12}>
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Description"
+                  label="Détails"
                   multiline
-                  rows={4}
+                  rows={8}
                   value={formik.values.description}
                   onChange={(e) =>
                     formik.setFieldValue('description', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={6}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Observation"
-                  multiline
-                  rows={4}
-                  value={formik.values.observation}
-                  onChange={(e) =>
-                    formik.setFieldValue('observation', e.target.value)
                   }
                   disabled={loadingPost || loadingPut}
                 />

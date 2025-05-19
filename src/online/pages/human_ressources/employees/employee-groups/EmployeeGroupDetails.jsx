@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
   Box,
@@ -9,12 +9,15 @@ import {
   ButtonBase,
   Typography,
   Divider,
+  Stack,
+  Button,
 } from '@mui/material';
 
 import { EMPLOYEE_GROUP_RECAP } from '../../../../../_shared/graphql/queries/EmployeeGroupQueries';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDateTime } from '../../../../../_shared/tools/functions';
-import EmployeeItemCard from '../../../human_ressources/employees/EmployeeItemCard';
+import EmployeeChip from '../../../human_ressources/employees/EmployeeChip';
+import { ArrowBack, Edit } from '@mui/icons-material';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -44,6 +47,24 @@ export default function EmployeeGroupDetails() {
   return (
     <>
       <Box sx={{ width: '100%' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+          <Link
+            to="/online/ressources-humaines/employes/groupes/liste"
+            className="no_style"
+          >
+            <Button variant="outlined" startIcon={<ArrowBack />}>
+              Retour à la liste
+            </Button>
+          </Link>
+          <Link
+            to={`/online/ressources-humaines/employes/groupes/modifier/${employeeGroupData?.employeeGroup?.id}`}
+            className="no_style"
+          >
+            <Button variant="outlined" endIcon={<Edit />}>
+              Modifier
+            </Button>
+          </Link>
+        </Box>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
             <EmployeeGroupMiniInfos
@@ -156,17 +177,21 @@ function EmployeeGroupOtherInfos({ employeeGroup }) {
       }}
     >
       <Typography gutterBottom variant="subtitle3" component="h3">
+        Les responsables
+      </Typography>
+      <Stack direction="row" flexWrap='wrap' spacing={1}>
+        {employeeGroup?.managers?.map((employee, index) => (
+          <EmployeeChip key={index} employee={employee?.employee} />
+        ))}
+      </Stack>
+      <Typography gutterBottom variant="subtitle3" component="h3">
         Les employés
       </Typography>
-      <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
+      <Stack direction="row" flexWrap='wrap' spacing={1}>
         {employeeGroup?.employees?.map((employee, index) => (
-          <Grid item xs={12} sm={12} md={12} key={index}>
-            <Item>
-              <EmployeeItemCard employee={employee?.employee} />
-            </Item>
-          </Grid>
+          <EmployeeChip key={index} employee={employee?.employee} />
         ))}
-      </Grid>
+      </Stack>
     </Paper>
   );
 }

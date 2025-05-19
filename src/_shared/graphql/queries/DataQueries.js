@@ -177,6 +177,15 @@ export const GET_DATAS_EMPLOYEE_CONTRACT = gql`
   ${DATA_BASIC_INFOS}
 `;
 
+export const GET_DATAS_VALIDATION_WORKFLOW = gql`
+  query {
+    employeePositions: datas(typeData: "EmployeePosition") {
+      ...DataBasicInfosFragment
+    }
+  }
+  ${DATA_BASIC_INFOS}
+`;
+
 export const GET_DATAS_EXPENSE = gql`
   query {
     accountingNatures: datas(typeData: "AccountingNature") {

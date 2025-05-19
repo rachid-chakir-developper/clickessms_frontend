@@ -46,7 +46,7 @@ const StyledMenu = styled((props) => (
 }));
 
 // Options with icons for each roles
-const ROLES = [
+export const ROLES = [
   { value: 'SUPER_ADMIN', label: 'Super Administrateur', icon: <Person />, color: 'default'},
   { value: 'ADMIN', label: 'Administrateur', icon: <Person />, color: 'default'},
   { value: 'MANAGER', label: 'Manager', icon: <Person />, color: 'default'},

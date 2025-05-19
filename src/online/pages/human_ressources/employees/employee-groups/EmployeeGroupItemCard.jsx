@@ -14,6 +14,8 @@ import {
 } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import { getFormatDateTime } from '../../../../../_shared/tools/functions';
+import EmployeeChip from '../EmployeeChip';
+import ChipGroupWithPopover from '../../../../_shared/components/persons/ChipGroupWithPopover';
 
 export default function EmployeeGroupItemCard({
   employeeGroup,
@@ -65,8 +67,9 @@ export default function EmployeeGroupItemCard({
                   color="text.secondary"
                   fontWeight="regular"
                 >
-                  À {`${getFormatDateTime(employeeGroup?.startingDateTime)}`}
+                  Responsables: 
                 </Typography>
+                <ChipGroupWithPopover people={employeeGroup?.managers?.map((manager) =>manager?.employee)} />
             </Stack>
           </Stack>
         </Stack>
@@ -82,23 +85,6 @@ export default function EmployeeGroupItemCard({
               anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
               transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           >
-              {employeeGroup?.employeeGroupParent && (
-              <Tooltip
-                title={`L'éstablishment parent: ${employeeGroup?.employeeGroupParent?.name}`}
-              >
-                <Link
-                  to={`/online/ressources-humaines/employes/groupes/details/${employeeGroup?.employeeGroupParent?.id}`}
-                  className="no_style"
-                >
-                  <MenuItem onClick={handleCloseMenu}>
-                    <Avatar
-                      alt={`${employeeGroup?.employeeGroupParent?.name}`}
-                      src={employeeGroup?.employeeGroupParent?.image}
-                    />
-                  </MenuItem>
-                </Link>
-              </Tooltip>
-            )}
             {onDeleteEmployeeGroup && (
               <Tooltip title="Supprimer">
                 <MenuItem
@@ -109,7 +95,7 @@ export default function EmployeeGroupItemCard({
                 </MenuItem>
               </Tooltip>
             )}
-            {onUpdateEmployeeGroupState && (
+            {/* {onUpdateEmployeeGroupState && (
               <Tooltip
                 title={!employeeGroup?.isActive ? 'Activer' : 'Désactiver'}
               >
@@ -125,7 +111,7 @@ export default function EmployeeGroupItemCard({
                   {!employeeGroup?.isActive ? 'Activer' : 'Désactiver'}
                 </MenuItem>
               </Tooltip>
-            )}
+            )} */}
             <Tooltip title="Modifier">
               <Link
                 to={`/online/ressources-humaines/employes/groupes/modifier/${employeeGroup?.id}`}

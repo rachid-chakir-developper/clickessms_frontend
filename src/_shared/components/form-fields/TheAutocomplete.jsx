@@ -34,6 +34,7 @@ export default function TheAutocomplete({
     else return null;
   };
   const getLabel = (option) => {
+    if (option?.label) return option?.label;
     if (option?.title) return option?.title;
     if (option?.name) return option?.name;
     return `${option?.firstName} ${option?.preferredName && option?.preferredName !== '' ? option?.preferredName : option?.lastName}`;
@@ -52,7 +53,12 @@ export default function TheAutocomplete({
       disableCloseOnSelect={multiple}
       getOptionLabel={getLabel}
       filterSelectedOptions
-      isOptionEqualToValue={(option, value) => option?.id === value?.id}
+      isOptionEqualToValue={(option, value) => {
+        if(option?.key) option?.key === value?.key
+        if(option?.value) return option?.value === value?.value
+        return option?.id === value?.id
+        }
+      }
       value={value}
       onInputChange={onInputChange}
       onChange={onChange}

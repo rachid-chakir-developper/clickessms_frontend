@@ -18,32 +18,25 @@ export const VALIDATION_WORKFLOW_BASIC_INFOS = gql`
     validationSteps {
       id
       order
-      roleConditions
-      serviceConditions
-      validatorType
-      roles
-      requiredApprovalCount
-      conditionExpression
-      positions {
-        id
-        name
-      }
-      roles
-      employees {
-        id
-        firstName
-        lastName
-        email
-      }
+      comment
       validationRules{
         id
+        validatorType
+        conditionExpression
+        targetEmployeeGroups {
+          id
+          name
+        }
         targetEmployees {
           id
           firstName
           lastName
         }
         targetRoles
-        targetServices
+        targetPositions{
+          id
+          name
+        }
         validatorEmployees {
           id
           firstName

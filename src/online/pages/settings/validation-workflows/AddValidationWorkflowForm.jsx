@@ -17,7 +17,7 @@ import {
 import dayjs from 'dayjs';
 
 import { Link, useNavigate } from 'react-router-dom';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
@@ -31,9 +31,15 @@ import {
   PUT_VALIDATION_WORKFLOW,
 } from '../../../../_shared/graphql/mutations/ValidationWorkflowMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
-import { WORKFLOW_FALLBACK_TYPES, WORKFLOW_REQUEST_TYPES } from '../../../../_shared/tools/constants';
+import { WORKFLOW_FALLBACK_TYPES, WORKFLOW_REQUEST_TYPES, WORKFLOW_VALIDATOR_TYPES } from '../../../../_shared/tools/constants';
 import { getWorkflowFallbackTypeLabel } from '../../../../_shared/tools/functions';
 import FallbackRuleList from './FallbackRuleList';
+import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
+import { ROLES } from '../../../../_shared/components/app/menu/CustomizedRolesLabelMenu';
+import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
+import { GET_DATAS_VALIDATION_WORKFLOW } from '../../../../_shared/graphql/queries/DataQueries';
+import SelectCheckmarks from '../../../../_shared/components/form-fields/SelectCheckmarks';
+import { GET_EMPLOYEE_GROUPS } from '../../../../_shared/graphql/queries/EmployeeGroupQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -53,25 +59,22 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
   });
   const formik = useFormik({
     initialValues: {
-      requestType: '',
+      requestType: WORKFLOW_REQUEST_TYPES?.LEAVE,
       description: '',
       validationSteps:[{
       order: 0,
-      roleConditions:[],
-      serviceConditions:[],
-      validatorType: '',
-      roles:[],
-      conditionExpression: '',
-      positions:[],
-      roles:[],
-      employees:[],
-      validationRules:[{
-        targetEmployees: [],
-        targetRoles: [],
-        targetServices: [],
-        validatorEmployees: [],
-        validatorRoles: [],
-        validatorPositions: [],}
+      comment: '',
+      validationRules:[
+        { 
+          targetEmployeeGroups: [],
+          targetEmployees: [],
+          targetRoles: [],
+          targetPositions: [],
+          validatorType: WORKFLOW_VALIDATOR_TYPES.ROLE,
+          validatorEmployees: [],
+          validatorRoles: [],
+          validatorPositions: [],
+        }
       ],
       fallbackRules:[
         {
@@ -86,14 +89,14 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
           fallbackRoles: [],
           fallbackEmployees: [],
           fallbackPositions: [],
-          order: 0
+          order: 1
         },
         {
           fallbackType: WORKFLOW_FALLBACK_TYPES.ADMIN,
           fallbackRoles: [],
           fallbackEmployees: [],
           fallbackPositions: [],
-          order: 0
+          order: 2
         }
       ]
       }
@@ -209,6 +212,35 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
       },
     });
   };
+  const [getEmployees, {
+      loading: loadingEmployees,
+      data: employeesData,
+      error: employeesError,
+      fetchMore: fetchMoreEmployees,
+    }] = useLazyQuery(GET_EMPLOYEES, { variables: { employeeFilter : null, page: 1, limit: 30 } });
+    
+    const onGetEmployees = (keyword)=>{
+      getEmployees({ variables: { employeeFilter : keyword === '' ? null : {keyword}, page: 1, limit: 30 } })
+    }
+
+  const [getEmployeeGroups, {
+      loading: loadingEmployeeGroups,
+      data: employeeGroupsData,
+      error: employeeGroupsError,
+      fetchMore: fetchMoreEmployeeGroups,
+    }] = useLazyQuery(GET_EMPLOYEE_GROUPS, { variables: { employeeGroupFilter : null, page: 1, limit: 30 } });
+    
+    const onGetEmployeeGroups = (keyword)=>{
+      getEmployeeGroups({ variables: { employeeGroupFilter : keyword === '' ? null : {keyword}, page: 1, limit: 30 } })
+    }
+
+  const {
+    loading: loadingDatas,
+    data: dataData,
+    error: datsError,
+    fetchMore: fetchMoreDatas,
+  } = useQuery(GET_DATAS_VALIDATION_WORKFLOW, { fetchPolicy: 'network-only' });
+
   const [getValidationWorkflow, { loading: loadingValidationWorkflow }] = useLazyQuery(
     GET_VALIDATION_WORKFLOW,
     {
@@ -263,7 +295,7 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
                 </FormControl>
               </Item>
             </Grid>
-            <Grid item xs={12} sm={12} md={12}>
+            {/* <Grid item xs={12} sm={12} md={12}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -277,9 +309,9 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
-            </Grid>
+            </Grid> */}
             {formik.values?.validationSteps?.map((validationStep, indexStep) => 
-              <Grid Grid item xs={12} sm={12} md={12} key={indexStep}>
+              <Grid item xs={12} sm={12} md={12} key={indexStep}>
                 <Box sx={{position: 'relative'}}>
                   <Grid
                     container
@@ -287,34 +319,136 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
                     columns={{ xs: 4, sm: 8, md: 12 }}
                     sx={{backgroundColor: indexStep%2 ? '' : '#f1f1f1', marginY:2, padding: 1, border: '1px solid #ccc'}}
                   >
-                    <Grid item xs={12} sm={6} md={3}>
-                      <Item>validationStep</Item>
-                    </Grid>
+                    {/* <Grid item xs={12} sm={12} md={12}>
+                      <Item>
+                        <TheTextField
+                          variant="outlined"
+                          label="Commentaire"
+                          multiline
+                          rows={4}
+                          value={validationStep?.comment}
+                          onChange={(e) =>
+                            formik.setFieldValue(`validationSteps.${indexStep}.comment`, e.target.value)
+                          }
+                          disabled={loadingPost || loadingPut}
+                        />
+                      </Item>
+                    </Grid> */}
                     <Grid item xs={12} sm={12} md={12}>
-                      {validationStep?.validationRules?.map((validationRule, indexRule) => 
-                        <Grid Grid item xs={12} sm={12} md={12} key={indexRule}>
-                          <Box sx={{position: 'relative'}}>
-                            <Grid
-                              container
-                              spacing={{ xs: 2, md: 3 }}
-                              columns={{ xs: 4, sm: 8, md: 12 }}
-                              sx={{backgroundColor: indexRule%2 ? '' : '#f1f1f1', marginY:2, padding: 1, border: '1px solid #ccc'}}
-                            >
-                              <Grid item xs={12} sm={12} md={12}>
-                                <Item>validationRule</Item>
-                              </Grid>
-                            </Grid>             
-                          </Box>
+                    {validationStep?.validationRules?.map((validationRule, indexRule) => 
+                      <Grid
+                        container
+                        spacing={{ xs: 2, md: 3 }}
+                        columns={{ xs: 4, sm: 8, md: 12 }}
+                        key={indexRule}
+                        sx={{backgroundColor: indexRule%2 ? '' : '#f1f1f1', marginY:2, padding: 1, border: '1px solid #ccc'}}
+                      >
+                        <Grid item xs={12} sm={6} md={6} >
+                          <Item>
+                            <TheAutocomplete
+                              options={ROLES.filter(option=>option?.value!=='SUPER_ADMIN')}
+                              label="Rôles demandeurs"
+                              placeholder="Sélectionnez un ou plusieurs rôles"
+                              limitTags={3}
+                              value={validationRule.targetRoles}
+                              onChange={(e, newValue) =>
+                                formik.setFieldValue(`validationSteps.${indexStep}.validationRules.${indexRule}.targetRoles`, newValue)
+                              }
+                            />
+                          </Item>
+                          <Item>
+                            <SelectCheckmarks
+                              options={dataData?.employeePositions || []}
+                              label="Postes demandeurs"
+                              placeholder="Ajouter un poste"
+                              limitTags={3}
+                              value={validationRule.targetPositions}
+                              onChange={(e, newValue) =>
+                                formik.setFieldValue(`validationSteps.${indexStep}.validationRules.${indexRule}.targetPositions`, newValue)
+                              }
+                            />
+                          </Item>
+                          <Item>
+                            <TheAutocomplete
+                              options={employeeGroupsData?.employeeGroups?.nodes}
+                              onInput={(e) => {
+                                onGetEmployeeGroups(e.target.value)
+                              }}
+                              label="Groupes employé demandeurs"
+                              placeholder="Sélectionnez un ou plusieurs groupes employé"
+                              limitTags={3}
+                              value={validationRule.targetEmployeeGroups}
+                              onChange={(e, newValue) =>
+                                formik.setFieldValue(`validationSteps.${indexStep}.validationRules.${indexRule}.targetEmployeeGroups`, newValue)
+                              }
+                            />
+                          </Item>
+                          <Item>
+                            <TheAutocomplete
+                              options={employeesData?.employees?.nodes}
+                              onInput={(e) => {
+                                onGetEmployees(e.target.value)
+                              }}
+                              label="Employés demandeurs"
+                              placeholder="Sélectionnez un ou plusieurs employés"
+                              limitTags={3}
+                              value={validationRule.targetEmployees}
+                              onChange={(e, newValue) =>
+                                formik.setFieldValue(`validationSteps.${indexStep}.validationRules.${indexRule}.targetEmployees`, newValue)
+                              }
+                            />
+                          </Item>
                         </Grid>
-                      )}
+                        <Grid item xs={12} sm={6} md={6} >
+                          <Item>
+                            <TheAutocomplete
+                              options={ROLES.filter(option=>option?.value!=='SUPER_ADMIN')}
+                              label="Rôles validateurs"
+                              placeholder="Sélectionnez un ou plusieurs rôles"
+                              limitTags={3}
+                              value={validationRule.validatorRoles}
+                              onChange={(e, newValue) =>
+                                formik.setFieldValue(`validationSteps.${indexStep}.validationRules.${indexRule}.validatorRoles`, newValue)
+                              }
+                            />
+                          </Item>
+                          <Item>
+                            <SelectCheckmarks
+                              options={dataData?.employeePositions || []}
+                              label="Postes validateurs"
+                              placeholder="Ajouter un poste"
+                              limitTags={3}
+                              value={validationRule.validatorPositions}
+                              onChange={(e, newValue) =>
+                                formik.setFieldValue(`validationSteps.${indexStep}.validationRules.${indexRule}.validatorPositions`, newValue)
+                              }
+                            />
+                          </Item>
+                          <Item>
+                            <TheAutocomplete
+                              options={employeesData?.employees?.nodes}
+                              onInput={(e) => {
+                                onGetEmployees(e.target.value)
+                              }}
+                              label="Employés validateurs"
+                              placeholder="Sélectionnez un ou plusieurs employés"
+                              limitTags={3}
+                              value={validationRule.validatorEmployees}
+                              onChange={(e, newValue) =>
+                                formik.setFieldValue(`validationSteps.${indexStep}.validationRules.${indexRule}.validatorEmployees`, newValue)
+                              }
+                            />
+                          </Item>
+                        </Grid>
+                      </Grid>
+                    )}
                     </Grid>
                     <Grid item xs={12} sm={12} md={12}>
                       <FallbackRuleList
-                        validationStep={validationStep}
+                        fallbackRules={validationStep?.fallbackRules || []}
                         formik={formik}
                         indexStep={indexStep}
-                        loadingPost={loadingPost}
-                        loadingPut={loadingPut}
+                        loading={loadingPost || loadingPut}
                       />
                     </Grid>
                   </Grid>             
