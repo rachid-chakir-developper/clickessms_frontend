@@ -9,7 +9,7 @@ export default function AddEmployeeGroup() {
       idEmployeeGroup={idEmployeeGroup}
       title={
         idEmployeeGroup && idEmployeeGroup > 0
-          ? `Modifier l'groupe d'employés`
+          ? `Modifier le groupe d'employés`
           : `Ajouter un groupe d'employés`
       }
     />

@@ -31,26 +31,35 @@ export default function SelectCheckmarks({
 }) {
   const [values, setValues] = React.useState(value || []);
 
+  const getOptionId = (option) => option?.id || option?.value;
+  const getOptionLabel = (option) =>
+    option?.label || option?.name || `${option?.firstName ?? ''} ${option?.preferredName && option?.preferredName !== '' ? option?.preferredName : option?.lastName ?? ''}`.trim();
+
   const onAddOption = (option) => {
-    console.log('option', option);
     let selectedValues = [...values];
-    if (selectedValues.map((sv) => sv.id).includes(option.id))
-      selectedValues = selectedValues.filter((sv) => sv.id !== option.id);
-    else selectedValues = [...selectedValues, option];
+    const optionId = getOptionId(option);
+    const isSelected = selectedValues.find((sv) => getOptionId(sv) === optionId);
+
+    if (isSelected) {
+      selectedValues = selectedValues.filter((sv) => getOptionId(sv) !== optionId);
+    } else {
+      selectedValues = [...selectedValues, option];
+    }
+
     setValues(selectedValues);
     onChange(selectedValues, selectedValues);
   };
+
   React.useEffect(() => {
-    setValues(value);
+    setValues(value || []);
   }, [value]);
 
   return (
     <Box sx={{ width: '100%' }}>
       <FormControl sx={{ width: '100%' }}>
-        <InputLabel id="demo-multiple-checkbox-label">{label}</InputLabel>
+        <InputLabel id="select-checkmarks-label">{label}</InputLabel>
         <Select
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
+          labelId="select-checkmarks-label"
           multiple={multiple}
           value={values}
           input={<OutlinedInput label={label} />}
@@ -59,11 +68,8 @@ export default function SelectCheckmarks({
               {selected.map((option, index) => (
                 <Chip
                   key={index}
-                  label={
-                    option?.name
-                      ? `${option?.name}`
-                      : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`
-                  }
+                  icon={option?.icon || null}
+                  label={getOptionLabel(option)}
                 />
               ))}
             </Box>
@@ -71,22 +77,22 @@ export default function SelectCheckmarks({
           MenuProps={MenuProps}
           placeholder={placeholder}
         >
-          {options.map((option, index) => (
-            <MenuItem
-              key={index}
-              value={option}
-              onClick={() => onAddOption(option)}
-            >
-              <Checkbox checked={values.map((v) => v.id).includes(option.id)} />
-              <ListItemText
-                primary={
-                  option?.name
-                    ? `${option?.name}`
-                    : `${option?.firstName} ${option?.preferredName && option?.preferredName !== ''  ? option?.preferredName : option?.lastName}`
-                }
-              />
-            </MenuItem>
-          ))}
+          {options.map((option, index) => {
+            const optionId = getOptionId(option);
+            const isChecked = values.find((v) => getOptionId(v) === optionId);
+
+            return (
+              <MenuItem
+                key={index}
+                value={option}
+                onClick={() => onAddOption(option)}
+              >
+                <Checkbox checked={!!isChecked} />
+                {option?.icon && <Box mr={1}>{option.icon}</Box>}
+                <ListItemText primary={getOptionLabel(option)} />
+              </MenuItem>
+            );
+          })}
         </Select>
         {helperText && <FormHelperText>{helperText}</FormHelperText>}
       </FormControl>

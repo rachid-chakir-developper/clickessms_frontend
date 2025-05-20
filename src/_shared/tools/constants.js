@@ -831,10 +831,12 @@ export const WORKFLOW_REQUEST_TYPES = {
 };
 
 export const WORKFLOW_VALIDATOR_TYPES = {
+  CUSTOM: "CUSTOM",
   ROLE: "ROLE",
   POSITION: "POSITION",
   MANAGER: "MANAGER",
   ALL: [
+    { value: "CUSTOM", label: "Sélection personnalisée" },
     { value: "ROLE", label: "Rôle" },
     { value: "POSITION", label: "Poste spécifique" },
     { value: "MANAGER", label: "Manager du demandeur" },

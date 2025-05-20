@@ -2,6 +2,7 @@ import React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Box, Grid, Typography } from '@mui/material';
 import { getWorkflowFallbackTypeLabel } from '../../../../_shared/tools/functions';
+import { DragIndicator } from '@mui/icons-material';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -62,7 +63,8 @@ const FallbackRuleList = ({ fallbackRules=[] , formik, indexStep }) => {
                         cursor: 'grab',
                       }}
                     >
-                      <Grid item xs={12}>
+                      <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <DragIndicator sx={{ color: 'text.secondary' }} />
                         <Typography variant="h6">
                           {index + 1}. {getWorkflowFallbackTypeLabel(fallbackRule?.fallbackType)}
                         </Typography>

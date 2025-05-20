@@ -86,7 +86,6 @@ export default function AddInvoiceForm({ idInvoice, title }) {
           beneficiary: beneficiary?.id || null,
         })),
       }));
-      console.log(invoiceCopy)
       if (invoiceCopy?.id && invoiceCopy?.id != '') {
         onUpdateInvoice({
           id: invoiceCopy.id,

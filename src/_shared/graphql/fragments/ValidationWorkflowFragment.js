@@ -22,7 +22,6 @@ export const VALIDATION_WORKFLOW_BASIC_INFOS = gql`
       validationRules{
         id
         validatorType
-        conditionExpression
         targetEmployeeGroups {
           id
           name
@@ -51,16 +50,6 @@ export const VALIDATION_WORKFLOW_BASIC_INFOS = gql`
       fallbackRules {
         id
         fallbackType
-        fallbackRoles
-        fallbackEmployees{
-          id
-          firstName
-          lastName
-        }
-        fallbackPositions {
-          id
-          name
-        }
         order
       }
     }

@@ -13,6 +13,7 @@ import {
   Select,
   MenuItem,
   FormHelperText,
+  Alert,
 } from '@mui/material';
 import dayjs from 'dayjs';
 
@@ -70,7 +71,7 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
           targetEmployees: [],
           targetRoles: [],
           targetPositions: [],
-          validatorType: WORKFLOW_VALIDATOR_TYPES.ROLE,
+          validatorType: WORKFLOW_VALIDATOR_TYPES.CUSTOM,
           validatorEmployees: [],
           validatorRoles: [],
           validatorPositions: [],
@@ -79,23 +80,14 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
       fallbackRules:[
         {
           fallbackType: WORKFLOW_FALLBACK_TYPES.REPLACEMENT,
-          fallbackRoles: [],
-          fallbackEmployees: [],
-          fallbackPositions: [],
           order: 0
         },
         {
           fallbackType: WORKFLOW_FALLBACK_TYPES.HIERARCHY,
-          fallbackRoles: [],
-          fallbackEmployees: [],
-          fallbackPositions: [],
           order: 1
         },
         {
           fallbackType: WORKFLOW_FALLBACK_TYPES.ADMIN,
-          fallbackRoles: [],
-          fallbackEmployees: [],
-          fallbackPositions: [],
           order: 2
         }
       ]
@@ -106,6 +98,33 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
     validationSchema: validationSchema,
     onSubmit: (values) => {
       let validationWorkflowCopy = {...values};
+
+      validationWorkflowCopy.validationSteps ??= [];
+
+      validationWorkflowCopy.validationSteps = validationWorkflowCopy.validationSteps.map((
+        { __typename, validationRules = [], ...itemCopy }) => ({
+        ...itemCopy,
+        validationRules: validationRules.map((
+          { __typename,
+            targetRoles=[],
+            targetEmployeeGroups=[],
+            targetEmployees=[],
+            targetPositions=[],
+            validatorRoles=[],
+            validatorEmployees=[],
+            validatorPositions=[],
+            ...itemICopy
+          }) => ({
+          ...itemICopy,
+            targetRoles: targetRoles.map((i) => i?.value),
+            targetEmployeeGroups: targetEmployeeGroups.map((i) => i?.id),
+            targetEmployees: targetEmployees.map((i) => i?.id),
+            targetPositions: targetPositions.map((i) => i?.id),
+            validatorRoles: validatorRoles.map((i) => i?.value),
+            validatorEmployees: validatorEmployees.map((i) => i?.id),
+            validatorPositions: validatorPositions.map((i) => i?.id),
+        })),
+      }));
       if (validationWorkflowCopy.id && validationWorkflowCopy.id != '') {
         onUpdateValidationWorkflow({
           id: validationWorkflowCopy.id,
@@ -246,7 +265,22 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
     {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
-        let { __typename, validationSteps, ...validationWorkflowCopy } = data.validationWorkflow;
+        let { __typename, ...validationWorkflowCopy } = data.validationWorkflow;
+        validationWorkflowCopy.validationSteps ??= [];
+        
+        validationWorkflowCopy.validationSteps = validationWorkflowCopy.validationSteps.map((
+          { __typename, validationRules = [], fallbackRules = [], ...itemCopy }) => ({
+          ...itemCopy,
+          validationRules: validationRules.map(({ __typename, targetRoles=[], validatorRoles=[],  ...itemICopy }) => ({
+            ...itemICopy,
+            targetRoles: ROLES?.filter(i=> JSON.parse(targetRoles).includes(i.value)),
+            validatorRoles: ROLES?.filter(i=> JSON.parse(validatorRoles).includes(i.value)),
+          })),
+          fallbackRules: fallbackRules.map(({ __typename, ...itemICopy }) => ({
+            ...itemICopy,
+          })),
+        }));
+        console.log(validationWorkflowCopy)
         formik.setValues(validationWorkflowCopy);
       },
       onError: (err) => console.log(err),
@@ -343,7 +377,11 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
                         key={indexRule}
                         sx={{backgroundColor: indexRule%2 ? '' : '#f1f1f1', marginY:2, padding: 1, border: '1px solid #ccc'}}
                       >
-                        <Grid item xs={12} sm={6} md={6} >
+                        <Grid item xs={12} sm={6} md={6} sx={{backgroundColor: '#E3F2FD' }}>
+                          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                            Définissez ici les critères pour lesquels la règle de validation s'appliquera. 
+                            La règle sera activée si le demandeur correspond à au moins un des rôles, postes, groupes d’employés ou employés spécifiés.
+                          </Typography>
                           <Item>
                             <TheAutocomplete
                               options={ROLES.filter(option=>option?.value!=='SUPER_ADMIN')}
@@ -399,8 +437,31 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
                             />
                           </Item>
                         </Grid>
-                        <Grid item xs={12} sm={6} md={6} >
+                        <Grid item xs={12} sm={6} md={6}  sx={{backgroundColor: '#E8F5E9' }}>
+                          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                            Définissez ici qui validera la demande selon le type choisi : rôle, poste, manager ou employés spécifiques.
+                          </Typography>
                           <Item>
+                            <FormControl fullWidth>
+                              <InputLabel>Type validateur</InputLabel>
+                              <Select
+                                id="validatorType"
+                                name="validatorType" 
+                                value={validationRule.validatorType}
+                                onChange={(e) =>
+                                  formik.setFieldValue(`validationSteps.${indexStep}.validationRules.${indexRule}.validatorType`, e.target.value)
+                                }
+                                disabled={loadingPost || loadingPut}
+                              >
+                                {WORKFLOW_VALIDATOR_TYPES.ALL.map((state, index) => (
+                                  <MenuItem key={index} value={state.value}>
+                                    {state.label}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
+                          </Item>
+                          {[WORKFLOW_VALIDATOR_TYPES.ROLE, WORKFLOW_VALIDATOR_TYPES.CUSTOM].includes(validationRule.validatorType) && <Item>
                             <TheAutocomplete
                               options={ROLES.filter(option=>option?.value!=='SUPER_ADMIN')}
                               label="Rôles validateurs"
@@ -411,8 +472,8 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
                                 formik.setFieldValue(`validationSteps.${indexStep}.validationRules.${indexRule}.validatorRoles`, newValue)
                               }
                             />
-                          </Item>
-                          <Item>
+                          </Item>}
+                          {[WORKFLOW_VALIDATOR_TYPES.POSITION, WORKFLOW_VALIDATOR_TYPES.CUSTOM].includes(validationRule.validatorType) && <Item>
                             <SelectCheckmarks
                               options={dataData?.employeePositions || []}
                               label="Postes validateurs"
@@ -423,7 +484,7 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
                                 formik.setFieldValue(`validationSteps.${indexStep}.validationRules.${indexRule}.validatorPositions`, newValue)
                               }
                             />
-                          </Item>
+                          </Item>}
                           <Item>
                             <TheAutocomplete
                               options={employeesData?.employees?.nodes}
@@ -437,13 +498,18 @@ export default function AddValidationWorkflowForm({ idValidationWorkflow, title 
                               onChange={(e, newValue) =>
                                 formik.setFieldValue(`validationSteps.${indexStep}.validationRules.${indexRule}.validatorEmployees`, newValue)
                               }
+                              helperText="Vous pouvez ajouter d'autres employés spécifiques qui valideront dans ce cas. Ce champ est facultatif."
                             />
                           </Item>
                         </Grid>
                       </Grid>
                     )}
                     </Grid>
-                    <Grid item xs={12} sm={12} md={12}>
+                    <Grid item xs={12} sm={12} md={12} sx={{ backgroundColor: '#e6f0ff' }}>
+                      <Alert severity="info" sx={{ mb: 4, mx: 2 }}>
+                        Ces règles de secours permettent de définir des validateurs alternatifs lorsque la règle principale ne s'applique pas.
+                         Vous pouvez modifier leur ordre en les glissant-déposant.
+                      </Alert>
                       <FallbackRuleList
                         fallbackRules={validationStep?.fallbackRules || []}
                         formik={formik}
