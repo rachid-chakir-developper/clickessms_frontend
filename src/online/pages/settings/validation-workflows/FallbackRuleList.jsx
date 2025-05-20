@@ -66,7 +66,7 @@ const FallbackRuleList = ({ fallbackRules=[] , formik, indexStep }) => {
                       <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <DragIndicator sx={{ color: 'text.secondary' }} />
                         <Typography variant="h6">
-                          {index + 1}. {getWorkflowFallbackTypeLabel(fallbackRule?.fallbackType)}
+                          {getWorkflowFallbackTypeLabel(fallbackRule?.fallbackType)}
                         </Typography>
                       </Grid>
                     </Grid>
