@@ -76,22 +76,20 @@ export default function TaskDetails() {
   if (loadingTask) return <ProgressService type="form" />;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1}}>
-        <Box sx={{marginX: 2}}>
-          <Link
-            to={`/online/travaux/interventions/liste`}
-            className="no_style"
-          >
-            <Button variant="text" startIcon={<List />}  size="small">
-              Retour à la Liste
-            </Button>
-          </Link>
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1}}>
+        <Link
+          to={`/online/travaux/interventions/liste`}
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
         {(canManageFacility || (user?.employee?.id==taskData?.task?.employee?.id)) && <Link
           to={`/online/travaux/interventions/modifier/${taskData?.task.id}`}
           className="no_style"
         >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
+          <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
         </Link>}
