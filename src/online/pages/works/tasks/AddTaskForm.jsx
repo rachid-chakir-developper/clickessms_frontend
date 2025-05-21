@@ -38,6 +38,7 @@ import { Close } from '@mui/icons-material';
 import { TASK_STATUS, PRIORITIES } from '../../../../_shared/tools/constants';
 import { GET_ESTABLISHMENTS } from '../../../../_shared/graphql/queries/EstablishmentQueries';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
+import { GET_SUPPLIERS } from '../../../../_shared/graphql/queries/SupplierQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -90,6 +91,7 @@ export default function AddTaskForm({ idTask, title }) {
       vehicles: [],
       materials: [],
       taskChecklist: [],
+      supplier: null,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -99,6 +101,7 @@ export default function AddTaskForm({ idTask, title }) {
       taskCopy.workers = taskCopy.workers.map((i) => i?.id);
       taskCopy.vehicles = taskCopy.vehicles.map((i) => i.id);
       taskCopy.materials = taskCopy.materials.map((i) => i.id);
+      taskCopy.supplier = taskCopy.supplier?.id;
       if (idTask && idTask != '') {
         onUpdateTask({
           id: taskCopy.id,
@@ -129,6 +132,14 @@ const [getEmployees, {
     error: establishmentsError,
     fetchMore: fetchMoreEstablishments,
   } = useQuery(GET_ESTABLISHMENTS, {
+    fetchPolicy: 'network-only',
+  });
+  const {
+    loading: loadingSuppliers,
+    data: suppliersData,
+    error: suppliersError,
+    fetchMore: fetchMoreSuppliers,
+  } = useQuery(GET_SUPPLIERS, {
     fetchPolicy: 'network-only',
   });
   const [createTask, { loading: loadingPost }] = useMutation(POST_TASK, {
@@ -219,6 +230,8 @@ const [getEmployees, {
   const [getTask, { loading: loadingTask }] = useLazyQuery(GET_TASK, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
+      console.log("Task data received:", data.task);
+      console.log("Supplier data:", data.task.supplier);
       let { __typename, ...taskCopy1 } = data.task;
       let { folder, employee, ...taskCopy } = taskCopy1;
       taskCopy.startingDateTime = taskCopy.startingDateTime ? dayjs(taskCopy.startingDateTime) : null;
@@ -457,6 +470,21 @@ onInput={(e) => {
                     </Select>
                 </FormControl>
               </Item></>}
+            </Grid>
+            <Grid item xs={12} sm={6} md={4} >
+              <Item>
+                <TheAutocomplete
+                  options={suppliersData?.suppliers?.nodes || []}
+                  label="Fournisseur"
+                  placeholder="Sélectionner un fournisseur"
+                  multiple={false}
+                  value={formik.values.supplier}
+                  onChange={(e, newValue) =>
+                    formik.setFieldValue('supplier', newValue)
+                  }
+                  disabled={loadingPost || loadingPut || isNotEditable}
+                />
+              </Item>
             </Grid>
             <Grid item xs={12} sm={12} md={12} >
               <Item>

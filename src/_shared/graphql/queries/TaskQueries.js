@@ -45,4 +45,3 @@ export const GET_TASK_RECAP = gql`
   ${TASK_RECAP}
 `;
 // Add more task-related queries here
-// Add more task-related queries here

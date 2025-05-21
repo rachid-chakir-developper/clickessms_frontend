@@ -503,6 +503,12 @@ export default function TableListBeneficiaryDocumentRecords({
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
+                    onClick={(event) => {
+                      // Ne pas naviguer si le clic est sur un bouton, une case à cocher ou un bouton d'icône
+                      if (!event.target.closest('button') && !event.target.closest('input[type="checkbox"]') && !event.target.closest('.MuiIconButton-root')) {
+                        navigate(`/online/ressources-humaines/beneficiaires/details/${row?.id}`);
+                      }
+                    }}
                   >
                     <StyledTableCell padding="checkbox">
                       <Checkbox

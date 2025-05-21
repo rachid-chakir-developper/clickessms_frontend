@@ -4,6 +4,7 @@ import { Box } from '@mui/material';
 import UndesirableEvents from './undesirable-events/UndesirableEvents';
 import ActionPlan from './action-plan/ActionPlan';
 import BoxIdeas from './box_ideas/BoxIdeas';
+import Procedure from './procedure/Procedure';
 
 export default function Qualities() {
   return (
@@ -20,6 +21,10 @@ export default function Qualities() {
         <Route
           path={`boite-idees/*`}
           element={<BoxIdeas />}
+        />
+        <Route
+          path={`procedure/*`}
+          element={<Procedure />}
         />
         <Route
           path="/"

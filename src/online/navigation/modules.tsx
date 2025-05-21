@@ -171,9 +171,9 @@ export const modules: Module[] = [
       {
         id: 'procedures',
         name: 'Procédures',
-        path: '/online/audits/procédures',
+        path: '/online/qualites/procedure',
         icon: <LibraryAddCheckIcon />,
-        disabled: true,
+        disabled: false,
         hidden(authorizationSystem) {
           return !authorizationSystem.requestAuthorization({
             type: 'manageQuality',

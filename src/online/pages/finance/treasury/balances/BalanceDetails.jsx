@@ -92,6 +92,71 @@ export default function BalanceDetails() {
               </Typography>
             </Paper>
           </Grid>
+          <Grid item xs={12}>
+            <Paper sx={{ padding: 2, marginTop: 2 }} variant="outlined">
+              <Typography gutterBottom variant="subtitle3" component="h3">
+                Informations complémentaires
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Typography variant="body1">
+                    <b>Statut :</b> {balanceData?.balance?.state}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body1">
+                    <b>Type de solde :</b> {balanceData?.balance?.type}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body1">
+                    <b>Devise :</b> {balanceData?.balance?.currency}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body1">
+                    <b>Solde initial :</b> {formatCurrencyAmount(balanceData?.balance?.initialBalance)}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body1">
+                    <b>Solde final :</b> {formatCurrencyAmount(balanceData?.balance?.finalBalance)}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body1">
+                    <b>Date de valeur :</b> {getFormatDateTime(balanceData?.balance?.valueDate)}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
+          {balanceData?.balance?.documents && balanceData?.balance?.documents.length > 0 && (
+            <Grid item xs={12}>
+              <Paper sx={{ padding: 2, marginTop: 2 }} variant="outlined">
+                <Typography gutterBottom variant="subtitle3" component="h3">
+                  Documents associés
+                </Typography>
+                <Grid container spacing={2}>
+                  {balanceData?.balance?.documents.map((doc, index) => (
+                    <Grid item xs={12} sm={6} md={4} key={index}>
+                      <Paper sx={{ padding: 1 }} variant="outlined">
+                        <Typography variant="body2">
+                          <b>Nom :</b> {doc.name}
+                        </Typography>
+                        <Typography variant="body2">
+                          <b>Type :</b> {doc.type}
+                        </Typography>
+                        <Typography variant="body2">
+                          <b>Date :</b> {getFormatDateTime(doc.date)}
+                        </Typography>
+                      </Paper>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Paper>
+            </Grid>
+          )}
         </Grid>
       </Box>
     </>

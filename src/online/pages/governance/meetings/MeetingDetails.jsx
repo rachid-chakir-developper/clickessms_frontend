@@ -3,13 +3,13 @@ import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Box, Grid, Paper, Typography, Divider, Chip, Stack, Button, ListItem, ListItemIcon, ListItemText, List, Avatar } from '@mui/material';
+import { Check, CheckBoxOutlineBlank, Done, Edit, Note, ArrowBack } from '@mui/icons-material';
 
 import { MEETING_RECAP } from '../../../../_shared/graphql/queries/MeetingQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { getFormatDate, getFormatDateTime } from '../../../../_shared/tools/functions';
 import BeneficiaryItemCard from '../../human_ressources/beneficiaries/BeneficiaryItemCard';
 import EstablishmentItemCard from '../../companies/establishments/EstablishmentItemCard';
-import { Check, CheckBoxOutlineBlank, Done, Edit, Note } from '@mui/icons-material';
 import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
@@ -39,7 +39,15 @@ export default function MeetingDetails() {
   return (
     <>
       <Stack>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+          <Link
+            to="/online/gouvernance/reunions/liste"
+            className="no_style"
+          >
+            <Button variant="outlined" startIcon={<ArrowBack />}>
+              Retour à la liste
+            </Button>
+          </Link>
           <Link
             to={`/online/gouvernance/reunions/modifier/${meetingData?.meeting?.id}`}
             className="no_style"
@@ -149,8 +157,8 @@ function MeetingMiniInfos({ meeting }) {
                 <Typography gutterBottom variant="subtitle1" component="div">
                   {meeting?.topics}
                 </Typography>
-                <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-                <Typography variant="body2" color="text.secondary">
+                {/* <Divider sx={{ marginTop: 2, marginBottom: 2 }} /> */}
+                {/* <Typography variant="body2" color="text.secondary">
                   <b>Crée le: </b> {`${getFormatDateTime(meeting?.createdAt)}`}{' '}
                   <br />
                   <b>Dernière modification: </b>
@@ -162,7 +170,7 @@ function MeetingMiniInfos({ meeting }) {
                   {`${getFormatDateTime(meeting?.startingDateTime)}`} <br />
                   <b>Date fin: </b>{' '}
                   {`${getFormatDateTime(meeting?.endingDateTime)}`}
-                </Typography>
+                </Typography> */}
               </Grid>
             </Grid>
           </Grid>

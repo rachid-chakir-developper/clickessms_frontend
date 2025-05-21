@@ -12,6 +12,7 @@ import {
   Button,
   Stack,
 } from '@mui/material';
+import { Edit, ArrowBack } from '@mui/icons-material';
 
 import { TASK_ACTION_RECAP } from '../../../../_shared/graphql/queries/TaskActionQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
@@ -22,7 +23,6 @@ import {
 } from '../../../../_shared/tools/functions';
 import EmployeeItemCard from '../../human_ressources/employees/EmployeeItemCard';
 import EstablishmentItemCard from '../../companies/establishments/EstablishmentItemCard';
-import { Edit } from '@mui/icons-material';
 import TaskActionStatusLabelMenu from './TaskActionStatusLabelMenu';
 import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
 import TaskActionTabs from './actions-tabs/TaskActionTabs';
@@ -51,17 +51,26 @@ export default function TaskActionDetails() {
   return (
     <>
       <Box sx={{ width: '100%' }}>
-        
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 1 }}>
-        <Link
-          to={`/online/travaux/actions/modifier/${taskActionData?.taskAction?.id}`}
-          className="no_style"
-        >
-          <Button variant="outlined" endIcon={<Edit />} size="small">
-            Modifier
-          </Button>
-        </Link>
-      </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+          <Link
+            to="/online/travaux/actions/liste"
+            className="no_style"
+          >
+            <Button variant="outlined" startIcon={<ArrowBack />}>
+              Retour à la liste
+            </Button>
+          </Link>
+          <Box>
+            <Link
+              to={`/online/travaux/actions/modifier/${taskActionData?.taskAction?.id}`}
+              className="no_style"
+            >
+              <Button variant="outlined" endIcon={<Edit />} size="small">
+                Modifier
+              </Button>
+            </Link>
+          </Box>
+        </Box>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
             <TaskActionMiniInfos taskAction={taskActionData?.taskAction} />
@@ -87,7 +96,7 @@ export default function TaskActionDetails() {
           </Grid>
           <Grid item xs={12} sm={12}>
             <Paper sx={{ padding: 2 }}>
-              <TaskActionTabs taskAction={taskActionData?.taskAction}/>
+              <TaskActionTabs taskAction={taskActionData?.taskAction} />
             </Paper>
           </Grid>
         </Grid>
@@ -159,16 +168,16 @@ function TaskActionOtherInfos({ taskAction }) {
       }}
     >
       {taskAction?.employees.length > 0 && (
-          <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
-            <Typography variant="h6" gutterBottom>
-              Personnes concernées
-            </Typography>
-            <Stack direction="row" flexWrap='wrap' spacing={1}>
-              {taskAction?.employees?.map((employee, index) => (
-                <EmployeeChip key={index} employee={employee} />
-              ))}
-            </Stack>
-          </Paper>
+        <Paper sx={{ padding: 1, marginY: 1 }} variant="outlined">
+          <Typography variant="h6" gutterBottom>
+            Personnes concernées
+          </Typography>
+          <Stack direction="row" flexWrap='wrap' spacing={1}>
+            {taskAction?.employees?.map((employee, index) => (
+              <EmployeeChip key={index} employee={employee} />
+            ))}
+          </Stack>
+        </Paper>
       )}
     </Paper>
   );

@@ -30,7 +30,7 @@ import {
   MoreVert,
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../../_shared/services/feedbacks/ProgressService';
 
@@ -239,12 +239,13 @@ export default function TableListBalances({
   onDeleteBalance,
   onUpdateBalanceState,
 }) {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   React.useEffect(() => {
     console.log(loading, rows);
@@ -377,6 +378,14 @@ export default function TableListBalances({
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
+                    onClick={(event) => {
+                      // Ne pas naviguer si on clique sur un bouton ou une checkbox
+                      if (!event.target.closest('button') && 
+                          !event.target.closest('input[type="checkbox"]') &&
+                          !event.target.closest('.MuiIconButton-root')) {
+                        navigate(`/online/finance/tresorerie/soldes/details/${row.id}`);
+                      }
+                    }}
                   >
                     <StyledTableCell padding="checkbox">
                       <Checkbox

@@ -6,7 +6,7 @@ import { Grid, Typography, Avatar } from '@mui/material';
 import { GET_RECAP_VEHICLE } from '../../../../_shared/graphql/queries/VehicleQueries';
 import { getCritAirVignetteLabel, getFormatDateTime, getVehicleStateLabel } from '../../../../_shared/tools/functions';
 import styled from '@emotion/styled';
-import { ArrowBack, DriveEta, Edit } from '@mui/icons-material';
+import { DriveEta, Edit, ArrowBack } from '@mui/icons-material';
 import VehicleTabs from './vehicles-tabs/VehicleTabs';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
@@ -159,7 +159,7 @@ const VehicleDetailsPage = ({ vehicle }) => {
                 État : <b>{getVehicleStateLabel(vehicle?.state)}</b>
               </Typography>}
               {vehicle?.critAirVignette && <Typography variant="body2">
-                Vignette Crit’Air : <b>{getCritAirVignetteLabel(vehicle?.critAirVignette)}</b>
+                Vignette Crit'Air : <b>{getCritAirVignetteLabel(vehicle?.critAirVignette)}</b>
               </Typography>}
             </Box>
           </Box>

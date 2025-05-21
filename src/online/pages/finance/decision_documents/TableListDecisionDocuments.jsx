@@ -32,7 +32,7 @@ import {
 } from '@mui/icons-material';
 import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
 import AppLabel from '../../../../_shared/components/app/label/AppLabel';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 
@@ -234,6 +234,7 @@ export default function TableListDecisionDocuments({
   rows,
   onDeleteDecisionDocument
 }) {
+  const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -342,14 +343,13 @@ export default function TableListDecisionDocuments({
                 }
 
                 const handleOpenMenu = (event) => {
-                  // Utilisez l'index de la ligne pour mettre à jour l'état d'ancrage correspondant
+                  event.stopPropagation();
                   const newAnchorElList = [...anchorElList];
                   newAnchorElList[index] = event.currentTarget;
                   setAnchorElList(newAnchorElList);
                 };
 
                 const handleCloseMenu = () => {
-                  // Réinitialisez l'état d'ancrage de la ligne correspondante à null
                   const newAnchorElList = [...anchorElList];
                   newAnchorElList[index] = null;
                   setAnchorElList(newAnchorElList);
@@ -370,8 +370,9 @@ export default function TableListDecisionDocuments({
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
+                    onClick={() => navigate(`/online/finance/decisions/details/${row.id}`)}
                   >
-                    <StyledTableCell padding="checkbox">
+                    <StyledTableCell padding="checkbox" onClick={(e) => e.stopPropagation()}>
                       <Checkbox
                         onClick={(event) => handleClick(event, row.id)}
                         color="primary"
@@ -391,7 +392,7 @@ export default function TableListDecisionDocuments({
                     </StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.decisionDate)}`}</StyledTableCell>
                     <StyledTableCell align="left">{`${getFormatDate(row?.receptionDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="right">
+                    <StyledTableCell align="right" onClick={(e) => e.stopPropagation()}>
                       <IconButton
                         aria-describedby={id}
                         onClick={handleOpenMenu}

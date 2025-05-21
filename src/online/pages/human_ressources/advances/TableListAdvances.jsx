@@ -279,6 +279,13 @@ export default function TableListAdvances() {
                     role="checkbox"
                     tabIndex={-1}
                     key={row.id}
+                    onClick={(event) => {
+                      // Ne pas naviguer si le clic est sur un bouton ou un bouton d'icône
+                      if (!event.target.closest('button') && !event.target.closest('.MuiIconButton-root')) {
+                        navigate(`../details/${row.id}`);
+                      }
+                    }}
+                    sx={{ cursor: 'pointer' }}
                   >
                     <TableCell>{row.number}</TableCell>
                     <TableCell>

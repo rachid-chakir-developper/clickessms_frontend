@@ -257,7 +257,7 @@ function MeetingMiniInfos({ meeting }) {
                     </Box>
                   </>
                 )}
-                <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+                {/* <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
                 <Typography variant="body2" color="text.secondary">
                   <b>Crée le: </b> {`${getFormatDateTime(meeting?.createdAt)}`}{' '}
                   <br />
@@ -270,7 +270,7 @@ function MeetingMiniInfos({ meeting }) {
                   {`${getFormatDateTime(meeting?.startingDateTime)}`} <br />
                   <b>Date fin: </b>{' '}
                   {`${getFormatDateTime(meeting?.endingDateTime)}`}
-                </Typography>
+                </Typography> */}
               </Grid>
             </Grid>
           </Grid>

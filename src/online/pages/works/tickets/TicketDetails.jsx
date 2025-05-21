@@ -66,14 +66,14 @@ export default function TicketDetails({ticketId}) {
     <>
       <Stack>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
-          {/* <Link
+          <Link
             to="/online/qualites/plan-action/tickets/liste"
             className="no_style"
           >
             <Button variant="outlined" startIcon={<ArrowBack />}>
               Retour à la liste
             </Button>
-          </Link> */}
+          </Link>
           <Box>
             {canManageQuality && 
               <Link

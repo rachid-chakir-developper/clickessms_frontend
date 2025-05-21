@@ -18,6 +18,7 @@ import {
   List,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Edit, Star, StarBorder, ArrowBack } from '@mui/icons-material';
 
 import { GET_TASK_RECAP } from '../../../../_shared/graphql/queries/TaskQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
@@ -35,7 +36,6 @@ import TaskWorkersList from '../../../_shared/components/utils/TaskWorkersList';
 import TaskVehiclesList from '../../../_shared/components/utils/TaskVehiclesList';
 import TaskMaterialsList from '../../../_shared/components/utils/TaskMaterialsList';
 import SignatureCard from '../../../_shared/components/feedBacks/SignatureCard';
-import { Edit, Star, StarBorder } from '@mui/icons-material';
 import TaskStatusLabelMenu from './TaskStatusLabelMenu';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import TaskTabs from './tasks-tabs/TaskTabs';
@@ -60,11 +60,18 @@ export default function TaskDetails() {
   let { idTask } = useParams();
   const [getTask, { loading: loadingTask, data: taskData, error: taskError }] =
     useLazyQuery(GET_TASK_RECAP);
+      
   React.useEffect(() => {
     if (idTask) {
       getTask({ variables: { id: idTask } });
     }
   }, [idTask]);
+
+  React.useEffect(() => {
+    if (taskData) {
+      console.log("TASK DETAILS DATA:", taskData);
+    }
+  }, [taskData]);
 
   if (loadingTask) return <ProgressService type="form" />;
   return (
@@ -89,6 +96,7 @@ export default function TaskDetails() {
           </Button>
         </Link>}
       </Box>
+      
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={7}>
@@ -207,6 +215,8 @@ function TaskMiniInfos({ task }) {
 }
 
 function TaskOtherInfos({ task }) {
+  console.log("Task in TaskOtherInfos:", task);
+  console.log("Supplier in TaskOtherInfos:", task?.supplier);
   return (
     <Paper
       variant="outlined"
@@ -232,6 +242,29 @@ function TaskOtherInfos({ task }) {
                   </Typography>
                 </Paper>
               </Box>
+              {task?.supplier ? (
+                <Paper sx={{ padding: 2, marginY:1 }} variant="outlined">
+                  <Typography variant="h6" gutterBottom>
+                    Fournisseur
+                  </Typography>
+                  <Stack direction="row" flexWrap='wrap' spacing={1}>
+                    <Chip
+                      label={task?.supplier?.name}
+                      variant="outlined"
+                      sx={{ margin: 0.5 }}
+                    />
+                  </Stack>
+                </Paper>
+              ) : (
+                <Paper sx={{ padding: 2, marginY:1 }} variant="outlined">
+                  <Typography variant="h6" gutterBottom>
+                    Fournisseur
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Aucun fournisseur associé
+                  </Typography>
+                </Paper>
+              )}
               {task?.employee && (
                 <>
                   <Paper sx={{ padding: 2, marginTop:2 }} variant="outlined">
@@ -241,7 +274,7 @@ function TaskOtherInfos({ task }) {
                     <EmployeeChip employee={task?.employee} />
                   </Paper>
                 </>
-              )}<></>
+              )}
               {task?.establishments.length > 0 && (
                   <Paper sx={{ padding: 1, marginY:1 }} variant="outlined">
                     <Typography variant="h6" gutterBottom>

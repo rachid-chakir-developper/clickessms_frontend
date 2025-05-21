@@ -394,7 +394,7 @@ export default function TableListMeetings({
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
-                    onClick={(event) => handleRowClick(event, row.id)}
+                    onClick={() => navigate(`/online/cr-entretiens/details/${row.id}`)}
                   >
                     <StyledTableCell padding="checkbox">
                       <Checkbox

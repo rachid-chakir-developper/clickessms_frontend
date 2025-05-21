@@ -227,18 +227,18 @@ export default function TableListBeneficiaries({
 }) {
   
   const [headCells, setHeadCells] = React.useState([
-    {
-      id: 'photo',
-      property: 'photo',
-      exportField: 'photo',
-      numeric: false,
-      disablePadding: false,
-      isDefault: true,
-      label: 'Photo',
-      render: ({photo, firstName})=> <Avatar alt={`${firstName}`} variant="rounded" src={ photo ? photo : '/default-placeholder.jpg'}
-                                  sx={{ width: 50, height: 50, bgcolor: '#e1e1e1' }}
-                                />
-    },
+    // {
+    //   id: 'photo',
+    //   property: 'photo',
+    //   exportField: 'photo',
+    //   numeric: false,
+    //   disablePadding: false,
+    //   isDefault: true,
+    //   label: 'Photo',
+    //   render: ({photo, firstName})=> <Avatar alt={`${firstName}`} variant="rounded" src={ photo ? photo : '/default-placeholder.jpg'}
+    //                               sx={{ width: 50, height: 50, bgcolor: '#e1e1e1' }}
+    //                             />
+    // },
     {
       id: 'gender',
       property: 'gender',

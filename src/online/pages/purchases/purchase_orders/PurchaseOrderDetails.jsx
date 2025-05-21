@@ -17,7 +17,7 @@ import {
   TableRow,
   tableCellClasses,
 } from '@mui/material';
-import { Edit, List } from '@mui/icons-material';
+import { Edit, List, ArrowBack } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { GET_PURCHASE_ORDER_RECAP } from '../../../../_shared/graphql/queries/PurchaseOrderQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
@@ -68,22 +68,25 @@ export default function PurchaseOrderDetails() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-        <Box sx={{marginX: 2}}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 2 }}>
+        <Link
+          to="/online/achats/bons-commandes/liste"
+          className="no_style"
+        >
+          <Button variant="outlined" startIcon={<ArrowBack />}>
+            Retour à la liste
+          </Button>
+        </Link>
+        <Box>
           <Link
-            to={`/online/achats/bons-commandes/liste`}
+            to={`/online/achats/bons-commandes/modifier/${purchaseOrder?.id}`}
             className="no_style"
           >
-            <Button variant="text" startIcon={<List />}  size="small">
-              Retour à la Liste
+            <Button variant="outlined" endIcon={<Edit />} size="small">
+              Modifier
             </Button>
           </Link>
         </Box>
-        {/* <Link to={`/online/achats/bons-commandes/modifier/${purchaseOrder?.id}`} className="no_style">
-          <Button variant="outlined" startIcon={<Edit />} size="small">
-            Modifier
-          </Button>
-        </Link> */}
       </Box>
 
       {/* Informations générales */}
