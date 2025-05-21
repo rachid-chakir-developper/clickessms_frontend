@@ -7,6 +7,7 @@ import { GET_SUPPLIER } from '../../../../_shared/graphql/queries/SupplierQuerie
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import { Edit, ArrowBack, Business, Person, AccountBalance, LocationOn, Phone, Email, Language, Description, Note, Info, AttachMoney, Verified, VerifiedUser } from '@mui/icons-material';
 import SupplierTabs from './suppliers-tabs/SupplierTabs';
+import OpenLibraryButton from '../../../_shared/components/library/OpenLibraryButton ';
 
 export default function SupplierDetails() {
   let { idSupplier } = useParams();
@@ -34,6 +35,7 @@ const SupplierDetailsPage = ({ supplier }) => {
     coverImage,
     number,
     externalNumber,
+    folder,
     name,
     managerName,
     supplierType,
@@ -222,6 +224,7 @@ const SupplierDetailsPage = ({ supplier }) => {
               <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                 <Info sx={{ mr: 1, fontSize: 'small' }} />Dernière modification: {getFormatDateTime(updatedAt)}
               </Typography> */}
+              <OpenLibraryButton folderParent={folder} />
             </Paper>
           </Paper>
           

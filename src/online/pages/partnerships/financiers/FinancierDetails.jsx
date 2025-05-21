@@ -6,6 +6,7 @@ import { Grid, Typography, Avatar } from '@mui/material';
 import { GET_FINANCIER } from '../../../../_shared/graphql/queries/FinancierQueries';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import { Edit, ArrowBack, Business, Person, AccountBalance, LocationOn, Phone, Email, Language, Description, Note, Info, AttachMoney } from '@mui/icons-material';
+import OpenLibraryButton from '../../../_shared/components/library/OpenLibraryButton ';
 
 export default function FinancierDetails() {
   let { idFinancier } = useParams();
@@ -32,6 +33,7 @@ const FinancierDetailsPage = ({ financier }) => {
     photo,
     coverImage,
     number,
+    folder,
     externalNumber,
     name,
     managerName,
@@ -197,6 +199,7 @@ const FinancierDetailsPage = ({ financier }) => {
               <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                 <Info sx={{ mr: 1, fontSize: 'small' }} />Dernière modification: {getFormatDateTime(updatedAt)}
               </Typography>
+              <OpenLibraryButton folderParent={folder} />
             </Paper>
           </Paper>
           

@@ -7,6 +7,7 @@ import { GET_PARTNER } from '../../../../_shared/graphql/queries/PartnerQueries'
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import { Edit, ArrowBack, Business, Person, AccountBalance, LocationOn, Phone, Email, Language, Description, Note, Info, AttachMoney, Domain } from '@mui/icons-material';
 import EstablishmentItemCard from '../../companies/establishments/EstablishmentItemCard';
+import OpenLibraryButton from '../../../_shared/components/library/OpenLibraryButton ';
 
 export default function PartnerDetails() {
   let { idPartner } = useParams();
@@ -34,6 +35,7 @@ const PartnerDetailsPage = ({ partner }) => {
     coverImage,
     number,
     externalNumber,
+    folder,
     name,
     managerName,
     partnerType,
@@ -199,6 +201,7 @@ const PartnerDetailsPage = ({ partner }) => {
               <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                 <Info sx={{ mr: 1, fontSize: 'small' }} />Dernière modification: {getFormatDateTime(updatedAt)}
               </Typography>
+              <OpenLibraryButton folderParent={folder} />
             </Paper>
           </Paper>
           

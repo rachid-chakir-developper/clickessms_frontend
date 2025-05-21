@@ -34,6 +34,7 @@ import TableExportButton from '../../../_shared/components/data_tools/export/Tab
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
 import { getFormatDateTime } from '../../../../_shared/tools/functions';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import OpenLibraryButton from '../../../_shared/components/library/OpenLibraryButton ';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -326,17 +327,6 @@ export default function TableListSuppliers({
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
-  const  { setDialogListLibrary, setPrintingModal } = useFeedBacks();
-  const onOpenDialogListLibrary = (folderParent) => {
-      setDialogListLibrary({
-        isOpen: true,
-        folderParent,
-        onClose: () => { 
-            setDialogListLibrary({isOpen: false})
-          }
-      })
-  }
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -511,15 +501,12 @@ export default function TableListSuppliers({
                             Détails
                           </MenuItem>
                         </Link>
-                        <MenuItem
-                          onClick={() => {
-                            onOpenDialogListLibrary(row?.folder);
-                            handleCloseMenu();
-                          }}
-                        >
-                          <Folder sx={{ mr: 2 }} />
-                          Bibliothèque
-                        </MenuItem>
+                        <OpenLibraryButton
+                          folderParent={row?.folder}
+                          apparence="menuItem"
+                          title="Bibliothèque"
+                          onAfterClick={handleCloseMenu}
+                        />
                         <Link
                           to={`/online/achats/fournisseurs/modifier/${row?.id}`}
                           className="no_style"

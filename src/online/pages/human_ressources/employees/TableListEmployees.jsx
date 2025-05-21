@@ -37,6 +37,7 @@ import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksPro
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 import { GET_CUSTOM_FIELDS } from '../../../../_shared/graphql/queries/CustomFieldQueries';
+import OpenLibraryButton from '../../../_shared/components/library/OpenLibraryButton ';
 import { useQuery } from '@apollo/client';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -431,17 +432,6 @@ export default function TableListEmployees({
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
-  const  { setDialogListLibrary, setPrintingModal } = useFeedBacks();
-  const onOpenDialogListLibrary = (folderParent) => {
-      setDialogListLibrary({
-        isOpen: true,
-        folderParent,
-        onClose: () => { 
-            setDialogListLibrary({isOpen: false})
-          }
-      })
-  }
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -616,15 +606,12 @@ export default function TableListEmployees({
                             Détails
                           </MenuItem>
                         </Link>
-                        <MenuItem
-                          onClick={() => {
-                            onOpenDialogListLibrary(row?.folder);
-                            handleCloseMenu();
-                          }}
-                        >
-                          <Folder sx={{ mr: 2 }} />
-                          Bibliothèque
-                        </MenuItem>
+                        <OpenLibraryButton
+                          folderParent={row?.folder}
+                          apparence="menuItem"
+                          title="Bibliothèque"
+                          onAfterClick={handleCloseMenu}
+                        />
                         <Link
                           to={`/online/ressources-humaines/employes/modifier/${row?.id}`}
                           className="no_style"

@@ -39,6 +39,7 @@ import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupW
 import { GET_CUSTOM_FIELDS } from '../../../../_shared/graphql/queries/CustomFieldQueries';
 import { useQuery } from '@apollo/client';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
+import OpenLibraryButton from '../../../_shared/components/library/OpenLibraryButton ';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -487,17 +488,6 @@ export default function TableListBeneficiaries({
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
-  const  { setDialogListLibrary, setPrintingModal } = useFeedBacks();
-  const onOpenDialogListLibrary = (folderParent) => {
-      setDialogListLibrary({
-        isOpen: true,
-        folderParent,
-        onClose: () => { 
-            setDialogListLibrary({isOpen: false})
-          }
-      })
-  }
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -672,15 +662,13 @@ export default function TableListBeneficiaries({
                             Détails
                           </MenuItem>
                         </Link>
-                        {canManageBeneficiaries && <><MenuItem
-                          onClick={() => {
-                            onOpenDialogListLibrary(row?.folder);
-                            handleCloseMenu();
-                          }}
-                        >
-                          <Folder sx={{ mr: 2 }} />
-                          Bibliothèque
-                        </MenuItem>
+                        {canManageBeneficiaries && <>
+                        <OpenLibraryButton
+                          folderParent={row?.folder}
+                          apparence="menuItem"
+                          title="Bibliothèque"
+                          onAfterClick={handleCloseMenu}
+                        />
                         <Link
                           to={`/online/ressources-humaines/beneficiaires/modifier/${row?.id}`}
                           className="no_style"

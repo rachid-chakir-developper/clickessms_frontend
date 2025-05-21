@@ -15,6 +15,7 @@ import { Edit, ArrowBack, List as ListIcon } from '@mui/icons-material';
 import BeneficiaryTabs from './beneficiary-tabs/BeneficiaryTabs';
 import CustomFieldValuesDetails from '../../../../_shared/components/form-fields/costum-fields/CustomFieldValuesDetails';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
+import OpenLibraryButton from '../../../_shared/components/library/OpenLibraryButton ';
 
 export default function BeneficiaryDetails() {
   const authorizationSystem = useAuthorizationSystem();
@@ -68,6 +69,7 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
     photo,
     coverImage,
     number,
+    folder,
     preferredName,
     firstName,
     lastName,
@@ -190,6 +192,8 @@ const BeneficiaryDetailsPage = ({ beneficiary }) => {
               Nationnalité: {nationality}<br />
               Statut professionnel: {professionalStatus?.name}
             </Typography>
+            <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+            <OpenLibraryButton folderParent={folder} />
           </Paper>
           <CustomFieldValuesDetails formModel="Beneficiary" idObject={id} />
         </Paper>

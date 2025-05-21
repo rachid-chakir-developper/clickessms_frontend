@@ -12,6 +12,7 @@ import {
 } from '../../../../_shared/tools/functions';
 import { Edit, ArrowBack, Person, Event, Home, Phone, Email, Language, ContactMail, AccountBalance, Description, Notes, Badge, Work, CalendarMonth } from '@mui/icons-material';
 import EmployeeTabs from './employee-tabs/EmployeeTabs';
+import OpenLibraryButton from '../../../_shared/components/library/OpenLibraryButton ';
 
 export default function EmployeeDetails() {
   let { idEmployee } = useParams();
@@ -58,6 +59,7 @@ const EmployeeDetailsPage = ({ employee }) => {
     signature,
     number,
     registrationNumber,
+    folder,
     firstName,
     lastName,
     preferredName,
@@ -252,6 +254,8 @@ const EmployeeDetailsPage = ({ employee }) => {
                 <b>Salaire initial:</b> {startingSalary} €
               </Typography>
             )}
+            <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+            <OpenLibraryButton folderParent={folder} />
           </Paper>
           
           <Typography variant="h6" gutterBottom sx={{ mt: 3, display: 'flex', alignItems: 'center' }}>
