@@ -32,8 +32,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
 import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
-import { getFormatDateTime } from '../../../../_shared/tools/functions';
-import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import OpenLibraryButton from '../../../_shared/components/library/OpenLibraryButton ';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({

@@ -223,20 +223,8 @@ const GovernanceMemberDetailsPage = ({ governanceMember }) => {
             {email && <Typography variant="body1">Email: {email}</Typography>}
             {mobile && <Typography variant="body1">Mobile: {mobile}</Typography>}
             {fix && <Typography variant="body1">Téléphone fixe: {fix}</Typography>}
-            {fax && <Typography variant="body1">Fax: {fax}</Typography>}
             {webSite && <Typography variant="body1">Site web: {webSite}</Typography>}
             {otherContacts && <Typography variant="body1">Autres contacts: {otherContacts}</Typography>}
-          </Paper>
-          
-          <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-            Informations Bancaires
-          </Typography>
-          <Paper sx={{ padding: 2 }} variant="outlined">
-            <Typography variant="body1">IBAN: {iban}</Typography>
-            <Typography variant="body1">BIC: {bic}</Typography>
-            <Typography variant="body1">
-              Nom de la banque: {bankName}
-            </Typography>
           </Paper>
           
           <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
@@ -257,18 +245,6 @@ const GovernanceMemberDetailsPage = ({ governanceMember }) => {
           <Paper sx={{ padding: 2 }} variant="outlined">
             <Typography variant="body1">
               {description ? description : "Aucune description pour l'instant"}
-            </Typography>
-          </Paper>
-        </Paper>
-      </Grid>
-      <Grid item xs={12} sm={12}>
-        <Paper sx={{ padding: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Observation
-          </Typography>
-          <Paper sx={{ padding: 2 }} variant="outlined">
-            <Typography variant="body1">
-              {observation ? observation : "Aucune observation pour l'instant"}
             </Typography>
           </Paper>
         </Paper>

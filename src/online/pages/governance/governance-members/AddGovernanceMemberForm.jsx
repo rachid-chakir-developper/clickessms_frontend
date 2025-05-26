@@ -213,7 +213,7 @@ export default function AddGovernanceMemberForm({ idGovernanceMember, title }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography component="div" variant="h5">
-        {title} {formik.values.number}
+        {title} <u>{`${formik.values.firstName} ${formik.values.lastName}`} </u>
       </Typography>
       {loadingGovernanceMember && <ProgressService type="form" />}
       {!loadingGovernanceMember && (
@@ -224,14 +224,6 @@ export default function AddGovernanceMemberForm({ idGovernanceMember, title }) {
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
             <Grid item xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Référence"
-                  value={formik.values.number}
-                  disabled
-                />
-              </Item>
               <Item>
                 <ImageFileField
                   variant="outlined"
@@ -296,7 +288,7 @@ export default function AddGovernanceMemberForm({ idGovernanceMember, title }) {
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Poste occupé"
+                  label="rôle"
                   value={formik.values.position}
                   onChange={(e) =>
                     formik.setFieldValue('position', e.target.value)
@@ -393,17 +385,6 @@ export default function AddGovernanceMemberForm({ idGovernanceMember, title }) {
               <Item>
                 <TheTextField
                   variant="outlined"
-                  label="Fax"
-                  value={formik.values.fax}
-                  onChange={(e) => formik.setFieldValue('fax', e.target.value)}
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
                   label="E-mail"
                   value={formik.values.email}
                   onChange={(e) =>
@@ -412,6 +393,8 @@ export default function AddGovernanceMemberForm({ idGovernanceMember, title }) {
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
+            </Grid>
+            <Grid item xs={2} sm={4} md={4}>
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -438,69 +421,16 @@ export default function AddGovernanceMemberForm({ idGovernanceMember, title }) {
             <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" />
             </Grid>
-            <Grid item xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="IBAN (RIB)"
-                  value={formik.values.iban}
-                  onChange={(e) => formik.setFieldValue('iban', e.target.value)}
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="BIC"
-                  value={formik.values.bic}
-                  onChange={(e) => formik.setFieldValue('bic', e.target.value)}
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={2} sm={4} md={4}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Nom de la banque"
-                  value={formik.values.bankName}
-                  onChange={(e) =>
-                    formik.setFieldValue('bankName', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
             <Grid item xs={12} sm={12} md={12}>
-              <Divider variant="middle" />
-            </Grid>
-            <Grid item xs={12} sm={6} md={6}>
               <Item>
                 <TheTextField
                   variant="outlined"
                   label="Description"
                   multiline
-                  rows={4}
+                  rows={6}
                   value={formik.values.description}
                   onChange={(e) =>
                     formik.setFieldValue('description', e.target.value)
-                  }
-                  disabled={loadingPost || loadingPut}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={6} md={6}>
-              <Item>
-                <TheTextField
-                  variant="outlined"
-                  label="Observation"
-                  multiline
-                  rows={4}
-                  value={formik.values.observation}
-                  onChange={(e) =>
-                    formik.setFieldValue('observation', e.target.value)
                   }
                   disabled={loadingPost || loadingPut}
                 />

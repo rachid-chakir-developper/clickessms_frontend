@@ -22,11 +22,11 @@ const OpenLibraryButton = ({
     };
 
     return (
-        <Tooltip title={title}>
+        <>
         {apparence === 'menuItem' && (
             <MenuItem onClick={onOpenDialogListLibrary}>
-            <Folder fontSize="small" sx={{ mr: 2 }} />
-                {title}
+                <Folder fontSize="small" sx={{ mr: 2 }} />
+                    {title}
             </MenuItem>
         )}
         {apparence==="button" && 
@@ -35,11 +35,13 @@ const OpenLibraryButton = ({
             </Button>
         }
         {apparence === 'iconButton' && (
-            <IconButton onClick={onOpenDialogListLibrary}>
-                <Folder />
-            </IconButton>
+            <Tooltip title={title}>
+                <IconButton onClick={onOpenDialogListLibrary}>
+                    <Folder />
+                </IconButton>
+            </Tooltip>
         )}
-        </Tooltip>
+        </>
     );
 };
 

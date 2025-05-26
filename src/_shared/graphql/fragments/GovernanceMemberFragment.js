@@ -27,6 +27,7 @@ export const GOVERNANCE_MEMBER_MINI_INFOS = gql`
     photo
     coverImage
     isActive
+    isArchived
   }
 `;
 

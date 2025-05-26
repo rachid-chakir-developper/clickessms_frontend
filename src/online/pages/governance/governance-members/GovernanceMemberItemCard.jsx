@@ -12,15 +12,18 @@ import {
   Folder,
   AccountBox,
   MoreVert,
-  Article,
+  Archive,
+  Unarchive,
 } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
+import OpenLibraryButton from '../../../_shared/components/library/OpenLibraryButton ';
 
 export default function GovernanceMemberItemCard({
   governanceMember,
   onDeleteGovernanceMember,
   onUpdateGovernanceMemberState,
+  onUpdateGovernanceMemberFields,
 }) {
   //   const theme = useTheme();
   const navigate = useNavigate();
@@ -32,16 +35,7 @@ export default function GovernanceMemberItemCard({
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
-  const { setDialogListLibrary } = useFeedBacks();
-  const onOpenDialogListLibrary = (folderParent) => {
-    setDialogListLibrary({
-      isOpen: true,
-      folderParent,
-      onClose: () => {
-        setDialogListLibrary({ isOpen: false });
-      },
-    });
-  };
+
   const onGoToDetails = ()=>{
     navigate(`/online/gouvernance/membres/details/${governanceMember?.id}`);
   }
@@ -102,65 +96,49 @@ export default function GovernanceMemberItemCard({
               anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
               transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           >
-            {onDeleteGovernanceMember && (
-              <Tooltip title="Supprimer">
-                <MenuItem
-                  onClick={() => {onDeleteGovernanceMember(governanceMember?.id); handleCloseMenu()}}
-                >
-                  <Delete fontSize="small" />
-                  Supprimer
-                </MenuItem>
-              </Tooltip>
-            )}
-            {onUpdateGovernanceMemberState && (
-              <Tooltip
-                title={!governanceMember?.isActive ? 'Activer' : 'Désactiver'}
-              >
-                <MenuItem
-                  aria-label={!governanceMember?.isActive ? 'play' : 'pause'}
-                  onClick={() => {onUpdateGovernanceMemberState(governanceMember?.id); handleCloseMenu()}}
-                >
-                  {!governanceMember?.isActive ? (
-                    <PlayArrowRounded />
-                  ) : (
-                    <PauseRounded />
-                  )}
-                  {!governanceMember?.isActive ? 'Activer' : 'Désactiver'}
-                </MenuItem>
-              </Tooltip>
-            )}
-            <Tooltip title="Modifier">
-              <Link
-                to={`/online/gouvernance/membres/modifier/${governanceMember?.id}`}
-                className="no_style"
-              >
-                <MenuItem onClick={handleCloseMenu}>
-                  <Edit fontSize="small" />
-                  Modifier
-                </MenuItem>
-              </Link>
-            </Tooltip>
+            <Link
+              to={`/online/gouvernance/membres/details/${governanceMember?.id}`}
+              className="no_style"
+            >
+              <MenuItem onClick={handleCloseMenu}>
+                <AccountBox fontSize="small" sx={{ mr: 2 }}/>
+                Détails
+              </MenuItem>
+            </Link>
             {governanceMember?.folder && (
-              <Tooltip title="Pièces jointes">
-                <MenuItem
-                  onClick={() => {onOpenDialogListLibrary(governanceMember?.folder); handleCloseMenu()}}
-                >
-                  <Folder fontSize="small" />
-                  Pièces jointes
-                </MenuItem>
-              </Tooltip>
+              <OpenLibraryButton
+                folderParent={governanceMember?.folder}
+                apparence="menuItem"
+                title="Bibliothèque"
+                onAfterClick={handleCloseMenu}
+              />
             )}
-            <Tooltip title="Détails">
-              <Link
-                to={`/online/gouvernance/membres/details/${governanceMember?.id}`}
-                className="no_style"
+            <Link
+              to={`/online/gouvernance/membres/modifier/${governanceMember?.id}`}
+              className="no_style"
+            >
+              <MenuItem onClick={handleCloseMenu}>
+                <Edit fontSize="small" sx={{ mr: 2 }}/>
+                Modifier
+              </MenuItem>
+            </Link>
+            <MenuItem
+              onClick={() => {
+                onUpdateGovernanceMemberFields({ variables: {id: governanceMember?.id, governanceMemberData: {isArchived: !governanceMember?.isArchived}} });
+                handleCloseMenu();
+              }}
+            >
+              {governanceMember?.isArchived ? <Unarchive sx={{ mr: 2 }} /> : <Archive sx={{ mr: 2 }} />}
+              {governanceMember?.isArchived ? 'Restaurer' : 'Archiver'}
+            </MenuItem>
+            {onDeleteGovernanceMember && (
+              <MenuItem
+                onClick={() => {onDeleteGovernanceMember(governanceMember?.id); handleCloseMenu()}}
               >
-                <MenuItem onClick={handleCloseMenu}>
-                  <AccountBox fontSize="small" />
-                  Détails
-                </MenuItem>
-              </Link>
-            </Tooltip>
+                <Delete fontSize="small" sx={{ mr: 2 }}/>
+                Supprimer
+              </MenuItem>
+            )}
           </Popover>
       </Stack>
     </Card>

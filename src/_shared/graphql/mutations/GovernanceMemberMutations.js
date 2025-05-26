@@ -55,6 +55,20 @@ export const PUT_GOVERNANCE_MEMBER_STATE = gql`
   ${GOVERNANCE_MEMBER_BASIC_INFOS}
 `;
 
+export const PUT_GOVERNANCE_MEMBER_FIELDS = gql`
+  mutation UpdateGovernanceMemberFields($id: ID!, $governanceMemberData: GovernanceMemberInput!) {
+    updateGovernanceMemberFields(id: $id, governanceMemberData: $governanceMemberData) {
+      done
+      success
+      message
+      governanceMember {
+        ...GovernanceMemberBasicInfosFragment
+      }
+    }
+  }
+  ${GOVERNANCE_MEMBER_BASIC_INFOS}
+`;
+
 export const DELETE_GOVERNANCE_MEMBER = gql`
   mutation DeleteGovernanceMember($id: ID!) {
     deleteGovernanceMember(id: $id) {

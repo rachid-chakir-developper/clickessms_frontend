@@ -7,6 +7,10 @@ import {
   Autocomplete,
   IconButton,
   InputAdornment,
+  FormControlLabel,
+  Radio,
+  FormControl,
+  RadioGroup,
 } from '@mui/material';
 import styled from '@emotion/styled';
 
@@ -24,10 +28,20 @@ const Item = styled(Stack)(({ theme }) => ({
 
 const GovernanceMemberFilter = ({ onFilterChange }) => {
 
+  const LIST_TYPES_ITEMS = {
+    ALL : 'ALL',
+    GOVERNANCE_MEMBER_ARCHIVED : 'GOVERNANCE_MEMBER_ARCHIVED',
+    ALL_: [
+      {value: 'ALL', label: 'Tous', hidden: false},
+      {value: 'GOVERNANCE_MEMBER_ARCHIVED', label: 'Archivées', hidden: false},
+    ]
+  }
+
   const [filterValues, setFilterValues] = useState({
     startingDateTime: null,
     endingDateTime: null,
     keyword: '',
+    listType: 'ALL'
   });
 
   const handleFilterSubmit = () => {
@@ -103,6 +117,30 @@ const GovernanceMemberFilter = ({ onFilterChange }) => {
                     }}
                 />
             </Item>
+        </Grid>
+        <Grid item xs={12} sm={12} md={12}>
+          <Item>
+            <FormControl>
+              <RadioGroup
+                row
+                aria-labelledby="demo-row-radio-buttons-group-label"
+                name="row-radio-buttons-group"
+                value={filterValues.listType}
+                onChange={(e) =>{
+                    setFilterValues({ ...filterValues, listType: e.target.value });
+                    onFilterChange({ ...filterValues, listType: e.target.value });
+                  }
+                }
+              >
+                {LIST_TYPES_ITEMS?.ALL_?.map((item, index) => {
+                  return (
+                      !item.hidden && <FormControlLabel key={index} value={item.value} control={<Radio />} label={item.label} />
+                    
+                  );
+                })}
+              </RadioGroup>
+            </FormControl>
+          </Item>
         </Grid>
     </Grid>
   );
