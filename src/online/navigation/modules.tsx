@@ -891,6 +891,17 @@ export const modules: Module[] = [
         icon: <GroupIcon />,
       },
       {
+        id: 'documents',
+        name: 'Documents / Trames',
+        path: '/online/gouvernance/documents-trames',
+        icon: <DescriptionIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageGovernanceModules',
+          }).authorized;
+        },
+      },
+      {
         id: 'minutes',
         name: 'Procès-verbaux',
         path: '/online/gouvernance/reunions',

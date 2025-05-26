@@ -46,7 +46,7 @@ export default function FrameDocumentDetails() {
     <>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
         <Link
-          to="/online/administratif/documents-trames/liste"
+          to="/online/gouvernance/documents-trames/liste"
           className="no_style"
         >
           <Button variant="outlined" startIcon={<ArrowBack />}>
@@ -54,7 +54,7 @@ export default function FrameDocumentDetails() {
           </Button>
         </Link>
         <Link
-          to={`/online/administratif/documents-trames/modifier/${frameDocumentData?.frameDocument?.id}`}
+          to={`/online/gouvernance/documents-trames/modifier/${frameDocumentData?.frameDocument?.id}`}
           className="no_style"
         >
           <Button variant="outlined" endIcon={<Edit />}>

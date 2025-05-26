@@ -9,6 +9,7 @@ export const FRAME_DOCUMENT_BASIC_INFOS = gql`
     number
     name
     document
+    documentScope
     isActive
     description
     establishments{
