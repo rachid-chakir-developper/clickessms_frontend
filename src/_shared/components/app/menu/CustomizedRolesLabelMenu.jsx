@@ -51,6 +51,7 @@ export const ROLES = [
   { value: 'ADMIN', label: 'Administrateur', icon: <Person />, color: 'default'},
   { value: 'MANAGER', label: 'Manager', icon: <Person />, color: 'default'},
   { value: 'SCE_MANAGER', label: 'Responsable CSE', icon: <Person />, color: 'default'},
+  { value: 'GOVERNANCE_MANAGER', label: 'Responsable Gouvernance', icon: <Person />, color: 'default'},
   { value: 'QUALITY_MANAGER', label: 'Responsable Qualité', icon: <Person />, color: 'default'},
   { value: 'ACTIVITY_MANAGER', label: 'Responsable Activité', icon: <Person />, color: 'default'},
   { value: 'SUPPORT_WORKER', label: 'Accompagnant (Éducateur)', icon: <Person />, color: 'default'},

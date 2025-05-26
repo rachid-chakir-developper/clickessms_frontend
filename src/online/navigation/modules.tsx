@@ -883,11 +883,6 @@ export const modules: Module[] = [
     id: 'governance',
     name: 'Gouvernance',
     icon: <TableBarIcon />,
-    hidden(authorizationSystem) {
-      return !authorizationSystem.requestAuthorization({
-        type: 'manageAdministrative',
-      }).authorized;
-    },
     entries: [
       {
         id: 'members',
@@ -900,6 +895,11 @@ export const modules: Module[] = [
         name: 'Procès-verbaux',
         path: '/online/gouvernance/reunions',
         icon: <TaskIcon />,
+        hidden(authorizationSystem) {
+          return !authorizationSystem.requestAuthorization({
+            type: 'manageGovernanceModules',
+          }).authorized;
+        },
       },
     ],
   },

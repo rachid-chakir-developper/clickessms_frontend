@@ -17,6 +17,7 @@ import styled from '@emotion/styled';
 import TheTextField from '../../../../_shared/components/form-fields/TheTextField';
 import TheDesktopDatePicker from '../../../../_shared/components/form-fields/TheDesktopDatePicker';
 import {  Close, Search } from '@mui/icons-material';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 const Item = styled(Stack)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -27,13 +28,17 @@ const Item = styled(Stack)(({ theme }) => ({
   }));
 
 const GovernanceMemberFilter = ({ onFilterChange }) => {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageGovernance = authorizationSystem.requestAuthorization({
+    type: 'manageGovernance',
+  }).authorized;
 
   const LIST_TYPES_ITEMS = {
     ALL : 'ALL',
     GOVERNANCE_MEMBER_ARCHIVED : 'GOVERNANCE_MEMBER_ARCHIVED',
     ALL_: [
       {value: 'ALL', label: 'Tous', hidden: false},
-      {value: 'GOVERNANCE_MEMBER_ARCHIVED', label: 'Archivées', hidden: false},
+      {value: 'GOVERNANCE_MEMBER_ARCHIVED', label: 'Archivées', hidden: !canManageGovernance},
     ]
   }
 
@@ -118,7 +123,7 @@ const GovernanceMemberFilter = ({ onFilterChange }) => {
                 />
             </Item>
         </Grid>
-        <Grid item xs={12} sm={12} md={12}>
+        {canManageGovernance && <Grid item xs={12} sm={12} md={12}>
           <Item>
             <FormControl>
               <RadioGroup
@@ -141,7 +146,7 @@ const GovernanceMemberFilter = ({ onFilterChange }) => {
               </RadioGroup>
             </FormControl>
           </Item>
-        </Grid>
+        </Grid>}
     </Grid>
   );
 };

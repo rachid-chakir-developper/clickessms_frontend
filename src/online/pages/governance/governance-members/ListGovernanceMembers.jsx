@@ -18,6 +18,7 @@ import { GET_GOVERNANCE_MEMBERS } from '../../../../_shared/graphql/queries/Gove
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import GovernanceMemberFilter from './GovernanceMemberFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -28,6 +29,10 @@ const Item = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ListGovernanceMembers() {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageGovernance = authorizationSystem.requestAuthorization({
+    type: 'manageGovernance',
+  }).authorized;
   const [paginator, setPaginator] = React.useState({ page: 1, limit: 18 });
   const [governanceMemberFilter, setGovernanceMemberrFilter] = React.useState(null);
   const handleFilterChange = (newFilter) => {
@@ -231,7 +236,7 @@ export default function ListGovernanceMembers() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      {canManageGovernance && <Grid item xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
           <Link
             to="/online/gouvernance/membres/ajouter"
@@ -242,7 +247,7 @@ export default function ListGovernanceMembers() {
             </Button>
           </Link>
         </Box>
-      </Grid>
+      </Grid>}
       <Grid item xs={12}>
         <GovernanceMemberFilter onFilterChange={handleFilterChange} />
       </Grid>

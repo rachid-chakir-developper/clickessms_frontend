@@ -28,6 +28,14 @@ export const entitiesModel = defineEntitiesModel({
     ownedBy: 'company',
     privileges: ['edit', 'view'],
   },
+  governance: {
+    ownedBy: 'company',
+    privileges: ['edit', 'view'],
+  },
+  governanceModules: {
+    ownedBy: 'company',
+    privileges: ['edit', 'view'],
+  },
   quality: {
     ownedBy: 'company',
     privileges: ['edit', 'view'],

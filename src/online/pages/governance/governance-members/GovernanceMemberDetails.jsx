@@ -12,8 +12,13 @@ import {
   getGovernanceRoleLabel,
 } from '../../../../_shared/tools/functions';
 import { Edit, ArrowBack } from '@mui/icons-material';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 export default function GovernanceMemberDetails() {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageGovernance = authorizationSystem.requestAuthorization({
+    type: 'manageGovernance',
+  }).authorized;
   let { idGovernanceMember } = useParams();
   const [getGovernanceMember, { loading: loadingGovernanceMember, data: governanceMemberData }] =
     useLazyQuery(GET_GOVERNANCE_MEMBER);
@@ -34,14 +39,14 @@ export default function GovernanceMemberDetails() {
             Retour à la liste
           </Button>
         </Link>
-        <Link
+        {canManageGovernance && <Link
           to={`/online/gouvernance/membres/modifier/${governanceMemberData?.governanceMember?.id}`}
           className="no_style"
         >
           <Button variant="outlined" endIcon={<Edit />}>
             Modifier
           </Button>
-        </Link>
+        </Link>}
       </Box>
       {governanceMemberData?.governanceMember && (
         <GovernanceMemberDetailsPage governanceMember={governanceMemberData?.governanceMember} />

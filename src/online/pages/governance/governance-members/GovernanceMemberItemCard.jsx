@@ -19,6 +19,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import OpenLibraryButton from '../../../_shared/components/library/OpenLibraryButton ';
 import { getGovernanceRoleLabel } from '../../../../_shared/tools/functions';
+import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 export default function GovernanceMemberItemCard({
   governanceMember,
@@ -26,6 +27,10 @@ export default function GovernanceMemberItemCard({
   onUpdateGovernanceMemberState,
   onUpdateGovernanceMemberFields,
 }) {
+  const authorizationSystem = useAuthorizationSystem();
+  const canManageGovernance = authorizationSystem.requestAuthorization({
+    type: 'manageGovernance',
+  }).authorized;
   //   const theme = useTheme();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -106,7 +111,7 @@ export default function GovernanceMemberItemCard({
                 Détails
               </MenuItem>
             </Link>
-            {governanceMember?.folder && (
+            {canManageGovernance && <>{governanceMember?.folder && (
               <OpenLibraryButton
                 folderParent={governanceMember?.folder}
                 apparence="menuItem"
@@ -139,7 +144,7 @@ export default function GovernanceMemberItemCard({
                 <Delete fontSize="small" sx={{ mr: 2 }}/>
                 Supprimer
               </MenuItem>
-            )}
+            )}</>}
           </Popover>
       </Stack>
     </Card>

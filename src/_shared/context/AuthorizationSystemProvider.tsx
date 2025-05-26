@@ -70,6 +70,16 @@ export function AuthorizationSystemProvider({ children }) {
         return user.company.id;
       },
     },
+    governance: {
+      company() {
+        return user.company.id;
+      },
+    },
+    governanceModules: {
+      company() {
+        return user.company.id;
+      },
+    },
     quality: {
       company() {
         return user.company.id;
