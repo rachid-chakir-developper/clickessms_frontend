@@ -212,7 +212,7 @@ export const getSceRoleLabel = (role) => {
 };
 
 export const getGovernanceRoleLabel = (role) => {
-  return GOVERNANCE_ROLE_CHOICES.ALL.find((t) => t.value === role)?.label;
+  return GOVERNANCE_ROLE_CHOICES.ALL.find((t) => t.value === role)?.label || role;
 };
 
 export const getUndesirableEventTypeLabel = (eventType) => {

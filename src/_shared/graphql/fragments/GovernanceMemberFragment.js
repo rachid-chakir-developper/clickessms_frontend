@@ -22,6 +22,7 @@ export const GOVERNANCE_MEMBER_ROLE_DETAILS = gql`
   fragment GovernanceMemberRoleFragment on GovernanceMemberRoleType {
     id
     role
+    otherRole
     startingDateTime
     endingDateTime
   }

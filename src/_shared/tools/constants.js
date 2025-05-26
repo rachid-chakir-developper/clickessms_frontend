@@ -487,6 +487,7 @@ export const GOVERNANCE_ROLE_CHOICES = {
   SECRETARY: "SECRETARY",
   ASSISTANT_SECRETARY: "ASSISTANT_SECRETARY",
   MEMBER: "MEMBER",
+  OTHER: "OTHER",
   ALL: [
     { value: "PRESIDENT", label: "Président / Présidente" },
     { value: "TREASURER", label: "Trésorier / Trésorière" },
@@ -494,6 +495,7 @@ export const GOVERNANCE_ROLE_CHOICES = {
     { value: "SECRETARY", label: "Secrétaire" },
     { value: "ASSISTANT_SECRETARY", label: "Secrétaire Adjoint / Secrétaire Adjointe" },
     { value: "MEMBER", label: "Membre" },
+    { value: "OTHER", label: "Autre" },
   ],
 };
 

@@ -116,7 +116,7 @@ export default function AddGovernanceMemberForm({ idGovernanceMember, title }) {
       ...formik.values,
       governanceMemberRoles: [
         ...formik.values.governanceMemberRoles,
-        { role: GOVERNANCE_ROLE_CHOICES.MEMBER, startingDateTime: dayjs(new Date()), endingDateTime: null},
+        { role: GOVERNANCE_ROLE_CHOICES.MEMBER, otherRole: '', startingDateTime: dayjs(new Date()), endingDateTime: null},
       ],
     });
   };
@@ -362,6 +362,15 @@ export default function AddGovernanceMemberForm({ idGovernanceMember, title }) {
                           </Select>
                       </FormControl>
                     </Item>
+                    {item.role===GOVERNANCE_ROLE_CHOICES?.OTHER && <Item>
+                      <TheTextField
+                        variant="outlined"
+                        label="Autre rôle"
+                        value={item.otherRole}
+                        onChange={(e) => formik.setFieldValue(`governanceMemberRoles.${index}.otherRole`, e.target.value)}
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>}
                   </Grid>
                   <Grid item xs={12} sm={6} md={4} >
                     <Item>
