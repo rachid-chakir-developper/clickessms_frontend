@@ -32,7 +32,7 @@ import {
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { GET_EMPLOYEES } from '../../../../_shared/graphql/queries/EmployeeQueries';
 import TheAutocomplete from '../../../../_shared/components/form-fields/TheAutocomplete';
-import { CSE_ROLE_CHOICES } from '../../../../_shared/tools/constants';
+import { SCE_ROLE_CHOICES } from '../../../../_shared/tools/constants';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -49,7 +49,7 @@ export default function AddSceMemberForm({ idSceMember, title }) {
   const formik = useFormik({
     initialValues: {
       employee: null,
-      role: 'MEMBER',
+      role: SCE_ROLE_CHOICES.MEMBER,
       description: '',
       observation: '',
       isActive: true,
@@ -236,7 +236,7 @@ export default function AddSceMemberForm({ idSceMember, title }) {
                         onChange={(e) => formik.setFieldValue('role', e.target.value)}
                         disabled={loadingPost || loadingPut}
                     >
-                    {CSE_ROLE_CHOICES?.ALL?.map((type, index) => {
+                    {SCE_ROLE_CHOICES?.ALL?.map((type, index) => {
                       return (
                         <MenuItem key={index} value={type.value}>
                           {type.label}

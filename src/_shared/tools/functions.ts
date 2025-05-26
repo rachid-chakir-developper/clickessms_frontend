@@ -23,7 +23,8 @@ import {
   CONTRACT_TYPES,
   MSG_NOTIF_TYPES,
   FEEDBACK_MODULES,
-  CSE_ROLE_CHOICES,
+  SCE_ROLE_CHOICES,
+  GOVERNANCE_ROLE_CHOICES,
   UNDESIRABLE_EVENT_TYPES,
   UNDESIRABLE_EVENT_SEVERITY,
   FIELD_TYPE_CHOICES,
@@ -206,8 +207,12 @@ export const getFeedbackModuleLabel = (module) => {
   return FEEDBACK_MODULES.ALL.find((t) => t.value == module)?.label;
 };
 
-export const getCSERoleLabel = (role) => {
-  return CSE_ROLE_CHOICES.ALL.find((t) => t.value === role)?.label;
+export const getSceRoleLabel = (role) => {
+  return SCE_ROLE_CHOICES.ALL.find((t) => t.value === role)?.label;
+};
+
+export const getGovernanceRoleLabel = (role) => {
+  return GOVERNANCE_ROLE_CHOICES.ALL.find((t) => t.value === role)?.label;
 };
 
 export const getUndesirableEventTypeLabel = (eventType) => {

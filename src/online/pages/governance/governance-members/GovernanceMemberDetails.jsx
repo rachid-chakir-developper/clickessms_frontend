@@ -9,6 +9,7 @@ import { GET_GOVERNANCE_MEMBER } from '../../../../_shared/graphql/queries/Gover
 import {
   getFormatDate,
   getFormatDateTime,
+  getGovernanceRoleLabel,
 } from '../../../../_shared/tools/functions';
 import { Edit, ArrowBack } from '@mui/icons-material';
 
@@ -59,6 +60,7 @@ const GovernanceMemberDetailsPage = ({ governanceMember }) => {
     lastName,
     birthDate,
     position,
+    role,
     hiringDate,
     probationEndDate,
     workEndDate,
@@ -141,8 +143,8 @@ const GovernanceMemberDetailsPage = ({ governanceMember }) => {
               {address && address !== '' && (
                 <Typography variant="body2">{address}</Typography>
               )}
-              {position && position !== '' && (
-                <Typography variant="body2">{position}</Typography>
+              {role && role !== '' && (
+                <Typography variant="body2">{getGovernanceRoleLabel(role)}</Typography>
               )}
               <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
                 {email}
@@ -180,7 +182,7 @@ const GovernanceMemberDetailsPage = ({ governanceMember }) => {
             <Typography variant="body1">
               Date de naissance: {getFormatDate(birthDate)}
             </Typography>
-            <Typography variant="body1">
+            {/* <Typography variant="body1">
               Date d'embauche: {getFormatDate(hiringDate)}
             </Typography>
             {probationEndDate && (
@@ -197,7 +199,7 @@ const GovernanceMemberDetailsPage = ({ governanceMember }) => {
               <Typography variant="body1">
                 Salaire initial: {startingSalary} €
               </Typography>
-            )}
+            )} */}
             <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
             {address && (
               <Typography variant="body1">

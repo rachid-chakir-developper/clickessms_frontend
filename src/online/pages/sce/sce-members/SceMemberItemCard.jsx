@@ -18,7 +18,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
-import { getCSERoleLabel } from '../../../../_shared/tools/functions';
+import { getSceRoleLabel } from '../../../../_shared/tools/functions';
 
 export default function SceMemberItemCard({
   sceMember,
@@ -100,7 +100,7 @@ export default function SceMemberItemCard({
               color="text.secondary"
               fontWeight="regular"
             >
-              {getCSERoleLabel(sceMember?.role)}
+              {getSceRoleLabel(sceMember?.role)}
             </Typography>
             </Stack>
           </Stack>

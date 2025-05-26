@@ -152,10 +152,9 @@ const TaskActionFilter = ({ onFilterChange }) => {
             <Item>
                 <TheAutocomplete
                         options={employeesData?.employees?.nodes}
-onInput={(e) => {
+                        onInput={(e) => {
                           onGetEmployees(e.target.value)
                         }}
-
                         label="Employés"
                         limitTags={3}
                         value={selectedEmployees}

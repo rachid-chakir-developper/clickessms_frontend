@@ -8,6 +8,11 @@ import {
   InputAdornment,
   Button,
   Divider,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  IconButton,
 } from '@mui/material';
 import dayjs from 'dayjs';
 
@@ -26,6 +31,8 @@ import {
   PUT_GOVERNANCE_MEMBER,
 } from '../../../../_shared/graphql/mutations/GovernanceMemberMutations';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import { GOVERNANCE_ROLE_CHOICES } from '../../../../_shared/tools/constants';
+import { Close } from '@mui/icons-material';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -74,11 +81,18 @@ export default function AddGovernanceMemberForm({ idGovernanceMember, title }) {
       description: '',
       observation: '',
       isActive: true,
+      governanceMemberRoles: []
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      let { photo, ...governanceMemberFormCopy } = values;
-      let { coverImage, ...governanceMemberCopy } = governanceMemberFormCopy;
+      let { photo, coverImage, ...governanceMemberCopy } = values;
+      if (!governanceMemberCopy?.governanceMemberRoles) governanceMemberCopy['governanceMemberRoles'] = [];
+      let items = [];
+        governanceMemberCopy.governanceMemberRoles.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          items.push(itemCopy);
+        });
+        governanceMemberCopy.governanceMemberRoles = items;
       if (idGovernanceMember && idGovernanceMember != '') {
         onUpdateGovernanceMember({
           id: governanceMemberCopy.id,
@@ -96,6 +110,28 @@ export default function AddGovernanceMemberForm({ idGovernanceMember, title }) {
         });
     },
   });
+
+  const addGovernanceMemberRole= () => {
+    formik.setValues({
+      ...formik.values,
+      governanceMemberRoles: [
+        ...formik.values.governanceMemberRoles,
+        { role: GOVERNANCE_ROLE_CHOICES.MEMBER, startingDateTime: dayjs(new Date()), endingDateTime: null},
+      ],
+    });
+  };
+
+  const removeGovernanceMemberRole= (index) => {
+    const updatedDecisionDocumentEntries = [...formik.values.governanceMemberRoles];
+    updatedDecisionDocumentEntries.splice(index, 1);
+
+    formik.setValues({
+      ...formik.values,
+      governanceMemberRoles: updatedDecisionDocumentEntries,
+    });
+  };
+
+
   const [createGovernanceMember, { loading: loadingPost }] = useMutation(
     POST_GOVERNANCE_MEMBER,
     {
@@ -194,12 +230,20 @@ export default function AddGovernanceMemberForm({ idGovernanceMember, title }) {
     {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
-        let { __typename, ...governanceMemberCopy1 } = data.governanceMember;
-        let { folder, ...governanceMemberCopy } = governanceMemberCopy1;
-        governanceMemberCopy.birthDate = dayjs(governanceMemberCopy.birthDate);
-        governanceMemberCopy.hiringDate = dayjs(governanceMemberCopy.hiringDate);
-        governanceMemberCopy.probationEndDate = dayjs(governanceMemberCopy.probationEndDate);
-        governanceMemberCopy.workEndDate = dayjs(governanceMemberCopy.workEndDate);
+        let { __typename, folder, ...governanceMemberCopy } = data.governanceMember;
+        governanceMemberCopy.birthDate = governanceMemberCopy.birthDate ? dayjs(governanceMemberCopy.birthDate) : null;
+        governanceMemberCopy.hiringDate = governanceMemberCopy.hiringDate ? dayjs(governanceMemberCopy.hiringDate) : null;
+        governanceMemberCopy.probationEndDate = governanceMemberCopy.probationEndDate ? dayjs(governanceMemberCopy.probationEndDate) : null;
+        governanceMemberCopy.workEndDate = governanceMemberCopy.workEndDate ? dayjs(governanceMemberCopy.workEndDate) : null;
+        if (!governanceMemberCopy?.governanceMemberRoles) governanceMemberCopy['governanceMemberRoles'] = [];
+        let items = [];
+        governanceMemberCopy.governanceMemberRoles.forEach((item) => {
+          let { __typename, ...itemCopy } = item;
+          itemCopy.startingDateTime = itemCopy.startingDateTime ? dayjs(itemCopy.startingDateTime) : null;
+          itemCopy.endingDateTime = itemCopy.endingDateTime ? dayjs(itemCopy.endingDateTime) : null;
+          items.push(itemCopy);
+        });
+        governanceMemberCopy.governanceMemberRoles = items;
         formik.setValues(governanceMemberCopy);
       },
       onError: (err) => console.log(err),
@@ -285,17 +329,92 @@ export default function AddGovernanceMemberForm({ idGovernanceMember, title }) {
                   disabled={loadingPost || loadingPut}
                 />
               </Item>
-              <Item>
-                <TheTextField
+            </Grid>
+            <Grid 
+              item
+              xs={12}
+              sm={12}
+              md={12} >
+              <Typography variant="h6">Les rôles</Typography>
+              {formik.values?.governanceMemberRoles?.map((item, index) => (
+                <Grid
+                  container
+                  key={index}
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  <Grid item xs={12} sm={4} md={4}>
+                    <Item>
+                      <FormControl fullWidth>
+                          <InputLabel>Rôle</InputLabel>
+                          <Select
+                              value={item.role}
+                              onChange={(e) => formik.setFieldValue(`governanceMemberRoles.${index}.role`, e.target.value)}
+                              disabled={loadingPost || loadingPut}
+                          >
+                          {GOVERNANCE_ROLE_CHOICES?.ALL?.map((type, index) => {
+                            return (
+                              <MenuItem key={index} value={type.value}>
+                                {type.label}
+                              </MenuItem>
+                            );
+                          })}
+                          </Select>
+                      </FormControl>
+                    </Item>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} >
+                    <Item>
+                      <TheDesktopDatePicker
+                        variant="outlined"
+                        label="Date de début"
+                        value={item.startingDateTime}
+                        onChange={(date) =>
+                          formik.setFieldValue(`governanceMemberRoles.${index}.startingDateTime`, date)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                    </Item>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} >
+                    <Item sx={{position: 'relative'}}>
+                      <TheDesktopDatePicker
+                        variant="outlined"
+                        label="Date de fin"
+                        value={item.endingDateTime}
+                        onChange={(date) =>
+                          formik.setFieldValue(`governanceMemberRoles.${index}.endingDateTime`, date)
+                        }
+                        disabled={loadingPost || loadingPut}
+                      />
+                      <IconButton sx={{position: 'absolute', top: -3, right: -2}}
+                        onClick={() => removeGovernanceMemberRole(index)}
+                        edge="end"
+                        color="error"
+                      >
+                        <Close />
+                      </IconButton>
+                    </Item>
+                  </Grid>
+                </Grid>
+              ))}
+            </Grid>
+            <Grid
+              xs={12}
+              sm={12}
+              md={12}
+              item
+            >
+              <Box sx={{ padding: 2, display: 'flex', justifyContent: 'flex-end', alignItems:'start' , borderStyle: 'dashed', borderWidth: 2, borderColor: '#f1f1f1', backgroundColor: '#fcfcfc'}}>
+                <Button
                   variant="outlined"
-                  label="rôle"
-                  value={formik.values.position}
-                  onChange={(e) =>
-                    formik.setFieldValue('position', e.target.value)
-                  }
+                  size="small"
+                  onClick={addGovernanceMemberRole}
                   disabled={loadingPost || loadingPut}
-                />
-              </Item>
+                >
+                  Ajouter un rôle
+                </Button>
+              </Box>
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
               <Divider variant="middle" />

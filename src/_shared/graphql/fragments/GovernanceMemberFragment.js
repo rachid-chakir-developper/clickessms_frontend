@@ -13,7 +13,17 @@ export const GOVERNANCE_MEMBER_PHONE_INFOS = gql`
     fix
     photo
     coverImage
+    role
     isActive
+  }
+`;
+
+export const GOVERNANCE_MEMBER_ROLE_DETAILS = gql`
+  fragment GovernanceMemberRoleFragment on GovernanceMemberRoleType {
+    id
+    role
+    startingDateTime
+    endingDateTime
   }
 `;
 
@@ -26,6 +36,7 @@ export const GOVERNANCE_MEMBER_MINI_INFOS = gql`
     email
     photo
     coverImage
+    role
     isActive
     isArchived
   }
@@ -34,6 +45,9 @@ export const GOVERNANCE_MEMBER_MINI_INFOS = gql`
 export const GOVERNANCE_MEMBER_BASIC_INFOS = gql`
   fragment GovernanceMemberBasicInfosFragment on GovernanceMemberType {
     ...GovernanceMemberMiniInfosFragment
+    governanceMemberRoles{
+      ...GovernanceMemberRoleFragment
+    }
     folder {
       id
       number
@@ -41,6 +55,7 @@ export const GOVERNANCE_MEMBER_BASIC_INFOS = gql`
     }
   }
   ${GOVERNANCE_MEMBER_MINI_INFOS}
+  ${GOVERNANCE_MEMBER_ROLE_DETAILS}
 `;
 
 export const GOVERNANCE_MEMBER_DETAILS = gql`

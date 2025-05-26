@@ -18,6 +18,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import OpenLibraryButton from '../../../_shared/components/library/OpenLibraryButton ';
+import { getGovernanceRoleLabel } from '../../../../_shared/tools/functions';
 
 export default function GovernanceMemberItemCard({
   governanceMember,
@@ -71,7 +72,7 @@ export default function GovernanceMemberItemCard({
               color="text.secondary"
               fontWeight="regular"
             >
-              {`${governanceMember?.position}`}
+              {`${getGovernanceRoleLabel(governanceMember?.role)}`}
             </Typography>
             <Typography
               component="div"
