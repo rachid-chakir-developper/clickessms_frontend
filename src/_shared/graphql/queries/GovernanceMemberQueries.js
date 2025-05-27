@@ -35,4 +35,11 @@ export const GET_GOVERNANCE_MEMBERS = gql`
   ${GOVERNANCE_MEMBER_BASIC_INFOS}
 `;
 
+// 🌳 Requête pour l'organigramme
+export const GET_GOVERNANCE_ORGANIZATION = gql`
+  query {
+    governanceOrganization
+  }
+`;
+
 // Add more governanceMember-related queries here

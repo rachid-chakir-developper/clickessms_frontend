@@ -267,7 +267,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les documents
+          Les documents de la gouvernance
         </Typography>
       )}
       <TableExportButton 

@@ -2,10 +2,10 @@ import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { Alert, Button, Stack } from '@mui/material';
+import { Alert, Button, Stack, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import GovernanceMemberItemCard from './GovernanceMemberItemCard';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { Add, List } from '@mui/icons-material';
+import { Add, AccountTree, List } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
@@ -14,11 +14,12 @@ import {
   PUT_GOVERNANCE_MEMBER_STATE,
   PUT_GOVERNANCE_MEMBER_FIELDS,
 } from '../../../../_shared/graphql/mutations/GovernanceMemberMutations';
-import { GET_GOVERNANCE_MEMBERS } from '../../../../_shared/graphql/queries/GovernanceMemberQueries';
+import { GET_GOVERNANCE_MEMBERS, GET_GOVERNANCE_ORGANIZATION } from '../../../../_shared/graphql/queries/GovernanceMemberQueries';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import GovernanceMemberFilter from './GovernanceMemberFilter';
 import PaginationControlled from '../../../../_shared/components/helpers/PaginationControlled';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
+import OrganizationChart from '../../../_shared/components/organizational-chart/OrganizationChart';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -51,6 +52,36 @@ export default function ListGovernanceMembers() {
   ] = useLazyQuery(GET_GOVERNANCE_MEMBERS, {
     variables: { governanceMemberFilter, page: paginator.page, limit: paginator.limit },
   });
+
+  const [
+  getGovernanceOrganization,
+  {
+    loading: loadingGovernanceOrganization,
+    data: governanceOrganizationData,
+    error: governanceOrganizationError,
+    fetchMore: fetchMoreGovernanceOrganization,
+  },
+] = useLazyQuery(GET_GOVERNANCE_ORGANIZATION, { fetchPolicy: 'network-only' });
+
+  const [view, setView] = React.useState('table');
+
+  const handleChange = (event, nextView) => {
+    if(nextView) setView(nextView);
+  };
+  
+  React.useEffect(() => {
+    switch (view) {
+      case 'organization':
+        getGovernanceOrganization()
+        break;
+      case 'table':
+        getGovernanceMembers()
+        break;
+    
+      default:
+        break;
+    }
+  }, [view]);
 
   React.useEffect(() => {
     getGovernanceMembers();
@@ -235,61 +266,88 @@ export default function ListGovernanceMembers() {
     };
 
   return (
-    <Grid container spacing={2}>
-      {canManageGovernance && <Grid item xs={12}>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
-          <Link
-            to="/online/gouvernance/membres/ajouter"
-            className="no_style"
-          >
-            <Button variant="contained" endIcon={<Add />}>
-              Ajouter un membre
-            </Button>
-          </Link>
-        </Box>
-      </Grid>}
-      <Grid item xs={12}>
-        <GovernanceMemberFilter onFilterChange={handleFilterChange} />
-      </Grid>
-      <Grid item xs={12}>
-        <Box sx={{ flexGrow: 1, paddingY: 4 }}>
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-          >
-            {loadingGovernanceMembers && (
-              <Grid key={'pgrs'} item xs={12} sm={6} md={4}>
-                <ProgressService type="mediaCard" />
-              </Grid>
-            )}
-            {governanceMembersData?.governanceMembers?.nodes?.length < 1 &&
-              !loadingGovernanceMembers && (
-                <Alert severity="warning">Aucun membre trouvé.</Alert>
+    <>
+      <Stack justifyContent="flex-end">
+        <ToggleButtonGroup
+          size="small"
+          value={view}
+          exclusive
+          onChange={handleChange}
+          sx={{justifyContent:"flex-end"}}
+        > 
+          <Tooltip title="La liste" >
+            <ToggleButton value="table" aria-label="list">
+              <List />
+            </ToggleButton>
+          </Tooltip>
+          <Tooltip title="L'organigramme" >
+            <ToggleButton value="organization" aria-label="quilt">
+              <AccountTree  />
+            </ToggleButton>
+          </Tooltip>
+        </ToggleButtonGroup>
+      </Stack>
+      {view==='table' && <Grid container spacing={2}>
+        {canManageGovernance && <Grid item xs={12}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 3 }}>
+            <Link
+              to="/online/gouvernance/membres/ajouter"
+              className="no_style"
+            >
+              <Button variant="contained" endIcon={<Add />}>
+                Ajouter un membre
+              </Button>
+            </Link>
+          </Box>
+        </Grid>}
+        <Grid item xs={12}>
+          <GovernanceMemberFilter onFilterChange={handleFilterChange} />
+        </Grid>
+        <Grid item xs={12}>
+          <Box sx={{ flexGrow: 1, paddingY: 4 }}>
+            <Grid
+              container
+              spacing={{ xs: 2, md: 3 }}
+              columns={{ xs: 4, sm: 8, md: 12 }}
+            >
+              {loadingGovernanceMembers && (
+                <Grid key={'pgrs'} item xs={12} sm={6} md={4}>
+                  <ProgressService type="mediaCard" />
+                </Grid>
               )}
-            {governanceMembersData?.governanceMembers?.nodes?.map((governanceMember, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <Item>
-                  <GovernanceMemberItemCard
-                    governanceMember={governanceMember}
-                    onDeleteGovernanceMember={onDeleteGovernanceMember}
-                    onUpdateGovernanceMemberState={onUpdateGovernanceMemberState}
-                    onUpdateGovernanceMemberFields={onUpdateGovernanceMemberFields}
-                  />
-                </Item>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      </Grid>
-      <Grid item xs={12}>
-        <PaginationControlled
-          totalItems={governanceMembersData?.governanceMembers?.totalCount} // Nombre total d'éléments
-          itemsPerPage={paginator.limit} // Nombre d'éléments par page
-          currentPage={paginator.page}
-          onChange={(page) => setPaginator({ ...paginator, page })}
-        />
-      </Grid>
-    </Grid>
+              {governanceMembersData?.governanceMembers?.nodes?.length < 1 &&
+                !loadingGovernanceMembers && (
+                  <Alert severity="warning">Aucun membre trouvé.</Alert>
+                )}
+              {governanceMembersData?.governanceMembers?.nodes?.map((governanceMember, index) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Item>
+                    <GovernanceMemberItemCard
+                      governanceMember={governanceMember}
+                      onDeleteGovernanceMember={onDeleteGovernanceMember}
+                      onUpdateGovernanceMemberState={onUpdateGovernanceMemberState}
+                      onUpdateGovernanceMemberFields={onUpdateGovernanceMemberFields}
+                    />
+                  </Item>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <PaginationControlled
+            totalItems={governanceMembersData?.governanceMembers?.totalCount} // Nombre total d'éléments
+            itemsPerPage={paginator.limit} // Nombre d'éléments par page
+            currentPage={paginator.page}
+            onChange={(page) => setPaginator({ ...paginator, page })}
+          />
+        </Grid>
+      </Grid>}
+      {view==='organization' && <OrganizationChart
+        loading={loadingGovernanceOrganization}
+        error={governanceOrganizationError}
+        organization={governanceOrganizationData?.governanceOrganization} 
+       />}
+    </>
   );
 }
