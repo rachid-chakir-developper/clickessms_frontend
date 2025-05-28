@@ -132,39 +132,13 @@ export default function ListMeetings() {
       <Grid item xs={12}>
         <MeetingFilter onFilterChange={handleFilterChange} />
       </Grid>
-      {/* <Grid item xs={12}>
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-          >
-            {loadingMeetings && (
-              <Grid key={'pgrs'} item xs={2} sm={4} md={3}>
-                <ProgressService type="mediaCard" />
-              </Grid>
-            )}
-            {meetingsData?.meetings?.nodes?.length < 1 && !loadingMeetings && (
-              <Alert severity="warning">Aucun procès-verbal trouvé.</Alert>
-            )}
-            {meetingsData?.meetings?.nodes?.map((meeting, index) => (
-              <Grid item xs={2} sm={4} md={3} key={index}>
-                <Item>
-                  <MeetingItemCard
-                    meeting={meeting}
-                    onDeleteMeeting={onDeleteMeeting}
-                  />
-                </Item>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      </Grid> */}
       <Grid item xs={12}>
         <TableListMeetings
           loading={loadingMeetings}
           rows={meetingsData?.meetings?.nodes || []}
           onDeleteMeeting={onDeleteMeeting}
+          onFilterChange={(newFilter) => handleFilterChange({ ...meetingFilter, ...newFilter })}
+          paginator={paginator}
         />
       </Grid>
       <Grid item xs={12}>

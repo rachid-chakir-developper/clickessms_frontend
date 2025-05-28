@@ -10,6 +10,7 @@ import { Grid, ListSubheader, Stack } from '@mui/material';
 import styled from '@emotion/styled';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
 import { Link, useNavigate } from 'react-router-dom';
+import { getGovernanceRoleLabel } from '../../../../_shared/tools/functions';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -30,70 +31,6 @@ const SearchResultList = ({ results, loading, keyword, onClose }) => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={6}>
-        <Item>
-          <List
-            sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-            subheader={
-              <ListSubheader sx={{ fontSize: 20, fontWeight: 700 }}>
-                Les structures
-              </ListSubheader>
-            }
-          >
-            {loading && <ProgressService type="searchResults" />}
-            {!loading && results?.establishments?.totalCount < 1 && (
-              <small>
-                Aucune structure trouvée avec{' '}
-                <b>
-                  "<em>{keyword}</em>"
-                </b>
-              </small>
-            )}
-            {results?.establishments?.nodes?.map((establishment, index) => (
-              <React.Fragment key={index}>
-                <ListItem 
-                  alignItems="flex-start" 
-                  button 
-                  onClick={() => handleItemClick(`/online/associations/structures/details/${establishment?.id}`)}
-                >
-                  <ListItemAvatar>
-                    <Avatar
-                      alt={`Avatar ${index + 1}`}
-                      src={
-                        establishment?.logo ? establishment?.logo : '/default-placeholder.jpg'
-                      }
-                    />
-                  </ListItemAvatar> 
-                  <ListItemText
-                    primary={establishment?.name}
-                    secondary={
-                      <React.Fragment>
-                        {establishment?.address && <Typography
-                          sx={{ display: 'block' }}
-                          component="span"
-                          variant="body2"
-                          color="text.primary"
-                        >
-                          {establishment?.address}
-                        </Typography>}
-                        {establishment?.siret && <Typography
-                          sx={{ display: 'block' }}
-                          component="span"
-                          variant="body2"
-                          color="text.primary"
-                        >
-                          {establishment?.siret}
-                        </Typography>}
-                      </React.Fragment>
-                    }
-                  />
-                </ListItem>
-                <Divider variant="inset" component="li" />
-              </React.Fragment>
-            ))}
-          </List>
-        </Item>
-      </Grid>
       <Grid item xs={12} md={6}>
         <Item>
           <List
@@ -266,6 +203,71 @@ const SearchResultList = ({ results, loading, keyword, onClose }) => {
                           {supplier?.address}
                         </Typography>
                         {` — ${supplier?.email}`}
+                      </React.Fragment>
+                    }
+                  />
+                </ListItem>
+                <Divider variant="inset" component="li" />
+              </React.Fragment>
+            ))}
+          </List>
+        </Item>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <Item>
+          <List
+            sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+            subheader={
+              <ListSubheader sx={{ fontSize: 20, fontWeight: 700 }}>
+                Les membres de la gouvernance
+              </ListSubheader>
+            }
+          >
+            {loading && <ProgressService type="searchResults" />}
+            {!loading && results?.governanceMembers?.totalCount < 1 && (
+              <small>
+                Aucun membre trouvé avec{' '}
+                <b>
+                  "<em>{keyword}</em>"
+                </b>
+              </small>
+            )}
+            {results?.governanceMembers?.nodes?.map((governanceMember, index) => (
+              <React.Fragment key={index}>
+                <ListItem 
+                  alignItems="flex-start" 
+                  button 
+                  onClick={() => handleItemClick(`/online/gouvernance/membres/details/${governanceMember?.id}`)}
+                >
+                  <ListItemAvatar>
+                    <Avatar
+                      alt={`Avatar ${index + 1}`}
+                      src={
+                        governanceMember?.photo
+                          ? governanceMember?.photo
+                          : '/default-placeholder.jpg'
+                      }
+                    />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={`${governanceMember?.firstName} ${governanceMember?.lastName}`}
+                    secondary={
+                      <React.Fragment>
+                        {governanceMember?.email && <Typography
+                          sx={{ display: 'block' }}
+                          component="span"
+                          variant="body2"
+                          color="text.primary"
+                        >
+                          {getGovernanceRoleLabel(governanceMember?.role)}
+                        </Typography>}
+                        {governanceMember?.email && <Typography
+                          sx={{ display: 'block' }}
+                          variant="body2"
+                          color="text.primary"
+                        >
+                          {governanceMember?.email}
+                        </Typography>}
                       </React.Fragment>
                     }
                   />

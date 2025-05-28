@@ -18,11 +18,6 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import styled from '@emotion/styled';
 import {
-  getFormatDate,
-  getStatusLabel,
-  getStatusLebelColor,
-} from '../../../../_shared/tools/functions';
-import {
   Article,
   Delete,
   Done,
@@ -30,11 +25,21 @@ import {
   Folder,
   MoreVert,
 } from '@mui/icons-material';
-import { Alert, Avatar, Chip, MenuItem, Popover, Stack } from '@mui/material';
-import AppLabel from '../../../../_shared/components/app/label/AppLabel';
+import { Alert, Avatar, Chip, FormControlLabel, FormGroup, Menu, MenuItem, Popover, Stack, TablePagination } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
+import TableExportButton from '../../../_shared/components/data_tools/export/TableExportButton';
+import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import { render } from 'react-dom';
+import EmployeeChip from '../../human_ressources/employees/EmployeeChip';
+import {
+  getFormatDate,
+  getStatusLabel,
+  getStatusLebelColor,
+  truncateText,
+} from '../../../../_shared/tools/functions';
+import TableFilterButton from '../../../_shared/components/table/TableFilterButton';
 import ChipGroupWithPopover from '../../../_shared/components/persons/ChipGroupWithPopover';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -96,39 +101,101 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
-      id: 'typeMeeting',
+      id: 'meetingTypes',
+      property: 'meeting_types__name',
+      exportField: ['meeting_types__name'],
       numeric: false,
       disablePadding: true,
-      label: 'Type de réunion',
+      isDefault: true,
+      label: 'Type de entretien',
+      render: ({meetingTypes}) => <Stack direction="row" flexWrap='wrap' spacing={1}>
+                              {meetingTypes?.map((meetingType, index) => {
+                                return (
+                                    <Chip
+                                        key={index}
+                                        label={meetingType?.name}
+                                        variant="outlined"
+                                    />
+                                );
+                              })}
+                          </Stack>,
     },
     {
         id: 'topics',
+        property: 'topics',
+        exportField: 'topics',
         numeric: false,
         disablePadding: false,
+        isDefault: true,
         label: 'Ordre du jour',
     },
     {
         id: 'startingDateTime',
+        property: 'starting_date_time',
+        exportField: 'starting_date_time',
         numeric: false,
         disablePadding: false,
+        isDefault: true,
         label: 'Date',
+        render: ({startingDateTime}) => getFormatDate(startingDateTime),
     },
     {
         id: 'establishments',
+        property: 'establishments__establishment__name',
+        exportField: ['establishments__establishment__name'],
         numeric: false,
         disablePadding: false,
-        label: 'Structures',
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Structure(s)',
+        render: ({establishments}) => establishments && establishments.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+        {establishments?.map((establishment, index) => {
+          return (
+            <EstablishmentChip
+              key={index}
+              establishment={establishment?.establishment}
+            />
+          );
+        })}
+      </Stack>
     },
     {
         id: 'participants',
+        property: 'participants__employee__first_name',
+        exportField: ['participants__employee__first_name', 'participants__employee__last_name'],
         numeric: false,
         disablePadding: false,
-        label: 'Invités',
+        isDefault: true,
+        disableClickDetail: true,
+        sortDisabled: true,
+        label: 'Invité(s)',
+        render: ({participants}) => participants && participants.length > 0 && <Stack direction="row" flexWrap='wrap' spacing={1}>
+            <ChipGroupWithPopover people={participants?.map((participant)=> participant?.employee)} />
+      </Stack>
+    },
+    {
+        id: 'description',
+        property: 'description',
+        exportField: 'description',
+        numeric: false,
+        disablePadding: false,
+        label: 'Description',
+        render: ({description})=> <Tooltip title={description}>{truncateText(description, 160)}</Tooltip>
+    },
+    {
+        id: 'observation',
+        property: 'observation',
+        exportField: 'observation',
+        numeric: false,
+        disablePadding: false,
+        label: 'Observation',
+        render: ({observation})=> <Tooltip title={observation}>{truncateText(observation, 160)}</Tooltip>
     },
     {
         id: 'action',
         numeric: true,
         disablePadding: false,
+        isDefault: true,
         label: 'Actions',
     },
 ];
@@ -141,9 +208,10 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    selectedColumns = []
   } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property, sortDisabled=false) => (event) => {
+    if(!sortDisabled) onRequestSort(event, property);
   };
 
   return (
@@ -160,7 +228,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </StyledTableCell>
-        {headCells.map((headCell) => (
+        {selectedColumns.map((headCell) => (
           <StyledTableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -168,9 +236,10 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+              hideSortIcon={headCell.sortDisabled}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.property, headCell?.sortDisabled)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -187,7 +256,10 @@ function EnhancedTableHead(props) {
 }
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onFilterChange } = props;
+  const [selectedColumns, setSelectedColumns] = React.useState(
+    headCells.filter(c => c?.isDefault).map((column) => column.id) // Tous les colonnes sélectionnées par défaut
+  );
 
   return (
     <Toolbar
@@ -224,7 +296,11 @@ function EnhancedTableToolbar(props) {
           Les procès-verbaux
         </Typography>
       )}
-
+      <TableExportButton 
+        entity={'Meeting'}
+        fileName={'procès-verbaux'}
+        fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
+        titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (
         <Tooltip title="Traité">
           <IconButton>
@@ -232,11 +308,12 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <TableFilterButton headCells={headCells} 
+          onFilterChange={(currentColumns)=>{
+            setSelectedColumns(currentColumns);
+            onFilterChange(headCells?.filter(c=> currentColumns?.includes(c.id)))
+          }
+        }/>
       )}
     </Toolbar>
   );
@@ -246,7 +323,8 @@ export default function TableListMeetings({
   loading,
   rows,
   onDeleteMeeting,
-  onUpdateMeetingState,
+  onFilterChange,
+  paginator,
 }) {
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
@@ -254,7 +332,7 @@ export default function TableListMeetings({
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(paginator?.limit || 10);
 
   const { setDialogListLibrary } = useFeedBacks();
   const onOpenDialogListLibrary = (folderParent) => {
@@ -271,6 +349,7 @@ export default function TableListMeetings({
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    onFilterChange({orderBy: `${isAsc ? '-' : ''}${property}`})
   };
 
   const handleSelectAllClick = (event) => {
@@ -316,17 +395,20 @@ export default function TableListMeetings({
   );
 
   const [anchorElList, setAnchorElList] = React.useState([]);
+  const [selectedColumns, setSelectedColumns] = React.useState(headCells.filter(c => c?.isDefault));
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+      <Paper sx={{ width: '100%', mb: 2 }} >
+        <EnhancedTableToolbar numSelected={selected.length} onFilterChange={(selectedColumns)=>setSelectedColumns(selectedColumns)}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
+            border="0"
             size="medium"
           >
             <EnhancedTableHead
+              selectedColumns={selectedColumns}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -337,14 +419,14 @@ export default function TableListMeetings({
             <TableBody>
               {loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <ProgressService type="text" />
                   </StyledTableCell>
                 </StyledTableRow>
               )}
               {rows?.length < 1 && !loading && (
                 <StyledTableRow>
-                  <StyledTableCell colSpan="7">
+                  <StyledTableCell colSpan={selectedColumns.length + 1}>
                     <Alert severity="warning">
                       Aucun procès-verbal trouvé.
                     </Alert>
@@ -385,7 +467,6 @@ export default function TableListMeetings({
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
-                    onClick={() => navigate(`/online/gouvernance/reunions/details/${row.id}`)}
                   >
                     <StyledTableCell padding="checkbox">
                       <Checkbox
@@ -397,54 +478,20 @@ export default function TableListMeetings({
                         }}
                       />
                     </StyledTableCell>
-                    <StyledTableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                    <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.meetingTypes?.map((meetingType, index) => {
-                        return (
-                            <Chip
-                                key={index}
-                                label={meetingType?.name}
-                                variant="outlined"
-                            />
-                        );
-                        })}
-                    </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{row.topics}</StyledTableCell>
-                    <StyledTableCell align="left">{`${getFormatDate(row?.startingDateTime)}`}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        {row?.establishments?.map((establishment, index) => {
-                          return (
-                            <Chip
-                              key={index}
-                              avatar={
-                                <Avatar
-                                  alt={establishment?.establishment?.name}
-                                  src={
-                                    establishment?.establishment?.logo
-                                      ? establishment?.establishment?.logo
-                                      : '/default-placeholder.jpg'
-                                  }
-                                />
-                              }
-                              label={establishment?.establishment?.name}
-                              variant="outlined"
-                            />
-                          );
-                        })}
-                      </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <Stack direction="row" flexWrap='wrap' spacing={1}>
-                        <ChipGroupWithPopover people={row?.participants?.map((participant) =>participant?.employee)} />
-                      </Stack>
-                    </StyledTableCell>
+                    {
+                      selectedColumns?.filter(c=>c?.id !== 'action')?.map((column, index) => {
+                        return <StyledTableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding={column?.disablePadding ? "none" : "normal"}
+                          key={index}
+                          onClick={()=> {if(!column?.disableClickDetail) navigate(`/online/gouvernance/reunions/details/${row?.id}`)}}
+                        >
+                        {column?.render ? column?.render(row) : row[column?.id]}
+                        </StyledTableCell>
+                      })
+                    }
                     <StyledTableCell align="right">
                       <IconButton
                         aria-describedby={id}
@@ -510,7 +557,7 @@ export default function TableListMeetings({
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
                 >
-                  <StyledTableCell colSpan={6} />
+                  <StyledTableCell colSpan={selectedColumns.length + 1} />
                 </StyledTableRow>
               )}
             </TableBody>

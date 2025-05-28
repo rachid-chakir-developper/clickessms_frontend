@@ -37,6 +37,7 @@ import {
   getFormatDate,
   getStatusLabel,
   getStatusLebelColor,
+  truncateText,
 } from '../../../../../_shared/tools/functions';
 import TableFilterButton from '../../../../_shared/components/table/TableFilterButton';
 import ChipGroupWithPopover from '../../../../_shared/components/persons/ChipGroupWithPopover';
@@ -214,6 +215,7 @@ const headCells = [
         numeric: false,
         disablePadding: false,
         label: 'Observation',
+        render: ({observation})=> <Tooltip title={observation}>{truncateText(observation, 160)}</Tooltip>
     },
     {
         id: 'action',
@@ -322,7 +324,7 @@ function EnhancedTableToolbar(props) {
       )}
       <TableExportButton 
         entity={'Meeting'}
-        fileName={'Vehicules'}
+        fileName={'entretiens'}
         fields={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.exportField)}
         titles={headCells?.filter(c=> selectedColumns?.includes(c.id) && c.exportField).map(c=>c?.label)} />
       {numSelected > 0 ? (

@@ -4,16 +4,14 @@ import {
   EMPLOYEE_PHONE_INFOS,
 } from '../fragments/EmployeeFragment';
 import {
-  CLIENT_PHONE_INFOS,
-} from '../fragments/ClientFragment';
-import {
   SUPPLIER_BASIC_INFOS,
   SUPPLIER_PHONE_INFOS,
 } from '../fragments/SupplierFragment';
 import { BENEFICIARY_MINI_INFOS, BENEFICIARY_PHONE_INFOS } from '../fragments/BeneficiaryFragment';
 import { PARTNER_PHONE_INFOS } from '../fragments/PartnerFragment';
-import { ESTABLISHMENT_MINI_INFOS, ESTABLISHMENT_PHONE_INFOS } from '../fragments/EstablishmentFragment';
+import { ESTABLISHMENT_PHONE_INFOS } from '../fragments/EstablishmentFragment';
 import { PHONE_NUMBER_INFOS } from '../fragments/DataFragment';
+import { GOVERNANCE_MEMBER_MINI_INFOS } from '../fragments/GovernanceMemberFragment';
 
 export const GET_SEARCH = gql`
   query search(
@@ -29,10 +27,10 @@ export const GET_SEARCH = gql`
       page: $page
     ) {
       results {
-        establishments {
+        governanceMembers{
           totalCount
           nodes {
-            ...EstablishmentMiniInfosFragment
+            ...GovernanceMemberMiniInfosFragment
           }
         }
         employees {
@@ -57,7 +55,7 @@ export const GET_SEARCH = gql`
     }
   }
   ${EMPLOYEE_MINI_INFOS}
-  ${ESTABLISHMENT_MINI_INFOS}
+  ${GOVERNANCE_MEMBER_MINI_INFOS}
   ${BENEFICIARY_MINI_INFOS}
   ${SUPPLIER_BASIC_INFOS}
 `;

@@ -180,36 +180,6 @@ const OrganizationChart = ({ organization = {}, loading, error }) => {
                   <OrganizationCard employee={node.employee} color={node.color} />
                 </Grid>
               ))}
-              {detachedMembers.map((node, idx) => (
-                <Grid item key={idx} xs={12} sm={6} md={4} lg={3}>
-                  <OrganizationCard employee={node.employee} color={node.color} />
-                </Grid>
-              ))}
-              {detachedMembers.map((node, idx) => (
-                <Grid item key={idx} xs={12} sm={6} md={4} lg={3}>
-                  <OrganizationCard employee={node.employee} color={node.color} />
-                </Grid>
-              ))}
-              {detachedMembers.map((node, idx) => (
-                <Grid item key={idx} xs={12} sm={6} md={4} lg={3}>
-                  <OrganizationCard employee={node.employee} color={node.color} />
-                </Grid>
-              ))}
-              {detachedMembers.map((node, idx) => (
-                <Grid item key={idx} xs={12} sm={6} md={4} lg={3}>
-                  <OrganizationCard employee={node.employee} color={node.color} />
-                </Grid>
-              ))}
-              {detachedMembers.map((node, idx) => (
-                <Grid item key={idx} xs={12} sm={6} md={4} lg={3}>
-                  <OrganizationCard employee={node.employee} color={node.color} />
-                </Grid>
-              ))}
-              {detachedMembers.map((node, idx) => (
-                <Grid item key={idx} xs={12} sm={6} md={4} lg={3}>
-                  <OrganizationCard employee={node.employee} color={node.color} />
-                </Grid>
-              ))}
             </Grid>
           </Box>
         )}
