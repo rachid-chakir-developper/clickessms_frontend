@@ -8,6 +8,7 @@ const OrganizationCard = ({employee , color}) => {
       variant="outlined"
       sx={{
         borderColor: color,
+        borderTopWidth: 8,
         minWidth: 150,
         maxWidth: 200,
         margin: 'auto',

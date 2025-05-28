@@ -892,7 +892,7 @@ export const modules: Module[] = [
       },
       {
         id: 'documents',
-        name: 'Documents / Trames',
+        name: 'Documents associatifs',
         path: '/online/gouvernance/documents-trames',
         icon: <DescriptionIcon />,
         hidden(authorizationSystem) {

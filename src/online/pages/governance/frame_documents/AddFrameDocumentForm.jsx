@@ -208,7 +208,7 @@ export default function AddFrameDocumentForm({ idFrameDocument, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={4} >
+            <Grid item xs={12} sm={6} md={8} >
               <Item>
                 <TheTextField
                   variant="outlined"
@@ -231,42 +231,13 @@ export default function AddFrameDocumentForm({ idFrameDocument, title }) {
                 />
               </Item>
             </Grid>
-            <Grid item xs={12} sm={6} md={4} >
-              <Item>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
-                    Type
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="Type"
-                    value={formik.values.documentType}
-                    onChange={(e) =>
-                      formik.setFieldValue('documentType', e.target.value)
-                    }
-                  >
-                    <MenuItem value={null}>
-                      <em>Choisissez un type</em>
-                    </MenuItem>
-                    {dataData?.documentTypes?.map((data, index) => {
-                      return (
-                        <MenuItem key={index} value={data.id}>
-                          {data.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Item>
-            </Grid>
             <Grid item xs={12} sm={12} md={12} >
               <Item>
                 <TheTextField
                   variant="outlined"
                   label="Description"
                   multiline
-                  rows={4}
+                  rows={8}
                   value={formik.values.description}
                   onChange={(e) => formik.setFieldValue('description', e.target.value)}
                   disabled={loadingPost || loadingPut}

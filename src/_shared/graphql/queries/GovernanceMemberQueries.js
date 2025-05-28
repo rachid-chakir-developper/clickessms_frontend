@@ -3,6 +3,7 @@ import {
   GOVERNANCE_MEMBER_BASIC_INFOS,
   GOVERNANCE_MEMBER_DETAILS,
 } from '../fragments/GovernanceMemberFragment';
+import { COMPANY_MINI_INFOS } from '../fragments/CompanyFragment';
 
 export const GET_GOVERNANCE_MEMBER = gql`
   query GetGovernanceMember($id: ID!) {
@@ -38,8 +39,15 @@ export const GET_GOVERNANCE_MEMBERS = gql`
 // 🌳 Requête pour l'organigramme
 export const GET_GOVERNANCE_ORGANIZATION = gql`
   query {
-    governanceOrganization
+    governanceOrganization{
+      organizationTree
+      currentDate
+      company {
+        ...CompanyMiniInfosFragment
+      }
+    }
   }
+  ${COMPANY_MINI_INFOS}
 `;
 
 // Add more governanceMember-related queries here

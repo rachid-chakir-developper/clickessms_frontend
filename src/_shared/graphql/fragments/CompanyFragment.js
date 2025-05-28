@@ -20,6 +20,22 @@ export const COMPANY_MEDIA_INFOS = gql`
   }
 `;
 
+export const COMPANY_MINI_INFOS = gql`
+  fragment CompanyMiniInfosFragment on CompanyType {
+    id
+    name
+    siret
+    finess
+    apeCode
+    approvalNumber
+    email
+    logo
+    coverImage
+    isActive
+    status
+  }
+`;
+
 export const COMPANY_BASIC_INFOS = gql`
   fragment CompanyBasicInfosFragment on CompanyType {
     id

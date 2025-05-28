@@ -122,19 +122,6 @@ const headCells = [
       label: 'Libellé',
     },
     {
-        id: 'documentType',
-        property: 'document_type',
-        exportField: 'document_type__name',
-        numeric: false,
-        disablePadding: false,
-        isDefault: true,
-        label: 'Type',
-        render: ({documentType})=> documentType && <Chip
-                                                      label={documentType?.name}
-                                                      variant="outlined"
-                                                    />
-    },
-    {
         id: 'establishments',
         property: 'establishments__name',
         exportField: ['establishments__name'],
@@ -267,7 +254,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Les documents de la gouvernance
+          Les documents associatifs
         </Typography>
       )}
       <TableExportButton 
