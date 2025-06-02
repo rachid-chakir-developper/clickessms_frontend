@@ -50,6 +50,10 @@ export const GOVERNANCE_MEMBER_BASIC_INFOS = gql`
     governanceMemberRoles{
       ...GovernanceMemberRoleFragment
     }
+    lastGovernanceMemberRole{
+      ...GovernanceMemberRoleFragment
+      isActive
+    }
     folder {
       id
       number

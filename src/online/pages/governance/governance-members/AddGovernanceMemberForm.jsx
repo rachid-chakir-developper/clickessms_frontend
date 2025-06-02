@@ -230,7 +230,7 @@ export default function AddGovernanceMemberForm({ idGovernanceMember, title }) {
     {
       fetchPolicy: 'network-only',
       onCompleted: (data) => {
-        let { __typename, folder, governanceRoles, ...governanceMemberCopy } = data.governanceMember;
+        let { __typename, folder, governanceRoles, lastGovernanceMemberRole, ...governanceMemberCopy } = data.governanceMember;
         governanceMemberCopy.birthDate = governanceMemberCopy.birthDate ? dayjs(governanceMemberCopy.birthDate) : null;
         governanceMemberCopy.hiringDate = governanceMemberCopy.hiringDate ? dayjs(governanceMemberCopy.hiringDate) : null;
         governanceMemberCopy.probationEndDate = governanceMemberCopy.probationEndDate ? dayjs(governanceMemberCopy.probationEndDate) : null;

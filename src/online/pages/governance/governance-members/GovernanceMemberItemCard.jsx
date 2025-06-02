@@ -18,7 +18,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedBacks } from '../../../../_shared/context/feedbacks/FeedBacksProvider';
 import OpenLibraryButton from '../../../_shared/components/library/OpenLibraryButton ';
-import { getGovernanceRoleLabel } from '../../../../_shared/tools/functions';
+import { getFormatDate, getGovernanceRoleLabel } from '../../../../_shared/tools/functions';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
 
 export default function GovernanceMemberItemCard({
@@ -32,6 +32,7 @@ export default function GovernanceMemberItemCard({
     type: 'manageGovernance',
   }).authorized;
   //   const theme = useTheme();
+  const {lastGovernanceMemberRole } = governanceMember
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -68,25 +69,31 @@ export default function GovernanceMemberItemCard({
           />
           <Stack direction="row" spacing={2} alignItems="center">
             <Stack direction="column" spacing={0.2} alignItems="center">
-            <Typography color="text.primary" fontWeight="medium" fontSize={18}>
-              {`${governanceMember?.firstName} ${governanceMember?.lastName}`}
-            </Typography>
-            <Typography
-              component="div"
-              variant="caption"
-              color="text.secondary"
-              fontWeight="regular"
-            >
-              {`${getGovernanceRoleLabel(governanceMember?.role)}`}
-            </Typography>
-            <Typography
-              component="div"
-              variant="caption"
-              color="text.secondary"
-              fontWeight="regular"
-            >
-              {`${governanceMember?.email}`}
-            </Typography>
+              <Typography color="text.primary" fontWeight="medium" fontSize={18}>
+                {`${governanceMember?.firstName} ${governanceMember?.lastName}`}
+              </Typography>
+              <Typography
+                component="div"
+                variant="caption"
+                color="text.secondary"
+                fontWeight="regular"
+                sx={{
+                  color: !lastGovernanceMemberRole?.isActive? 'red': 'initial',
+                  fontStyle: !lastGovernanceMemberRole?.isActive? 'italic': 'initial',
+                }}
+              >
+                {lastGovernanceMemberRole?.role!=='OTHER' ? `${getGovernanceRoleLabel(lastGovernanceMemberRole?.role)}` : lastGovernanceMemberRole?.otherRole}
+              </Typography>
+              <Typography
+                component="div"
+                variant="caption"
+                color="text.secondary"
+                fontWeight="regular"
+                sx={{ fontStyle: 'italic' }}
+              >
+                <b>Élu le :</b> {getFormatDate(lastGovernanceMemberRole?.startingDateTime)}<br />
+                <b>Fin du mandat le :</b> {getFormatDate(lastGovernanceMemberRole?.endingDateTime)}
+              </Typography>
             </Stack>
           </Stack>
         </Stack>

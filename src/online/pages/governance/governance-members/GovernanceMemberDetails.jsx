@@ -68,6 +68,7 @@ const GovernanceMemberDetailsPage = ({ governanceMember }) => {
     position,
     role,
     governanceMemberRoles,
+    lastGovernanceMemberRole,
     hiringDate,
     probationEndDate,
     workEndDate,
@@ -150,8 +151,21 @@ const GovernanceMemberDetailsPage = ({ governanceMember }) => {
               {address && address !== '' && (
                 <Typography variant="body2">{address}</Typography>
               )}
-              {role && role !== '' && (
-                <Typography variant="body2">{getGovernanceRoleLabel(role)}</Typography>
+              {role && role !== '' && (<>
+                            <Typography variant="body2"
+                              sx={{
+                                color: !lastGovernanceMemberRole?.isActive? 'red': '#ffffff',
+                                fontStyle: !lastGovernanceMemberRole?.isActive? 'italic': 'initial',
+                              }}
+                            >
+                              {lastGovernanceMemberRole?.role!=='OTHER' ? `${getGovernanceRoleLabel(lastGovernanceMemberRole?.role)}` : lastGovernanceMemberRole?.otherRole}
+                            </Typography>
+                            <Typography variant="body2"
+                              sx={{ fontStyle: 'italic', textAlign: 'center' }}
+                            >
+                              <b>Élu le :</b> {getFormatDate(lastGovernanceMemberRole?.startingDateTime)}<br />
+                              <b>Fin du mandat le :</b> {getFormatDate(lastGovernanceMemberRole?.endingDateTime)}
+                            </Typography></>
               )}
               <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
                 {email}
