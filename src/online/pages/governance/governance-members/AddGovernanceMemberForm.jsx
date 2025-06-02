@@ -376,7 +376,7 @@ export default function AddGovernanceMemberForm({ idGovernanceMember, title }) {
                     <Item>
                       <TheDesktopDatePicker
                         variant="outlined"
-                        label="Date de début"
+                        label="Élu le"
                         value={item.startingDateTime}
                         onChange={(date) =>
                           formik.setFieldValue(`governanceMemberRoles.${index}.startingDateTime`, date)
@@ -389,7 +389,7 @@ export default function AddGovernanceMemberForm({ idGovernanceMember, title }) {
                     <Item sx={{position: 'relative'}}>
                       <TheDesktopDatePicker
                         variant="outlined"
-                        label="Date de fin"
+                        label="Fin du mandat le"
                         value={item.endingDateTime}
                         onChange={(date) =>
                           formik.setFieldValue(`governanceMemberRoles.${index}.endingDateTime`, date)

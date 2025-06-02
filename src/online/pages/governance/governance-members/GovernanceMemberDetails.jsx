@@ -13,6 +13,7 @@ import {
 } from '../../../../_shared/tools/functions';
 import { Edit, ArrowBack } from '@mui/icons-material';
 import { useAuthorizationSystem } from '../../../../_shared/context/AuthorizationSystemProvider';
+import GovernanceMemberRolesTimeline from './GovernanceMemberRolesTimeline';
 
 export default function GovernanceMemberDetails() {
   const authorizationSystem = useAuthorizationSystem();
@@ -66,6 +67,7 @@ const GovernanceMemberDetailsPage = ({ governanceMember }) => {
     birthDate,
     position,
     role,
+    governanceMemberRoles,
     hiringDate,
     probationEndDate,
     workEndDate,
@@ -235,12 +237,10 @@ const GovernanceMemberDetailsPage = ({ governanceMember }) => {
           </Paper>
           
           <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-            Statut
+            Rôles
           </Typography>
           <Paper sx={{ padding: 2 }} variant="outlined">
-            <Typography variant="body1">
-              Statut: {isActive ? "Actif" : "Inactif"}
-            </Typography>
+            <GovernanceMemberRolesTimeline governanceMemberRoles={governanceMemberRoles} />
           </Paper>
         </Paper>
       </Grid>
