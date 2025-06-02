@@ -7,15 +7,15 @@ import FrameDocuments from './frame_documents/FrameDocuments';
 
 export default function Governance() {
   const authorizationSystem = useAuthorizationSystem();
-  const canManageGovernance = authorizationSystem.requestAuthorization({
-    type: 'manageGovernance',
+  const canManageGovernanceModules = authorizationSystem.requestAuthorization({
+    type: 'manageGovernanceModules',
   }).authorized;
   return (
     <Box>
       <Routes>
         <Route path={`membres/*`} element={<GovernanceMembers />} />
-        {canManageGovernance &&<Route path={`documents-trames/*`} element={<FrameDocuments />} />}
-        {canManageGovernance && <Route path={`reunions/*`} element={<Meetings />} />}
+        {canManageGovernanceModules &&<Route path={`documents-trames/*`} element={<FrameDocuments />} />}
+        {canManageGovernanceModules && <Route path={`reunions/*`} element={<Meetings />} />}
         <Route path="/" element={<Navigate to={`membres`} replace />} />
       </Routes>
     </Box>

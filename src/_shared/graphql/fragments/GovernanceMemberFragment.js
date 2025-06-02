@@ -37,6 +37,7 @@ export const GOVERNANCE_MEMBER_MINI_INFOS = gql`
     email
     photo
     coverImage
+    governanceRoles
     role
     isActive
     isArchived

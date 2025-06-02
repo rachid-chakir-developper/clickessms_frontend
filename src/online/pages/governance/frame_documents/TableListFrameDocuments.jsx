@@ -288,8 +288,8 @@ export default function TableListFrameDocuments({
   paginator,
 }) {
   const authorizationSystem = useAuthorizationSystem();
-  const canManageAdministrative = authorizationSystem.requestAuthorization({
-    type: 'manageAdministrative',
+  const canManageGovernanceModules = authorizationSystem.requestAuthorization({
+    type: 'manageGovernanceModules',
   }).authorized;
   const navigate = useNavigate();
   const [order, setOrder] = React.useState('asc');
@@ -492,7 +492,7 @@ export default function TableListFrameDocuments({
                           <Download sx={{ mr: 2 }} />
                           Télécharger
                         </MenuItem>
-                        {canManageAdministrative && <><Link
+                        {canManageGovernanceModules && <><Link
                           to={`/online/gouvernance/documents-trames/modifier/${row?.id}`}
                           className="no_style"
                         >

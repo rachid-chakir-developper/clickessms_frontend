@@ -267,7 +267,7 @@ export default function ListGovernanceMembers() {
 
   return (
     <>
-      <Stack justifyContent="flex-end">
+      <Stack justifyContent="flex-end" sx={{mb: 2}}>
         <ToggleButtonGroup
           size="small"
           value={view}

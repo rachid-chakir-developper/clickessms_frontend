@@ -35,6 +35,7 @@ import UserRolesLabelMenu from './UserRolesLabelMenu';
 import PartnerChip from '../partnerships/partners/PartnerChip';
 import FinancierChip from '../partnerships/financiers/FinancierChip';
 import SupplierChip from '../purchases/suppliers/SupplierChip';
+import GovernanceMemberChip from '../governance/governance-members/GovernanceMemberChip';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -143,9 +144,10 @@ const headCells = [
         sortDisabled: true,
         isDefault: true,
         label: 'Assigné à',
-        render: ({employee, partner, financier, supplier}) => 
+        render: ({employee, governanceMember, partner, financier, supplier}) => 
                               <Stack direction="row" flexWrap='wrap' spacing={1}>
                                 {employee && <EmployeeChip employee={employee}/>}
+                                {governanceMember && <GovernanceMemberChip governanceMember={governanceMember}/>}
                                 {partner && <PartnerChip partner={partner}/>}
                                 {financier && <FinancierChip financier={financier}/>}
                                 {supplier && <SupplierChip supplier={supplier}/>}

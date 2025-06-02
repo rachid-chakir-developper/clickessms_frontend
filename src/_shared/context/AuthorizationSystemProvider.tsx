@@ -162,7 +162,8 @@ export function AuthorizationSystemProvider({ children }) {
       // Use role of user in here
       let roles: any[] = user?.roles
       let sceRoles: any[] = user?.employee && user?.employee?.sceRoles ? user?.employee?.sceRoles : []
-      roles = [...roles, ...sceRoles];
+      let governanceRoles: any[] = user?.governanceMember && user?.governanceMember?.governanceRoles ? user?.governanceMember?.governanceRoles : []
+      roles = [...roles, ...sceRoles, ...governanceRoles];
       return roles;
     },
   });

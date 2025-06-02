@@ -28,6 +28,7 @@ import { GET_PARTNERS } from '../../../_shared/graphql/queries/PartnerQueries';
 import { GET_FINANCIERS } from '../../../_shared/graphql/queries/FinancierQueries';
 import { GET_SUPPLIERS } from '../../../_shared/graphql/queries/SupplierQueries';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { GET_GOVERNANCE_MEMBERS } from '../../../_shared/graphql/queries/GovernanceMemberQueries';
 
 const Item = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -66,6 +67,7 @@ export default function AddUserForm({ idUser, title }) {
       firstName: '',
       lastName: '',
       employee: null,
+      governanceMember: null,
       partner: null,
       financier: null,
       supplier: null,
@@ -80,6 +82,7 @@ export default function AddUserForm({ idUser, title }) {
       let { photo, ...userFormCopy } = values;
       let { coverImage, ...userCopy } = userFormCopy;
       userCopy.employee = userCopy.employee?.id;
+      userCopy.governanceMember = userCopy.governanceMember?.id;
       userCopy.partner = userCopy.partner?.id;
       userCopy.financier = userCopy.financier?.id;
       userCopy.supplier = userCopy.supplier?.id;
@@ -110,11 +113,20 @@ const [getEmployees, {
     data: employeesData,
     error: employeesError,
     fetchMore: fetchMoreEmployees,
-  }] = useLazyQuery(GET_EMPLOYEES, { variables: { employeeFilter : null, page: 1, limit: 10 } });
+  }] = useLazyQuery(GET_EMPLOYEES, { variables: { employeeFilter : null, page: 1, limit: 30 } });
   
   const onGetEmployees = (keyword)=>{
-    getEmployees({ variables: { employeeFilter : keyword === '' ? null : {keyword}, page: 1, limit: 10 } })
+    getEmployees({ variables: { employeeFilter : keyword === '' ? null : {keyword}, page: 1, limit: 30 } })
   }
+
+  const {
+    loading: loadingGovernanceMembers,
+    data: governanceMembersData,
+    error: governanceMembersError,
+    fetchMore: fetchMoreGovernanceMembers,
+  } = useQuery(GET_GOVERNANCE_MEMBERS, {
+    fetchPolicy: 'network-only',
+  });
 
   const {
     loading: loadingPartners,
@@ -413,10 +425,9 @@ const [getEmployees, {
               <Item>
                 <TheAutocomplete
                   options={employeesData?.employees?.nodes}
-onInput={(e) => {
+                  onInput={(e) => {
                           onGetEmployees(e.target.value)
                         }}
-
                   label="Employé"
                   placeholder="Choisissez un employé"
                   limitTags={2}
@@ -424,6 +435,19 @@ onInput={(e) => {
                   value={formik.values.employee}
                   onChange={(e, newValue) => {
                     formik.setFieldValue('employee', newValue);
+                  }}
+                />
+              </Item>
+              <Item>
+                <TheAutocomplete
+                  options={governanceMembersData?.governanceMembers?.nodes}
+                  label="Membre de la gouvernance"
+                  placeholder="Choisissez un membre"
+                  limitTags={2}
+                  multiple={false}
+                  value={formik.values.governanceMember}
+                  onChange={(e, newValue) => {
+                    formik.setFieldValue('governanceMember', newValue);
                   }}
                 />
               </Item>

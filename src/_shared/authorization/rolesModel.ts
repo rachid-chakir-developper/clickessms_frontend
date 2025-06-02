@@ -107,5 +107,9 @@ export const rolesModel = defineRolesModel(entitiesModel, {
     MEMBER_IN_SCE: { // membre du cse
       sceModules: 'edit',
     },
+    MEMBER_IN_GOVERNANCE: { // membre de gouvernance
+      governance: 'edit',
+      governanceModules: 'edit',
+    },
   },
 });

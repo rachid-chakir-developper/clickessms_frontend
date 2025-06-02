@@ -5,6 +5,7 @@ import { EMPLOYEE_MINI_INFOS } from './EmployeeFragment';
 import { PARTNER_MINI_INFOS } from './PartnerFragment';
 import { SUPPLIER_MINI_INFOS } from './SupplierFragment';
 import { FINANCIER_MINI_INFOS } from './FinancierFragment';
+import { GOVERNANCE_MEMBER_MINI_INFOS } from './GovernanceMemberFragment';
 
 export const USER_BASIC_INFOS = gql`
   fragment UserBasicInfosFragment on UserType {
@@ -23,6 +24,9 @@ export const USER_BASIC_INFOS = gql`
     employee {
       ...EmployeeMiniInfosFragment
     }
+    governanceMember {
+      ...GovernanceMemberMiniInfosFragment
+    }
     partner {
       ...PartnerMiniInfosFragment
     }
@@ -34,6 +38,7 @@ export const USER_BASIC_INFOS = gql`
     }
   }
   ${EMPLOYEE_MINI_INFOS}
+  ${GOVERNANCE_MEMBER_MINI_INFOS}
   ${PARTNER_MINI_INFOS}
   ${FINANCIER_MINI_INFOS}
   ${SUPPLIER_MINI_INFOS}
