@@ -151,20 +151,19 @@ const GovernanceMemberDetailsPage = ({ governanceMember }) => {
               {address && address !== '' && (
                 <Typography variant="body2">{address}</Typography>
               )}
-              {role && role !== '' && (<>
-                            <Typography variant="body2"
-                              sx={{
-                                color: !lastGovernanceMemberRole?.isActive? 'red': '#ffffff',
-                                fontStyle: !lastGovernanceMemberRole?.isActive? 'italic': 'initial',
-                              }}
-                            >
+              {lastGovernanceMemberRole && (<>
+                            <Typography variant="body2">
                               {lastGovernanceMemberRole?.role!=='OTHER' ? `${getGovernanceRoleLabel(lastGovernanceMemberRole?.role)}` : lastGovernanceMemberRole?.otherRole}
                             </Typography>
                             <Typography variant="body2"
                               sx={{ fontStyle: 'italic', textAlign: 'center' }}
                             >
-                              <b>Élu le :</b> {getFormatDate(lastGovernanceMemberRole?.startingDateTime)}<br />
-                              <b>Fin du mandat le :</b> {getFormatDate(lastGovernanceMemberRole?.endingDateTime)}
+                              <b>Élu le :</b> <span style={{ color: !lastGovernanceMemberRole?.isActive ? 'red' : 'inherit' }}>
+                                  {getFormatDate(lastGovernanceMemberRole?.startingDateTime)}
+                                </span><br />
+                              <b>Fin du mandat le :</b> <span style={{ color: !lastGovernanceMemberRole?.isActive ? 'red' : 'inherit' }}>
+                                  {getFormatDate(lastGovernanceMemberRole?.endingDateTime)}
+                                </span>
                             </Typography></>
               )}
               <Typography variant="body2" sx={{ fontStyle: 'italic' }}>

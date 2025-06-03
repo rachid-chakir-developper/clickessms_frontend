@@ -72,15 +72,11 @@ export default function GovernanceMemberItemCard({
               <Typography color="text.primary" fontWeight="medium" fontSize={18}>
                 {`${governanceMember?.firstName} ${governanceMember?.lastName}`}
               </Typography>
-              <Typography
+              {lastGovernanceMemberRole && <><Typography
                 component="div"
                 variant="caption"
                 color="text.secondary"
                 fontWeight="regular"
-                sx={{
-                  color: !lastGovernanceMemberRole?.isActive? 'red': 'initial',
-                  fontStyle: !lastGovernanceMemberRole?.isActive? 'italic': 'initial',
-                }}
               >
                 {lastGovernanceMemberRole?.role!=='OTHER' ? `${getGovernanceRoleLabel(lastGovernanceMemberRole?.role)}` : lastGovernanceMemberRole?.otherRole}
               </Typography>
@@ -91,9 +87,13 @@ export default function GovernanceMemberItemCard({
                 fontWeight="regular"
                 sx={{ fontStyle: 'italic' }}
               >
-                <b>Élu le :</b> {getFormatDate(lastGovernanceMemberRole?.startingDateTime)}<br />
-                <b>Fin du mandat le :</b> {getFormatDate(lastGovernanceMemberRole?.endingDateTime)}
-              </Typography>
+                <b>Élu le :</b> <span style={{ color: !lastGovernanceMemberRole?.isActive ? 'red' : 'inherit' }}>
+                    {getFormatDate(lastGovernanceMemberRole?.startingDateTime)}
+                  </span><br />
+                <b>Fin du mandat le :</b> <span style={{ color: !lastGovernanceMemberRole?.isActive ? 'red' : 'inherit' }}>
+                    {getFormatDate(lastGovernanceMemberRole?.endingDateTime)}
+                  </span>
+              </Typography></>}
             </Stack>
           </Stack>
         </Stack>

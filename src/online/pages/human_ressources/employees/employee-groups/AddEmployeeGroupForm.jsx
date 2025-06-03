@@ -253,7 +253,7 @@ const [getEmployees, {
                   }}
                   label="Responsables"
                   placeholder="Ajouter un employé"
-                  limitTags={3}
+                  limitTags={5}
                   value={formik.values.managers}
                   onChange={(e, newValue) =>
                     formik.setFieldValue('managers', newValue)
@@ -270,7 +270,7 @@ const [getEmployees, {
                   }}
                   label="Employés"
                   placeholder="Ajouter un employé"
-                  limitTags={3}
+                  limitTags={30}
                   value={formik.values.employees}
                   onChange={(e, newValue) =>
                     formik.setFieldValue('employees', newValue)
