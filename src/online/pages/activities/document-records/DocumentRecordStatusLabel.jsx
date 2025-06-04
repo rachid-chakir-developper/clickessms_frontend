@@ -30,6 +30,11 @@ const DocumentRecordStatusLabel = ({ documentRecord }) => {
         >
             <AppLabel aria-describedby={id} color={color}>{label}</AppLabel>
             {document && document!="" && <AppLabel sx={{ml: 1}} color="default">Manquant</AppLabel>}
+            {endingDate && (
+                <Typography variant="body2">
+                    <strong>Expire le :</strong> {getFormatDate(endingDate)}
+                </Typography>
+            )}
             <Popover
                 id={id}
                 open={open}
@@ -64,7 +69,7 @@ const DocumentRecordStatusLabel = ({ documentRecord }) => {
                     )}
                     {endingDate && (
                         <Typography variant="body2">
-                            <strong>Valide jusqu'à :</strong> {getFormatDate(endingDate)}
+                            <strong>Expire le :</strong> {getFormatDate(endingDate)}
                         </Typography>
                     )}
                     <Typography variant="body2">

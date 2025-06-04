@@ -5,12 +5,13 @@ import {
     MenuItem,
     IconButton,
     CircularProgress,
+    Button,
 } from '@mui/material';
-import { GridOn, Download } from '@mui/icons-material';
+import { GridOn, Download, FileDownload } from '@mui/icons-material';
 import { EXPORT_EXCEL_MUTATION } from '../../../../../_shared/graphql/mutations/PrinterMutations';
 import { useFeedBacks } from '../../../../../_shared/context/feedbacks/FeedBacksProvider';
 
-const ExportExcelButton = ({ dashboardActivityFilter=null, documentType, id, data, apparence = "menuItem", title = "Exporter Excel" }) => {
+const ExportExcelButton = ({ dashboardActivityFilter=null, documentType, id, data, apparence = "menuItem", title = "Exporter en Excel" }) => {
     const { setNotifyAlert } = useFeedBacks();
     const [exportExcel, { loading }] = useMutation(EXPORT_EXCEL_MUTATION);
 
@@ -74,9 +75,9 @@ const ExportExcelButton = ({ dashboardActivityFilter=null, documentType, id, dat
                     {loading ? (
                         <CircularProgress size={24} sx={{ marginRight: 2 }} />
                     ) : (
-                        <GridOn fontSize="small" sx={{ mr: 2 }} />
+                        <FileDownload fontSize="small" sx={{ mr: 2 }} />
                     )}
-                    Exporter Excel
+                    {title}
                 </MenuItem>
             )}
 
@@ -86,7 +87,7 @@ const ExportExcelButton = ({ dashboardActivityFilter=null, documentType, id, dat
                         {loading ? (
                             <CircularProgress size={24} />
                         ) : (
-                            <GridOn />
+                            <FileDownload />
                         )}
                     </IconButton>
                 </Tooltip>
@@ -98,9 +99,24 @@ const ExportExcelButton = ({ dashboardActivityFilter=null, documentType, id, dat
                         {loading ? (
                             <CircularProgress size={24} />
                         ) : (
-                            <Download />
+                            <FileDownload />
                         )}
                     </IconButton>
+                </Tooltip>
+            )}
+
+            {apparence === 'buttonExport' && (
+                <Tooltip title={title}>
+                    <Button variant="outlined" 
+                        startIcon={loading ? (
+                            <CircularProgress size={24} />
+                        ) : (
+                            <FileDownload />
+                        )}
+                        onClick={handleClick} disabled={loading}
+                    >
+                        {title}
+                    </Button>
                 </Tooltip>
             )}
         </>

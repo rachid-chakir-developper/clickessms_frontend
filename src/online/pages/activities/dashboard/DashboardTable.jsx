@@ -1,7 +1,8 @@
-import React from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper, Box } from "@mui/material";
+import React, { useState } from "react";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper, Box, Tab } from "@mui/material";
 import EstablishmentChip from "../../companies/establishments/EstablishmentChip";
 import ChipBeneficiaryGroupWithPopover from "../../../_shared/components/persons/ChipBeneficiaryGroupWithPopover";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 const DashboardTableItem = ({activityTrackingEstablishment}) => {
   const extractValues = (key, suffix = '') => {
@@ -147,13 +148,31 @@ const DashboardTableItem = ({activityTrackingEstablishment}) => {
 };
 
 const DashboardTable = ({activityTrackingEstablishments=[]}) => {
+  // État pour gérer l'onglet actif
+  const [selectedEstablishment, setSelectedEstablishment] = useState(0);
 
+  const handleChange = (event, newValue) => {
+      setSelectedEstablishment(newValue);
+  };
 
   return (
-    <Box sx={{ padding: 2 }}>
-      {activityTrackingEstablishments?.map((activityTrackingEstablishment, index) => (
-        <DashboardTableItem key={index} activityTrackingEstablishment={activityTrackingEstablishment} />
-      ))}
+    <Box sx={{ flexGrow: 1, marginTop: 2 }}>
+      <TabContext value={`${selectedEstablishment}`}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <TabList onChange={handleChange} aria-label="lab API tabs example" 
+                variant="scrollable"
+                scrollButtons="auto">
+                {activityTrackingEstablishments.map((establishment, index) => (
+                    <Tab label={establishment.establishment?.name || `Établissement ${index + 1}`} key={index} value={`${index}`} />
+                ))}
+            </TabList>
+        </Box>
+        {activityTrackingEstablishments?.map((activityTrackingEstablishment, index) => (
+          <TabPanel key={index} value={`${index}`} >
+            <DashboardTableItem activityTrackingEstablishment={activityTrackingEstablishment} />
+          </TabPanel>
+        ))}
+      </TabContext>
     </Box>
   );
 };

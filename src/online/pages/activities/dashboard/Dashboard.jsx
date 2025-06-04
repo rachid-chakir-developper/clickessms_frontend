@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, IconButton, Stack, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
+import { Box, Button, Grid, IconButton, Stack, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import { useLazyQuery, useQuery } from '@apollo/client';
 import { Assessment, BarChart, EventNote, FileDownload, Group, PictureAsPdf, Summarize, TableChart, ViewList, ViewQuilt } from '@mui/icons-material';
 import ProgressService from '../../../../_shared/services/feedbacks/ProgressService';
@@ -133,12 +133,15 @@ export default function Dashboard() {
             </Grid>
             {view!=='graph'  && !isExporting && <Box>
               {view!=='activity_month' && <Tooltip title="Exporter en Excel">
-                <IconButton variant="contained" onClick={exportTableToExcel} >
+                {/* <IconButton variant="contained" onClick={exportTableToExcel} >
                   <FileDownload />
-                </IconButton>
+                </IconButton> */}
+                <Button variant="outlined" startIcon={<FileDownload />} onClick={exportTableToExcel}>
+                  Exporter en Excel
+                </Button>
               </Tooltip>}
-              <GeneratePdfButton apparence="iconButtonExport" documentType={view} />
-              {view==='activity_month' && <ExportExcelButton apparence="iconButtonExport" dashboardActivityFilter={dashboardActivityFilter} documentType={view} />}
+              {/* <GeneratePdfButton apparence="ButtonExport" documentType={view} /> */}
+              {view==='activity_month' && <ExportExcelButton apparence="buttonExport" dashboardActivityFilter={dashboardActivityFilter} documentType={view} />}
             </Box>}
             <Grid item xs={12}>
               <Stack justifyContent="flex-end">

@@ -1,10 +1,12 @@
-import { Grid, Box, styled, Paper, Typography } from '@mui/material';
+import { Grid, Box, styled, Paper, Typography, Tab } from '@mui/material';
 import Deposits from './charts/Deposits';
 import MixedBarChart from './charts/MixedBarChart';
 import SimpleLineChart from './charts/SimpleLineChart';
 import SecondSimpleLineChart from './charts/SecondSimpleLineChart';
 import { formatCurrencyAmount } from '../../../../_shared/tools/functions';
 import EstablishmentChip from '../../companies/establishments/EstablishmentChip';
+import { useState } from 'react';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -118,14 +120,34 @@ const DashboardGraphItem = ({ activityTrackingEstablishment }) => {
   };
 
 const DashboardGraph = ({ activityTrackingEstablishments }) => {
+    // État pour gérer l'onglet actif
+    const [selectedEstablishment, setSelectedEstablishment] = useState(0);
+
+    const handleChange = (event, newValue) => {
+        setSelectedEstablishment(newValue);
+    };
+
 
     return (
         <Box sx={{ flexGrow: 1, marginTop: 2 }}>
-            {activityTrackingEstablishments?.map((activityTrackingEstablishment, index) => (
-                <Box key={index} sx={{backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#e0e0e0"}}>
-                    <DashboardGraphItem activityTrackingEstablishment={activityTrackingEstablishment} />
+            <TabContext value={`${selectedEstablishment}`}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <TabList onChange={handleChange} aria-label="lab API tabs example" 
+                        variant="scrollable"
+                        scrollButtons="auto">
+                        {activityTrackingEstablishments.map((establishment, index) => (
+                            <Tab label={establishment.establishment?.name || `Établissement ${index + 1}`} key={index} value={`${index}`} />
+                        ))}
+                    </TabList>
                 </Box>
-            ))}
+                {activityTrackingEstablishments?.map((activityTrackingEstablishment, index) => (
+                    <TabPanel key={index} value={`${index}`} >
+                        <Box sx={{backgroundColor: "#f7f7f7"}}>
+                            <DashboardGraphItem activityTrackingEstablishment={activityTrackingEstablishment} />
+                        </Box>
+                    </TabPanel>
+                ))}
+            </TabContext>
         </Box>
     );
 };
