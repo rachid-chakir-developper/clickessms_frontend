@@ -135,11 +135,28 @@ const SynthesisEstablishmentsTableItem = ({ activitySynthesisEstablishment }) =>
                                             ? beneficiary?.preferredName
                                             : beneficiary?.lastName
                                     } ${beneficiary?.firstName}`}</TableCell>
-                                <TableCell style={{ color: beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.APPROVED ? "green" : "red" }}>
-                                    {beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.APPROVED  && <>Admis </>}
-                                    {beneficiaryAdmission?.status===BENEFICIARY_ADMISSION_STATUS_CHOICES.REJECTED  && <>Refusé </>}
-                                    le {getFormatDate(beneficiaryAdmission.responseDate)}
+                                <TableCell
+                                    style={{
+                                        color:
+                                        beneficiaryAdmission?.status === BENEFICIARY_ADMISSION_STATUS_CHOICES.APPROVED
+                                            ? "green"
+                                            : beneficiaryAdmission?.status === BENEFICIARY_ADMISSION_STATUS_CHOICES.REJECTED
+                                            ? "red"
+                                            : beneficiaryAdmission?.status === BENEFICIARY_ADMISSION_STATUS_CHOICES.CANCELED
+                                            ? "orange"
+                                            : "gray", // PENDING ou inconnu
+                                    }}
+                                    >
+                                    {beneficiaryAdmission?.status === BENEFICIARY_ADMISSION_STATUS_CHOICES.APPROVED && <>Admis</>}
+                                    {beneficiaryAdmission?.status === BENEFICIARY_ADMISSION_STATUS_CHOICES.REJECTED && <>Refusé</>}
+                                    {beneficiaryAdmission?.status === BENEFICIARY_ADMISSION_STATUS_CHOICES.PENDING && <>En attente</>}
+                                    {beneficiaryAdmission?.status === BENEFICIARY_ADMISSION_STATUS_CHOICES.CANCELED && <>Annulé</>}
+
+                                    {beneficiaryAdmission?.responseDate && (
+                                        <> le {getFormatDate(beneficiaryAdmission.responseDate)}</>
+                                    )}
                                 </TableCell>
+
                                 <TableCell>{beneficiaryAdmission.statusReason || ""}</TableCell>
                             </TableRow>)
                             }
